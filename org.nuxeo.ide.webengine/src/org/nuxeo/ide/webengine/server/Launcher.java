@@ -27,11 +27,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
-import org.eclipse.debug.core.ILaunchListener;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.debug.ui.ILaunchGroup;
@@ -49,7 +47,7 @@ import org.nuxeo.ide.webengine.Nuxeo;
 public class Launcher implements IJavaLaunchConfigurationConstants {
 
     public static String MAIN = "org.nuxeo.runtime.launcher.Main";
-    public static String JAVA_OPTS = "-Djava.rmi.server.RMIClassLoaderSpi=org.nuxeo.runtime.launcher.NuxeoRMIClassLoader -Dsun.lang.ClassLoader.allowArraySyntax=true";
+    public static String JAVA_OPTS = "-Ddebug=true -Djava.rmi.server.RMIClassLoaderSpi=org.nuxeo.runtime.launcher.NuxeoRMIClassLoader -Dsun.lang.ClassLoader.allowArraySyntax=true";
     public static String JAVA_OPTS_DERBY = "-Dderby.system.home=data/derby";
     public static String PROGRAM_ARGS = "/org.nuxeo.osgi.application.Main bundles/.:lib/.:config -home .";
 
@@ -95,7 +93,6 @@ public class Launcher implements IJavaLaunchConfigurationConstants {
             }
             buf.setLength(buf.length()-1);
         }
-        buf.append(" -debug");
         return buf.toString();
     }
     

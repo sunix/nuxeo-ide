@@ -110,7 +110,7 @@ public class ServerView extends ViewPart implements ILaunchesListener2 {
         PluginProvider provider = new PluginProvider();
         tv.setContentProvider(provider);
         tv.setLabelProvider(provider);
-        refresh();
+
         tv.addCheckStateListener(new ICheckStateListener() {
             public void checkStateChanged(CheckStateChangedEvent event) {   
                 config.projects = new ArrayList<IProject>();
@@ -119,6 +119,8 @@ public class ServerView extends ViewPart implements ILaunchesListener2 {
                 }
             }  
         });
+        
+        refresh();
     }
     
     public void refresh() {
@@ -126,6 +128,7 @@ public class ServerView extends ViewPart implements ILaunchesListener2 {
             tv.setInput(ResourcesPlugin.getWorkspace());
             tv.setCheckedElements(config.projects.toArray());
         }
+        updateActions();
     }
     
     

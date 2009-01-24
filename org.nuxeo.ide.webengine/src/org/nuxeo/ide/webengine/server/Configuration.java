@@ -50,7 +50,7 @@ public class Configuration {
     
     public boolean isValid() {
         String name = launcher.getName();
-        return launcher != null && name.endsWith(".jar") && name.startsWith("nuxeo-runtime-launcher"); 
+        return launcher != null && name.endsWith(".jar") && name.startsWith("nuxeo-runtime-launcher") && launcher.isFile(); 
     }
     
     public File getHome() {

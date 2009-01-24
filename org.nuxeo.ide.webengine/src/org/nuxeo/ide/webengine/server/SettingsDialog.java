@@ -99,7 +99,7 @@ public class SettingsDialog extends TitleAreaDialog {
             for (String name : file.list()) {
                 if (name.endsWith(".jar") && name.startsWith("nuxeo-runtime-launcher")) {
                     view.config.launcher = new File(file, name);
-                    view.getViewSite().getActionBars().updateActionBars();
+                    view.updateActions();
                     super.okPressed(); 
                     return;
                 }
