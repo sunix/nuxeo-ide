@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+   <extension
+         id="org.nuxeo.ide.webengine.WebEngineNature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="org.nuxeo.ide.webengine.WebEngineNature">
+         </run>		 
+      </runtime>
+      <!--requires-nature id="org.eclipse.jdt.core.javanature"/-->
+   </extension>
+
+   <extension
+      id="org.nuxeo.ide.webengine.AnnotationBuilder" 
+      name="WebEngine Annotation Builder" 
+      	point="org.eclipse.core.resources.builders">
+      <builder>
+         <run 
+            class="org.nuxeo.ide.webengine.AnnotationBuilder">
+         </run>
+      </builder>
+   </extension>
+
+   <extension                                                                                                                                               
+         point="org.eclipse.ui.newWizards">                                                                                                                 
+      <category                                                                                                                                             
+            name="Nuxeo Development"                                                                                                                       
+            id="org.nuxeo.ide">                                                                                                                       
+      </category>                                                                                                                                           
+      <wizard                                                                                                                                               
+            name="WebEngine Project"                                                                                                                  
+            icon="icons/newprj_wiz.gif"                                                                                                       
+            category="org.nuxeo.ide"                                                                                                                  
+            class="org.nuxeo.ide.webengine.ProjectWizard"                                                                       
+            project="true"                                                                                                                                  
+            finalPerspective="org.eclipse.jdt.ui.JavaPerspective"                                                              
+            id="org.eclipse.pde.ui.NewProjectWizard">                                                                                                       
+         <description>                                                                                                                                      
+            Create a WebEngine Project                                                                                                         
+         </description>                                                                                                                                     
+      </wizard>    
+    </extension>
+    
+    
+    
+       <extension                                                                                                                                               
+         point="org.eclipse.ui.popupMenus"> 
+    <objectContribution                                                                                                                                   
+            objectClass="org.eclipse.core.resources.IProject"                                                                                               
+            adaptable="true"                                                                                                                                
+            id="org.nuxeo.ide.pluginProjectToolSet">                                                                                                   
+         <menu                                                                                                                                              
+               label="Nuxeo Tools"                                                                                                            
+               id="org.nuxeo.ide.tools">                                                                                                       
+            <separator                                                                                                                                      
+               name="group0">                                                                                                                               
+            </separator>                                                                                                                                    
+         </menu>                                                                                                                                            
+         <visibility>                                                                                                                                       
+                <not>                                                                                                                                       
+                <or>                                                                                                                                        
+            <objectState                                                                                                                                    
+                    name="projectNature"                                                                                                                    
+                    value="org.nuxeo.ide.webengine.WebEngineNature"/>                                                                                                  
+                <objectState                                                                                                                                
+                        name="open"                                                                                                                         
+                        value="false"/>                                                                                                                     
+            </or>                                                                                                                                           
+            </not>                                                                                                                                          
+         </visibility>                                                                                                                                      
+                                                                                                                                                            
+         <action                                                                                                                                            
+            label="Add WebEngine Nature"                                                                                                                       
+            class="org.nuxeo.ide.webengine.AddWebEngineNature"                                                                         
+            menubarPath="org.nuxeo.ide.tools/group0"                                                                                           
+            enablesFor="+"                                                                                                                                  
+            id="org.nuxeo.ide.tools.convertToWebEngine">                                                                                                 
+        </action>                                                                                                                                           
+      </objectContribution> 
+          <objectContribution                                                                                                                                   
+            objectClass="org.eclipse.core.resources.IProject"                                                                                               
+            adaptable="true"                                                                                                                                
+            id="org.nuxeo.ide.pluginProjectToolSet">                                                                                                   
+         <menu                                                                                                                                              
+               label="Nuxeo Tools"                                                                                                            
+               id="org.nuxeo.ide.tools">                                                                                                       
+            <separator                                                                                                                                      
+               name="group0">                                                                                                                               
+            </separator>                                                                                                                                    
+         </menu>                                                                                                                                            
+         <visibility>                                                                                                                                       
+                <and>                                                                                                                                        
+            <objectState                                                                                                                                    
+                    name="projectNature"                                                                                                                    
+                    value="org.nuxeo.ide.webengine.WebEngineNature"/>    
+                <objectState                                                                                                                                
+                        name="open"                                                                                                                         
+                        value="true"/>                                                                                                                     
+            </and>                                                                                                                                           
+         </visibility>                                                                                                                                      
+                                                                                                                                                            
+         <action                                                                                                                                            
+            label="Remove WebEngine Nature"                                                                                                                       
+            class="org.nuxeo.ide.webengine.RemoveWebEngineNature"                                                                         
+            menubarPath="org.nuxeo.ide.tools/group0"                                                                                           
+            enablesFor="+"                                                                                                                                  
+            id="org.nuxeo.ide.tools.removeWebEngineNature">                                                                                                 
+        </action>                                                                                                                                           
+      </objectContribution> 
+      </extension>
+      
+    <extension                                                                                                                                             
+         point="org.eclipse.ui.views">        
+         	<category                                                                                                                                             
+            name="Nuxeo Views"                                                                                                                     
+            id="org.nuxeo.ide">                                                                                                                        
+      </category> 
+    <view                                                                                                                                                 
+            name="WebEngine Server"                                                                                                                    
+            icon="icons/nx.gif"                                                                                                   
+            category="org.nuxeo.ide"                                                                                                                       
+            class="org.nuxeo.ide.webengine.server.ServerView"                                                                                      
+            id="org.nuxeo.ide.webengine.server.ServerView">                                                                                                       
+      </view>    
+      </extension>
+ 
+ <extension
+	point="org.eclipse.ui.commands">
+         	<category                                                                                                                                             
+            name="Nuxeo Commands"                                                                                                                     
+            id="org.nuxeo.ide">                                                                                                                        
+      </category> 
+      <command
+            categoryId="org.nuxeo.ide"
+            id="org.nuxeo.ide.webengine.startServer"
+            description="Start a Nuxeo WebEngine Server"
+            name="Start Server">
+      </command>
+      <command
+            categoryId="org.nuxeo.ide"
+            id="org.nuxeo.ide.webengine.debugServer"
+            description="Debug a Nuxeo WebEngine Server"
+            name="Debug Server">
+      </command>
+       <command
+            categoryId="org.nuxeo.ide"
+            id="org.nuxeo.ide.webengine.stopServer"
+            description="Stop a Nuxeo WebEngine Server"
+            name="Stop Server">
+      </command>
+            <command
+            categoryId="org.nuxeo.ide"
+            id="org.nuxeo.ide.webengine.refreshServer"
+            description="Refresh a Nuxeo WebEngine Server"
+            name="Refresh Server">
+      </command>
+       <command
+            categoryId="org.nuxeo.ide"
+            id="org.nuxeo.ide.webengine.configureServer"
+            description="Configure a Nuxeo WebEngine Server"
+            name="Server Settings">
+      </command>
+ </extension>
+ 
+    <extension point="org.eclipse.ui.handlers">
+ 	<handler commandId="org.nuxeo.ide.webengine.debugServer"
+  class="org.nuxeo.ide.webengine.server.DebugCommand">
+  <!--activeWhen>
+
+  </activeWhen-->
+ </handler>
+ 	<handler commandId="org.nuxeo.ide.webengine.startServer"
+  class="org.nuxeo.ide.webengine.server.StartCommand">
+  <!--activeWhen>
+
+  </activeWhen-->
+ </handler>
+ 	<handler commandId="org.nuxeo.ide.webengine.stopServer"
+  class="org.nuxeo.ide.webengine.server.StopCommand">
+  <!--activeWhen>
+
+  </activeWhen-->
+ </handler>
+ 	<handler commandId="org.nuxeo.ide.webengine.refreshServer"
+  class="org.nuxeo.ide.webengine.server.RefreshCommand">
+  <!--activeWhen>
+
+  </activeWhen-->
+ </handler>
+ 
+  	<handler commandId="org.nuxeo.ide.webengine.configureServer"
+  class="org.nuxeo.ide.webengine.server.SettingsCommand">
+  <!--activeWhen>
+
+  </activeWhen-->
+ </handler>
+ 
+   </extension>        
+      
+   <extension
+         point="org.eclipse.ui.menus">
+     <menuContribution
+            locationURI="toolbar:org.nuxeo.ide.webengine.server.ServerView?after=additions">
+         <command
+         		icon="icons/debug.gif"
+               commandId="org.nuxeo.ide.webengine.debugServer"
+               label="Debug"
+               tooltip="Debug">
+         </command>
+      </menuContribution>    
+      <menuContribution      
+            locationURI="toolbar:org.nuxeo.ide.webengine.server.ServerView?after=additions">
+         <command
+               commandId="org.nuxeo.ide.webengine.startServer"
+               icon="icons/start.gif"
+               label="Start"
+               tooltip="Start">
+         </command>
+      </menuContribution>
+         <menuContribution
+            locationURI="toolbar:org.nuxeo.ide.webengine.server.ServerView?after=additions">
+         <command
+               commandId="org.nuxeo.ide.webengine.stopServer"
+               icon="icons/stop.gif"
+               label="Stop"
+               tooltip="Stop">
+         </command>
+      </menuContribution>
+            <menuContribution
+            locationURI="toolbar:org.nuxeo.ide.webengine.server.ServerView?after=additions">
+         <command
+         		icon="icons/refresh.gif"
+               commandId="org.nuxeo.ide.webengine.refreshServer"
+               label="Refresh"
+               tooltip="Refresh">
+         </command>
+      </menuContribution>
+      <menuContribution
+            locationURI="toolbar:org.nuxeo.ide.webengine.server.ServerView?after=additions">
+         <command
+         		icon="icons/connect.gif"
+               commandId="org.nuxeo.ide.webengine.configureServer"
+               label="Settings"
+               tooltip="Settings">
+         </command>
+      </menuContribution>
+   </extension>
+   
+
+</plugin>
