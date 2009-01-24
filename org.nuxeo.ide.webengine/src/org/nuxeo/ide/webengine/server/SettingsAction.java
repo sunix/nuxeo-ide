@@ -16,24 +16,30 @@
  */
 package org.nuxeo.ide.webengine.server;
 
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.ui.handlers.HandlerUtil;
+import org.eclipse.jface.action.Action;
+import org.nuxeo.ide.webengine.Nuxeo;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  *
  */
-public class StopCommand extends AbstractHandler {
+public class SettingsAction extends Action {
 
-    /* (non-Javadoc)
-     * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-     */
-    public Object execute(ExecutionEvent event) throws ExecutionException {
-        System.out.println("event: "+event);
-        HandlerUtil.getCurrentSelection(event);
-        return null;
+    protected ServerView view;
+    
+    public SettingsAction(ServerView view) {
+        setId("org.nuxeo.ide.webengine.server.settings");
+        this.view = view;
+        setText("Configuration");
+        setToolTipText("Server Configuration");
+        setImageDescriptor(Nuxeo.getImageDescriptor("/icons/settings.gif"));
     }
+    
+    @Override
+    public void run() {
+        SettingsDialog dlg = new SettingsDialog(view);
+        dlg.open();
+    }
+
 
 }

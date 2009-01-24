@@ -26,11 +26,16 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchesListener2;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IContributionItem;
+import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
@@ -53,6 +58,9 @@ public class ServerView extends ViewPart implements ILaunchesListener2 {
     }
 
 
+    public Configuration getConfiguration() {
+        return config;
+    }
 
     public void dispose() {
         super.dispose();
@@ -88,6 +96,16 @@ public class ServerView extends ViewPart implements ILaunchesListener2 {
     
     @Override
     public void createPartControl(Composite parent) {
+        IToolBarManager tbar = getViewSite().getActionBars().getToolBarManager();
+        tbar.add(new DebugAction(this));
+        tbar.add(new RunAction(this));
+        tbar.add(new TerminateAction(this));
+        tbar.add(new Separator());
+        tbar.add(new RefreshAction(this));
+        tbar.add(new SettingsAction(this));        
+        
+        //tbar.u
+        
         tv = CheckboxTableViewer.newCheckList(parent, SWT.BORDER);
         PluginProvider provider = new PluginProvider();
         tv.setContentProvider(provider);
@@ -122,36 +140,39 @@ public class ServerView extends ViewPart implements ILaunchesListener2 {
         Configuration.store(memento);
     }
     
+    public void updateActions() {
+        Display display = Display.getCurrent();
+        if (display == null) {
+            Display.getDefault().asyncExec(new Runnable() {
+                public void run() {
+                    safeUpdateActions();
+                } 
+            });
+        } else {
+            safeUpdateActions();
+        }
+    }
+    
+    public void safeUpdateActions() {
+        IToolBarManager tbar = getViewSite().getActionBars().getToolBarManager();
+        for (IContributionItem item :  tbar.getItems()) {
+            item.update(IAction.ENABLED);
+        }        
+    }
     
     
     public void launchesAdded(ILaunch[] launches) {
         for (ILaunch launch : launches) {
             if (launch.getLaunchConfiguration().getName().indexOf("WebEngine") > -1) {
                 this.launch = launch;
-                System.out.println("added");
                 if (!this.launch.isTerminated()) {
-                    System.out.println("staaaaaart");    
+                    updateActions();
                 }
             }
         }
     }
     
-    public void launchesChanged(ILaunch[] launches) {
-        for (ILaunch launch : launches) {
-            if (this.launch == launch) {
-                System.out.println("changed");
-            }
-        }
-    }
     
-    public void launchesRemoved(ILaunch[] launches) {
-        for (ILaunch launch : launches) {
-            if (this.launch == launch) {
-                this.launch = null;
-                System.out.println("removed");
-            }
-        }
-    }
 
     /* (non-Javadoc)
      * @see org.eclipse.debug.core.ILaunchesListener2#launchesTerminated(org.eclipse.debug.core.ILaunch[])
@@ -160,10 +181,17 @@ public class ServerView extends ViewPart implements ILaunchesListener2 {
         for (ILaunch launch : launches) {
             if (this.launch == launch) {
                 this.launch = null;
-                System.out.println("terminated");
+                updateActions();
             }
         }        
     }
     
+    public void launchesRemoved(ILaunch[] launches) {
+        // do nothing
+    }
+
+    public void launchesChanged(ILaunch[] launches) {
+        // do nothing
+    }
 
 }

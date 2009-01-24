@@ -23,7 +23,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -42,12 +41,10 @@ public class SettingsDialog extends TitleAreaDialog {
 
     protected ServerView view;
     protected Text text;
-    protected ImageDescriptor img;
     
-    public SettingsDialog(ServerView view, ImageDescriptor img) {
+    public SettingsDialog(ServerView view) {
         super (Display.getCurrent().getActiveShell());
         this.view = view;
-        this.img = img;
     }
     
     /* (non-Javadoc)
@@ -66,9 +63,7 @@ public class SettingsDialog extends TitleAreaDialog {
         
         setTitle("Server Configuration");
         setMessage("Specify an already installed WebEngine");
-        if (img != null) {
-            setTitleImage(img.createImage());
-        }
+        setTitleImage(Nuxeo.getImage("icons/defcon_wiz.png"));
         
         Composite panel = new Composite(control, SWT.NONE);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).applyTo(

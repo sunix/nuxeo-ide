@@ -16,27 +16,29 @@
  */
 package org.nuxeo.ide.webengine.server;
 
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.handlers.HandlerUtil;
+import org.eclipse.jface.action.Action;
+import org.nuxeo.ide.webengine.Nuxeo;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  *
  */
-public class SettingsCommand extends AbstractHandler {
+public class RefreshAction extends Action {
 
-
-    public Object execute(ExecutionEvent event) throws ExecutionException {
-        IWorkbenchPart part = HandlerUtil.getActivePart(event);
-        if (part instanceof ServerView) {
-            ServerView view = (ServerView)part;
-            SettingsDialog dlg = new SettingsDialog(view, null);
-            dlg.open();
-        }
-        return null;
+    protected ServerView view;
+    
+    public RefreshAction(ServerView view) {
+        setId("org.nuxeo.ide.webengine.server.refresh");
+        this.view = view;
+        setText("Refresh");
+        setToolTipText("Refresh");
+        setImageDescriptor(Nuxeo.getImageDescriptor("/icons/refresh.gif"));
     }
+    
+    @Override
+    public void run() {
+        view.refresh();
+    }
+
 
 }
