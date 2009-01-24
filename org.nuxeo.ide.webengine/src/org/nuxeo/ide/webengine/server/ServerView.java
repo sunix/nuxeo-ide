@@ -23,6 +23,9 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.ILaunch;
+import org.eclipse.debug.core.ILaunchesListener2;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
@@ -38,14 +41,29 @@ import org.nuxeo.ide.webengine.Nuxeo;
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  *
  */
-public class ServerView extends ViewPart {
+public class ServerView extends ViewPart implements ILaunchesListener2 {
 
     protected CheckboxTableViewer tv;
     protected Configuration config = null; // the active configuration
+
+    protected ILaunch launch;
     
+    public ILaunch getCurrentLaunch() {
+        return launch;
+    }
+
+
+
+    public void dispose() {
+        super.dispose();
+        DebugPlugin.getDefault().getLaunchManager().removeLaunchListener(this);
+    }
+
     @Override
     public void init(IViewSite site, IMemento memento) throws PartInitException {
         super.init(site, memento);
+        
+        DebugPlugin.getDefault().getLaunchManager().addLaunchListener(this);
         
         if (memento != null) {
             Configuration.init(memento);
@@ -104,4 +122,48 @@ public class ServerView extends ViewPart {
         Configuration.store(memento);
     }
     
+    
+    
+    public void launchesAdded(ILaunch[] launches) {
+        for (ILaunch launch : launches) {
+            if (launch.getLaunchConfiguration().getName().indexOf("WebEngine") > -1) {
+                this.launch = launch;
+                System.out.println("added");
+                if (!this.launch.isTerminated()) {
+                    System.out.println("staaaaaart");    
+                }
+            }
+        }
+    }
+    
+    public void launchesChanged(ILaunch[] launches) {
+        for (ILaunch launch : launches) {
+            if (this.launch == launch) {
+                System.out.println("changed");
+            }
+        }
+    }
+    
+    public void launchesRemoved(ILaunch[] launches) {
+        for (ILaunch launch : launches) {
+            if (this.launch == launch) {
+                this.launch = null;
+                System.out.println("removed");
+            }
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.debug.core.ILaunchesListener2#launchesTerminated(org.eclipse.debug.core.ILaunch[])
+     */
+    public void launchesTerminated(ILaunch[] launches) {
+        for (ILaunch launch : launches) {
+            if (this.launch == launch) {
+                this.launch = null;
+                System.out.println("terminated");
+            }
+        }        
+    }
+    
+
 }

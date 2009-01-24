@@ -27,11 +27,14 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationType;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
+import org.eclipse.debug.core.ILaunchListener;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.DebugUITools;
+import org.eclipse.debug.ui.ILaunchGroup;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
@@ -58,6 +61,8 @@ public class Launcher implements IJavaLaunchConfigurationConstants {
         }
         ILaunchConfiguration configuration = createLaunchConfiguration(config);
         DebugUITools.launch(configuration, ILaunchManager.RUN_MODE);
+        ILaunchGroup gr = DebugUITools.getLaunchGroup(configuration, ILaunchManager.RUN_MODE);
+        System.out.println(gr.getCategory());
     }
 
     public static void debug(Configuration config) throws CoreException {
@@ -186,9 +191,9 @@ public class Launcher implements IJavaLaunchConfigurationConstants {
         workingCopy.setAttribute(ATTR_CLASSPATH, classpath);
         workingCopy.setAttribute(ATTR_DEFAULT_CLASSPATH,  false);
 
-        System.out.println("VMARGS: "+vmargs);
-        System.out.println("ARGS:  "+args);
-        System.out.println("CLASSPATH: "+classpath);
+//        System.out.println("VMARGS: "+vmargs);
+//        System.out.println("ARGS:  "+args);
+//        System.out.println("CLASSPATH: "+classpath);
         
         //workingCopy.setAttribute(IDebugUIConstants.ATTR_LAUNCH_IN_BACKGROUND, true);
         // create the launch configuration
