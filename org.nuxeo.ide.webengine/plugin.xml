@@ -126,6 +126,32 @@
             id="org.nuxeo.ide.webengine.server.ServerView">                                                                                                       
       </view>    
       </extension>
+    <extension
+          point="org.eclipse.debug.core.launchConfigurationTypes">
+       <launchConfigurationType
+             delegate="org.nuxeo.ide.webengine.WebengineLaunchConfigurationDelegate"
+             id="org.nuxeo.ide.webengine.launchConfigurationType"
+             modes="run,debug"
+             name="Webengine Application"
+             sourcePathComputerId="org.eclipse.jdt.launching.sourceLookup.javaSourcePathComputer">
+       </launchConfigurationType>
+    </extension>
+    <extension
+          point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+       <launchConfigurationTypeImage
+             configTypeID="org.nuxeo.ide.webengine.launchConfigurationType"
+             icon="icons/nx.gif"
+             id="org.nuxeo.ide.webengine.launchConfigurationTypeImage1">
+       </launchConfigurationTypeImage>
+    </extension>
+    <extension
+          point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+       <launchConfigurationTabGroup
+             class="org.nuxeo.ide.webengine.LaunchConfigurationTabGroup"
+             id="org.nuxeo.ide.webengine.launchConfigurationTabGroup"
+             type="org.nuxeo.ide.webengine.launchConfigurationType">
+       </launchConfigurationTabGroup>
+    </extension>
 
 
 
