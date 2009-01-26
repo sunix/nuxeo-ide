@@ -81,7 +81,7 @@ public class AnnotationBuilder extends IncrementalProjectBuilder {
         }
         if (mod != modcount) {
             try {
-                System.out.println("################ Writing annotations");
+                //System.out.println("################ Writing annotations");
                 writeState(monitor);
             } catch (Exception e) {
                 e.printStackTrace(); //TODO
@@ -207,7 +207,7 @@ public class AnnotationBuilder extends IncrementalProjectBuilder {
         for (AnnotatedResource res : resources.values().toArray(new AnnotatedResource[resources.size()])) {
             buf.append(res.toString()).append("\r\n");
         }
-        writeOutputResource(getJavaProject(), "OSGI-INF/annotations", buf.toString().getBytes(), monitor); 
+        writeOutputResource(getJavaProject(), "META-INF/web-types", buf.toString().getBytes(), monitor); 
     }
     
     public void writeOutputResource(IJavaProject prj, String path, byte[] bytes, IProgressMonitor monitor) throws CoreException {

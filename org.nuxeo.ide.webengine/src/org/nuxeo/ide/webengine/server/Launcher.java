@@ -20,7 +20,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -33,11 +35,13 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.debug.ui.ILaunchGroup;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
+import org.eclipse.ui.actions.WorkspaceAction;
 import org.nuxeo.ide.webengine.Nuxeo;
 
 /**
@@ -72,7 +76,7 @@ public class Launcher implements IJavaLaunchConfigurationConstants {
     }
 
     
-    public static String args(Configuration config) {
+    public static String args(Configuration config) throws CoreException {
         StringBuilder buf = new StringBuilder();
         // compute osgi bundle name
         String osgi = "bundles/nuxeo-runtime-osgi-1.5-SNAPSHOT.jar";
@@ -84,10 +88,12 @@ public class Launcher implements IJavaLaunchConfigurationConstants {
             }
         }
         buf.append(osgi).append(PROGRAM_ARGS).append(" ");
+        IPath wspath = ResourcesPlugin.getWorkspace().getRoot().getLocation();
         if (!config.projects.isEmpty()) {            
             buf.append("-post-bundles ");
             for (IProject prj : config.projects) {
-                IPath path = prj.getLocation();
+                IJavaProject jprj = JavaCore.create(prj);
+                IPath path = wspath.append(jprj.getOutputLocation());
                 String ospath = path.toOSString();
                 buf.append(ospath).append(":");
             }
