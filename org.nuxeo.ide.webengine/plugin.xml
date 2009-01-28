@@ -24,27 +24,6 @@
       </builder>
    </extension>
 
-   <extension                                                                                                                                               
-         point="org.eclipse.ui.newWizards">                                                                                                                 
-      <category                                                                                                                                             
-            name="Nuxeo Development"                                                                                                                       
-            id="org.nuxeo.ide">                                                                                                                       
-      </category>                                                                                                                                           
-      <wizard                                                                                                                                               
-            name="WebEngine Project"                                                                                                                  
-            icon="icons/newprj_wiz.gif"                                                                                                       
-            category="org.nuxeo.ide"                                                                                                                  
-            class="org.nuxeo.ide.webengine.ProjectWizard"                                                                       
-            project="true"                                                                                                                                  
-            finalPerspective="org.eclipse.jdt.ui.JavaPerspective"                                                              
-            id="org.eclipse.pde.ui.NewProjectWizard">                                                                                                       
-         <description>                                                                                                                                      
-            Create a WebEngine Project                                                                                                         
-         </description>                                                                                                                                     
-      </wizard>    
-    </extension>
-    
-    
     
        <extension                                                                                                                                               
          point="org.eclipse.ui.popupMenus"> 
@@ -127,6 +106,27 @@
       </view>    
       </extension>
       
+
+<!-- disabled for now since it is not finished
+   <extension                                                                                                                                               
+         point="org.eclipse.ui.newWizards">                                                                                                                 
+      <category                                                                                                                                             
+            name="Nuxeo Development"                                                                                                                       
+            id="org.nuxeo.ide">                                                                                                                       
+      </category>                                                                                                                                           
+      <wizard                                                                                                                                               
+            name="WebEngine Project"                                                                                                                  
+            icon="icons/newprj_wiz.gif"                                                                                                       
+            category="org.nuxeo.ide"                                                                                                                  
+            class="org.nuxeo.ide.webengine.ProjectWizard"                                                                       
+            project="true"                                                                                                                                  
+            finalPerspective="org.eclipse.jdt.ui.JavaPerspective"                                                              
+            id="org.eclipse.pde.ui.NewProjectWizard">                                                                                                       
+         <description>                                                                                                                                      
+            Create a WebEngine Project                                                                                                         
+         </description>                                                                                                                                     
+      </wizard>    
+    </extension>    
       
     <extension
           point="org.eclipse.debug.core.launchConfigurationTypes">
@@ -154,7 +154,7 @@
              type="org.nuxeo.ide.webengine.launchConfigurationType">
        </launchConfigurationTabGroup>
     </extension>
-
+    -->
 
 
 </plugin>
