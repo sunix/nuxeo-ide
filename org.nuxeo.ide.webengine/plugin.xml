@@ -126,10 +126,12 @@
             id="org.nuxeo.ide.webengine.server.ServerView">                                                                                                       
       </view>    
       </extension>
+      
+      
     <extension
           point="org.eclipse.debug.core.launchConfigurationTypes">
        <launchConfigurationType
-             delegate="org.nuxeo.ide.webengine.WebengineLaunchConfigurationDelegate"
+             delegate="org.nuxeo.ide.webengine.launch.WebengineLaunchConfigurationDelegate"
              id="org.nuxeo.ide.webengine.launchConfigurationType"
              modes="run,debug"
              name="Webengine Application"
@@ -147,7 +149,7 @@
     <extension
           point="org.eclipse.debug.ui.launchConfigurationTabGroups">
        <launchConfigurationTabGroup
-             class="org.nuxeo.ide.webengine.LaunchConfigurationTabGroup"
+             class="org.nuxeo.ide.webengine.launch.LaunchConfigurationTabGroup"
              id="org.nuxeo.ide.webengine.launchConfigurationTabGroup"
              type="org.nuxeo.ide.webengine.launchConfigurationType">
        </launchConfigurationTabGroup>

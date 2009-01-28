@@ -17,7 +17,12 @@
 package org.nuxeo.ide.webengine;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -43,19 +48,27 @@ public class AddWebEngineNature implements IObjectActionDelegate {
      */
     public void run(IAction action) {
         if (selection instanceof IStructuredSelection) {
-            try {
-                Object[] objs = ((IStructuredSelection)selection).toArray();
-                for (Object obj : objs) {
-                    if (obj instanceof IProject) {
-                        IProject project = (IProject)obj;
-                        if (((IProject) obj).getNature(WebEngineNature.ID) == null) {
-                            WebEngineNature.install(project);
+            Job job = new Job("My First Job") {
+                protected IStatus run(IProgressMonitor monitor) {
+                    try {
+                        Object[] objs = ((IStructuredSelection)selection).toArray();
+                        for (Object obj : objs) {
+                            if (obj instanceof IProject) {
+                                IProject project = (IProject)obj;
+                                if (((IProject) obj).getNature(WebEngineNature.ID) == null) {
+                                    WebEngineNature.install(project);
+                                    project.build(IncrementalProjectBuilder.FULL_BUILD, WebEngineNature.BUILDER_ID, null, monitor);
+                                }
+                            }
                         }
+                    } catch (CoreException e) {
+                        return new Status(IStatus.ERROR, Nuxeo.PLUGIN_ID, "Failed to add WebEngine nature", e);
                     }
+                    return Status.OK_STATUS;
                 }
-            } catch (CoreException e) {
-                e.printStackTrace();
-            }
+            };
+            job.setPriority(Job.SHORT);
+            job.schedule(); // start as soon as possible
         }
     }
 
@@ -66,4 +79,5 @@ public class AddWebEngineNature implements IObjectActionDelegate {
         this.selection = selection;
     }
 
+    
 }

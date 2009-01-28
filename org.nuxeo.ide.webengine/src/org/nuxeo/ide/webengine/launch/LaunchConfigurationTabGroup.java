@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.nuxeo.ide.webengine;
+package org.nuxeo.ide.webengine.launch;
 
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTabGroup;
 import org.eclipse.debug.ui.CommonTab;
