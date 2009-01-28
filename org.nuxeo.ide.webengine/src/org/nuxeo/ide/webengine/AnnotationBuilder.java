@@ -70,6 +70,7 @@ public class AnnotationBuilder extends IncrementalProjectBuilder {
     @Override
     protected IProject[] build(int kind, Map args, IProgressMonitor monitor)
             throws CoreException {
+        //double s = System.currentTimeMillis();
         long mod = modcount;
         if (kind == FULL_BUILD) {
             processProject(getProject());
@@ -87,6 +88,7 @@ public class AnnotationBuilder extends IncrementalProjectBuilder {
                 e.printStackTrace(); //TODO
             }
         }
+        //System.out.println(">>>>>>>>>"+((System.currentTimeMillis()-s)/1000));
         return null;
     }
     

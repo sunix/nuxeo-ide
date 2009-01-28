@@ -112,7 +112,7 @@ public class ServerView extends ViewPart implements ILaunchesListener2 {
         tv.setLabelProvider(provider);
 
         tv.addCheckStateListener(new ICheckStateListener() {
-            public void checkStateChanged(CheckStateChangedEvent event) {   
+            public void checkStateChanged(CheckStateChangedEvent event) {                
                 config.projects = new ArrayList<IProject>();
                 for (Object o : tv.getCheckedElements()) {
                     config.projects.add((IProject)o);
