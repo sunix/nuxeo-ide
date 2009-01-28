@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.nuxeo.ide.webengine.feature"
+      label="Nuxeo IDE Webengine Feature"
+      version="1.0.0.qualifier"
+      provider-name="Nuxeo">
+
+   <description>
+      Provide eclipse tools for helping developping Nuxeo Webengine Components.
+   </description>
+
+   <copyright url="http://www.gnu.org/licenses/lgpl.html">
+      (C) Copyright 2006-2007 Nuxeo SAS (http://nuxeo.com/) and contributors.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the GNU Lesser General
+Public License (LGPL) version 2.1 which accompanies this distribution,
+and is
+available at http://www.gnu.org/licenses/lgpl.html
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+   </copyright>
+
+   <url>
+      <update label="Nuxeo ide update site" url="http://download.nuxeo.org/nuxeo-rcp/updates/snapshots/"/>
+   </url>
+
+   <plugin
+         id="org.nuxeo.ide.webengine"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
