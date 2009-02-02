@@ -17,6 +17,7 @@
 package org.nuxeo.ide.webengine;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -48,7 +49,8 @@ import org.eclipse.jdt.core.JavaCore;
  */
 public class AnnotationBuilder extends IncrementalProjectBuilder {
 
-    protected long modcount;
+    protected long modcount = 0;
+    protected long classesChanged = 0;
     protected ConcurrentMap<String, AnnotatedResource> resources;
     
 
@@ -71,6 +73,7 @@ public class AnnotationBuilder extends IncrementalProjectBuilder {
     protected IProject[] build(int kind, Map args, IProgressMonitor monitor)
             throws CoreException {
         //double s = System.currentTimeMillis();
+        long cnt = classesChanged;
         long mod = modcount;
         if (kind == FULL_BUILD) {
             processProject(getProject());
@@ -87,6 +90,10 @@ public class AnnotationBuilder extends IncrementalProjectBuilder {
             } catch (Exception e) {
                 e.printStackTrace(); //TODO
             }
+        }
+        // update META-INF/classes.reload file
+        if (cnt != classesChanged) {
+            touchOutputResource(getJavaProject(), "META-INF/classes.reload", monitor);
         }
         //System.out.println(">>>>>>>>>"+((System.currentTimeMillis()-s)/1000));
         return null;
@@ -152,6 +159,7 @@ public class AnnotationBuilder extends IncrementalProjectBuilder {
     
 
     protected void removeResource(IFile file) throws CoreException {
+        classesChanged++; 
         resources.remove(file.getFullPath().toString());
         modcount++;
     }
@@ -180,6 +188,7 @@ public class AnnotationBuilder extends IncrementalProjectBuilder {
     }
     
     public void processJavaFile(IFile file) throws CoreException {
+        classesChanged++; 
         IType type = getType(file);
         // TODO: better to check annotation fqn
         AnnotatedResource res = getAnnotatedResource(type);
@@ -238,6 +247,18 @@ public class AnnotationBuilder extends IncrementalProjectBuilder {
             file.setContents(in, true, false, monitor);
         }
     }
+    
+    public void touchOutputResource(IJavaProject prj, String path, IProgressMonitor monitor) throws CoreException {
+        IPath p = prj.getOutputLocation();
+        p = p.append(path);
+        IFile file = prj.getResource().getWorkspace().getRoot().getFile(p);
+        if (file.exists()) {
+            file.getLocation().toFile().setLastModified(System.currentTimeMillis());
+        } else {
+            file.create(new ByteArrayInputStream(new byte[0]), IResource.FORCE, monitor);
+        }
+    }
+    
 
     public ICompilationUnit getCompilationUnit(IResource resource) {
         if (resource.getType() == IResource.FILE) {

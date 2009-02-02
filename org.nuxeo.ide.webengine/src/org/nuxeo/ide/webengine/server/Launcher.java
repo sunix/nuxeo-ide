@@ -48,7 +48,7 @@ import org.nuxeo.ide.webengine.Nuxeo;
 public class Launcher implements IJavaLaunchConfigurationConstants {
 
     public static String MAIN = "org.nuxeo.runtime.launcher.Main";
-    public static String JAVA_OPTS = "-Ddebug=true -Djava.rmi.server.RMIClassLoaderSpi=org.nuxeo.runtime.launcher.NuxeoRMIClassLoader -Dsun.lang.ClassLoader.allowArraySyntax=true";
+    public static String JAVA_OPTS = "-Dorg.nuxeo.dev=ide -Djava.rmi.server.RMIClassLoaderSpi=org.nuxeo.runtime.launcher.NuxeoRMIClassLoader -Dsun.lang.ClassLoader.allowArraySyntax=true";
     public static String JAVA_OPTS_DERBY = "-Dderby.system.home=data/derby";
     public static String PROGRAM_ARGS = "/org.nuxeo.osgi.application.Main bundles/.:lib/.:config -home .";
 
