@@ -94,7 +94,7 @@
     <extension                                                                                                                                             
          point="org.eclipse.ui.views">        
          	<category                                                                                                                                             
-            name="Nuxeo Views"                                                                                                                     
+            name="Nuxeo IDE"                                                                                                                     
             id="org.nuxeo.ide">                                                                                                                        
       </category> 
     <view                                                                                                                                                 
@@ -105,6 +105,27 @@
             id="org.nuxeo.ide.webengine.server.ServerView">                                                                                                       
       </view>    
       </extension>
+    <extension
+          point="org.eclipse.ui.perspectiveExtensions">
+       <perspectiveExtension
+             targetID="org.eclipse.debug.ui.DebugPerspective">
+          <view
+                id="org.nuxeo.ide.webengine.server.ServerView"
+                minimized="false"
+                relationship="stack"
+                relative="org.eclipse.debug.ui.DebugView">
+          </view>
+       </perspectiveExtension>
+       <perspectiveExtension
+             targetID="org.eclipse.jdt.ui.JavaPerspective">
+          <view
+                id="org.nuxeo.ide.webengine.server.ServerView"
+                minimized="false"
+                relationship="stack"
+                relative="org.eclipse.ui.views.ProblemView">
+          </view>
+       </perspectiveExtension>
+    </extension>
       
 
 <!-- disabled for now since it is not finished
