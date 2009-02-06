@@ -24,9 +24,13 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
@@ -35,20 +39,25 @@ import org.nuxeo.ide.webengine.Nuxeo;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
- *
+ * 
  */
 public class SettingsDialog extends TitleAreaDialog {
 
     protected ServerView view;
+
     protected Text text;
-    
+
     public SettingsDialog(ServerView view) {
-        super (Display.getCurrent().getActiveShell());
+        super(Display.getCurrent().getActiveShell());
         this.view = view;
     }
-    
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets
+     * .Shell)
      */
     @Override
     protected void configureShell(Shell newShell) {
@@ -56,23 +65,22 @@ public class SettingsDialog extends TitleAreaDialog {
         newShell.setText("Settings");
         setTitle("Server Configuration");
     }
-    
+
     @Override
     protected Control createDialogArea(Composite parent) {
-        Composite control = (Composite)super.createDialogArea(parent);
-        
+        Composite control = (Composite) super.createDialogArea(parent);
+
         setTitle("Server Configuration");
         setMessage("Specify an already installed WebEngine");
         setTitleImage(Nuxeo.getImage("icons/defcon_wiz.png"));
-        
+
         Composite panel = new Composite(control, SWT.NONE);
-        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).applyTo(
-                panel);
-        GridLayout grid =  new GridLayout(2, false);
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).applyTo(panel);
+        GridLayout grid = new GridLayout(3, false);
         grid.marginWidth = 10;
         grid.marginHeight = 10;
         panel.setLayout(grid);
-        
+
         Label label = new Label(panel, SWT.NONE);
         label.setText("Server Home: ");
 
@@ -81,14 +89,33 @@ public class SettingsDialog extends TitleAreaDialog {
             text.setText(view.config.launcher.getParentFile().getAbsolutePath());
         }
 
-        //FileDialog dlg = new FileDialog();
-        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).applyTo(text);        
-        
-        
-        return control;        
+        // FileDialog dlg = new FileDialog();
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true,
+                false).applyTo(text);
+
+        Button browseButton = new Button(panel, SWT.BORDER);
+        browseButton.setText("Browse");
+        final Composite parentDialog = parent;
+        browseButton.addSelectionListener(new SelectionListener() {
+            public void widgetDefaultSelected(SelectionEvent e) {
+                widgetSelected(e);
+            }
+
+            public void widgetSelected(SelectionEvent e) {
+                DirectoryDialog directorydlg = new DirectoryDialog(
+                        parentDialog.getShell());
+
+                String path = directorydlg.open();
+                text.setText(path);
+            }
+        });
+
+        return control;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.dialogs.Dialog#okPressed()
      */
     @Override
@@ -97,18 +124,20 @@ public class SettingsDialog extends TitleAreaDialog {
         File file = new File(path);
         if (file.isDirectory()) {
             for (String name : file.list()) {
-                if (name.endsWith(".jar") && name.startsWith("nuxeo-runtime-launcher")) {
+                if (name.endsWith(".jar")
+                        && name.startsWith("nuxeo-runtime-launcher")) {
                     view.config.launcher = new File(file, name);
                     view.updateActions();
-                    super.okPressed(); 
+                    super.okPressed();
                     return;
                 }
             }
-        }        
-        Status s = new Status(IStatus.ERROR, Nuxeo.PLUGIN_ID, "The specified file is not a valid WebEngine installation directory");
+        }
+        Status s = new Status(IStatus.ERROR, Nuxeo.PLUGIN_ID,
+                "The specified file is not a valid WebEngine installation directory");
         ErrorDialog dialog = new ErrorDialog(getShell(), "Error",
                 "Invalid WebEngine home directory", s, IStatus.ERROR
-                | IStatus.WARNING | IStatus.INFO);
+                        | IStatus.WARNING | IStatus.INFO);
         dialog.open();
     }
 
