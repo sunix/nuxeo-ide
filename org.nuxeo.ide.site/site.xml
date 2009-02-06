@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/org.nuxeo.ide.webengine.feature_1.0.0.200901281632.jar" id="org.nuxeo.ide.webengine.feature" version="1.0.0.200901281632">
+   <description url="http://download.nuxeo.org/nuxeo-ide/updates/snapshots">
+      Nuxeo IDE update site - Snapshots versions
+   </description>
+   <feature url="features/org.nuxeo.ide.webengine.feature_1.0.0.200902061418.jar" id="org.nuxeo.ide.webengine.feature" version="1.0.0.200902061418">
       <category name="org.nuxeo.ide.webengine"/>
    </feature>
    <category-def name="org.nuxeo.ide.webengine" label="Nuxeo IDE Webengine">
