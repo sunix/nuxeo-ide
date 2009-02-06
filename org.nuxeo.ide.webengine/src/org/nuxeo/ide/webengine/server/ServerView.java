@@ -108,6 +108,7 @@ public class ServerView extends ViewPart implements ILaunchesListener2 {
 		tbar.add(new Separator());
 		tbar.add(new RefreshAction(this));
 		tbar.add(new SettingsAction(this));
+		tbar.add(new OpenWebBrowserAction(this));
 
 		// tbar.u
 
