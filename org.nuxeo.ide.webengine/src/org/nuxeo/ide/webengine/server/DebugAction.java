@@ -29,7 +29,7 @@ import org.nuxeo.ide.webengine.UI;
 public class DebugAction extends Action {
 
     protected ServerView view;
-    
+
     public DebugAction(ServerView view) {
         setId("org.nuxeo.ide.webengine.server.debug");
         this.view = view;
@@ -37,7 +37,7 @@ public class DebugAction extends Action {
         setToolTipText("Debug");
         setImageDescriptor(Nuxeo.getImageDescriptor("/icons/debug.gif"));
     }
-    
+
     @Override
     public void run() {
         try {

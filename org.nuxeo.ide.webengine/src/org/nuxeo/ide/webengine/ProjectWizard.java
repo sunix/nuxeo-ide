@@ -57,15 +57,12 @@ public class ProjectWizard extends NewElementWizard {
     public ProjectWizard(NewJavaProjectWizardPageOne pageOne, NewJavaProjectWizardPageTwo pageTwo) {
         setDefaultPageImageDescriptor(JavaPluginImages.DESC_WIZBAN_NEWJPRJ);
         setDialogSettings(JavaPlugin.getDefault().getDialogSettings());
-        setWindowTitle("New WebEngine Project"); 
+        setWindowTitle("New WebEngine Project");
 
         fFirstPage= pageOne;
         fSecondPage= pageTwo;
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.wizard.Wizard#addPages()
-     */
     public void addPages() {
         if (fFirstPage == null)
             fFirstPage= new NewJavaProjectWizardPageOne();
@@ -74,20 +71,14 @@ public class ProjectWizard extends NewElementWizard {
         if (fSecondPage == null)
             fSecondPage= new ProjectWizardPage2(fFirstPage);
         addPage(fSecondPage);
-        
-        fFirstPage.init(getSelection(), getActivePart());
-    }       
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jdt.internal.ui.wizards.NewElementWizard#finishPage(org.eclipse.core.runtime.IProgressMonitor)
-     */
+        fFirstPage.init(getSelection(), getActivePart());
+    }
+
     protected void finishPage(IProgressMonitor monitor) throws InterruptedException, CoreException {
         fSecondPage.performFinish(monitor); // use the full progress monitor
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.wizard.IWizard#performFinish()
-     */
     public boolean performFinish() {
         boolean res= super.performFinish();
         if (res) {
@@ -99,7 +90,7 @@ public class ProjectWizard extends NewElementWizard {
             }
 
             BasicNewProjectResourceWizard.updatePerspective(fConfigElement);
-            selectAndReveal(fSecondPage.getJavaProject().getProject());             
+            selectAndReveal(fSecondPage.getJavaProject().getProject());
 
             Display.getDefault().asyncExec(new Runnable() {
                 public void run() {
@@ -112,7 +103,7 @@ public class ProjectWizard extends NewElementWizard {
         }
         return res;
     }
-    
+
     private IWorkbenchPart getActivePart() {
         IWorkbenchWindow activeWindow= getWorkbench().getActiveWorkbenchWindow();
         if (activeWindow != null) {
@@ -125,10 +116,10 @@ public class ProjectWizard extends NewElementWizard {
     }
 
     protected void handleFinishException(Shell shell, InvocationTargetException e) {
-        String title= NewWizardMessages.JavaProjectWizard_op_error_title; 
-        String message= NewWizardMessages.JavaProjectWizard_op_error_create_message;             
+        String title= NewWizardMessages.JavaProjectWizard_op_error_title;
+        String message= NewWizardMessages.JavaProjectWizard_op_error_create_message;
         ExceptionHandler.handle(e, getShell(), title, message);
-    }   
+    }
 
     /*
      * Stores the configuration element for the wizard.  The config element will be used
@@ -138,17 +129,11 @@ public class ProjectWizard extends NewElementWizard {
         fConfigElement= cfig;
     }
 
-    /* (non-Javadoc)
-     * @see IWizard#performCancel()
-     */
     public boolean performCancel() {
         fSecondPage.performCancel();
         return super.performCancel();
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jdt.internal.ui.wizards.NewElementWizard#getCreatedElement()
-     */
     public IJavaElement getCreatedElement() {
         return fSecondPage.getJavaProject();
     }

@@ -26,7 +26,7 @@ import org.nuxeo.ide.webengine.Nuxeo;
 public class RefreshAction extends Action {
 
     protected ServerView view;
-    
+
     public RefreshAction(ServerView view) {
         setId("org.nuxeo.ide.webengine.server.refresh");
         this.view = view;
@@ -34,7 +34,7 @@ public class RefreshAction extends Action {
         setToolTipText("Refresh");
         setImageDescriptor(Nuxeo.getImageDescriptor("/icons/refresh.gif"));
     }
-    
+
     @Override
     public void run() {
         view.refresh();

@@ -24,7 +24,7 @@ import org.eclipse.jdt.core.IType;
  */
 public abstract class AnnotatedResource {
     public String className;
-    
+
     public AnnotatedResource(IType type) {
         this.className = type.getFullyQualifiedName();
     }
@@ -38,4 +38,5 @@ public abstract class AnnotatedResource {
         }
         return false;
     }
+
 }

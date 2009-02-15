@@ -36,23 +36,17 @@ import org.osgi.framework.BundleContext;
 public class Nuxeo implements BundleActivator{
 
     public final static String PLUGIN_ID = "org.nuxeo.ide.webengine";
-    
+
     protected static BundleContext ctx;
-    
-    /* (non-Javadoc)
-     * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
-     */
+
     public void start(BundleContext context) throws Exception {
         ctx = context;
     }
-    
-    /* (non-Javadoc)
-     * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
-     */
+
     public void stop(BundleContext context) throws Exception {
         ctx = null;
     }
-    
+
     public static  Image getImage(String path) {
         return getImageDescriptor(path).createImage();
     }
@@ -60,7 +54,7 @@ public class Nuxeo implements BundleActivator{
     public static ImageDescriptor getImageDescriptor(String path) {
         URL url = ctx.getBundle().getEntry(path);
         if (url != null) {
-            return ImageDescriptor.createFromURL(url); 
+            return ImageDescriptor.createFromURL(url);
         }
         return ImageDescriptor.getMissingImageDescriptor();
     }
@@ -68,7 +62,7 @@ public class Nuxeo implements BundleActivator{
     public static BundleContext getContext() {
         return ctx;
     }
-    
+
     public static void log(Throwable e) {
         if (e instanceof InvocationTargetException)
             e = ((InvocationTargetException) e).getTargetException();
@@ -80,12 +74,12 @@ public class Nuxeo implements BundleActivator{
         }
         log(status);
     }
-    
+
     public static void log(IStatus status) {
         if (status != null)
             ResourcesPlugin.getPlugin().getLog().log(status);
     }
-    
+
     public static boolean isWebEngineProject(IProject project) {
         try {
             return project.hasNature(WebEngineNature.ID);// && !WorkspaceModelManager.isBinaryProject(project);

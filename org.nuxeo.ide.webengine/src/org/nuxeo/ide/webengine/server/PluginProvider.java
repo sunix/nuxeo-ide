@@ -36,26 +36,17 @@ import org.nuxeo.ide.webengine.Nuxeo;
 public class PluginProvider implements IStructuredContentProvider, ILabelProvider  {
 
     //protected static ImageDescriptor img = ImageDescriptor.createFromURL(Nuxeo.getContext().getBundle().getEntry("/icons/prj.gif"));
-    
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.IContentProvider#dispose()
-     */
+
     public void dispose() {
         // TODO Auto-generated method stub
 
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
-     */
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
         // TODO Auto-generated method stub
         //UIPlugin.getDefault().getImageRegistry().get(key)
     }
-    
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
-     */
+
     public Object[] getElements(Object inputElement) {
         ArrayList<IProject> prjs = new ArrayList<IProject>();
         IWorkspace ws = ResourcesPlugin.getWorkspace();
@@ -67,43 +58,28 @@ public class PluginProvider implements IStructuredContentProvider, ILabelProvide
         return prjs.toArray(new IProject[prjs.size()]);
     }
 
-   
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
-     */
+
     public String getText(Object element) {
         return ((IResource)element).getName();
     }
-    
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
-     */
+
     public Image getImage(Object element) {
         //return img.createImage();
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
-     */
     public void addListener(ILabelProviderListener listener) {
         // TODO Auto-generated method stub
-        
+
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
-     */
     public boolean isLabelProperty(Object element, String property) {
         // TODO Auto-generated method stub
         return false;
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
-     */
     public void removeListener(ILabelProviderListener listener) {
         // TODO Auto-generated method stub
-        
+
     }
 }

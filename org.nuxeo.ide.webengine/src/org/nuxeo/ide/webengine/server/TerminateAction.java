@@ -29,7 +29,7 @@ import org.nuxeo.ide.webengine.UI;
 public class TerminateAction extends Action {
 
     protected ServerView view;
-    
+
     public TerminateAction(ServerView view) {
         setId("org.nuxeo.ide.webengine.server.terminate");
         this.view = view;
@@ -37,7 +37,7 @@ public class TerminateAction extends Action {
         setToolTipText("Terminate Process");
         setImageDescriptor(Nuxeo.getImageDescriptor("/icons/terminate.gif"));
     }
-    
+
     @Override
     public void run() {
         try {
@@ -53,7 +53,7 @@ public class TerminateAction extends Action {
     @Override
     public boolean isEnabled() {
         ILaunch launch = view.getCurrentLaunch();
-        return launch != null && !launch.isTerminated(); 
+        return launch != null && !launch.isTerminated();
     }
 
 }

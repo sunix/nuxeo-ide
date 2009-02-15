@@ -29,7 +29,7 @@ import org.nuxeo.ide.webengine.Nuxeo;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
- * 
+ *
  */
 public class OpenWebBrowserAction extends Action {
 

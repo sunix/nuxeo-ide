@@ -36,16 +36,10 @@ import org.eclipse.ui.IWorkbenchPart;
 public class AddWebEngineNature implements IObjectActionDelegate {
 
     protected ISelection selection;
-    
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction, org.eclipse.ui.IWorkbenchPart)
-     */
+
     public void setActivePart(IAction action, IWorkbenchPart targetPart) {
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
-     */
     public void run(IAction action) {
         if (selection instanceof IStructuredSelection) {
             Job job = new Job("My First Job") {
@@ -72,12 +66,8 @@ public class AddWebEngineNature implements IObjectActionDelegate {
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
-     */
     public void selectionChanged(IAction action, ISelection selection) {
         this.selection = selection;
     }
 
-    
 }

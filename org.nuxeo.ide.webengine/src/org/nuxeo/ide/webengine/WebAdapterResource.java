@@ -24,11 +24,11 @@ import org.eclipse.jdt.core.IType;
  *
  */
 public class WebAdapterResource extends AnnotatedResource {
-    
+
     public WebAdapterResource(IType type, IAnnotation anno) {
         super (type);
     }
-    
+
     @Override
     public String toString() {
         return className+"|org.nuxeo.ecm.webengine.model.WebAdapter";

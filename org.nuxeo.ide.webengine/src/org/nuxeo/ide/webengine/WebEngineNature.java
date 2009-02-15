@@ -27,23 +27,23 @@ import org.eclipse.core.runtime.CoreException;
 /**
  * This class is instantiated when a new project with thewebngine nature is created from the new project wizard.
  * This nature will add an annotation builder specific for webengine projects.
- * 
+ *
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  *
  */
 public class WebEngineNature implements IProjectNature {
 
     public final static String BUILDER_ID = "org.nuxeo.ide.webengine.AnnotationBuilder";
-    public final static String ID = "org.nuxeo.ide.webengine.WebEngineNature"; 
-    
+    public final static String ID = "org.nuxeo.ide.webengine.WebEngineNature";
+
     protected IProject project;
 
     /**
-     * 
+     *
      */
     public WebEngineNature() {
     }
-    
+
     public IProject getProject() {
         return project;
     }
@@ -53,7 +53,7 @@ public class WebEngineNature implements IProjectNature {
     }
 
     public void configure() throws CoreException {
-        
+
         IProjectDescription desc = project.getDescription();
         ICommand[] commands = desc.getBuildSpec();
         boolean found = false;
@@ -64,7 +64,7 @@ public class WebEngineNature implements IProjectNature {
               break;
            }
         }
-        if (!found) { 
+        if (!found) {
            //add builder to project
            ICommand command = desc.newCommand();
            command.setBuilderName(BUILDER_ID);
@@ -78,7 +78,7 @@ public class WebEngineNature implements IProjectNature {
         }
 
     }
-    
+
     public void deconfigure() throws CoreException {
         IProjectDescription desc = project.getDescription();
         ICommand[] commands = desc.getBuildSpec();
@@ -93,7 +93,7 @@ public class WebEngineNature implements IProjectNature {
             project.setDescription(desc, null);
         }
     }
-    
+
     public static void install(IProject project) {
         try {
             IProjectDescription description = project.getDescription();
@@ -107,7 +107,7 @@ public class WebEngineNature implements IProjectNature {
             // Something went wrong
         }
     }
-    
+
     public static void uninstall(IProject project) {
         try {
             IProjectDescription description = project.getDescription();

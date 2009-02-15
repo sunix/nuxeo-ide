@@ -39,7 +39,7 @@ import org.nuxeo.ide.webengine.Nuxeo;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
- * 
+ *
  */
 public class SettingsDialog extends TitleAreaDialog {
 
@@ -54,7 +54,7 @@ public class SettingsDialog extends TitleAreaDialog {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets
      * .Shell)
@@ -115,7 +115,7 @@ public class SettingsDialog extends TitleAreaDialog {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.dialogs.Dialog#okPressed()
      */
     @Override

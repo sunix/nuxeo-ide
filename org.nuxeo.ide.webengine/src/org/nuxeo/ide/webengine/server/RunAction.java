@@ -29,7 +29,7 @@ import org.nuxeo.ide.webengine.UI;
 public class RunAction extends Action {
 
     protected ServerView view;
-    
+
     public RunAction(ServerView view) {
         setId("org.nuxeo.ide.webengine.server.run");
         this.view = view;
@@ -37,7 +37,7 @@ public class RunAction extends Action {
         setToolTipText("Run");
         setImageDescriptor(Nuxeo.getImageDescriptor("/icons/run.gif"));
     }
-    
+
     @Override
     public void run() {
         try {
@@ -50,7 +50,7 @@ public class RunAction extends Action {
     @Override
     public boolean isEnabled() {
         ILaunch launch = view.getCurrentLaunch();
-        return view.config.isValid() && (launch == null || launch.isTerminated()); 
+        return view.config.isValid() && (launch == null || launch.isTerminated());
     }
 
 }

@@ -26,7 +26,7 @@ import org.nuxeo.ide.webengine.Nuxeo;
 public class SettingsAction extends Action {
 
     protected ServerView view;
-    
+
     public SettingsAction(ServerView view) {
         setId("org.nuxeo.ide.webengine.server.settings");
         this.view = view;
@@ -34,7 +34,7 @@ public class SettingsAction extends Action {
         setToolTipText("Server Configuration");
         setImageDescriptor(Nuxeo.getImageDescriptor("/icons/settings.gif"));
     }
-    
+
     @Override
     public void run() {
         SettingsDialog dlg = new SettingsDialog(view);

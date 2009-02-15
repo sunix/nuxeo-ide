@@ -53,7 +53,7 @@ public class Launcher implements IJavaLaunchConfigurationConstants {
     public static String PROGRAM_ARGS = "/org.nuxeo.osgi.application.Main bundles/.:lib/.:config -home .";
 
 
-    
+
     public static void run(Configuration config) throws CoreException {
         if (!config.isValid()) {
             throw new CoreException(new Status(IStatus.ERROR, Nuxeo.PLUGIN_ID, "Invaid Launch Configuration! No home folder specified."));
@@ -72,7 +72,7 @@ public class Launcher implements IJavaLaunchConfigurationConstants {
         DebugUITools.launch(configuration, ILaunchManager.DEBUG_MODE);
     }
 
-    
+
     public static String args(Configuration config) throws CoreException {
         StringBuilder buf = new StringBuilder();
         // compute osgi bundle name
@@ -85,7 +85,7 @@ public class Launcher implements IJavaLaunchConfigurationConstants {
             }
         }
         buf.append(osgi).append(PROGRAM_ARGS).append(" ");
-        if (!config.projects.isEmpty()) {            
+        if (!config.projects.isEmpty()) {
             buf.append("-post-bundles ");
             for (IProject prj : config.projects) {
                 IPath location = prj.getLocation(); // absolute location on file system
@@ -101,20 +101,20 @@ public class Launcher implements IJavaLaunchConfigurationConstants {
         }
         return buf.toString();
     }
-    
+
     public static String vmargs(String jar) {
         return vmargs(jar, "");
     }
 
     public static String vmargs(String jar, String extra) {
-        return JAVA_OPTS + " " + JAVA_OPTS_DERBY + " " + extra; 
+        return JAVA_OPTS + " " + JAVA_OPTS_DERBY + " " + extra;
     }
-    
+
     public static List<String> createClassPath(java.io.File ... files) throws CoreException {
         ArrayList<String> paths = new ArrayList<String>();
         for (int i=0; i<files.length; i++) {
             IPath path = new Path(files[i].getAbsolutePath());
-            IRuntimeClasspathEntry bootstrapEntry = 
+            IRuntimeClasspathEntry bootstrapEntry =
                 JavaRuntime.newArchiveRuntimeClasspathEntry(path);
              bootstrapEntry.setClasspathProperty(IRuntimeClasspathEntry.USER_CLASSES);
              paths.add(bootstrapEntry.getMemento());
@@ -125,9 +125,9 @@ public class Launcher implements IJavaLaunchConfigurationConstants {
             JavaRuntime.newRuntimeContainerClasspathEntry(systemLibsPath,
                IRuntimeClasspathEntry.STANDARD_CLASSES);
         paths.add(systemLibsEntry.getMemento());
-        
+
         //if you want tools.jar on the class path
-//        IVMInstall jre = JavaRuntime.getDefaultVMInstall();         
+//        IVMInstall jre = JavaRuntime.getDefaultVMInstall();
 //        File jdkHome = jre.getInstallLocation();
 //        IPath toolsPath = new Path(jdkHome.getAbsolutePath())
 //               .append("lib")
@@ -136,8 +136,8 @@ public class Launcher implements IJavaLaunchConfigurationConstants {
         return paths;
     }
 
-    
-    
+
+
     public static ILaunchConfiguration createLaunchConfiguration(Configuration config) throws CoreException {
         ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
         ILaunchConfigurationType type =
@@ -151,7 +151,7 @@ public class Launcher implements IJavaLaunchConfigurationConstants {
                 configuration.delete();
                 break;
             }
-        }        
+        }
         ILaunchConfigurationWorkingCopy workingCopy =
             type.newInstance(null, "WebEngine ["+config.id+"]");
 
@@ -159,7 +159,7 @@ public class Launcher implements IJavaLaunchConfigurationConstants {
         // attach to a project
         // do not attach for now since we have an external classpath
         //workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROJECT_NAME, config.projects.get(0).getName());
-        
+
         // specify the JVM to use
         IVMInstall jre = null;
         if (!config.projects.isEmpty()) { // use the JVM used by  the first project
@@ -170,21 +170,21 @@ public class Launcher implements IJavaLaunchConfigurationConstants {
             jre = JavaRuntime.getDefaultVMInstall();
         }
         jre = JavaRuntime.getDefaultVMInstall();
-        
+
         // don't know what to put in this attribute ...
-        //workingCopy.setAttribute(ATTR_JRE_CONTAINER_PATH, jre.get);                
+        //workingCopy.setAttribute(ATTR_JRE_CONTAINER_PATH, jre.get);
 //      workingCopy.setAttribute(ATTR_VM_INSTALL_NAME, jre.getName());
 //      workingCopy.setAttribute(ATTR_VM_INSTALL_TYPE, jre.getVMInstallType().getId());
-        
+
         // main class
         workingCopy.setAttribute(ATTR_MAIN_TYPE_NAME, MAIN);
         // JVM arguments
         String vmargs = vmargs(config.launcher.getAbsolutePath());
-        workingCopy.setAttribute(ATTR_VM_ARGUMENTS, vmargs);        
+        workingCopy.setAttribute(ATTR_VM_ARGUMENTS, vmargs);
         // program arguments
         String args = args(config);
         workingCopy.setAttribute(ATTR_PROGRAM_ARGUMENTS, args);
-        
+
         // working directory
         workingCopy.setAttribute(ATTR_WORKING_DIRECTORY,
              config.getHome().getAbsolutePath());
@@ -197,10 +197,10 @@ public class Launcher implements IJavaLaunchConfigurationConstants {
 //        System.out.println("VMARGS: "+vmargs);
 //        System.out.println("ARGS:  "+args);
 //        System.out.println("CLASSPATH: "+classpath);
-        
+
         //workingCopy.setAttribute(IDebugUIConstants.ATTR_LAUNCH_IN_BACKGROUND, true);
         // create the launch configuration
-        return workingCopy.doSave();        
+        return workingCopy.doSave();
     }
-    
+
 }

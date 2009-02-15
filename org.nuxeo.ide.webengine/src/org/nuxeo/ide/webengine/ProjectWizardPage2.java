@@ -39,19 +39,13 @@ public class ProjectWizardPage2 extends NewJavaProjectWizardPageTwo {
         super (one);
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jdt.ui.wizards.JavaCapabilityConfigurationPage#configureJavaProject(org.eclipse.core.runtime.IProgressMonitor)
-     */
     @Override
     public void configureJavaProject(IProgressMonitor monitor)
             throws CoreException, InterruptedException {
         super.configureJavaProject(monitor);
         WebEngineNature.install(getJavaProject().getProject());
     }
-    
-    /* (non-Javadoc)
-     * @see org.eclipse.jdt.ui.wizards.JavaCapabilityConfigurationPage#init(org.eclipse.jdt.core.IJavaProject, org.eclipse.core.runtime.IPath, org.eclipse.jdt.core.IClasspathEntry[], boolean)
-     */
+
     @Override
     public void init(IJavaProject jproject, IPath defaultOutputLocation,
             IClasspathEntry[] defaultEntries,
@@ -74,5 +68,5 @@ public class ProjectWizardPage2 extends NewJavaProjectWizardPageTwo {
         super.init(jproject, defaultOutputLocation, entries.toArray(new IClasspathEntry[entries.size()]),
                 defaultsOverrideExistingClasspath);
     }
-    
+
 }
