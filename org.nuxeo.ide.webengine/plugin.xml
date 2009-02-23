@@ -126,6 +126,21 @@
           </view>
        </perspectiveExtension>
     </extension>
+    <extension
+          point="org.eclipse.ui.newWizards">
+       <category
+             id="org.nuxeo.ide.newprojects.category"
+             name="Nuxeo">
+       </category>
+       <wizard
+             category="org.nuxeo.ide.newprojects.category"
+             class="org.nuxeo.ide.webengine.NewProjectWizard"
+             icon="icons/nx.gif"
+             id="org.nuxeo.ide.webengine.NewProjectWizard"
+             name="WebEngine"
+             project="true">
+       </wizard>
+    </extension>
       
 
 <!-- disabled for now since it is not finished
