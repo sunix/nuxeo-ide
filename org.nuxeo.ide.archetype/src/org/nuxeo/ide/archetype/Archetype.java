@@ -145,7 +145,7 @@ public class Archetype {
         ZipEntry entry = zip.getEntry("archetype.xml");
         if (entry == null) {
             System.err.println("Invalid archetype zip.");
-            System.exit(1);
+            throw new Exception("Invalid archetype zip.");
         }
         // load archetype definition
         InputStream in = new BufferedInputStream(zip.getInputStream(entry));

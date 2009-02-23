@@ -48,14 +48,16 @@ public class NewProjectWizard extends Wizard implements INewWizard {
     private ArchetypeChooserWizardPage archetypeChooserWizardPage;
 
     public NewProjectWizard() {
-        mainPage = new WizardNewProjectCreationPage("Nuxeo Webengine Project");
-        // archetypeWizardPage = new ArchetypeWizardPage();
+        mainPage = new WizardNewProjectCreationPage("Create a new archetype based Project");
         archetypeChooserWizardPage = new ArchetypeChooserWizardPage();
     }
     
     
     public void setArchetypeWizardPage(ArchetypeWizardPage archetypeWizardPage) {
         this.archetypeWizardPage = archetypeWizardPage;
+        archetypeWizardPage.setTitle("Create a new archetype based Project");
+        archetypeWizardPage.setDescription("Create a new archetype based Project");
+        archetypeWizardPage.setImageDescriptor(Activator.getImageDescriptor("icons/nuxeo/dialog_editfile.png"));
         archetypeWizardPage.setWizard(this);
 
     }
@@ -63,13 +65,12 @@ public class NewProjectWizard extends Wizard implements INewWizard {
     @Override
     public void addPages() {
         super.addPages();
-
         // Add the main project page
-        mainPage.setTitle("Nuxeo Webengine Project");
-        mainPage.setDescription("Create a new Nuxeo Webengine Project");
+        mainPage.setTitle("Create a new archetype based Project");
+        mainPage.setDescription("Create a new archetype based Project");
         mainPage.setImageDescriptor(Activator.getImageDescriptor("icons/nuxeo/dialog_editfile.png"));
 
-        archetypeChooserWizardPage.setTitle("Nuxeo Webengine Project");
+        archetypeChooserWizardPage.setTitle("Create a new Project based on an archetype");
         archetypeChooserWizardPage.setDescription("Choose Archetype (template) location");
         archetypeChooserWizardPage.setImageDescriptor(Activator.getImageDescriptor("icons/nuxeo/dialog_editfile.png"));
 

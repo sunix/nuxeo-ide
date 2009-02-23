@@ -64,7 +64,6 @@ public class ArchetypeWizardPage extends WizardPage {
         } catch (Exception e) {
             System.err.println("An error occured while loading template archetype file");
             e.printStackTrace();
-            System.exit(1);
         }
 
         // getArchetype

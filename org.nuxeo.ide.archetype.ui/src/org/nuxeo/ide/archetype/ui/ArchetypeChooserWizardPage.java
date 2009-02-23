@@ -88,7 +88,8 @@ public class ArchetypeChooserWizardPage extends WizardPage {
     protected boolean validatePage() {
         setErrorMessage(null);
 
-        if (!(new File(this.tpl)).exists()) { // testing
+        if (!(new File(this.tpl)).exists()) {
+            // to update the next page, see getNextPage()
             setMessage("Please select a existing template");
             return false;
         }
@@ -124,7 +125,6 @@ public class ArchetypeChooserWizardPage extends WizardPage {
         });
 
         // set default value
-
         Button browseButton = new Button(archetypeGroup, SWT.BORDER);
         browseButton.setText("Browse");
         final Composite parentDialog = parent;
@@ -135,25 +135,31 @@ public class ArchetypeChooserWizardPage extends WizardPage {
 
             public void widgetSelected(SelectionEvent e) {
                 FileDialog filedlg = new FileDialog(parentDialog.getShell());
-
                 filedlg.setFilterExtensions(new String[] { "*.zip" });
-
                 String path = filedlg.open();
                 textField.setText(path);
+                tpl = path;
+                setPageComplete(validatePage());
             }
         });
-
     }
+
+    ArchetypeWizardPage page;
+
+    String oldTpl = null;
 
     @Override
     public IWizardPage getNextPage() {
-        // TODO make something smarter
-        // IWizardPage page = super.getNextPage();
-        ArchetypeWizardPage page = new ArchetypeWizardPage(tpl);
-        page.setTitle("Nuxeo Webengine Project");
-        page.setDescription("Choose Archetype (template) location");
-        page.setImageDescriptor(Activator.getImageDescriptor("icons/wizban/defcon_wiz.png"));
-        ((NewProjectWizard) getWizard()).setArchetypeWizardPage(page);
+        if (page == null || oldTpl != tpl) {
+            try {
+                System.err.println("blablabla");
+                page = new ArchetypeWizardPage(tpl);
+                oldTpl = tpl;
+                ((NewProjectWizard) getWizard()).setArchetypeWizardPage(page);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         return page;
     }
 
