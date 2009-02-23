@@ -132,14 +132,14 @@
              id="org.nuxeo.ide.newprojects.category"
              name="Nuxeo">
        </category>
-       <wizard
+       <!-- wizard replaced by "new Archetype" project
              category="org.nuxeo.ide.newprojects.category"
              class="org.nuxeo.ide.webengine.NewProjectWizard"
              icon="icons/nx.gif"
              id="org.nuxeo.ide.webengine.NewProjectWizard"
              name="WebEngine"
              project="true">
-       </wizard>
+       </wizard -->
     </extension>
       
 

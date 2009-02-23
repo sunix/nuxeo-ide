@@ -16,7 +16,7 @@
  *     stan
  */
 
-package org.nuxeo.ide.webengine;
+package org.nuxeo.ide.archetype;
 
 import java.io.BufferedInputStream;
 import java.io.File;

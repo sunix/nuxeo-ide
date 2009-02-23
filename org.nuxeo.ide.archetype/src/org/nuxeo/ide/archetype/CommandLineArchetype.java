@@ -14,7 +14,7 @@
  * Contributors:
  *     stan
  */
-package org.nuxeo.ide.webengine;
+package org.nuxeo.ide.archetype;
 
 import java.io.File;
 import java.io.IOException;

@@ -14,7 +14,7 @@
  * Contributors:
  *     stan
  */
-package org.nuxeo.ide.webengine;
+package org.nuxeo.ide.archetype.ui;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -52,7 +52,8 @@ public class NewProjectWizard extends Wizard implements INewWizard {
         // archetypeWizardPage = new ArchetypeWizardPage();
         archetypeChooserWizardPage = new ArchetypeChooserWizardPage();
     }
-
+    
+    
     public void setArchetypeWizardPage(ArchetypeWizardPage archetypeWizardPage) {
         this.archetypeWizardPage = archetypeWizardPage;
         archetypeWizardPage.setWizard(this);
@@ -66,11 +67,11 @@ public class NewProjectWizard extends Wizard implements INewWizard {
         // Add the main project page
         mainPage.setTitle("Nuxeo Webengine Project");
         mainPage.setDescription("Create a new Nuxeo Webengine Project");
-        mainPage.setImageDescriptor(Nuxeo.getImageDescriptor("icons/wizban/defcon_wiz.png"));
+        mainPage.setImageDescriptor(Activator.getImageDescriptor("icons/nuxeo/dialog_editfile.png"));
 
         archetypeChooserWizardPage.setTitle("Nuxeo Webengine Project");
         archetypeChooserWizardPage.setDescription("Choose Archetype (template) location");
-        archetypeChooserWizardPage.setImageDescriptor(Nuxeo.getImageDescriptor("icons/wizban/defcon_wiz.png"));
+        archetypeChooserWizardPage.setImageDescriptor(Activator.getImageDescriptor("icons/nuxeo/dialog_editfile.png"));
 
         addPage(mainPage);
         addPage(archetypeChooserWizardPage);
@@ -129,10 +130,7 @@ public class NewProjectWizard extends Wizard implements INewWizard {
                         }
                         project.open(null);
                     }
-                    if (!project.hasNature(WebEngineNature.BUILDER_ID)) {
-                        NewProjectWizard.addNatureToProject(project,
-                                WebEngineNature.ID, null);
-                    }
+
                     if (!project.hasNature(JavaCore.NATURE_ID)) {
                         NewProjectWizard.addNatureToProject(project,
                                 JavaCore.NATURE_ID, null);
@@ -168,9 +166,6 @@ public class NewProjectWizard extends Wizard implements INewWizard {
         newNatures[prevNatures.length] = natureId;
         description.setNatureIds(newNatures);
         proj.setDescription(description, monitor);
-        if (natureId == WebEngineNature.ID) {
-            WebEngineNature.install(proj);
-        }
     }
 
 }

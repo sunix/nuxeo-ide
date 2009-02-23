@@ -14,7 +14,7 @@
  * Contributors:
  *     stan
  */
-package org.nuxeo.ide.webengine;
+package org.nuxeo.ide.archetype;
 
 /**
  * POJO object for Archetype var.
