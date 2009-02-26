@@ -47,11 +47,12 @@ import org.nuxeo.ide.webengine.Nuxeo;
  */
 public class Launcher implements IJavaLaunchConfigurationConstants {
 
-    public static String MAIN = "org.nuxeo.runtime.launcher.Main";
-    public static String JAVA_OPTS = "-Dorg.nuxeo.dev=ide -Djava.rmi.server.RMIClassLoaderSpi=org.nuxeo.runtime.launcher.NuxeoRMIClassLoader -Dsun.lang.ClassLoader.allowArraySyntax=true";
-    public static String JAVA_OPTS_DERBY = "-Dderby.system.home=data/derby";
-    public static String PROGRAM_ARGS = "/org.nuxeo.osgi.application.Main bundles/.:lib/.:config -home .";
-
+    public static final String MAIN = "org.nuxeo.runtime.launcher.Main";
+    public static final String JAVA_OPTS = "-Dorg.nuxeo.dev=ide "
+            + "-Djava.rmi.server.RMIClassLoaderSpi=org.nuxeo.runtime.launcher.NuxeoRMIClassLoader "
+            + "-Dsun.lang.ClassLoader.allowArraySyntax=true";
+    public static final String JAVA_OPTS_DERBY = "-Dderby.system.home=data/derby";
+    public static final String PROGRAM_ARGS = "/org.nuxeo.osgi.application.Main bundles/.:lib/.:config -home .";
 
 
     public static void run(Configuration config) throws CoreException {
@@ -71,7 +72,6 @@ public class Launcher implements IJavaLaunchConfigurationConstants {
         ILaunchConfiguration configuration = createLaunchConfiguration(config);
         DebugUITools.launch(configuration, ILaunchManager.DEBUG_MODE);
     }
-
 
     public static String args(Configuration config) throws CoreException {
         StringBuilder buf = new StringBuilder();
@@ -135,8 +135,6 @@ public class Launcher implements IJavaLaunchConfigurationConstants {
 //        IRuntimeClasspathEntry toolsEntry =
         return paths;
     }
-
-
 
     public static ILaunchConfiguration createLaunchConfiguration(Configuration config) throws CoreException {
         ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();

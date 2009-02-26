@@ -41,5 +41,4 @@ public class SettingsAction extends Action {
         dlg.open();
     }
 
-
 }

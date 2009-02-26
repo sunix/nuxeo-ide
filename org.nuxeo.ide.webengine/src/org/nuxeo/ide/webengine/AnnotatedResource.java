@@ -26,14 +26,19 @@ public abstract class AnnotatedResource {
     public String className;
 
     public AnnotatedResource(IType type) {
-        this.className = type.getFullyQualifiedName();
+        className = type.getFullyQualifiedName();
     }
+
     @Override
     public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null) return false;
+        if (obj == this) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
         if (obj.getClass() == AnnotatedResource.class) {
-            AnnotatedResource ar = (AnnotatedResource)obj;
+            AnnotatedResource ar = (AnnotatedResource) obj;
             return ar.className.equals(className);
         }
         return false;

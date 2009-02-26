@@ -35,7 +35,7 @@ import org.osgi.framework.BundleContext;
  */
 public class Nuxeo implements BundleActivator{
 
-    public final static String PLUGIN_ID = "org.nuxeo.ide.webengine";
+    public static final String PLUGIN_ID = "org.nuxeo.ide.webengine";
 
     protected static BundleContext ctx;
 
@@ -64,8 +64,9 @@ public class Nuxeo implements BundleActivator{
     }
 
     public static void log(Throwable e) {
-        if (e instanceof InvocationTargetException)
+        if (e instanceof InvocationTargetException) {
             e = ((InvocationTargetException) e).getTargetException();
+        }
         IStatus status = null;
         if (e instanceof CoreException) {
             status = ((CoreException) e).getStatus();
@@ -76,8 +77,9 @@ public class Nuxeo implements BundleActivator{
     }
 
     public static void log(IStatus status) {
-        if (status != null)
+        if (status != null) {
             ResourcesPlugin.getPlugin().getLog().log(status);
+        }
     }
 
     public static boolean isWebEngineProject(IProject project) {
@@ -88,6 +90,5 @@ public class Nuxeo implements BundleActivator{
             return false;
         }
     }
-
 
 }

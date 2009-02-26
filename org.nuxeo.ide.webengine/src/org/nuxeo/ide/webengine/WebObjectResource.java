@@ -33,4 +33,5 @@ public class WebObjectResource extends AnnotatedResource {
     public String toString() {
         return className+"|org.nuxeo.ecm.webengine.model.WebObject";
     }
+
 }

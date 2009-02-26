@@ -25,7 +25,9 @@ import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
 
 /**
- * This class is instantiated when a new project with thewebngine nature is created from the new project wizard.
+ * This class is instantiated when a new project with the webnegine nature
+ * is created from the new project wizard.
+ * <p>
  * This nature will add an annotation builder specific for webengine projects.
  *
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -33,14 +35,11 @@ import org.eclipse.core.runtime.CoreException;
  */
 public class WebEngineNature implements IProjectNature {
 
-    public final static String BUILDER_ID = "org.nuxeo.ide.webengine.AnnotationBuilder";
-    public final static String ID = "org.nuxeo.ide.webengine.WebEngineNature";
+    public static final String BUILDER_ID = "org.nuxeo.ide.webengine.AnnotationBuilder";
+    public static final String ID = "org.nuxeo.ide.webengine.WebEngineNature";
 
     protected IProject project;
 
-    /**
-     *
-     */
     public WebEngineNature() {
     }
 
@@ -76,7 +75,6 @@ public class WebEngineNature implements IProjectNature {
            desc.setBuildSpec(newCommands);
            project.setDescription(desc, null);
         }
-
     }
 
     public void deconfigure() throws CoreException {
@@ -126,4 +124,5 @@ public class WebEngineNature implements IProjectNature {
             // Something went wrong
         }
     }
+
 }

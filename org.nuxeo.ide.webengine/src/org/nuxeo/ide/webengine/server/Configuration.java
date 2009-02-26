@@ -27,10 +27,9 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.ui.IMemento;
 
 /**
- * For now only one configuration is supported
+ * For now only one configuration is supported.
  *
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
- *
  */
 public class Configuration {
 
@@ -41,7 +40,6 @@ public class Configuration {
     public List<IProject> projects = new ArrayList<IProject>();
 
     private Configuration() {
-
     }
 
     public Configuration(String id) {
@@ -111,8 +109,9 @@ public class Configuration {
 
     protected static void loadPlugins(IMemento[] mementos, Configuration config) {
         IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-        if (mementos == null)
+        if (mementos == null) {
             return;
+        }
         for (IMemento memento : mementos) {
             String id = memento.getID();
             IProject prj = root.getProject(id);
@@ -121,4 +120,5 @@ public class Configuration {
             }
         }
     }
+
 }

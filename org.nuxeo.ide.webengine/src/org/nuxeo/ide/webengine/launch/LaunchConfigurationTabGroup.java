@@ -15,9 +15,6 @@ import org.eclipse.debug.ui.ILaunchConfigurationTab;
 public class LaunchConfigurationTabGroup extends
         AbstractLaunchConfigurationTabGroup {
 
-    /**
-     *
-     */
     public LaunchConfigurationTabGroup() {
     }
 

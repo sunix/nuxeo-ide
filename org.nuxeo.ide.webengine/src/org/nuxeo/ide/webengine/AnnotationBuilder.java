@@ -17,7 +17,6 @@
 package org.nuxeo.ide.webengine;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -157,7 +156,9 @@ public class AnnotationBuilder extends IncrementalProjectBuilder {
         IJavaProject prj =  JavaCore.create(project);
         IPackageFragmentRoot[] roots = prj.getPackageFragmentRoots();
         for (IPackageFragmentRoot root : roots) {
-            if (root.getKind() != IPackageFragmentRoot.K_SOURCE) continue;
+            if (root.getKind() != IPackageFragmentRoot.K_SOURCE) {
+                continue;
+            }
             IResource res = root.getResource();
             res.accept(new IResourceVisitor() {
                 public boolean visit(IResource resource) throws CoreException {

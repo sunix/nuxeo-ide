@@ -61,6 +61,7 @@ public class ServerView extends ViewPart implements ILaunchesListener2 {
         return config;
     }
 
+    @Override
     public void dispose() {
         super.dispose();
         DebugPlugin.getDefault().getLaunchManager().removeLaunchListener(this);
@@ -80,28 +81,24 @@ public class ServerView extends ViewPart implements ILaunchesListener2 {
             config = new Configuration("default");
         }
 
-        ResourcesPlugin.getWorkspace().addResourceChangeListener(
-                new IResourceChangeListener() {
-                    public void resourceChanged(IResourceChangeEvent event) {
-                        IResource resource = event.getResource();
-                        if (resource == null) {
-                            refresh(); // may be a nature modification
-                        } else if (event.getType() == IResourceChangeEvent.PRE_DELETE) {
-                            if (resource.getType() == IResource.PROJECT
-                                    && Nuxeo
-                                            .isWebEngineProject((IProject) resource)) {
-                                refresh();
-                            }
-                        }
+        ResourcesPlugin.getWorkspace().addResourceChangeListener(new IResourceChangeListener() {
+            public void resourceChanged(IResourceChangeEvent event) {
+                IResource resource = event.getResource();
+                if (resource == null) {
+                    refresh(); // may be a nature modification
+                } else if (event.getType() == IResourceChangeEvent.PRE_DELETE) {
+                    if (resource.getType() == IResource.PROJECT
+                            && Nuxeo.isWebEngineProject((IProject) resource)) {
+                        refresh();
                     }
-                });
-
+                }
+            }
+        });
     }
 
     @Override
     public void createPartControl(Composite parent) {
-        IToolBarManager tbar = getViewSite().getActionBars()
-                .getToolBarManager();
+        IToolBarManager tbar = getViewSite().getActionBars().getToolBarManager();
         tbar.add(new DebugAction(this));
         tbar.add(new RunAction(this));
         tbar.add(new TerminateAction(this));
@@ -162,8 +159,7 @@ public class ServerView extends ViewPart implements ILaunchesListener2 {
     }
 
     public void safeUpdateActions() {
-        IToolBarManager tbar = getViewSite().getActionBars()
-                .getToolBarManager();
+        IToolBarManager tbar = getViewSite().getActionBars().getToolBarManager();
         for (IContributionItem item : tbar.getItems()) {
             item.update(IAction.ENABLED);
         }
@@ -180,13 +176,6 @@ public class ServerView extends ViewPart implements ILaunchesListener2 {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.eclipse.debug.core.ILaunchesListener2#launchesTerminated(org.eclipse
-     * .debug.core.ILaunch[])
-     */
     public void launchesTerminated(ILaunch[] launches) {
         for (ILaunch launch : launches) {
             if (this.launch == launch) {

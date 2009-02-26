@@ -63,24 +63,29 @@ public class ProjectWizard extends NewElementWizard {
         fSecondPage= pageTwo;
     }
 
+    @Override
     public void addPages() {
-        if (fFirstPage == null)
+        if (fFirstPage == null) {
             fFirstPage= new NewJavaProjectWizardPageOne();
+        }
         addPage(fFirstPage);
 
-        if (fSecondPage == null)
+        if (fSecondPage == null) {
             fSecondPage= new ProjectWizardPage2(fFirstPage);
+        }
         addPage(fSecondPage);
 
         fFirstPage.init(getSelection(), getActivePart());
     }
 
+    @Override
     protected void finishPage(IProgressMonitor monitor) throws InterruptedException, CoreException {
         fSecondPage.performFinish(monitor); // use the full progress monitor
     }
 
+    @Override
     public boolean performFinish() {
-        boolean res= super.performFinish();
+        boolean res = super.performFinish();
         if (res) {
             final IJavaElement newElement= getCreatedElement();
 
@@ -105,7 +110,7 @@ public class ProjectWizard extends NewElementWizard {
     }
 
     private IWorkbenchPart getActivePart() {
-        IWorkbenchWindow activeWindow= getWorkbench().getActiveWorkbenchWindow();
+        IWorkbenchWindow activeWindow = getWorkbench().getActiveWorkbenchWindow();
         if (activeWindow != null) {
             IWorkbenchPage activePage= activeWindow.getActivePage();
             if (activePage != null) {
@@ -115,13 +120,14 @@ public class ProjectWizard extends NewElementWizard {
         return null;
     }
 
+    @Override
     protected void handleFinishException(Shell shell, InvocationTargetException e) {
-        String title= NewWizardMessages.JavaProjectWizard_op_error_title;
-        String message= NewWizardMessages.JavaProjectWizard_op_error_create_message;
+        String title = NewWizardMessages.JavaProjectWizard_op_error_title;
+        String message = NewWizardMessages.JavaProjectWizard_op_error_create_message;
         ExceptionHandler.handle(e, getShell(), title, message);
     }
 
-    /*
+    /**
      * Stores the configuration element for the wizard.  The config element will be used
      * in <code>performFinish</code> to set the result perspective.
      */
@@ -129,12 +135,15 @@ public class ProjectWizard extends NewElementWizard {
         fConfigElement= cfig;
     }
 
+    @Override
     public boolean performCancel() {
         fSecondPage.performCancel();
         return super.performCancel();
     }
 
+    @Override
     public IJavaElement getCreatedElement() {
         return fSecondPage.getJavaProject();
     }
+
 }

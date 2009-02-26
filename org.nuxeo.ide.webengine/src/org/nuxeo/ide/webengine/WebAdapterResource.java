@@ -33,4 +33,5 @@ public class WebAdapterResource extends AnnotatedResource {
     public String toString() {
         return className+"|org.nuxeo.ecm.webengine.model.WebAdapter";
     }
+
 }

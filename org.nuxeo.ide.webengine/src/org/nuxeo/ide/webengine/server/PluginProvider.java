@@ -33,9 +33,11 @@ import org.nuxeo.ide.webengine.Nuxeo;
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  *
  */
-public class PluginProvider implements IStructuredContentProvider, ILabelProvider  {
+public class PluginProvider implements IStructuredContentProvider,
+        ILabelProvider {
 
-    //protected static ImageDescriptor img = ImageDescriptor.createFromURL(Nuxeo.getContext().getBundle().getEntry("/icons/prj.gif"));
+    // protected static ImageDescriptor img =
+    // ImageDescriptor.createFromURL(Nuxeo.getContext().getBundle().getEntry("/icons/prj.gif"));
 
     public void dispose() {
         // TODO Auto-generated method stub
@@ -44,7 +46,7 @@ public class PluginProvider implements IStructuredContentProvider, ILabelProvide
 
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
         // TODO Auto-generated method stub
-        //UIPlugin.getDefault().getImageRegistry().get(key)
+        // UIPlugin.getDefault().getImageRegistry().get(key)
     }
 
     public Object[] getElements(Object inputElement) {
@@ -58,19 +60,17 @@ public class PluginProvider implements IStructuredContentProvider, ILabelProvide
         return prjs.toArray(new IProject[prjs.size()]);
     }
 
-
     public String getText(Object element) {
-        return ((IResource)element).getName();
+        return ((IResource) element).getName();
     }
 
     public Image getImage(Object element) {
-        //return img.createImage();
+        // return img.createImage();
         return null;
     }
 
     public void addListener(ILabelProviderListener listener) {
         // TODO Auto-generated method stub
-
     }
 
     public boolean isLabelProperty(Object element, String property) {
@@ -80,6 +80,6 @@ public class PluginProvider implements IStructuredContentProvider, ILabelProvide
 
     public void removeListener(ILabelProviderListener listener) {
         // TODO Auto-generated method stub
-
     }
+
 }

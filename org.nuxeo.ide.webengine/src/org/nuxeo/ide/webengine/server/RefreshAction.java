@@ -40,5 +40,4 @@ public class RefreshAction extends Action {
         view.refresh();
     }
 
-
 }

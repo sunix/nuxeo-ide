@@ -67,7 +67,6 @@ public class UI {
         showInfo(message, APPLICATION_NAME);
     }
 
-
     public static void showInfo(String message, String title) {
         MessageDialog dlg = new MessageDialog(Display.getDefault().getActiveShell(), title, null,
                 message,
@@ -85,4 +84,5 @@ public class UI {
                 MessageDialog.QUESTION, new String[] {"Yes", "No"}, 0);
         return dlg.open();
     }
+
 }
