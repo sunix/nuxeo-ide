@@ -23,11 +23,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 
+ *
  * Command line project generator base on templates (archetype)
- * 
+ *
  * @author stan
- * 
+ *
  */
 public class CommandLineArchetype {
 

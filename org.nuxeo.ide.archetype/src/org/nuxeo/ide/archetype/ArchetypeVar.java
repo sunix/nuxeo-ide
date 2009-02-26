@@ -18,9 +18,9 @@ package org.nuxeo.ide.archetype;
 
 /**
  * POJO object for Archetype var.
- * 
+ *
  * @author <a href="mailto:stan@nuxeo.com">Sun Seng David TAN</a>
- * 
+ *
  */
 public class ArchetypeVar {
 

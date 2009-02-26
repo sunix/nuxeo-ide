@@ -21,9 +21,6 @@ public class LaunchConfigurationTabGroup extends
     public LaunchConfigurationTabGroup() {
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.debug.ui.ILaunchConfigurationTabGroup#createTabs(org.eclipse.debug.ui.ILaunchConfigurationDialog, java.lang.String)
-     */
     public void createTabs(ILaunchConfigurationDialog dialog, String mode) {
         ILaunchConfigurationTab[] tabs = null;
 

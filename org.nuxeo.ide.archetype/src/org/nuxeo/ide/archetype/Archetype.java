@@ -40,15 +40,15 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 /**
- * 
+ *
  * An archetype is a kind of template for creating new templates.
- * 
+ *
  * In RCP : getAvailableVars, display in the ui, get the map<String key, String
  * value> and pass it to the "doProcess Expand vars to start the replace".
- * 
+ *
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * @author <a href="mailto:stan@nuxeo.com">Sun Seng David TAN</a>
- * 
+ *
  */
 public class Archetype {
 
@@ -72,14 +72,14 @@ public class Archetype {
 
         outDir = expandVars(outDir, values);
         File out = new File(outDir);
-        
+
         /* Do not exist if the target exist */
         // if (out.exists()) {
         // System.out.println("Target directory already exists: " + out);
         // System.out.println("Please specify as target a directory to be created. Exiting.");
         // System.exit(1);
         // }
-        
+
         unzip(archive, out);
         new File(out, "archetype.xml").delete();
         if (elRes != null) {
@@ -129,7 +129,7 @@ public class Archetype {
 
     /**
      * load file in the Document doc
-     * 
+     *
      * @param tpl
      * @param out
      * @throws Exception

@@ -113,11 +113,6 @@ public class SettingsDialog extends TitleAreaDialog {
         return control;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.jface.dialogs.Dialog#okPressed()
-     */
     @Override
     protected void okPressed() {
         String path = text.getText().trim();

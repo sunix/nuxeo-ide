@@ -36,7 +36,7 @@ import org.nuxeo.ide.archetype.ArchetypeVar;
 
 /**
  * @author stan
- * 
+ *
  */
 public class ArchetypeWizardPage extends WizardPage {
 
@@ -77,7 +77,7 @@ public class ArchetypeWizardPage extends WizardPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets
      * .Composite)
@@ -105,7 +105,7 @@ public class ArchetypeWizardPage extends WizardPage {
 
     /**
      * Returns whether this page's controls currently all contain valid values.
-     * 
+     *
      * @return <code>true</code> if all controls are valid, and
      *         <code>false</code> if at least one is invalid
      */

@@ -36,7 +36,7 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * @author stan
- * 
+ *
  */
 public class ArchetypeChooserWizardPage extends WizardPage {
 
@@ -53,7 +53,7 @@ public class ArchetypeChooserWizardPage extends WizardPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets
      * .Composite)
@@ -81,7 +81,7 @@ public class ArchetypeChooserWizardPage extends WizardPage {
 
     /**
      * Returns whether this page's controls currently all contain valid values.
-     * 
+     *
      * @return <code>true</code> if all controls are valid, and
      *         <code>false</code> if at least one is invalid
      */
