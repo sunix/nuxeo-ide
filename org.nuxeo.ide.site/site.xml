@@ -3,12 +3,20 @@
    <description url="http://download.nuxeo.org/nuxeo-ide/updates/snapshots">
       Nuxeo IDE update site - Snapshots versions
    </description>
-   <feature url="features/org.nuxeo.ide.webengine.feature_1.0.0.200902061418.jar" id="org.nuxeo.ide.webengine.feature" version="1.0.0.200902061418">
+   <feature url="features/org.nuxeo.ide.webengine.feature_1.0.0.200903051941.jar" id="org.nuxeo.ide.webengine.feature" version="1.0.0.200903051941">
       <category name="org.nuxeo.ide.webengine"/>
+   </feature>
+   <feature url="features/org.nuxeo.ide.archetype.feature_1.0.0.200903051941.jar" id="org.nuxeo.ide.archetype.feature" version="1.0.0.200903051941">
+      <category name="org.nuxeo.ide.archetype"/>
    </feature>
    <category-def name="org.nuxeo.ide.webengine" label="Nuxeo IDE Webengine">
       <description>
          Eclipse Tools for helping developping Webengine components
+      </description>
+   </category-def>
+   <category-def name="org.nuxeo.ide.archetype" label="Archetype">
+      <description>
+         Tools to create new projects based on templates (archetypes)
       </description>
    </category-def>
 </site>

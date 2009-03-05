@@ -26,28 +26,40 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
- *
+ * 
  */
-public class Nuxeo implements BundleActivator{
+public class Nuxeo extends AbstractUIPlugin {
 
     public final static String PLUGIN_ID = "org.nuxeo.ide.webengine";
 
     protected static BundleContext ctx;
 
+    // The shared instance
+    private static Nuxeo plugin;
+
     public void start(BundleContext context) throws Exception {
+        super.start(context);
         ctx = context;
+        plugin = this;
     }
 
     public void stop(BundleContext context) throws Exception {
+        plugin = null;
         ctx = null;
+        super.stop(context);
     }
 
-    public static  Image getImage(String path) {
+    public static Nuxeo getDefault() {
+        return plugin;
+    }
+
+    public static Image getImage(String path) {
         return getImageDescriptor(path).createImage();
     }
 
@@ -70,7 +82,8 @@ public class Nuxeo implements BundleActivator{
         if (e instanceof CoreException) {
             status = ((CoreException) e).getStatus();
         } else if (e.getMessage() != null) {
-            status = new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK, e.getMessage(), e);
+            status = new Status(IStatus.ERROR, PLUGIN_ID, IStatus.OK,
+                    e.getMessage(), e);
         }
         log(status);
     }
@@ -82,12 +95,12 @@ public class Nuxeo implements BundleActivator{
 
     public static boolean isWebEngineProject(IProject project) {
         try {
-            return project.hasNature(WebEngineNature.ID);// && !WorkspaceModelManager.isBinaryProject(project);
+            return project.hasNature(WebEngineNature.ID);// &&
+            // !WorkspaceModelManager.isBinaryProject(project);
         } catch (Exception e) {
             Nuxeo.log(e);
             return false;
         }
     }
-
 
 }

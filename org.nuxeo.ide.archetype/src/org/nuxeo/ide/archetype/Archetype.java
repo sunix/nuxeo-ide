@@ -72,14 +72,13 @@ public class Archetype {
 
         outDir = expandVars(outDir, values);
         File out = new File(outDir);
-        
+
         /* Do not exist if the target exist */
         // if (out.exists()) {
         // System.out.println("Target directory already exists: " + out);
         // System.out.println("Please specify as target a directory to be created. Exiting.");
         // System.exit(1);
         // }
-        
         unzip(archive, out);
         new File(out, "archetype.xml").delete();
         if (elRes != null) {
