@@ -17,6 +17,7 @@
 package org.nuxeo.ide.archetype.ui;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +36,9 @@ import org.nuxeo.ide.archetype.Archetype;
 import org.nuxeo.ide.archetype.ArchetypeVar;
 
 /**
+ * A generic archetype wizard. User can chose from the file system, the
+ * archetype page he want to use.
+ * 
  * @author stan
  *
  */
@@ -47,15 +51,36 @@ public class ArchetypeWizardPage extends WizardPage {
 
     Map<String, String> values = new HashMap<String, String>();
 
+    protected ArchetypeWizardPage(InputStream in) {
+
+        super("Archetype metadata page");
+        archetype = new Archetype();
+
+        try {
+            File temp = File.createTempFile("archetype", ".zip");
+            Archetype.copyToFile(in, temp);
+
+            temp.deleteOnExit();
+            // copy the zip file to the temp
+
+            File zipFile = archetype.loadFile(temp.getAbsolutePath());
+            // not good shoudld be the zip file ?
+            archetype.loadDocFromZip(zipFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        setPageComplete(false);
+
+    }
+
     protected ArchetypeWizardPage(String tpl) {
         super("Archetype metadata page");
 
         archetype = new Archetype();
-        // temporary
-        // String tpl =
-        // "/home/stan/hg/nuxeo2/nxserver/extras/archetype/gwebmodule.zip";
 
         File zipFile = null;
+
         try {
             // TODO may be refactor again
             zipFile = archetype.loadFile(tpl);

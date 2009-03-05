@@ -132,14 +132,22 @@
              id="org.nuxeo.ide.newprojects.category"
              name="Nuxeo">
        </category>
-       <!-- wizard replaced by "new Archetype" project
+       <wizard
              category="org.nuxeo.ide.newprojects.category"
-             class="org.nuxeo.ide.webengine.NewProjectWizard"
+             class="org.nuxeo.ide.webengine.project.NewWebEngineProjectWizard"
+             finalPerspective="org.eclipse.jdt.ui.JavaPerspective"
+             hasPages="true"
              icon="icons/nx.gif"
-             id="org.nuxeo.ide.webengine.NewProjectWizard"
-             name="WebEngine"
-             project="true">
-       </wizard -->
+             id="org.nuxeo.ide.webengine.project.NewWebEngineProjectWizard"
+             name="WebEngine Project"
+             project="true">                                                                                                       
+         <description>                                                                                                                                      
+            Create a WebEngine Project                                                                                                         
+         </description>                                                                                                                                     
+      </wizard>
+       <primaryWizard
+             id="org.nuxeo.ide.webengine.project.NewWebEngineProjectWizard">
+       </primaryWizard>
     </extension>
       
 

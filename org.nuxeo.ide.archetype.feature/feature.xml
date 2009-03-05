@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.nuxeo.ide.webengine.feature"
-      label="Nuxeo IDE Webengine Feature"
+      id="org.nuxeo.ide.archetype.feature"
+      label="Archetype Feature"
       version="1.0.0.qualifier"
       provider-name="Nuxeo">
 
-   <description>
-      Provide eclipse tools for helping developping Nuxeo Webengine Components.
+   <description url="http://www.example.com/description">
+      [Enter Feature Description here.]
    </description>
 
    <copyright url="http://www.gnu.org/licenses/lgpl.html">
@@ -23,16 +23,25 @@ GNU Lesser General Public License for more details.
 
    <license url="http://www.gnu.org/licenses/lgpl.html">
       (C) Copyright 2009 Nuxeo SA (http://nuxeo.com/) and contributors.
-All rights reserved. This program and the accompanying materials are made available under the terms of the GNU Lesser General Public License (LGPL) version 2.1 which accompanies this distribution, and is available at http://www.gnu.org/licenses/lgpl.html
-This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the GNU Lesser General
+Public License (LGPL) version 2.1 which accompanies this distribution,
+and is available at http://www.gnu.org/licenses/lgpl.html
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Lesser General Public License for more details.
    </license>
 
-   <url>
-      <update label="Nuxeo ide update site" url="http://download.nuxeo.org/nuxeo-rcp/updates/snapshots/"/>
-   </url>
+   <plugin
+         id="org.nuxeo.ide.archetype"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
    <plugin
-         id="org.nuxeo.ide.webengine"
+         id="org.nuxeo.ide.archetype.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"
