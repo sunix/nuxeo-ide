@@ -31,6 +31,10 @@ This library is distributed in the hope that it will be useful, but WITHOUT ANY 
       <update label="Nuxeo ide update site" url="http://download.nuxeo.org/nuxeo-rcp/updates/snapshots/"/>
    </url>
 
+   <requires>
+      <import feature="org.nuxeo.ide.archetype.feature" version="1.0.0.qualifier"/>
+   </requires>
+
    <plugin
          id="org.nuxeo.ide.webengine"
          download-size="0"
