@@ -128,7 +128,7 @@ public class Archetype {
 
     /**
      * load file in the Document doc
-     *
+     * 
      * @param tpl
      * @param out
      * @throws Exception
@@ -137,6 +137,21 @@ public class Archetype {
         archive = new File(tpl);
 
         return archive;
+    }
+
+    public Document loadDocFromFolder(File folder) throws Exception {
+        File archetypexmlfile = new File(folder.getAbsolutePath()
+                + File.separatorChar + "archetype.xml");
+        // load archetype definition
+        FileInputStream stream = new FileInputStream(archetypexmlfile);
+        InputStream in = new BufferedInputStream(stream);
+        Document doc = load(in);
+        in.close();
+        stream.close();
+
+        // setting up elVars and elRes
+        settingUp(doc);
+        return doc;
     }
 
     public Document loadDocFromZip(File archive) throws Exception {
