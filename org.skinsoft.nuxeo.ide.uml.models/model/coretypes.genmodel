@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.skinsoft.nuxeo.ide.uml.models/src"
+    modelPluginID="skdoc_emf" modelName="Coretypes" importerID="org.eclipse.xsd.ecore.importer"
+    complianceLevel="6.0" copyrightFields="false">
+  <foreignModel>../../NuxeoComponentsXSD/core-types-contrib.xsd</foreignModel>
+  <genPackages prefix="Coretypes" basePackage="org.skinsoft.nuxeo.components" resource="XML"
+      disposableProviderFactory="true" ecorePackage="coretypes.ecore#/">
+    <genClasses ecoreClass="coretypes.ecore#//ComponentType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference coretypes.ecore#//ComponentType/extension"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute coretypes.ecore#//ComponentType/name"/>
+    </genClasses>
+    <genClasses ecoreClass="coretypes.ecore#//DoctypeType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference coretypes.ecore#//DoctypeType/schema"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference coretypes.ecore#//DoctypeType/facet"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute coretypes.ecore#//DoctypeType/extends"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute coretypes.ecore#//DoctypeType/name"/>
+    </genClasses>
+    <genClasses ecoreClass="coretypes.ecore#//DocumentRoot">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EAttribute coretypes.ecore#//DocumentRoot/mixed"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference coretypes.ecore#//DocumentRoot/xMLNSPrefixMap"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference coretypes.ecore#//DocumentRoot/xSISchemaLocation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference coretypes.ecore#//DocumentRoot/component"/>
+    </genClasses>
+    <genClasses ecoreClass="coretypes.ecore#//ExtensionType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference coretypes.ecore#//ExtensionType/schema"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference coretypes.ecore#//ExtensionType/doctype"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute coretypes.ecore#//ExtensionType/point"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute coretypes.ecore#//ExtensionType/target"/>
+    </genClasses>
+    <genClasses ecoreClass="coretypes.ecore#//FacetType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute coretypes.ecore#//FacetType/value"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute coretypes.ecore#//FacetType/name"/>
+    </genClasses>
+    <genClasses ecoreClass="coretypes.ecore#//SchemaType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute coretypes.ecore#//SchemaType/value"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute coretypes.ecore#//SchemaType/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute coretypes.ecore#//SchemaType/prefix"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute coretypes.ecore#//SchemaType/src"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

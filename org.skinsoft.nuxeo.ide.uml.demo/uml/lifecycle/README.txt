@@ -1,0 +1,1 @@
+Additional StateMachine diagrams diagrams can be added in this directory.

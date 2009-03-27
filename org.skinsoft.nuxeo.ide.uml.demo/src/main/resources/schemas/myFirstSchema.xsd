@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:myFirstSchema="http://demo.uml.ide.nuxeo.skinsoft.org/schemas/myFirstSchema" xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://demo.uml.ide.nuxeo.skinsoft.org/schemas/myFirstSchema">
+  <xs:element name="stringField" type="xs:string"/>
+</xs:schema>

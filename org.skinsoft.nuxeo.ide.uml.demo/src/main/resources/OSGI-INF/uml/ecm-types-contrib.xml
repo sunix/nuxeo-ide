@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.skinsoft.nuxeo.ide.uml.demo.uml.ecm.types">
+  <extension point="types" target="org.nuxeo.ecm.platform.types.TypeService">
+    <type id="MyFirstDocType"/>
+    <type id="Workspace">
+      <subtypes>
+        <type>MyFirstDocType</type>
+      </subtypes>
+    </type>
+  </extension>
+</component>

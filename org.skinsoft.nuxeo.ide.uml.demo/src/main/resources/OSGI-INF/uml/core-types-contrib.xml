@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.skinsoft.nuxeo.ide.uml.demo.uml.core.types">
+  <extension point="schema" target="org.nuxeo.ecm.core.schema.TypeService">
+    <schema name="myFirstSchema" prefix="myFirstSchema" src="schemas/myFirstSchema.xsd"/>
+    <schema name="directorySchema" prefix="directorySchema" src="schemas/directorySchema.xsd"/>
+    <schema name="docPartWithDirectoryRelation" prefix="docPartWithDirectoryRelation" src="schemas/docPartWithDirectoryRelation.xsd"/>
+    <schema name="anotherDocPart" prefix="anotherDocPart" src="schemas/anotherDocPart.xsd"/>
+    <schema name="complexPart" prefix="complexPart" src="schemas/complexPart.xsd"/>
+  </extension>
+  <extension point="doctype" target="org.nuxeo.ecm.core.schema.TypeService">
+    <doctype extends="Document" name="MyFirstDocType">
+      <schema name="dublincore"/>
+      <schema name="uid"/>
+      <schema name="common"/>
+      <schema name="myFirstSchema"/>
+      <facet name="Folderish"/>
+    </doctype>
+  </extension>
+</component>

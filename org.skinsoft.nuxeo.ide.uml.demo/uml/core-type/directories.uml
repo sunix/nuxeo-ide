@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Package xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/2.1.0/UML" xmi:id="_BHbd4RlfEd6u5sOmGcKfvQ" name="org.skinsoft.nuxeo.ide.uml.demo">
+  <elementImport xmi:id="_BKfY8BlfEd6u5sOmGcKfvQ">
+    <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+  </elementImport>
+  <elementImport xmi:id="_BOfvMBlfEd6u5sOmGcKfvQ">
+    <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+  </elementImport>
+  <elementImport xmi:id="_BOfvMRlfEd6u5sOmGcKfvQ">
+    <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#UnlimitedNatural"/>
+  </elementImport>
+  <elementImport xmi:id="_BOfvMhlfEd6u5sOmGcKfvQ">
+    <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+  </elementImport>
+  <packagedElement xmi:type="uml:DataType" xmi:id="_KS3SsBlfEd6u5sOmGcKfvQ" name="Directory">
+    <ownedAttribute xmi:id="_KS3SsRlfEd6u5sOmGcKfvQ" name="id" aggregation="composite">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+    </ownedAttribute>
+  </packagedElement>
+  <packagedElement xmi:type="uml:DataType" xmi:id="_LgBCUBlfEd6u5sOmGcKfvQ" name="DirectorySchema">
+    <generalization xmi:id="_Ny0ycBlfEd6u5sOmGcKfvQ" general="_KS3SsBlfEd6u5sOmGcKfvQ"/>
+    <ownedAttribute xmi:id="_TTPHABlfEd6u5sOmGcKfvQ" name="value" aggregation="composite">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_VQ2qQBlfEd6u5sOmGcKfvQ" name="label" aggregation="composite">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+    </ownedAttribute>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_OWm08BlfEd6u5sOmGcKfvQ" name="ConcreteDirectory">
+    <generalization xmi:id="_SxuVYBlfEd6u5sOmGcKfvQ" general="_LgBCUBlfEd6u5sOmGcKfvQ"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:DataType" xmi:id="_pIJk0BlfEd6u5sOmGcKfvQ" name="DocumentPart"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_rKoZ8BlfEd6u5sOmGcKfvQ" name="DocPartWithDirectoryRelation">
+    <generalization xmi:id="_umk8YBlfEd6u5sOmGcKfvQ" general="_pIJk0BlfEd6u5sOmGcKfvQ"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_wU_mABlfEd6u5sOmGcKfvQ" memberEnd="_wVANEBlfEd6u5sOmGcKfvQ _wVA0IBlfEd6u5sOmGcKfvQ">
+    <ownedEnd xmi:id="_wVANEBlfEd6u5sOmGcKfvQ" name="src" type="_rKoZ8BlfEd6u5sOmGcKfvQ" association="_wU_mABlfEd6u5sOmGcKfvQ">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_wVANEhlfEd6u5sOmGcKfvQ" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_wVANERlfEd6u5sOmGcKfvQ" value="1"/>
+    </ownedEnd>
+    <ownedEnd xmi:id="_wVA0IBlfEd6u5sOmGcKfvQ" name="directoryField" type="_OWm08BlfEd6u5sOmGcKfvQ" aggregation="shared" association="_wU_mABlfEd6u5sOmGcKfvQ">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_wVA0IhlfEd6u5sOmGcKfvQ" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_wVA0IRlfEd6u5sOmGcKfvQ" value="1"/>
+    </ownedEnd>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_sDh7YBlgEd6u5sOmGcKfvQ" memberEnd="_sDjJgBlgEd6u5sOmGcKfvQ _sDjJgxlgEd6u5sOmGcKfvQ">
+    <ownedEnd xmi:id="_sDjJgBlgEd6u5sOmGcKfvQ" name="src" type="_rKoZ8BlfEd6u5sOmGcKfvQ" association="_sDh7YBlgEd6u5sOmGcKfvQ">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_sDjJghlgEd6u5sOmGcKfvQ" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_sDjJgRlgEd6u5sOmGcKfvQ" value="1"/>
+    </ownedEnd>
+    <ownedEnd xmi:id="_sDjJgxlgEd6u5sOmGcKfvQ" name="mutlipleDirectoryField" type="_OWm08BlfEd6u5sOmGcKfvQ" aggregation="shared" association="_sDh7YBlgEd6u5sOmGcKfvQ">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_xW8VwBlgEd6u5sOmGcKfvQ" value="*"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_xW8VwRlgEd6u5sOmGcKfvQ"/>
+    </ownedEnd>
+  </packagedElement>
+</uml:Package>

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<fragment>
+	
+	<extension target="application#MODULE">
+		<!-- Correspond à un module du application.xml -->
+		<module>
+			<java>${bundle.fileName}</java>
+		</module>
+	</extension>
+	
+</fragment>

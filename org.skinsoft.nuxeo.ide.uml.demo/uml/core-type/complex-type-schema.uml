@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Package xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/2.1.0/UML" xmi:id="_pYnhABkjEd6BcYmAh0CTVg" name="org.skinsoft.nuxeo.ide.uml.demo">
+  <elementImport xmi:id="_pZH3UBkjEd6BcYmAh0CTVg">
+    <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+  </elementImport>
+  <elementImport xmi:id="_pZH3URkjEd6BcYmAh0CTVg">
+    <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+  </elementImport>
+  <elementImport xmi:id="_pZH3UhkjEd6BcYmAh0CTVg">
+    <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#UnlimitedNatural"/>
+  </elementImport>
+  <elementImport xmi:id="_pZH3UxkjEd6BcYmAh0CTVg">
+    <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+  </elementImport>
+  <packagedElement xmi:type="uml:DataType" xmi:id="_uBmeUBkjEd6BcYmAh0CTVg" name="Document"/>
+  <packagedElement xmi:type="uml:DataType" xmi:id="_uBmeURkjEd6BcYmAh0CTVg" name="DocumentPart"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_xbS-ABkjEd6BcYmAh0CTVg" name="MyFirstDocType" isAbstract="true">
+    <generalization xmi:id="_0Xb_ABkjEd6BcYmAh0CTVg" general="_uBmeUBkjEd6BcYmAh0CTVg"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_8JLdABkjEd6BcYmAh0CTVg" name="ComplexPart">
+    <generalization xmi:id="_96tFABkjEd6BcYmAh0CTVg" general="_uBmeURkjEd6BcYmAh0CTVg"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_-kwHkBkjEd6BcYmAh0CTVg" memberEnd="_-kwHkRkjEd6BcYmAh0CTVg _-kwuoBkjEd6BcYmAh0CTVg">
+    <ownedEnd xmi:id="_-kwHkRkjEd6BcYmAh0CTVg" name="src" type="_xbS-ABkjEd6BcYmAh0CTVg" association="_-kwHkBkjEd6BcYmAh0CTVg">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_-kwHkxkjEd6BcYmAh0CTVg" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_-kwHkhkjEd6BcYmAh0CTVg" value="1"/>
+    </ownedEnd>
+    <ownedEnd xmi:id="_-kwuoBkjEd6BcYmAh0CTVg" name="dst" type="_8JLdABkjEd6BcYmAh0CTVg" aggregation="composite" association="_-kwHkBkjEd6BcYmAh0CTVg">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_-kwuohkjEd6BcYmAh0CTVg" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_-kwuoRkjEd6BcYmAh0CTVg" value="1"/>
+    </ownedEnd>
+  </packagedElement>
+  <packagedElement xmi:type="uml:DataType" xmi:id="__hYu8BkjEd6BcYmAh0CTVg" name="Cmpl">
+    <ownedAttribute xmi:id="_McMYgBkkEd6BcYmAh0CTVg" name="stringField" aggregation="composite">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_OBoFQBkkEd6BcYmAh0CTVg" name="dateField" aggregation="composite">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_METAMODELS/Ecore.metamodel.uml#EDate"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:id="_T2ZgQBkkEd6BcYmAh0CTVg" name="multipleStringField" aggregation="composite">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_V-yJEBkkEd6BcYmAh0CTVg" value="*"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_V-yJERkkEd6BcYmAh0CTVg"/>
+    </ownedAttribute>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_GAv_EBkkEd6BcYmAh0CTVg" memberEnd="_GAv_ERkkEd6BcYmAh0CTVg _GAv_FBkkEd6BcYmAh0CTVg">
+    <ownedEnd xmi:id="_GAv_ERkkEd6BcYmAh0CTVg" name="src" type="_8JLdABkjEd6BcYmAh0CTVg" association="_GAv_EBkkEd6BcYmAh0CTVg">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_GAv_ExkkEd6BcYmAh0CTVg" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_GAv_EhkkEd6BcYmAh0CTVg" value="1"/>
+    </ownedEnd>
+    <ownedEnd xmi:id="_GAv_FBkkEd6BcYmAh0CTVg" name="cmplField" type="__hYu8BkjEd6BcYmAh0CTVg" aggregation="composite" association="_GAv_EBkkEd6BcYmAh0CTVg">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_GAwmIBkkEd6BcYmAh0CTVg" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_GAv_FRkkEd6BcYmAh0CTVg" value="1"/>
+    </ownedEnd>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_IQB6EBkkEd6BcYmAh0CTVg" memberEnd="_IQB6ERkkEd6BcYmAh0CTVg _IQChIBkkEd6BcYmAh0CTVg">
+    <ownedEnd xmi:id="_IQB6ERkkEd6BcYmAh0CTVg" name="src" type="_8JLdABkjEd6BcYmAh0CTVg" association="_IQB6EBkkEd6BcYmAh0CTVg">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_IQB6ExkkEd6BcYmAh0CTVg" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_IQB6EhkkEd6BcYmAh0CTVg" value="1"/>
+    </ownedEnd>
+    <ownedEnd xmi:id="_IQChIBkkEd6BcYmAh0CTVg" name="cmplMultipleField" type="__hYu8BkjEd6BcYmAh0CTVg" aggregation="composite" association="_IQB6EBkkEd6BcYmAh0CTVg">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_KsZO0BkkEd6BcYmAh0CTVg" value="*"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_KsZO0RkkEd6BcYmAh0CTVg"/>
+    </ownedEnd>
+  </packagedElement>
+  <packagedElement xmi:type="uml:DataType" xmi:id="_YXjXQBkkEd6BcYmAh0CTVg" name="AnotherCmpl">
+    <ownedAttribute xmi:id="_ejhKQBkkEd6BcYmAh0CTVg" name="integerField" aggregation="composite">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_METAMODELS/UML.metamodel.uml#Integer"/>
+    </ownedAttribute>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_aZD8ABkkEd6BcYmAh0CTVg" memberEnd="_aZEjEBkkEd6BcYmAh0CTVg _aZEjExkkEd6BcYmAh0CTVg">
+    <ownedEnd xmi:id="_aZEjEBkkEd6BcYmAh0CTVg" name="src" type="__hYu8BkjEd6BcYmAh0CTVg" association="_aZD8ABkkEd6BcYmAh0CTVg">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_aZEjEhkkEd6BcYmAh0CTVg" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_aZEjERkkEd6BcYmAh0CTVg" value="1"/>
+    </ownedEnd>
+    <ownedEnd xmi:id="_aZEjExkkEd6BcYmAh0CTVg" name="nestedComplexField" type="_YXjXQBkkEd6BcYmAh0CTVg" aggregation="composite" association="_aZD8ABkkEd6BcYmAh0CTVg">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_aZEjFRkkEd6BcYmAh0CTVg" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_aZEjFBkkEd6BcYmAh0CTVg" value="1"/>
+    </ownedEnd>
+  </packagedElement>
+</uml:Package>

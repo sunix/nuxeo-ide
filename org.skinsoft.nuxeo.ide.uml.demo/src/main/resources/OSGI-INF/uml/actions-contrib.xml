@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.skinsoft.nuxeo.ide.uml.demo.uml.actions">
+  <extension point="actions" target="org.nuxeo.ecm.platform.actions.ActionService">
+    <action enabled="true" id="DoSomethingOnMyFirstDocType" label="actions.label.DoSomethingOnMyFirstDocType" link="do something">
+      <category>an action category</category>
+      <filter append="false" id="DoSomethingOnMyFirstDocTypeFilter0">
+        <rule grant="true">
+          <type>MyFirstDocType</type>
+        </rule>
+      </filter>
+      <filter append="false" id="DoSomethingOnMyFirstDocTypeFilter1">
+        <rule grant="true">
+          <permission>anActorWithSomePermissions</permission>
+        </rule>
+      </filter>
+      <filter append="false" id="DoSomethingOnMyFirstDocTypeFilter2">
+        <rule grant="true">
+          <condition>document.getPathAsString().startsWith( &quot;/default-domain&quot; )</condition>
+        </rule>
+      </filter>
+    </action>
+    <action enabled="true" id="DoAnotherThingOnMyFirstDocType" label="actions.label.DoAnotherThingOnMyFirstDocType" link="do another thing">
+      <category>DoSomethingOnMyFirstDocType_SUBACTIONS</category>
+      <filter append="false" id="DoAnotherThingOnMyFirstDocTypeFilter0">
+        <rule grant="true">
+          <type>MyFirstDocType</type>
+        </rule>
+      </filter>
+    </action>
+  </extension>
+</component>

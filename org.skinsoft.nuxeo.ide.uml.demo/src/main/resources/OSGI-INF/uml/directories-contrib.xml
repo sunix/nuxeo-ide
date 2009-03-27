@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.skinsoft.nuxeo.ide.uml.demo.uml.directories">
+  <extension point="directories" target="org.nuxeo.ecm.directory.sql.SQLDirectoryFactory">
+    <directory name="concreteDirectory">
+      <schema>directorySchema</schema>
+      <idField>directorySchema:id</idField>
+      <dataSource>java:/nxsqldirectory</dataSource>
+      <table>concreteDirectory</table>
+      <createTablePolicy>on_missing_columns</createTablePolicy>
+      <autoincrementIdField>true</autoincrementIdField>
+    </directory>
+  </extension>
+</component>

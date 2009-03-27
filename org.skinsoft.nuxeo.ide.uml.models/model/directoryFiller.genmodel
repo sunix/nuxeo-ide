@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.skinsoft.nuxeo.ide.uml.models/src"
+    modelPluginID="skdoc_emf" modelName="DirectoryFiller" importerID="org.eclipse.xsd.ecore.importer"
+    complianceLevel="6.0" copyrightFields="false">
+  <foreignModel>../../NuxeoComponentsXSD/directory-filler-contrib.xsd</foreignModel>
+  <genPackages prefix="Filler" basePackage="org.skinsoft.nuxeo.components.directory"
+      resource="XML" disposableProviderFactory="true" ecorePackage="filler.ecore#/">
+    <genClasses ecoreClass="filler.ecore#//ComponentType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference filler.ecore#//ComponentType/extension"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute filler.ecore#//ComponentType/name"/>
+    </genClasses>
+    <genClasses ecoreClass="filler.ecore#//DocumentRoot">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EAttribute filler.ecore#//DocumentRoot/mixed"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference filler.ecore#//DocumentRoot/xMLNSPrefixMap"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference filler.ecore#//DocumentRoot/xSISchemaLocation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference filler.ecore#//DocumentRoot/component"/>
+    </genClasses>
+    <genClasses ecoreClass="filler.ecore#//ExtensionType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference filler.ecore#//ExtensionType/fillDirectory"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute filler.ecore#//ExtensionType/point"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute filler.ecore#//ExtensionType/target"/>
+    </genClasses>
+    <genClasses ecoreClass="filler.ecore#//FillDirectoryType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute filler.ecore#//FillDirectoryType/dataFile"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute filler.ecore#//FillDirectoryType/dataFormat"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute filler.ecore#//FillDirectoryType/mode"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute filler.ecore#//FillDirectoryType/name"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

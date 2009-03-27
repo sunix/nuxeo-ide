@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:complexPart="http://demo.uml.ide.nuxeo.skinsoft.org/schemas/complexPart" xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://demo.uml.ide.nuxeo.skinsoft.org/schemas/complexPart">
+  <xs:complexType name="cmpl">
+    <xs:sequence>
+      <xs:element name="stringField" type="xs:string"/>
+      <xs:element name="dateField" type="xs:date"/>
+      <xs:element name="multipleStringField" type="complexPart:stringList"/>
+      <xs:element name="nestedComplexField" type="complexPart:anotherCmpl"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="stringList">
+    <xs:list itemType="xs:string"/>
+  </xs:simpleType>
+  <xs:complexType name="anotherCmpl">
+    <xs:sequence>
+      <xs:element name="integerField" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="cmplField" type="complexPart:cmpl"/>
+  <xs:complexType name="cmplList">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="item" type="complexPart:cmpl"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="cmplMultipleField" type="complexPart:cmplList"/>
+</xs:schema>

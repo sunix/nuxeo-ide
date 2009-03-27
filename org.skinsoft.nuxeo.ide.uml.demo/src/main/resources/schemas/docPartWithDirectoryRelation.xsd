@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:docPartWithDirectoryRelation="http://demo.uml.ide.nuxeo.skinsoft.org/schemas/docPartWithDirectoryRelation" xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://demo.uml.ide.nuxeo.skinsoft.org/schemas/docPartWithDirectoryRelation">
+  <xs:element name="directoryField" type="xs:string"/>
+  <xs:simpleType name="stringList">
+    <xs:list itemType="xs:string"/>
+  </xs:simpleType>
+  <xs:element name="mutlipleDirectoryField" type="docPartWithDirectoryRelation:stringList"/>
+</xs:schema>

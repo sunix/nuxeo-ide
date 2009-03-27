@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.skinsoft.nuxeo.ide.uml.models/src"
+    modelPluginID="skdoc_emf" modelName="Workflow" importerID="org.eclipse.xsd.ecore.importer"
+    complianceLevel="6.0" copyrightFields="false">
+  <foreignModel>../../NuxeoComponentsXSD/workflow-contrib.xsd</foreignModel>
+  <genPackages prefix="Workflow" basePackage="org.skinsoft.nuxeo.components" resource="XML"
+      disposableProviderFactory="true" ecorePackage="workflow.ecore#/">
+    <genClasses ecoreClass="workflow.ecore#//ComponentType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference workflow.ecore#//ComponentType/extension"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute workflow.ecore#//ComponentType/name"/>
+    </genClasses>
+    <genClasses ecoreClass="workflow.ecore#//DefinitionType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute workflow.ecore#//DefinitionType/engineName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute workflow.ecore#//DefinitionType/mimetype"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute workflow.ecore#//DefinitionType/definitionPath"/>
+    </genClasses>
+    <genClasses ecoreClass="workflow.ecore#//DocTypeRuleType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute workflow.ecore#//DocTypeRuleType/workflowDefinition"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute workflow.ecore#//DocTypeRuleType/docType"/>
+    </genClasses>
+    <genClasses ecoreClass="workflow.ecore#//DocumentRoot">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EAttribute workflow.ecore#//DocumentRoot/mixed"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference workflow.ecore#//DocumentRoot/xMLNSPrefixMap"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference workflow.ecore#//DocumentRoot/xSISchemaLocation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference workflow.ecore#//DocumentRoot/component"/>
+    </genClasses>
+    <genClasses ecoreClass="workflow.ecore#//ExtensionType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference workflow.ecore#//ExtensionType/definition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference workflow.ecore#//ExtensionType/workflowDocumentSecurityPolicy"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference workflow.ecore#//ExtensionType/docTypeRule"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference workflow.ecore#//ExtensionType/pathRule"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference workflow.ecore#//ExtensionType/workflowDocumentSecurityPolicyRelation"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute workflow.ecore#//ExtensionType/point"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute workflow.ecore#//ExtensionType/target"/>
+    </genClasses>
+    <genClasses ecoreClass="workflow.ecore#//PathRuleType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute workflow.ecore#//PathRuleType/workflowDefinition"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute workflow.ecore#//PathRuleType/path"/>
+    </genClasses>
+    <genClasses ecoreClass="workflow.ecore#//WorkflowDocumentSecurityPolicyRelationType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute workflow.ecore#//WorkflowDocumentSecurityPolicyRelationType/workflowName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute workflow.ecore#//WorkflowDocumentSecurityPolicyRelationType/for"/>
+    </genClasses>
+    <genClasses ecoreClass="workflow.ecore#//WorkflowDocumentSecurityPolicyType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute workflow.ecore#//WorkflowDocumentSecurityPolicyType/value"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute workflow.ecore#//WorkflowDocumentSecurityPolicyType/class"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute workflow.ecore#//WorkflowDocumentSecurityPolicyType/name"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

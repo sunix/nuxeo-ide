@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.skinsoft.nuxeo.ide.uml.models/src"
+    modelPluginID="skdoc_emf" modelName="Ecmtypes" importerID="org.eclipse.xsd.ecore.importer"
+    complianceLevel="6.0" copyrightFields="false">
+  <foreignModel>../../NuxeoComponentsXSD/ecm-types-contrib.xsd</foreignModel>
+  <genPackages prefix="Ecmtypes" basePackage="org.skinsoft.nuxeo.components" resource="XML"
+      disposableProviderFactory="true" ecorePackage="ecmtypes.ecore#/">
+    <genClasses ecoreClass="ecmtypes.ecore#//ComponentType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecmtypes.ecore#//ComponentType/require"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecmtypes.ecore#//ComponentType/extension"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecmtypes.ecore#//ComponentType/name"/>
+    </genClasses>
+    <genClasses ecoreClass="ecmtypes.ecore#//DocumentRoot">
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EAttribute ecmtypes.ecore#//DocumentRoot/mixed"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ecmtypes.ecore#//DocumentRoot/xMLNSPrefixMap"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference ecmtypes.ecore#//DocumentRoot/xSISchemaLocation"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecmtypes.ecore#//DocumentRoot/component"/>
+    </genClasses>
+    <genClasses ecoreClass="ecmtypes.ecore#//ExtensionType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecmtypes.ecore#//ExtensionType/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecmtypes.ecore#//ExtensionType/point"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecmtypes.ecore#//ExtensionType/target"/>
+    </genClasses>
+    <genClasses ecoreClass="ecmtypes.ecore#//LayoutsType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecmtypes.ecore#//LayoutsType/layout"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecmtypes.ecore#//LayoutsType/mode"/>
+    </genClasses>
+    <genClasses ecoreClass="ecmtypes.ecore#//SubtypesType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecmtypes.ecore#//SubtypesType/type"/>
+    </genClasses>
+    <genClasses ecoreClass="ecmtypes.ecore#//TypeType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecmtypes.ecore#//TypeType/label"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecmtypes.ecore#//TypeType/icon"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecmtypes.ecore#//TypeType/defaultView"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecmtypes.ecore#//TypeType/layouts"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference ecmtypes.ecore#//TypeType/subtypes"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecmtypes.ecore#//TypeType/coretype"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute ecmtypes.ecore#//TypeType/id"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

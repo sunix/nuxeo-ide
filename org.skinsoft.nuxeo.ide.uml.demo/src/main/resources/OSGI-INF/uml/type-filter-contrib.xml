@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.skinsoft.nuxeo.ide.uml.demo.uml.type.filters">
+  <extension point="filters" target="org.nuxeo.ecm.platform.actions.ActionService">
+    <filter id="isMyFirstDocType">
+      <rule>
+        <type>MyFirstDocType</type>
+      </rule>
+    </filter>
+  </extension>
+</component>
