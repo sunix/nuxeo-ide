@@ -25,13 +25,12 @@ import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
 
 /**
- * This class is instantiated when a new project with the webnegine nature
+ * This class is instantiated when a new project with the webengine nature
  * is created from the new project wizard.
  * <p>
  * This nature will add an annotation builder specific for webengine projects.
  *
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
- *
  */
 public class WebEngineNature implements IProjectNature {
 

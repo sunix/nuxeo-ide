@@ -38,10 +38,10 @@ public class RemoveWebEngineNature implements IObjectActionDelegate {
     public void run(IAction action) {
         if (selection instanceof IStructuredSelection) {
             try {
-                Object[] objs = ((IStructuredSelection)selection).toArray();
+                Object[] objs = ((IStructuredSelection) selection).toArray();
                 for (Object obj : objs) {
                     if (obj instanceof IProject) {
-                        IProject project = (IProject)obj;
+                        IProject project = (IProject) obj;
                         if (((IProject) obj).getNature(WebEngineNature.ID) != null) {
                             WebEngineNature.uninstall(project);
                         }

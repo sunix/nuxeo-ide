@@ -43,9 +43,10 @@ public class AddWebEngineNature implements IObjectActionDelegate {
     public void run(IAction action) {
         if (selection instanceof IStructuredSelection) {
             Job job = new Job("My First Job") {
+                @Override
                 protected IStatus run(IProgressMonitor monitor) {
                     try {
-                        Object[] objs = ((IStructuredSelection)selection).toArray();
+                        Object[] objs = ((IStructuredSelection) selection).toArray();
                         for (Object obj : objs) {
                             if (obj instanceof IProject) {
                                 IProject project = (IProject)obj;

@@ -83,8 +83,8 @@ public class SettingsDialog extends TitleAreaDialog {
         }
 
         // FileDialog dlg = new FileDialog();
-        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true,
-                false).applyTo(text);
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER)
+                .grab(true, false).applyTo(text);
 
         Button browseButton = new Button(panel, SWT.BORDER);
         browseButton.setText("Browse");
@@ -124,8 +124,8 @@ public class SettingsDialog extends TitleAreaDialog {
         Status s = new Status(IStatus.ERROR, Nuxeo.PLUGIN_ID,
                 "The specified file is not a valid WebEngine installation directory");
         ErrorDialog dialog = new ErrorDialog(getShell(), "Error",
-                "Invalid WebEngine home directory", s, IStatus.ERROR
-                        | IStatus.WARNING | IStatus.INFO);
+                "Invalid WebEngine home directory", s,
+                IStatus.ERROR | IStatus.WARNING | IStatus.INFO);
         dialog.open();
     }
 

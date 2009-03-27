@@ -18,7 +18,6 @@ public class WebengineLaunchConfigurationDelegate extends
 
     public void launch(ILaunchConfiguration configuration, String mode,
             ILaunch launch, IProgressMonitor monitor) throws CoreException {
-
     }
 
 }

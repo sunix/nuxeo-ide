@@ -35,9 +35,11 @@ public class UI {
     }
 
     public static void showError(String message, Throwable t, String title) {
-        IStatus status = new Status(IStatus.ERROR, Nuxeo.getContext().getBundle().getSymbolicName(), IStatus.OK, message, t);
-        ErrorDialog dlg = new ErrorDialog(Display.getDefault().getActiveShell(),
-                title, message, status, IStatus.ERROR | IStatus.WARNING | IStatus.INFO | IStatus.OK | IStatus.CANCEL);
+        IStatus status = new Status(IStatus.ERROR,
+                Nuxeo.getContext().getBundle().getSymbolicName(), IStatus.OK, message, t);
+        ErrorDialog dlg = new ErrorDialog(
+                Display.getDefault().getActiveShell(), title, message, status,
+                IStatus.ERROR | IStatus.WARNING | IStatus.INFO | IStatus.OK | IStatus.CANCEL);
         dlg.open();
     }
 
@@ -46,9 +48,9 @@ public class UI {
     }
 
     public static void showError(String message, String title) {
-        MessageDialog dlg = new MessageDialog(Display.getDefault().getActiveShell(), title, null,
-                message,
-                MessageDialog.ERROR, new String[] {"Ok"}, 0);
+        MessageDialog dlg = new MessageDialog(
+                Display.getDefault().getActiveShell(), title, null, message,
+                MessageDialog.ERROR, new String[] { "Ok" }, 0);
         dlg.open();
     }
 
@@ -57,9 +59,9 @@ public class UI {
     }
 
     public static void showWarning(String message, String title) {
-        MessageDialog dlg = new MessageDialog(Display.getDefault().getActiveShell(), title, null,
-                message,
-                MessageDialog.WARNING, new String[] {"Ok"}, 0);
+        MessageDialog dlg = new MessageDialog(
+                Display.getDefault().getActiveShell(), title, null, message,
+                MessageDialog.WARNING, new String[] { "Ok" }, 0);
         dlg.open();
     }
 
@@ -68,9 +70,9 @@ public class UI {
     }
 
     public static void showInfo(String message, String title) {
-        MessageDialog dlg = new MessageDialog(Display.getDefault().getActiveShell(), title, null,
-                message,
-                MessageDialog.INFORMATION, new String[] {"Ok"}, 0);
+        MessageDialog dlg = new MessageDialog(
+                Display.getDefault().getActiveShell(), title, null, message,
+                MessageDialog.INFORMATION, new String[] { "Ok" }, 0);
         dlg.open();
     }
 
@@ -79,9 +81,9 @@ public class UI {
     }
 
     public static int showPrompt(String message, String title) {
-        MessageDialog dlg = new MessageDialog(Display.getDefault().getActiveShell(), title, null,
-                message,
-                MessageDialog.QUESTION, new String[] {"Yes", "No"}, 0);
+        MessageDialog dlg = new MessageDialog(
+                Display.getDefault().getActiveShell(), title, null, message,
+                MessageDialog.QUESTION, new String[] { "Yes", "No" }, 0);
         return dlg.open();
     }
 

@@ -46,7 +46,7 @@ public class TerminateAction extends Action {
                 launch.terminate();
             }
         } catch (CoreException e) {
-            UI.showError("Failed to temrinate process", e);
+            UI.showError("Failed to terminate process", e);
         }
     }
 

@@ -67,7 +67,8 @@ public class Launcher implements IJavaLaunchConfigurationConstants {
 
     public static void debug(Configuration config) throws CoreException {
         if (!config.isValid()) {
-            throw new CoreException(new Status(IStatus.ERROR, Nuxeo.PLUGIN_ID, "Invaid Launch Configuration! No home folder specified."));
+            throw new CoreException(
+                    new Status(IStatus.ERROR, Nuxeo.PLUGIN_ID, "Invalid Launch Configuration! No home folder specified."));
         }
         ILaunchConfiguration configuration = createLaunchConfiguration(config);
         DebugUITools.launch(configuration, ILaunchManager.DEBUG_MODE);
