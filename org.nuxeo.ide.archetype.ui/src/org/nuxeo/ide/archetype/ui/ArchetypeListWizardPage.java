@@ -127,7 +127,7 @@ public abstract class ArchetypeListWizardPage extends WizardPage {
         }
         if (page == null || oldTpl != tpl) {
             try {
-                page = new ArchetypeWizardPage(tpl.getInputStream());
+                page = new ArchetypeWizardPage(tpl.getArchetypeFile());
                 oldTpl = tpl;
 
                 ((NewArchetypeListBasedProjectWizard) getWizard()).setArchetypeWizardPage(page);

@@ -73,13 +73,11 @@ public class Archetype {
         outDir = expandVars(outDir, values);
         File out = new File(outDir);
 
-        /* Do not exist if the target exist */
-        // if (out.exists()) {
-        // System.out.println("Target directory already exists: " + out);
-        // System.out.println("Please specify as target a directory to be created. Exiting.");
-        // System.exit(1);
-        // }
-        unzip(archive, out);
+        if (archive.isDirectory()) {
+            recursiveCopy(archive, out);
+        } else {
+            unzip(archive, out);
+        }
         new File(out, "archetype.xml").delete();
         if (elRes != null) {
             processResources(elRes, out, values);
@@ -87,7 +85,6 @@ public class Archetype {
 
     }
 
-    // to
     public List<ArchetypeVar> getAvailableVars(Map<String, String> values) {
 
         if (archetypeVars == null) {
@@ -133,9 +130,8 @@ public class Archetype {
      * @param out
      * @throws Exception
      */
-    public File loadFile(String tpl) throws Exception {
-        archive = new File(tpl);
-
+    public File setArchiveFile(File tpl) throws Exception {
+        archive = tpl;
         return archive;
     }
 
@@ -417,6 +413,26 @@ public class Archetype {
             if (in != null) {
                 in.close();
             }
+        }
+    }
+
+    public void recursiveCopy(File sourceFile, File destinationFile)
+            throws IOException {
+
+        if (sourceFile.isDirectory()) {
+            if (!destinationFile.exists()) {
+                destinationFile.mkdir();
+            }
+
+            String[] children = sourceFile.list();
+            for (int i = 0; i < children.length; i++) {
+                recursiveCopy(new File(sourceFile, children[i]), new File(
+                        destinationFile, children[i]));
+            }
+
+        } else {
+            InputStream in = new FileInputStream(sourceFile);
+            copyToFile(in, destinationFile);
         }
     }
 

@@ -37,11 +37,11 @@ public class NewWebEngineProjectWizard extends
                 return new IArchetypeFileEntry[] {
                         new BundleArchetypeFileEntry(
                                 Nuxeo.getDefault().getBundle(), new Path(
-                                        "archetypes/gwebmodule.zip"),
+                                        "archetypes/gwebmodule"),
                                 "Webengine Project with groovy files"),
                         new BundleArchetypeFileEntry(
                                 Nuxeo.getDefault().getBundle(), new Path(
-                                        "archetypes/webmodule.zip"),
+                                        "archetypes/webmodule"),
                                 "Webengine Project with java files") };
 
             }

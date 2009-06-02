@@ -16,6 +16,7 @@
  */
 package org.nuxeo.ide.archetype.ui.providers;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -37,8 +38,20 @@ public interface IArchetypeFileEntry {
      * Get the stream of the file.
      * 
      * @return
-     * @throws IOException 
+     * @throws IOException
+     * @Deprecated This shouldn't be used anymore as a project template
+     *             archetype location can be a zip file but also a folder.
+     *             getFile should be used instead and return a file (that can be
+     *             a zip file or a folder)
      */
     InputStream getInputStream() throws IOException;
+
+    /**
+     * Get the file (zip file) or folder of the archetype.
+     * 
+     * @return
+     * @throws IOException
+     */
+    File getArchetypeFile() throws Exception;
 
 }

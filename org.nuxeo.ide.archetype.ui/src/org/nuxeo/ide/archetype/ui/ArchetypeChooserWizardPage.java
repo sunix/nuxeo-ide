@@ -152,8 +152,7 @@ public class ArchetypeChooserWizardPage extends WizardPage {
     public IWizardPage getNextPage() {
         if (page == null || oldTpl != tpl) {
             try {
-                System.err.println("blablabla");
-                page = new ArchetypeWizardPage(tpl);
+                page = new ArchetypeWizardPage(new File(tpl));
                 oldTpl = tpl;
                 ((NewProjectWizard) getWizard()).setArchetypeWizardPage(page);
             } catch (Exception e) {

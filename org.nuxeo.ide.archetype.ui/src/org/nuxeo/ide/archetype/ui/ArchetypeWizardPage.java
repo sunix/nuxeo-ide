@@ -17,7 +17,6 @@
 package org.nuxeo.ide.archetype.ui;
 
 import java.io.File;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +39,7 @@ import org.nuxeo.ide.archetype.ArchetypeVar;
  * archetype page he want to use.
  * 
  * @author stan
- *
+ * 
  */
 public class ArchetypeWizardPage extends WizardPage {
 
@@ -51,21 +50,20 @@ public class ArchetypeWizardPage extends WizardPage {
 
     Map<String, String> values = new HashMap<String, String>();
 
-    protected ArchetypeWizardPage(InputStream in) {
+    protected ArchetypeWizardPage(File archetypeFile) {
 
         super("Archetype metadata page");
         archetype = new Archetype();
 
         try {
-            File temp = File.createTempFile("archetype", ".zip");
-            Archetype.copyToFile(in, temp);
+            archetypeFile = archetype.setArchiveFile(archetypeFile);
+            if (archetypeFile.isDirectory()) {
+                archetype.loadDocFromFolder(archetypeFile);
+            } else {
+                // zip file case
+                archetype.loadDocFromZip(archetypeFile);
+            }
 
-            temp.deleteOnExit();
-            // copy the zip file to the temp
-
-            File zipFile = archetype.loadFile(temp.getAbsolutePath());
-            // not good shoudld be the zip file ?
-            archetype.loadDocFromZip(zipFile);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -74,35 +72,10 @@ public class ArchetypeWizardPage extends WizardPage {
 
     }
 
-    protected ArchetypeWizardPage(String tpl) {
-        super("Archetype metadata page");
-
-        archetype = new Archetype();
-
-        File zipFile = null;
-
-        try {
-            // TODO may be refactor again
-            zipFile = archetype.loadFile(tpl);
-            archetype.loadDocFromZip(zipFile);
-
-        } catch (Exception e) {
-            System.err.println("An error occured while loading template archetype file");
-            e.printStackTrace();
-        }
-
-        // getArchetype
-
-        // get values from the user
-
-        // set up the default page
-
-        setPageComplete(false);
-    }
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets
      * .Composite)
@@ -130,7 +103,7 @@ public class ArchetypeWizardPage extends WizardPage {
 
     /**
      * Returns whether this page's controls currently all contain valid values.
-     *
+     * 
      * @return <code>true</code> if all controls are valid, and
      *         <code>false</code> if at least one is invalid
      */

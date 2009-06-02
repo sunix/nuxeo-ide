@@ -16,8 +16,10 @@
  */
 package org.nuxeo.ide.archetype.ui.providers;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
@@ -60,6 +62,12 @@ public class BundleArchetypeFileEntry implements IArchetypeFileEntry {
      */
     public String getTitle() {
         return title;
+    }
+
+    @Override
+    public File getArchetypeFile() throws Exception {
+        URL url = FileLocator.find(bundle, path, null);
+        return new File(FileLocator.toFileURL(url).toURI());
     }
 
 }

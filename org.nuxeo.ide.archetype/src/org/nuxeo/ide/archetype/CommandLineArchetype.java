@@ -63,7 +63,7 @@ public class CommandLineArchetype {
         File zipFile = null;
         try {
             // TODO may be refactor again
-            zipFile = archetype.loadFile(tpl);
+            zipFile = archetype.setArchiveFile(new File(tpl));
             archetype.loadDocFromZip(zipFile);
 
         } catch (Exception e) {
