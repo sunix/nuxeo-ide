@@ -64,7 +64,12 @@ public class BundleArchetypeFileEntry implements IArchetypeFileEntry {
         return title;
     }
 
-    @Override
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.nuxeo.ide.archetype.ui.providers.IArchetypeFileEntry#getArchetypeFile()
+     */
     public File getArchetypeFile() throws Exception {
         URL url = FileLocator.find(bundle, path, null);
         return new File(FileLocator.toFileURL(url).toURI());
