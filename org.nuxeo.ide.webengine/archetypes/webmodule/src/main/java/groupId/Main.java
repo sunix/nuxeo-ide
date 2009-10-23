@@ -1,13 +1,11 @@
 package ${package};
 
-import java.io.*;
-import javax.ws.rs.*;
-import javax.ws.rs.core.*;
-import org.nuxeo.ecm.core.rest.*;
-import org.nuxeo.ecm.webengine.model.*;
-import org.nuxeo.ecm.webengine.model.impl.*;
-import org.nuxeo.ecm.webengine.model.exceptions.*;
-import org.nuxeo.ecm.webengine.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+
+import org.nuxeo.ecm.webengine.model.WebObject;
+import org.nuxeo.ecm.webengine.model.impl.ModuleRoot;
 
 @WebObject(type="${moduleId}")
 @Produces("text/html; charset=UTF-8")
