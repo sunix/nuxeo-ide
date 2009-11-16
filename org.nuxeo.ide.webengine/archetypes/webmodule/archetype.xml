@@ -9,13 +9,13 @@
     <var label="Package" name="package" default="${groupId}" prompt="true" />
   </vars>
   <resources>
-    <template src="src/main/java/groupId/Main.java" />
+    <template src="src/main/java/package/Main.java" />
     <template src="src/main/resources/META-INF/MANIFEST.MF" />
     <template src="src/main/resources/OSGI-INF/deployment-fragment.xml" />
     <template src="src/main/resources/module.xml" />
     <template src="src/main/resources/i18n/messages_en.properties" />    
     <template src="pom.xml" />
-    <package src="src/main/java/groupId" target="src/main/java/${groupId}" />
+    <package src="src/main/java/package" target="src/main/java/${package}" />
     <directory src="src/main/resources/skin/views/moduleId" target="src/main/resources/skin/views/${moduleId}" />
   </resources>
 </archetype>
