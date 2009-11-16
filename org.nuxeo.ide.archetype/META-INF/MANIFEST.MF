@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Archetype Plug-in
-Bundle-SymbolicName: org.nuxeo.ide.archetype
+Bundle-SymbolicName: org.nuxeo.ide.archetype;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.nuxeo.ide.archetype.Activator
 Require-Bundle: org.eclipse.ui,
