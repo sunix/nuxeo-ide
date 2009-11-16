@@ -15,6 +15,23 @@
              name="New Archetype based project"
              project="true">
        </wizard>
+       <wizard
+             category="org.nuxeo.ide.newprojects.category"
+             class="org.nuxeo.ide.archetype.ui.NewNuxeoProjectWizard"
+             finalPerspective="org.eclipse.jdt.ui.JavaPerspective"
+             hasPages="true"
+             icon="icons/nuxeo/16_document.png"
+             id="org.nuxeo.ide.archetype.ui.NewNuxeoProjectWizard"
+             name="Nuxeo Basic Project"
+             project="true">                                                                                                       
+         <description>                                                                                                                                      
+            Create a Nuxeo Basic Project                                                                                                         
+         </description>                                                                                                                                     
+      </wizard>
+       <primaryWizard
+             id="org.nuxeo.ide.archetype.ui.NewNuxeoProjectWizard">
+       </primaryWizard>
+       
    </extension>
 
 </plugin>

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<archetype>
+  <vars>
+    <var label="Group Id" name="groupId" default="org.sample" prompt="true" />
+    <var label="Artifact Id" name="artifactId" default="sample" prompt="true" />
+    <var label="Version" name="version" default="1.0-SNAPSHOT" prompt="true" />
+    <var label="OSGI Bundle Name" name="bundleId" default="org.sample" prompt="true" />
+  </vars>
+  <resources>
+    <template src="src/main/resources/META-INF/MANIFEST.MF" />
+    <template src="src/main/resources/OSGI-INF/deployment-fragment.xml" />
+    <template src="pom.xml" />
+    <directory src="src/main/java/" target="src/main/java" />
+  </resources>
+</archetype>
+

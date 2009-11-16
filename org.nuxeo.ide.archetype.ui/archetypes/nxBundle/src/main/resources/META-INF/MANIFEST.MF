@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 1
+Bundle-Name: ${artifactId} project
+Bundle-SymbolicName: ${bundleId};singleton:=true
+Bundle-Vendor: Nuxeo
+Nuxeo-Require: org.nuxeo.runtime
