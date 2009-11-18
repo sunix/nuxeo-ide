@@ -30,4 +30,23 @@
     </dependency>
   </dependencies>
 
+  <!-- APT plugin for annotation preprocessing -->
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.myfaces.tobago</groupId>
+        <artifactId>maven-apt-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>generate-bindings</id>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  <!-- end APT plugin -->
+
 </project>
