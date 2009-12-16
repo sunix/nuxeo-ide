@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+
+<archetype>
+  <vars>
+    <var label="Group Id" name="groupId" default="org.sample"
+      prompt="true" />
+    <var label="Artifact Id" name="artifactId" default="sample"
+      prompt="true" />
+    <var label="Version" name="version" default="1.0-SNAPSHOT"
+      prompt="true" />
+    <var label="OSGI Bundle Name" name="bundleId" default="org.sample"
+      prompt="true" />
+    <var label="Package" name="package" default="${groupId}" prompt="true" />
+  </vars>
+  <resources>
+    <template
+      src="src/test/java/package/TestSampleProjectServiceImplSetAcl.java" />
+    <template src="src/main/java/package/SampleProjectServiceImpl.java" />
+    <template src="src/main/java/package/SampleProjectConstants.java" />
+    <template src="src/main/resources/META-INF/MANIFEST.MF" />
+    <template src="src/main/resources/OSGI-INF/deployment-fragment.xml" />
+    <template src="pom.xml" />
+    <package src="src/main/java/package" target="src/main/java/${package}" />
+    <package src="src/test/java/package" target="src/test/java/${package}" />
+    <directory src="src/main/java/" target="src/main/java" />
+    <directory src="src/test/java/" target="src/test/java" />
+    <directory src="src/main/resources/" target="src/main/resources" />
+    <directory src="src/test/resources/" target="src/test/resources" />
+  </resources>
+</archetype>
+

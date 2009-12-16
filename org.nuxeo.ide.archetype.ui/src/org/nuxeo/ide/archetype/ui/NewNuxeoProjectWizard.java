@@ -8,23 +8,29 @@ import org.nuxeo.ide.archetype.ui.providers.BundleArchetypeFileEntry;
 import org.nuxeo.ide.archetype.ui.providers.IArchetypeFileEntry;
 
 /**
- * Wizard for generating a Basic Nuxeo Project
+ * Wizard for generating a Basic Nuxeo Projects and samples
  * 
  * @author <a href=mailto:stan@nuxeo.com>Sun Seng David TAN</a>
  * 
  */
 public class NewNuxeoProjectWizard extends NewArchetypeListBasedProjectWizard {
 
-	public NewNuxeoProjectWizard() {
-		super(new ArchetypeListWizardPage() {
-			@Override
-			public IArchetypeFileEntry[] getArchetypeFileEntry() {
-				return new IArchetypeFileEntry[] { new BundleArchetypeFileEntry(
-						Activator.getDefault().getBundle(), new Path(
-								"archetypes/nxBundle"), "Nuxeo basic project") };
+    public NewNuxeoProjectWizard() {
+        super(new ArchetypeListWizardPage() {
+            @Override
+            public IArchetypeFileEntry[] getArchetypeFileEntry() {
+                return new IArchetypeFileEntry[] {
+                        new BundleArchetypeFileEntry(
+                                Activator.getDefault().getBundle(), new Path(
+                                        "archetypes/nxBundle"),
+                                "Nuxeo basic project"),
+                        new BundleArchetypeFileEntry(
+                                Activator.getDefault().getBundle(), new Path(
+                                        "archetypes/nxCoreTestCase"),
+                                "Nuxeo sample project with a test case") };
 
-			}
-		});
-	}
+            }
+        });
+    }
 
 }

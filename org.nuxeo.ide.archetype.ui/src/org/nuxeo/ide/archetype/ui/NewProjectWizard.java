@@ -35,9 +35,9 @@ import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 
 /**
  * New Project Wizard for webengine.
- *
+ * 
  * @author stan
- *
+ * 
  */
 public class NewProjectWizard extends Wizard implements INewWizard {
 
@@ -48,10 +48,10 @@ public class NewProjectWizard extends Wizard implements INewWizard {
     private ArchetypeChooserWizardPage archetypeChooserWizardPage;
 
     public NewProjectWizard() {
-        mainPage = new WizardNewProjectCreationPage("Create a new archetype based Project");
+        mainPage = new WizardNewProjectCreationPage(
+                "Create a new archetype based Project");
         archetypeChooserWizardPage = new ArchetypeChooserWizardPage();
     }
-
 
     public void setArchetypeWizardPage(ArchetypeWizardPage archetypeWizardPage) {
         this.archetypeWizardPage = archetypeWizardPage;
@@ -81,7 +81,7 @@ public class NewProjectWizard extends Wizard implements INewWizard {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.jface.wizard.Wizard#performFinish()
      */
     @Override
@@ -111,6 +111,7 @@ public class NewProjectWizard extends Wizard implements INewWizard {
                         project.refreshLocal(IResource.DEPTH_INFINITE, monitor);
 
                     } catch (Exception e) {
+                        // TODO use log4j or eclipse logger. Show error message.
                         e.printStackTrace();
                     }
                     monitor.worked(1);
@@ -151,7 +152,7 @@ public class NewProjectWizard extends Wizard implements INewWizard {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
      * org.eclipse.jface.viewers.IStructuredSelection)
      */
