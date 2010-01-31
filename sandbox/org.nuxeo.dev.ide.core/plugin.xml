@@ -38,7 +38,6 @@
          </visibility>            
          <action
                label="Remove Nuxeo Nature"
-               icon="icons/nx.gif"
                class="org.nuxeo.dev.ide.builder.ToggleNatureAction"
                menubarPath="additions"
                enablesFor="+"
@@ -60,7 +59,6 @@
          </visibility>
          <action
                label="Add Nuxeo Nature"
-               icon="icons/nx.gif"
                class="org.nuxeo.dev.ide.builder.ToggleNatureAction"
                menubarPath="additions"
                enablesFor="+"

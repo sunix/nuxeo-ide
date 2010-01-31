@@ -1,5 +1,7 @@
 package org.nuxeo.dev.ide.builder;
 
+import java.util.ArrayList;
+
 import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -26,23 +28,26 @@ public class NuxeoProject implements IProjectNature {
 	 * @see org.eclipse.core.resources.IProjectNature#configure()
 	 */
 	public void configure() throws CoreException {
-		IProjectDescription desc = project.getDescription();
-		ICommand[] commands = desc.getBuildSpec();
-
-		for (int i = 0; i < commands.length; ++i) {
-			if (commands[i].getBuilderName().equals(NuxeoApplicationBuilder.BUILDER_ID)) {
-				return;
-			}
-		}
-
-		ICommand[] newCommands = new ICommand[commands.length + 1];
-		System.arraycopy(commands, 0, newCommands, 0, commands.length);
-		ICommand command = desc.newCommand();
-		command.setBuilderName(NuxeoApplicationBuilder.BUILDER_ID);
-		newCommands[newCommands.length - 1] = command;
-		desc.setBuildSpec(newCommands);
-		project.setDescription(desc, null);
-		IJavaProject jprj = JavaCore.create(project);
+	    // configure builder
+//		IProjectDescription desc = project.getDescription();
+//		ICommand[] commands = desc.getBuildSpec();
+//
+//		for (int i = 0; i < commands.length; ++i) {
+//			if (commands[i].getBuilderName().equals(NuxeoApplicationBuilder.BUILDER_ID)) {
+//				return;
+//			}
+//		}
+//
+//		ICommand[] newCommands = new ICommand[commands.length + 1];
+//		System.arraycopy(commands, 0, newCommands, 0, commands.length);
+//		ICommand command = desc.newCommand();
+//		command.setBuilderName(NuxeoApplicationBuilder.BUILDER_ID);
+//		newCommands[newCommands.length - 1] = command;
+//		desc.setBuildSpec(newCommands);		
+//		project.setDescription(desc, null);
+		
+	    // configure classpath
+	    IJavaProject jprj = JavaCore.create(project);
 		IClasspathEntry[] cp = jprj.getRawClasspath();
 		IClasspathEntry[] newcp = new IClasspathEntry[cp.length + 1];
 		System.arraycopy(cp, 0, newcp, 0, cp.length);
@@ -56,19 +61,36 @@ public class NuxeoProject implements IProjectNature {
 	 * @see org.eclipse.core.resources.IProjectNature#deconfigure()
 	 */
 	public void deconfigure() throws CoreException {
-		IProjectDescription description = getProject().getDescription();
-		ICommand[] commands = description.getBuildSpec();
-		for (int i = 0; i < commands.length; ++i) {
-			if (commands[i].getBuilderName().equals(NuxeoApplicationBuilder.BUILDER_ID)) {
-				ICommand[] newCommands = new ICommand[commands.length - 1];
-				System.arraycopy(commands, 0, newCommands, 0, i);
-				System.arraycopy(commands, i + 1, newCommands, i,
-						commands.length - i - 1);
-				description.setBuildSpec(newCommands);
-				project.setDescription(description, null);			
-				return;
-			}
+	    // deconfigure builder
+//		IProjectDescription description = getProject().getDescription();
+//		ICommand[] commands = description.getBuildSpec();
+//		for (int i = 0; i < commands.length; ++i) {
+//			if (commands[i].getBuilderName().equals(NuxeoApplicationBuilder.BUILDER_ID)) {
+//				ICommand[] newCommands = new ICommand[commands.length - 1];
+//				System.arraycopy(commands, 0, newCommands, 0, i);
+//				System.arraycopy(commands, i + 1, newCommands, i,
+//						commands.length - i - 1);
+//				description.setBuildSpec(newCommands);
+//				project.setDescription(description, null);			
+//				return;
+//			}
+//		}
+
+		// deconfigure classpath
+		IJavaProject jprj = JavaCore.create(project);
+		IClasspathEntry[] cp = jprj.getRawClasspath();
+		Path p = new Path(NuxeoDevClassPathContainer.ID);
+		ArrayList<IClasspathEntry> result = new ArrayList<IClasspathEntry>(); 
+		for (IClasspathEntry cpe : cp) {
+		    if (cpe.getEntryKind() == IClasspathEntry.CPE_CONTAINER) {
+		        if (p.equals(cpe.getPath())) {
+		            continue;
+		        }
+		    }
+		    result.add(cpe);
 		}
+		jprj.setRawClasspath(result.toArray(new IClasspathEntry[result.size()]), null);
+
 	}
 
 	/*
