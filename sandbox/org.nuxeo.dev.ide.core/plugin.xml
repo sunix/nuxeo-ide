@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <!--extension
+         id="org.nuxeo.dev.ide.nuxeoAppBuilder"
+         name="Nuxeo Application Project Builder"
+         point="org.eclipse.core.resources.builders">
+      <builder
+            hasNature="true">
+         <run
+               class="org.nuxeo.dev.ide.builder.NuxeoApplicationBuilder">
+         </run>
+      </builder>
+   </extension-->
+   <extension
+         id="org.nuxeo.dev.ide.NuxeoNature"
+         name="Nuxeo Application Project Nature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="org.nuxeo.dev.ide.builder.NuxeoProject">
+         </run>
+      </runtime>
+      <!--builder
+            id="org.nuxeo.dev.ide.nuxeoAppBuilder">
+      </builder-->
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            objectClass="org.eclipse.core.resources.IProject"
+            nameFilter="*"
+            id="org.nuxeo.dev.ide.contribution1">
+         <visibility>
+             <objectState name="projectNature" value="org.nuxeo.dev.ide.NuxeoNature"/>
+         </visibility>            
+         <action
+               label="Remove Nuxeo Nature"
+               icon="icons/nx.gif"
+               class="org.nuxeo.dev.ide.builder.ToggleNatureAction"
+               menubarPath="additions"
+               enablesFor="+"
+               id="org.nuxeo.dev.ide.addRemoveNatureAction">
+         </action>         
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            objectClass="org.eclipse.core.resources.IProject"
+            nameFilter="*"
+            id="org.nuxeo.dev.ide.contribution1">
+         <visibility>
+            <not>
+              <objectState name="projectNature" value="org.nuxeo.dev.ide.NuxeoNature"/>
+            </not>
+         </visibility>
+         <action
+               label="Add Nuxeo Nature"
+               icon="icons/nx.gif"
+               class="org.nuxeo.dev.ide.builder.ToggleNatureAction"
+               menubarPath="additions"
+               enablesFor="+"
+               id="org.nuxeo.dev.ide.addRemoveNatureAction">
+         </action>         
+      </objectContribution>
+   </extension>   
+   <!--extension
+         id="xmlProblem"
+         name="XML Problem"
+         point="org.eclipse.core.resources.markers">
+      <super
+            type="org.eclipse.core.resources.problemmarker">
+      </super>
+      <persistent
+            value="true">
+      </persistent>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            name="Sample Preferences"
+            class="org.nuxeo.dev.ide.preferences.SamplePreferencePage"
+            id="org.nuxeo.dev.ide.preferences.SamplePreferencePage">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.nuxeo.dev.ide.preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            name="Sample Page"
+            nameFilter="*.*"
+            class="org.nuxeo.dev.ide.properties.SamplePropertyPage"
+            id="org.nuxeo.dev.ide.properties.samplePropertyPage">
+         <enabledWhen>
+            <instanceof
+                  value="org.eclipse.core.resources.IFile">
+            </instanceof>
+         </enabledWhen>
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="Sample Category"
+            id="org.nuxeo.dev.ide">
+      </category>
+      <view
+            name="Sample View"
+            icon="icons/sample.gif"
+            category="org.nuxeo.dev.ide"
+            class="org.nuxeo.dev.ide.views.SampleView"
+            id="org.nuxeo.dev.ide.views.SampleView">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.eclipse.jdt.ui.JavaPerspective">
+         <view
+               ratio="0.5"
+               relative="org.eclipse.ui.views.TaskList"
+               relationship="right"
+               id="org.nuxeo.dev.ide.views.SampleView">
+         </view>
+      </perspectiveExtension>
+   </extension-->
+   <extension
+         point="org.eclipse.help.contexts">
+      <contexts
+            file="contexts.xml">
+      </contexts>
+   </extension>
+
+
+<!-- launch configuration -->
+<extension point="org.eclipse.debug.core.launchConfigurationTypes">
+    <launchConfigurationType
+        name="Nuxeo Application"
+        delegate="org.nuxeo.dev.ide.launcher.NuxeoLauncher"
+        modes="run, debug"               
+        id="org.eclipse.jdt.launching.nuxeoApplication">  
+    </launchConfigurationType>
+</extension>
+<!-- launch icon -->
+<extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+    <launchConfigurationTypeImage
+        icon="icons/nx.gif"
+        configTypeID="org.eclipse.jdt.launching.nuxeoApplication"
+        id="org.eclipse.jdt.debug.ui.launchConfigurationTypeImage.nuxeoApp">
+    </launchConfigurationTypeImage>
+</extension>
+<!-- launch tab group -->
+<extension point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+    <launchConfigurationTabGroup
+        type="org.eclipse.jdt.launching.nuxeoApplication"
+        class="org.nuxeo.dev.ide.launcher.NuxeoLauncherTabGroup"
+        id="org.eclipse.jdt.debug.ui.launchConfigurationTabGroup.nuxeoApp">
+    </launchConfigurationTabGroup>
+</extension>
+<!-- launch shortcut -->
+<extension point="org.eclipse.debug.ui.launchShortcuts">
+    <shortcut
+        id="org.eclipse.jdt.debug.ui.nuxeoAppShortcut"
+        class="org.nuxeo.dev.ide.launcher.NuxeoApplicationLaunchShortcut"
+        label="Nuxeo Application"
+        icon="icons/nx.gif"
+        modes="run, debug">
+        <description
+     description="Runs Nuxeo Application"
+     mode="run">
+    </description>
+    <description
+     description="Debugs Nuxeo Application"
+     mode="debug">
+    </description>        
+          <contextualLaunch>
+  <enablement>
+    <with variable="selection">
+     <count value="1"/>
+      <iterate>
+         <and>
+          <test property="org.eclipse.jdt.launching.isContainer"/>
+          <test property="org.eclipse.jdt.launching.hasProjectNature" args="org.nuxeo.dev.ide.NuxeoNature"/>
+         </and>
+      </iterate>
+     </with>
+  </enablement>
+  </contextualLaunch>
+  <configurationType
+    id="org.eclipse.jdt.launching.nuxeoApplication">
+  </configurationType>
+    </shortcut>
+</extension>
+
+<extension point="org.eclipse.jdt.core.classpathContainerInitializer">
+  <classpathContainerInitializer id="org.nuxeo.DEV_TOOLS_LIBRARY" class = "org.nuxeo.dev.ide.launcher.NuxeoDevClassPathInitializer"/>
+</extension>
+
+</plugin>
