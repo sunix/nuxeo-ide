@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Nuxeo IDE Builder
+Bundle-SymbolicName: org.nuxeo.ide.builder;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.nuxeo.ide.builder.Activator
+Bundle-Vendor: Nuxeo SA
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.junit4,
+ org.apache.commons.logging,
+ org.eclipse.ui.ide
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Import-Package: org.eclipse.jdt.core,
+ org.eclipse.pde.internal.core

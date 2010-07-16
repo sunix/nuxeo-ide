@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         id="org.nuxeo.ide.builder.BundleBuilder"
+         name="Nuxeo Bundle Builder"
+         point="org.eclipse.core.resources.builders">
+      <builder
+            callOnEmptyDelta="false"
+            hasNature="true"
+            isConfigurable="false">
+         <run
+               class="org.nuxeo.ide.builder.BundleBuilder">
+         </run>
+      </builder>
+   </extension>
+   <extension
+         id="org.nuxeo.ide.builder.BundleNature"
+         name="Nuxeo Bundle Nature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="org.nuxeo.ide.builder.BundleNature">
+         </run>
+      </runtime>
+      <builder
+            id="org.nuxeo.ide.builder.BundleBuilder">
+      </builder>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            objectClass="org.eclipse.core.resources.IProject"
+            nameFilter="*"
+            id="org.nuxeo.ide.builder.project.popup">
+         <action
+               label="Toggle Nuxeo Bundle Nature"
+               class="org.nuxeo.ide.builder.ToggleNatureAction"
+               menubarPath="additions"
+               enablesFor="+"
+               id="org.nuxeo.ide.builder.addRemoveNatureAction">
+         </action>
+         <action
+               class="org.nuxeo.ide.builder.manifest.ReformatProjectAction"
+               id="org.nuxeo.ide.builder.reformatManifest"
+               label="Reformat Manifest"
+               menubarPath="nuxeo">
+         </action>
+      </objectContribution>
+      <objectContribution
+            adaptable="true"
+            id="org.nuxeo.ide.builder.manifest.popup"
+            nameFilter="MANIFEST.MF"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               class="org.nuxeo.ide.builder.manifest.ReformatManifestAction"
+               id="org.nuxeo.ide.builder.reformatManifest"
+               label="Reformat Manifest"
+               menubarPath="nuxeo">
+         </action>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="org.nuxeo.ide.builder.ws.popup"
+            objectClass="org.eclipse.ui.internal.WorkingSet">
+         <action
+               class="org.nuxeo.ide.builder.manifest.ReformatWorkingSetAction"
+               id="org.nuxeo.ide.builder.reformatManifest"
+               label="Reformat Manifests">
+         </action>
+      </objectContribution>
+   </extension>
+   <extension
+         id="xmlProblem"
+         name="XML Problem"
+         point="org.eclipse.core.resources.markers">
+      <super
+            type="org.eclipse.core.resources.problemmarker">
+      </super>
+      <persistent
+            value="true">
+      </persistent>
+   </extension>
+   <extension
+         point="org.eclipse.ui.ide.projectNatureImages">
+      <image
+            icon="ILoveECM.jpg"
+            id="org.nuxeo.ide.builder.iLoveECM"
+            natureId="org.nuxeo.ide.builder.bundleNature">
+      </image>
+   </extension>
+
+</plugin>
