@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <description url="http://download.nuxeo.org/nuxeo-ide/updates/snapshots">
+      Nuxeo IDE update site - Snapshots versions
+   </description>
+   <feature url="features/org.nuxeo.ide.webengine.feature_1.0.0.201007181426.jar" id="org.nuxeo.ide.webengine.feature" version="1.0.0.201007181426">
+      <category name="org.nuxeo.ide"/>
+   </feature>
+   <feature url="features/org.nuxeo.ide.archetype.feature_1.0.0.201007181426.jar" id="org.nuxeo.ide.archetype.feature" version="1.0.0.201007181426">
+      <category name="org.nuxeo.ide"/>
+   </feature>
+   <feature url="features/org.nuxeo.ide.feature_1.0.0.201007181426.jar" id="org.nuxeo.ide.feature" version="1.0.0.201007181426">
+      <category name="org.nuxeo.ide"/>
+   </feature>
+   <category-def name="org.nuxeo.ide" label="Nuxeo IDE"/>
+</site>

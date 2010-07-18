@@ -13,3 +13,7 @@ target
 *.iws
 *-orig
 *-bak
+eclipse
+nuxeo-sdk
+target-platform
+org.nuxeo.ide.releng/externals

@@ -1,0 +1,26 @@
+<project xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+
+  <target name="check-target-platform">
+    <property name="swtbot.target-platform" value="${basedir}/../target-platform/swtbot" />
+    <available file="${swtbot.target-platform}/plugins" property="swtbot.target-platform.available" />
+    <property name="nuxeo-sdk.target-platform" value="${basedir}/../target-platform/nuxeo-sdk" />
+    <available file="${nuxeo-sdk.target-platform}/plugins" property="nuxeo-sdk.target-platform.available" />
+  </target>
+
+  <target name="materialize-target-platform" depends="check-target-platform,materialize-swtbot,materialize-nuxeo-sdk"/>
+
+  <target name="materialize-swtbot" unless="swtbot.target-platform.available">
+    <mkdir dir="${swtbot.target-platform}"/>
+    <unzip dest="${swtbot.target-platform}" src="externals/${swtbot.archive}">
+      <mapper type="glob" from="eclipse/*" to="${swtbot.target-platform}/"/>
+    </unzip>
+  </target>
+
+  <target name="materialize-nuxeo-sdk" unless="nuxeo-sdk.target-platform.available">
+    <artifact:mvn pom="materialize-nuxeo-sdk.xml" mavenHome="${maven.home}">
+      <arg value="-e"/>
+      <arg value="package"/>
+    </artifact:mvn>
+  </target>
+
+</project>

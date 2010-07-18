@@ -1,0 +1,12 @@
+# see http://archive.eclipse.org/eclipse/downloads/drops/R-3.3-200706251500/srcIncludedBuildInstructions.html#build_platforms for valid values
+
+os = linux
+ws = gtk
+arch = x86_64
+
+# provide 34, 35 or 36
+eclipse.version = 35
+eclipse-target = ${basedir}/externals/eclipse
+
+# provide maven for nuxeo target platform
+maven.home = /usr/local/opt/apache-maven
