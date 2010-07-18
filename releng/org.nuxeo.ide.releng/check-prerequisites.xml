@@ -16,11 +16,11 @@
         <available file="${swtbot}/plugins" property="swtbot.available" />
         <fail unless="swtbot.available" message="failed to find swtbot plugins located at ${swtbot}" />
 
-        <property name="nuxeo-sdk" value="${basedir}/../target-platform/nuxeo-sdk" />
-        <available file="${nuxeo-sdk}/plugins" property="nuxeo-sdk.available" />
-        <fail unless="nuxeo-sdk.available" message="failed to find nuxeo-sdk plugins located at ${nuxeo-sdk}" />
+        <property name="thirds" value="${basedir}/../target-platform/thirds" />
+        <available file="${thirds}/plugins" property="thirds.available" />
+        <fail unless="thirds.available" message="failed to find thirds plugins located at ${thirds}" />
 
-        <property name="pde-build-path" value="${nuxeo-sdk}" />
+        <property name="pde-build-path" value="${thirds}" />
 
         <echo>Using pluginPath = ${pde-build-path}</echo>
     </target>

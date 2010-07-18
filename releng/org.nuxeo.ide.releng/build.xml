@@ -40,7 +40,7 @@
 
     <property name="all.buildId" value="${plugin.version.primary}.${plugin.suffix}" />
 
-    <property name="plugin.prefix" value="org.nuxeo.ecm.rcp" />
+    <property name="plugin.prefix" value="org.nuxeo" />
 
     <property name="feature.id" value="org.nuxeo.apogee.sdk.feature" />
     <property name="feature.id.test" value="${feature.id}.test" />
@@ -55,7 +55,7 @@
         <delete failonerror="false" includeemptydirs="true">
             <fileset dir="externals">
                 <include name="**eclipse**/**/**.*" />
-                <include name="nuxeo-sdk/**/**.*" />
+                <include name="thirds/**/**.*" />
             </fileset>
         </delete>
     </target>

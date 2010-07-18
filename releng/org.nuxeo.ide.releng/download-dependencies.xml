@@ -9,7 +9,7 @@
         <available file="externals/libs/ant-contrib-1.0b3.jar" property="ant-contrib-lib-available" />
         <available file="externals/libs/maven-ant-tasks-2.1.0.jar" property="maven-ant-lib-available" />
         <available file="externals/libs/cobertura-1.9" property="ant-cobertura-lib-available" />
-        <available file="externals/nuxeo-sdk/plugins" property="nuxeo-sdk-available" />
+        <available file="externals/thirds/plugins" property="thirds-available" />
         <available file="externals/${swtbot.archive}" property="swtbot-available" />
     	<property name="check-dependencies.available" value="true" />
     </target>
