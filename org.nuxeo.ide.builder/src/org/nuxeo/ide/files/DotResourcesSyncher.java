@@ -31,8 +31,8 @@ public class DotResourcesSyncher {
     public boolean needsSynchronization(IProject project, IResourceDelta delta) {
         IResource resource = delta.getResource();
         IPath path = resource.getProjectRelativePath();
-        for (IPath folderPath : dotsPath) {
-            if (!folderPath.isPrefixOf(path)) {
+        for (IPath dotPath : dotsPath) {
+            if (!dotPath.isPrefixOf(path)) {
                 continue;
             }
             if (isAffected(project, delta)) {
@@ -99,8 +99,12 @@ public class DotResourcesSyncher {
     }
 
     public void copyToResources(IProject project, IResourceDelta delta, IProgressMonitor monitor) throws CoreException {
+        if (!needsSynchronization(project, delta)) {
+            return;
+        }
         if (delta.getResource().getType() == IResource.FILE) {
             synchronizeDotFile(project, delta, monitor);
+            return;
         }
         for (IResourceDelta affectedDelta : delta.getAffectedChildren()) {
             copyToResources(project, affectedDelta, monitor);
