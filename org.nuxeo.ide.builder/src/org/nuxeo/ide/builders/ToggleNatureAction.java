@@ -1,4 +1,4 @@
-package org.nuxeo.ide.builder;
+package org.nuxeo.ide.builders;
 
 import java.util.Iterator;
 

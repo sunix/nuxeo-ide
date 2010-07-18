@@ -11,7 +11,7 @@
             hasNature="true"
             isConfigurable="false">
          <run
-               class="org.nuxeo.ide.builder.BundleBuilder">
+               class="org.nuxeo.ide.builders.BundleBuilder">
          </run>
       </builder>
    </extension>
@@ -21,7 +21,7 @@
          point="org.eclipse.core.resources.natures">
       <runtime>
          <run
-               class="org.nuxeo.ide.builder.BundleNature">
+               class="org.nuxeo.ide.builders.BundleNature">
          </run>
       </runtime>
       <builder
@@ -37,13 +37,13 @@
             id="org.nuxeo.ide.builder.project.popup">
          <action
                label="Toggle Nuxeo Bundle Nature"
-               class="org.nuxeo.ide.builder.ToggleNatureAction"
+               class="org.nuxeo.ide.builders.ToggleNatureAction"
                menubarPath="additions"
                enablesFor="+"
                id="org.nuxeo.ide.builder.addRemoveNatureAction">
          </action>
          <action
-               class="org.nuxeo.ide.builder.manifest.ReformatProjectAction"
+               class="org.nuxeo.ide.manifests.ReformatProjectAction"
                id="org.nuxeo.ide.builder.reformatManifest"
                label="Reformat Manifest"
                menubarPath="nuxeo">
@@ -55,7 +55,7 @@
             nameFilter="MANIFEST.MF"
             objectClass="org.eclipse.core.resources.IFile">
          <action
-               class="org.nuxeo.ide.builder.manifest.ReformatManifestAction"
+               class="org.nuxeo.ide.manifests.ReformatManifestAction"
                id="org.nuxeo.ide.builder.reformatManifest"
                label="Reformat Manifest"
                menubarPath="nuxeo">
@@ -66,9 +66,14 @@
             id="org.nuxeo.ide.builder.ws.popup"
             objectClass="org.eclipse.ui.internal.WorkingSet">
          <action
-               class="org.nuxeo.ide.builder.manifest.ReformatWorkingSetAction"
+               class="org.nuxeo.ide.manifests.ReformatWorkingSetAction"
                id="org.nuxeo.ide.builder.reformatManifest"
                label="Reformat Manifests">
+         </action>
+         <action
+               class="org.nuxeo.ide.versions.BranchVersionLabeler"
+               id="org.nuxeo.ide.builder.changeVersionLabel"
+               label="Change Version Label">
          </action>
       </objectContribution>
    </extension>
@@ -86,10 +91,21 @@
    <extension
          point="org.eclipse.ui.ide.projectNatureImages">
       <image
-            icon="ILoveECM.jpg"
+            icon="icons/ILoveECM.jpg"
             id="org.nuxeo.ide.builder.iLoveECM"
-            natureId="org.nuxeo.ide.builder.bundleNature">
+            natureId="org.nuxeo.ide.builder.BundleNature">
       </image>
    </extension>
+   
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            name="Release Engineering"
+            icon="icons/releng_gears.gif"
+            class="org.nuxeo.ide.perspectives.ReleaseEngineeringPerspective"
+            id="org.nuxeo.ide.tools.perspectives.ReleaseEngineeringPerspective">
+      </perspective>
+   </extension>
+   
 
 </plugin>

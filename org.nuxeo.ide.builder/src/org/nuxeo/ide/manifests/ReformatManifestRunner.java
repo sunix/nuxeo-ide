@@ -1,4 +1,4 @@
-package org.nuxeo.ide.builder.manifest;
+package org.nuxeo.ide.manifests;
 
 import java.io.IOException;
 
@@ -10,7 +10,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.statushandlers.StatusManager;
-import org.nuxeo.ide.builder.Activator;
+import org.nuxeo.ide.Activator;
 
 public class ReformatManifestRunner {
 	

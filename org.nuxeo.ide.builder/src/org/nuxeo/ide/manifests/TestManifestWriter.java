@@ -1,4 +1,4 @@
-package org.nuxeo.ide.builder.manifest;
+package org.nuxeo.ide.manifests;
 
 import static junit.framework.Assert.assertTrue;
 
@@ -12,7 +12,7 @@ import java.util.jar.Manifest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
-import org.nuxeo.ide.builder.manifest.DirectiveTransformer.ExportPackageVersionEraser;
+import org.nuxeo.ide.manifests.DirectiveTransformer.ExportPackageVersionEraser;
 
 public class TestManifestWriter  {
 	

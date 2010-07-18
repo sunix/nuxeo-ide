@@ -1,4 +1,4 @@
-package org.nuxeo.ide.builder.manifest;
+package org.nuxeo.ide.manifests;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -16,7 +16,7 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.internal.WorkingSet;
 import org.eclipse.ui.statushandlers.StatusManager;
-import org.nuxeo.ide.builder.Activator;
+import org.nuxeo.ide.Activator;
 
 @SuppressWarnings("restriction")
 public class ReformatWorkingSetAction implements IObjectActionDelegate {

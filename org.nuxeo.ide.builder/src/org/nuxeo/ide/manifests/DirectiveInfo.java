@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.nuxeo.ide.builder.manifest;
+package org.nuxeo.ide.manifests;
 
 public class DirectiveInfo {
 	public final String name;

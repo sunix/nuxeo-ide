@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.nuxeo.ide.builder.manifest;
+package org.nuxeo.ide.manifests;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

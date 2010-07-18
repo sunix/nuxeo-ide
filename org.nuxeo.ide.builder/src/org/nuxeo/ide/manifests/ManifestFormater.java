@@ -1,4 +1,4 @@
-package org.nuxeo.ide.builder.manifest;
+package org.nuxeo.ide.manifests;
 
 import java.io.File;
 import java.io.FileInputStream;

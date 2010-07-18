@@ -1,8 +1,15 @@
-package org.nuxeo.ide.builder;
+package org.nuxeo.ide;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.nuxeo.ide.templates.TemplateProvider;
 import org.osgi.framework.BundleContext;
+
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -14,6 +21,8 @@ public class Activator extends AbstractUIPlugin {
 
 	// The shared instance
 	private static Activator plugin;
+
+	protected Injector injector;
 
 	/**
 	 * The constructor
@@ -28,6 +37,7 @@ public class Activator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+		injector = Guice.createInjector(new IdeModule());
 	}
 
 	/*
@@ -36,6 +46,7 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
+		injector = null;
 		super.stop(context);
 	}
 
@@ -58,4 +69,13 @@ public class Activator extends AbstractUIPlugin {
 	public static ImageDescriptor getImageDescriptor(String path) {
 		return imageDescriptorFromPlugin(PLUGIN_ID, path);
 	}
+
+    public void inject(Object instance) {
+         injector.injectMembers(instance);
+    }
+
+    public static CoreException wrapError(String message, Throwable error) {
+        return new CoreException(new Status(IStatus.ERROR, PLUGIN_ID, message, error));
+    }
+
 }

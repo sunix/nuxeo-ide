@@ -1,13 +1,11 @@
-package org.nuxeo.ide.builder;
-
-import java.io.File;
-import java.net.URI;
+package org.nuxeo.ide.files;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -109,21 +107,42 @@ public class DotResourcesSyncher {
         }
     }
 
-    public void eraseAndCopyToResources(IProject project, IProgressMonitor monitor) throws CoreException {
-        IFolder resourceFolder = project.getFolder(resourcePath);
+    public void copyToResources(final IProject project, final IProgressMonitor monitor) throws CoreException {
+        final IFolder resourceFolder = project.getFolder(resourcePath);
+        final IPath projectLocation = project.getLocation();
         for (IPath dotPath : dotsPath) {
-            IFolder source = project.getFolder(dotPath);
-            if (!source.exists()) {
+            final IFolder dotFolder = project.getFolder(dotPath);
+            if (!dotFolder.exists()) {
                 continue;
             }
-            IFolder target = resourceFolder.getFolder(dotPath);
-            if (target.exists()) {
-                target.delete(true, monitor);
-            }
-            createDerivedHierarchy(resourceFolder, dotPath.removeLastSegments(1), monitor);
-            source.copy(target.getFullPath(), COPY_FLAGS, monitor);
+            dotFolder.accept(new IResourceVisitor() {
+                @Override
+                public boolean visit(IResource dotResource) throws CoreException {
+                    IPath path = relocatePath(projectLocation, dotResource, resourceFolder);
+                    if (dotResource.getType() == IResource.FOLDER) {
+                        IFolder dotFolder = (IFolder)dotResource;
+                        IFolder targetFolder = resourceFolder.getFolder(path);
+                        if (targetFolder.exists()) {
+                            return true;
+                        }
+                        dotFolder.copy(targetFolder.getFullPath(), COPY_FLAGS, monitor);
+                       return false;
+                    } else if (dotResource.getType() == IResource.FILE) {
+                        IFile dotFile = (IFile)dotResource;
+                        IFile targetFile = resourceFolder.getFile(path);
+                        if (targetFile.exists()) {
+                            targetFile.setContents(dotFile.getContents(), 0, monitor);
+                            return false;
+                        }
+                        dotFile.copy(targetFile.getFullPath(), COPY_FLAGS, monitor);
+                        return false;
+                    }
+                    return false;
+                }
+            });
         }
     }
+
 
     public void eraseAndCopyFromResources(IProject project, IProgressMonitor monitor) throws CoreException {
         IFolder resourcesFolder = project.getFolder(resourcePath);
@@ -145,19 +164,10 @@ public class DotResourcesSyncher {
 
     public static final IPath DOT_PATH = new Path(".");
 
-    public IPath relocatePath(IProject project, IFolder base, IResource resource, IFolder target) {
-        IPath baseLocation = base.getLocation();
-        IPath fileLocation = resource.getLocation();
-        IPath commonLocation = fileLocation.removeFirstSegments(baseLocation.segmentCount());
-        return target.getLocation().append(commonLocation);
+    public IPath relocatePath(IPath baseLocation, IResource resource, IFolder target) {
+        IPath resourceLocation = resource.getLocation();
+        IPath relativeLocation = resourceLocation.removeFirstSegments(baseLocation.segmentCount());
+        return relativeLocation;
     }
 
-    public void copyFolder(IProject project, IFolder baseFolder, IFolder sourceFolder, IFolder targetFolder, IProgressMonitor monitor) throws CoreException {
-        IPath relocatedPath = relocatePath(project, baseFolder, sourceFolder, targetFolder);
-        IFolder relocatedFolder = targetFolder.getFolder(relocatedPath);
-        if (relocatedFolder.exists()) {
-             relocatedFolder.delete(false, monitor); // TODO analyze and replace only altered content
-        }
-        sourceFolder.copy(relocatedFolder.getParent().getFullPath(), false, monitor);
-     }
 }
