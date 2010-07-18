@@ -3,7 +3,7 @@
 <plugin>
 
    <extension
-         id="org.nuxeo.ide.builder.BundleBuilder"
+         id="org.nuxeo.ide.builders.BundleBuilder"
          name="Nuxeo Bundle Builder"
          point="org.eclipse.core.resources.builders">
       <builder
@@ -16,7 +16,7 @@
       </builder>
    </extension>
    <extension
-         id="org.nuxeo.ide.builder.BundleNature"
+         id="org.nuxeo.ide.builders.BundleNature"
          name="Nuxeo Bundle Nature"
          point="org.eclipse.core.resources.natures">
       <runtime>
@@ -25,7 +25,7 @@
          </run>
       </runtime>
       <builder
-            id="org.nuxeo.ide.builder.BundleBuilder">
+            id="org.nuxeo.ide.builders.BundleBuilder">
       </builder>
    </extension>
    <extension
@@ -34,7 +34,7 @@
             adaptable="true"
             objectClass="org.eclipse.core.resources.IProject"
             nameFilter="*"
-            id="org.nuxeo.ide.builder.project.popup">
+            id="org.nuxeo.ide.projects.popup">
          <action
                label="Toggle Nuxeo Bundle Nature"
                class="org.nuxeo.ide.builders.ToggleNatureAction"
@@ -51,7 +51,7 @@
       </objectContribution>
       <objectContribution
             adaptable="true"
-            id="org.nuxeo.ide.builder.manifest.popup"
+            id="org.nuxeo.ide.manifests.popup"
             nameFilter="MANIFEST.MF"
             objectClass="org.eclipse.core.resources.IFile">
          <action
@@ -93,7 +93,7 @@
       <image
             icon="icons/ILoveECM.jpg"
             id="org.nuxeo.ide.builder.iLoveECM"
-            natureId="org.nuxeo.ide.builder.BundleNature">
+            natureId="org.nuxeo.ide.builders.BundleNature">
       </image>
    </extension>
    
@@ -103,7 +103,7 @@
             name="Release Engineering"
             icon="icons/releng_gears.gif"
             class="org.nuxeo.ide.perspectives.ReleaseEngineeringPerspective"
-            id="org.nuxeo.ide.tools.perspectives.ReleaseEngineeringPerspective">
+            id="org.nuxeo.ide.perspectives.ReleaseEngineeringPerspective">
       </perspective>
    </extension>
    

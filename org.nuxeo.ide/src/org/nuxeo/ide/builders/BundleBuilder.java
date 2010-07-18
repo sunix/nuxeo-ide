@@ -30,7 +30,7 @@ public class BundleBuilder extends IncrementalProjectBuilder {
                 dotSyncher.copyToResources(project, monitor);
                 break;
             case CLEAN_BUILD:
-                dotSyncher.eraseAndCopyFromResources(project, monitor);
+                dotSyncher.copyFromResources(project, monitor);
                 break;
             default:
                 return new IProject[] {};
@@ -41,6 +41,6 @@ public class BundleBuilder extends IncrementalProjectBuilder {
     @Override
     protected void clean(IProgressMonitor monitor) throws CoreException {
         IProject project = getProject();
-        dotSyncher.eraseAndCopyFromResources(project, monitor);
+        dotSyncher.copyFromResources(project, monitor);
     }
 }

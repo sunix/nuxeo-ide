@@ -1,5 +1,6 @@
 package org.nuxeo.ide.files;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -12,6 +13,78 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 
 public class DotResourcesSyncher {
+
+    private final class Eraser implements IResourceVisitor {
+
+        private final IFolder root;
+
+        private final IProgressMonitor monitor;
+
+        private final IPath basepath;
+
+        private Eraser(IPath basepath, IFolder root, IProgressMonitor monitor) {
+            this.root = root;
+            this.monitor = monitor;
+            this.basepath = basepath;
+        }
+
+        @Override
+        public boolean visit(IResource resource) throws CoreException {
+            IPath path = relocatePath(basepath, resource);
+            if (!root.exists(path)) {
+                resource.delete(false, monitor);
+                return false;
+            }
+            return true;
+        }
+
+    }
+
+    private final class Duplicator implements IResourceVisitor {
+
+        private final IContainer root;
+
+        private final IProgressMonitor monitor;
+
+        private final IPath basepath;
+
+        private Duplicator(IPath basepath, IContainer root, IProgressMonitor monitor) {
+            this.root = root;
+            this.monitor = monitor;
+            this.basepath = basepath;
+        }
+
+        @Override
+        public boolean visit(IResource resource) throws CoreException {
+            IPath path = relocatePath(basepath, resource);
+            if (resource.getType() == IResource.FOLDER) {
+                return duplicateFolder((IFolder) resource, path);
+            }
+            if (resource.getType() == IResource.FILE) {
+                return duplicateFile((IFile) resource, path);
+            }
+            return false;
+        }
+
+        public boolean duplicateFile(IFile srcFile, IPath path) throws CoreException {
+            IFile targetFile = root.getFile(path);
+            if (targetFile.exists()) {
+                targetFile.setContents(srcFile.getContents(), 0, monitor);
+                return false;
+            }
+            srcFile.copy(targetFile.getFullPath(), COPY_FLAGS, monitor);
+            return false;
+        }
+
+        protected boolean duplicateFolder(IFolder srcFolder, IPath path) throws CoreException {
+            IFolder dstFolder = root.getFolder(path);
+            if (dstFolder.exists()) {
+                return true;
+            }
+            srcFolder.copy(dstFolder.getFullPath(), COPY_FLAGS, monitor);
+            return false;
+        }
+    }
 
     protected final IPath[] dotsPath;
 
@@ -112,66 +185,38 @@ public class DotResourcesSyncher {
     }
 
     public void copyToResources(final IProject project, final IProgressMonitor monitor) throws CoreException {
-        final IFolder resourceFolder = project.getFolder(resourcePath);
-        final IPath projectLocation = project.getLocation();
+        final IFolder root = project.getFolder(resourcePath);
+        final IPath basepath = project.getFullPath();
         for (IPath dotPath : dotsPath) {
             final IFolder dotFolder = project.getFolder(dotPath);
             if (!dotFolder.exists()) {
                 continue;
             }
-            dotFolder.accept(new IResourceVisitor() {
-                @Override
-                public boolean visit(IResource dotResource) throws CoreException {
-                    IPath path = relocatePath(projectLocation, dotResource, resourceFolder);
-                    if (dotResource.getType() == IResource.FOLDER) {
-                        IFolder dotFolder = (IFolder)dotResource;
-                        IFolder targetFolder = resourceFolder.getFolder(path);
-                        if (targetFolder.exists()) {
-                            return true;
-                        }
-                        dotFolder.copy(targetFolder.getFullPath(), COPY_FLAGS, monitor);
-                       return false;
-                    } else if (dotResource.getType() == IResource.FILE) {
-                        IFile dotFile = (IFile)dotResource;
-                        IFile targetFile = resourceFolder.getFile(path);
-                        if (targetFile.exists()) {
-                            targetFile.setContents(dotFile.getContents(), 0, monitor);
-                            return false;
-                        }
-                        dotFile.copy(targetFile.getFullPath(), COPY_FLAGS, monitor);
-                        return false;
-                    }
-                    return false;
-                }
-            });
+            dotFolder.accept(new Duplicator(basepath, root, monitor));
         }
     }
 
-
-    public void eraseAndCopyFromResources(IProject project, IProgressMonitor monitor) throws CoreException {
-        IFolder resourcesFolder = project.getFolder(resourcePath);
+    public void copyFromResources(IProject project, IProgressMonitor monitor) throws CoreException {
+        IFolder root = project.getFolder(resourcePath);
+        IPath basepath = root.getFullPath();
         for (IPath path : dotsPath) {
-            IResource source = resourcesFolder.findMember(path);
-            if (source == null) {
-                return;
+            IFolder resourcesFolder = root.getFolder(path);
+            if (!resourcesFolder.exists()) {
+                continue;
             }
-            IResource target = project.getFolder(path);
-            if (target.exists()) {
-                target.delete(false, monitor);
-            }
-            if (path.segmentCount() > 1) {
-                createDerivedHierarchy(project.getFolder(path.segment(0)), path.removeLastSegments(1), monitor);
-            }
-            source.copy(target.getFullPath(), COPY_FLAGS, monitor);
+            final IFolder dotFolder = project.getFolder(path);
+            resourcesFolder.accept(new Duplicator(basepath, project, monitor));
+            dotFolder.accept(new Eraser(basepath, resourcesFolder, monitor));
         }
+
     }
 
     public static final IPath DOT_PATH = new Path(".");
 
-    public IPath relocatePath(IPath baseLocation, IResource resource, IFolder target) {
-        IPath resourceLocation = resource.getLocation();
-        IPath relativeLocation = resourceLocation.removeFirstSegments(baseLocation.segmentCount());
-        return relativeLocation;
+    public IPath relocatePath(IPath basepath, IResource resource) {
+        IPath resourcePath = resource.getFullPath();
+        IPath relativePath = resourcePath.removeFirstSegments(basepath.segmentCount());
+        return relativePath;
     }
 
 }
