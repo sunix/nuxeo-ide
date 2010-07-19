@@ -1,4 +1,4 @@
-package org.nuxeo.ide.versions;
+package org.nuxeo.ide.sandbox.versions;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -22,9 +22,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.matchers.JUnitMatchers;
-import org.nuxeo.ide.Activator;
+import org.nuxeo.ide.sandbox.Activator;
+import org.nuxeo.ide.sandbox.templates.TemplateProvider;
 import org.nuxeo.ide.files.TestResourcesLoader;
-import org.nuxeo.ide.templates.TemplateProvider;
 import org.xml.sax.InputSource;
 
 import com.google.inject.Inject;

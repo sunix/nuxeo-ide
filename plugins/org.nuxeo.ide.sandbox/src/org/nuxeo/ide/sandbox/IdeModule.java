@@ -1,9 +1,10 @@
-package org.nuxeo.ide;
+package org.nuxeo.ide.sandbox;
 
-import org.nuxeo.ide.templates.TemplateProvider;
+import org.nuxeo.ide.sandbox.templates.TemplateProvider;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
+
 
 public class IdeModule extends AbstractModule {
 
@@ -13,7 +14,7 @@ public class IdeModule extends AbstractModule {
     }
 
     @Provides
-    TemplateProvider provideTemplateProvider() {
+    public TemplateProvider provideTemplateProvider() {
         return new TemplateProvider();
     }
 }

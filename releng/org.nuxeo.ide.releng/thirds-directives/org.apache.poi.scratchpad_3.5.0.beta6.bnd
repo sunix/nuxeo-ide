@@ -1,3 +1,2 @@
--nouses: true
-Fragment-Host: org.apache.poi
-Import-Package: *;resolution:=optional
+Export-Package: org.apache.poi.*;scratchpad=split;mandatory:=scratchpad
+Import-Package: org.osgi.framework,javax.transaction.*;version=1.1,*;resolution:=optional

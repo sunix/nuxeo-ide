@@ -97,15 +97,7 @@
       </image>
    </extension>
    
-   <extension
-         point="org.eclipse.ui.perspectives">
-      <perspective
-            name="Release Engineering"
-            icon="icons/releng_gears.gif"
-            class="org.nuxeo.ide.perspectives.ReleaseEngineeringPerspective"
-            id="org.nuxeo.ide.perspectives.ReleaseEngineeringPerspective">
-      </perspective>
-   </extension>
+
    
 
 </plugin>

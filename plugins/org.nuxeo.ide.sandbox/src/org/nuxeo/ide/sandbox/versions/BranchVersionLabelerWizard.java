@@ -1,4 +1,4 @@
-package org.nuxeo.ide.versions;
+package org.nuxeo.ide.sandbox.versions;
 
 import org.eclipse.jface.wizard.Wizard;
 

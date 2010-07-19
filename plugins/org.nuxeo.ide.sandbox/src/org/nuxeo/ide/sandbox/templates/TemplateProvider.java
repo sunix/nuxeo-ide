@@ -1,4 +1,4 @@
-package org.nuxeo.ide.templates;
+package org.nuxeo.ide.sandbox.templates;
 
 import java.io.IOException;
 

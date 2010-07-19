@@ -1,9 +1,8 @@
-package org.nuxeo.ide;
+package org.nuxeo.ide.sandbox;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -13,11 +12,10 @@ import org.osgi.framework.BundleContext;
 public class Activator extends AbstractUIPlugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "org.nuxeo.ide.builder";
+	public static final String PLUGIN_ID = "org.nuxeo.ide.sandbox"; //$NON-NLS-1$
 
 	// The shared instance
 	private static Activator plugin;
-
 
 	/**
 	 * The constructor
@@ -52,19 +50,10 @@ public class Activator extends AbstractUIPlugin {
 		return plugin;
 	}
 
-	/**
-	 * Returns an image descriptor for the image file at the given
-	 * plug-in relative path
-	 *
-	 * @param path the path
-	 * @return the image descriptor
-	 */
-	public static ImageDescriptor getImageDescriptor(String path) {
-		return imageDescriptorFromPlugin(PLUGIN_ID, path);
-	}
-
     public static CoreException wrapError(String message, Throwable error) {
         return new CoreException(new Status(IStatus.ERROR, PLUGIN_ID, message, error));
     }
+
+
 
 }

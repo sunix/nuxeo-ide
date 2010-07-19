@@ -1,4 +1,4 @@
-package org.nuxeo.ide.versions;
+package org.nuxeo.ide.sandbox.versions;
 
 public class BranchVersionLabelerJob {
 
