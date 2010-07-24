@@ -1,0 +1,2 @@
+Nuxeo IDE plugin and target platform has moved in nuxeo-apogee repository (http://hg.nuxeo.org/nuxeo-apogee,nuxeo-apogee-rcp/plugins/org.nuxeo.ecm.rcp.ide). I've let in place the source there for reference only. Please, do not commit any change there.
+
