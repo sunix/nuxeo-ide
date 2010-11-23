@@ -18,17 +18,25 @@ package org.nuxeo.dev.ide.launcher;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
- *
+ * 
  */
 public interface NuxeoLaunchAttributes {
-    
+
+    public static final String ISOLATED = "org.nuxeo.dev.isolated";
+
     public static final String HOME = "org.nuxeo.dev.home";
+
     public static final String HOST = "org.nuxeo.dev.host";
+
     public static final String NOCACHE = "org.nuxeo.dev.nocache";
+
     public static final String UPDATE = "org.nuxeo.dev.update";
+
     public static final String OFFLINE = "org.nuxeo.dev.offline";
-    //public static final String MAIN = "org.nuxeo.dev.main";
+
+    // public static final String MAIN = "org.nuxeo.dev.main";
     public static final String PROFILE = "org.nuxeo.dev.profile";
+
     public static final String CUSTOM_PROFILE = "org.nuxeo.dev.customProfile";
-    
+
 }
