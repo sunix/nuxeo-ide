@@ -1,4 +1,4 @@
-package org.nuxeo.ide.studio.views;
+package org.nuxeo.ide.studio;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;

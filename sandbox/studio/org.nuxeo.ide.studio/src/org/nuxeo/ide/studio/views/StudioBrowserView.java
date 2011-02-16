@@ -1,4 +1,4 @@
-package org.nuxeo.ide.studio.views.views;
+package org.nuxeo.ide.studio.views;
 
 import java.util.ArrayList;
 
