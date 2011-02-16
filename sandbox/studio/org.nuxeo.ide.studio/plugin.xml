@@ -12,7 +12,7 @@
             name="Studio Browser"
             icon="icons/sample.gif"
             category="org.nuxeo.ide.studio.views"
-            class="org.nuxeo.ide.studio.views.views.StudioBrowserView"
+            class="org.nuxeo.ide.studio.views.StudioBrowserView"
             id="org.nuxeo.ide.studio.views.views.StudioBrowserView">
       </view>
    </extension>
