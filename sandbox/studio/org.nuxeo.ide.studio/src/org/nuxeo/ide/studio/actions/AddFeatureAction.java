@@ -17,8 +17,13 @@
 package org.nuxeo.ide.studio.actions;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+import org.nuxeo.ide.studio.data.Node;
+import org.nuxeo.ide.studio.editors.StudioEditor;
+import org.nuxeo.ide.studio.editors.StudioEditorInput;
 import org.nuxeo.ide.studio.ui.Icons;
-import org.nuxeo.ide.studio.ui.UI;
 
 /**
  * @author eugen
@@ -32,8 +37,31 @@ public class AddFeatureAction extends Action {
     }
 
     public void run() {
-        System.out.println("add...");
-        UI.showInfo("Not yet... ");
+        Node n = new Node() {
+            @Override
+            public String getType() {
+                return null;
+            }
+            @Override
+            public String getLabel() {
+                return "Create";
+            }
+            @Override
+            public String getKey() {
+                return "?project=test1#@wiz.create";
+            }
+            @Override
+            public String getId() {
+                return "create";
+            }
+        };
+        IWorkbenchWindow window=PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+        IWorkbenchPage page = window.getActivePage();
+        try {
+        page.openEditor(new StudioEditorInput(n), StudioEditor.ID);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

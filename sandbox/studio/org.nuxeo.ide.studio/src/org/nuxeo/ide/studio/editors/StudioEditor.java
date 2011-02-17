@@ -8,10 +8,16 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IViewActionDelegate;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 import org.nuxeo.ide.studio.data.Node;
 import org.nuxeo.ide.studio.internal.preferences.PreferencesStore;
+import org.nuxeo.ide.studio.views.StudioBrowserView;
 
 
 public class StudioEditor extends EditorPart {
@@ -62,7 +68,19 @@ public class StudioEditor extends EditorPart {
         browser.setUrl(url);
         browser.addTitleListener(new TitleListener() {
             public void changed(TitleEvent event) {
-                System.out.println("title changed :" + event.title);
+                if (event.title.endsWith("Save Done!")) {
+                    System.out.println("save done");
+                } else if (event.title.endsWith("Create Done!")) {
+                    System.out.println("create done");
+                    IWorkbenchWindow window=PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+                    IWorkbenchPage page = window.getActivePage();
+                    IViewPart view = page.findView(StudioBrowserView.ID);
+                    if (view != null) {
+                        ((StudioBrowserView)view).refresh();
+                    }
+                    //TODO not working
+                    setPartName("TODO - find id");
+                }
             }
         });
     }

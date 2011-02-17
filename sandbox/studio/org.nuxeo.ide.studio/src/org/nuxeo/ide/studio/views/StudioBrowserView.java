@@ -56,7 +56,7 @@ public class StudioBrowserView extends ViewPart {
 	/**
 	 * The ID of the view as specified by the extension.
 	 */
-	public static final String ID = "org.nuxeo.ide.studio.views.views.StudioBrowserView";
+	public static final String ID = "org.nuxeo.ide.studio.views.StudioBrowserView";
 
 	private TreeViewer viewer;
 	private DrillDownAdapter drillDownAdapter;
@@ -76,6 +76,10 @@ public class StudioBrowserView extends ViewPart {
 	 * The constructor.
 	 */
 	public StudioBrowserView() {
+	}
+
+	public void refresh() {
+	    viewer.setInput(FeatureHelper.buildFeatureTree("test1"));
 	}
 
 	/**
