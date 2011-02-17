@@ -5,23 +5,24 @@ import org.eclipse.core.runtime.Path;
 import org.nuxeo.ide.studio.connector.StudioIDEContentProvider;
 import org.nuxeo.ide.studio.connector.StudioIDEProject;
 import org.nuxeo.ide.studio.connector.internal.ProjectBean;
+import org.nuxeo.ide.studio.data.model.Feature;
 
 public class MockIDEContentProvider implements StudioIDEContentProvider {
-        
+
     protected ProjectBean[] projects = new ProjectBean[0];
-    
+
     public void setProjects(ProjectBean... beans) {
         this.projects = beans;
     }
-    
+
     public MockIDEContentProvider() {
         populate();
-    } 
+    }
 
     protected void injectProjectURL(ProjectBean p) {
         p.setBinaryPath("/" + p.getName() + ".jar");
     }
-    
+
     protected void populate() {
         ProjectBean p1 = new ProjectBean("p1");
         ProjectBean p2 = new ProjectBean("p2");
@@ -29,14 +30,14 @@ public class MockIDEContentProvider implements StudioIDEContentProvider {
         injectProjectURL(p2);
         setProjects(p1, p2);
     }
-        
+
 
     @Override
     public StudioIDEProject[] getProjects() {
         return projects;
     }
 
- 
+
     @Override
     public StudioIDEProject getDefaultProject() {
         return projects[0];
@@ -57,4 +58,8 @@ public class MockIDEContentProvider implements StudioIDEContentProvider {
         return new Path(path);
     }
 
+    @Override
+    public Feature[] getFeatures(String projectId) {
+        return null;
+    }
 }
