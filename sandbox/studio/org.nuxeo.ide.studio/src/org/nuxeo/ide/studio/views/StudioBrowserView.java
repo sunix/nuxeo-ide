@@ -6,7 +6,6 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
@@ -17,7 +16,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -25,7 +23,9 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
+import org.nuxeo.ide.studio.actions.AddFeatureAction;
 import org.nuxeo.ide.studio.actions.CollapseAllAction;
+import org.nuxeo.ide.studio.actions.DeleteFeatureAction;
 import org.nuxeo.ide.studio.actions.ExpandAllAction;
 import org.nuxeo.ide.studio.data.Node;
 import org.nuxeo.ide.studio.data.model.FeatureHelper;
@@ -60,10 +60,11 @@ public class StudioBrowserView extends ViewPart {
 
 	private TreeViewer viewer;
 	private DrillDownAdapter drillDownAdapter;
-	private Action action1;
-	private Action action2;
 	private Action doubleClickAction;
 
+
+	private Action addFeature;
+	private Action deleteFeature;
 	private Action expandAll;
 	private Action collapseAll;
 
@@ -117,14 +118,13 @@ public class StudioBrowserView extends ViewPart {
 	}
 
 	private void fillLocalPullDown(IMenuManager manager) {
-		manager.add(action1);
-		manager.add(new Separator());
-		manager.add(action2);
+		manager.add(addFeature);
+		manager.add(deleteFeature);
 	}
 
 	private void fillContextMenu(IMenuManager manager) {
-		manager.add(action1);
-		manager.add(action2);
+		manager.add(addFeature);
+		manager.add(deleteFeature);
 		manager.add(new Separator());
 		drillDownAdapter.addNavigationActions(manager);
 		// Other plug-ins can contribute there actions here
@@ -132,6 +132,9 @@ public class StudioBrowserView extends ViewPart {
 	}
 
 	private void fillLocalToolBar(IToolBarManager manager) {
+	    manager.add(addFeature);
+	    manager.add(deleteFeature);
+	    manager.add(new Separator());
 		manager.add(expandAll);
 		manager.add(collapseAll);
 		manager.add(new Separator());
@@ -139,31 +142,11 @@ public class StudioBrowserView extends ViewPart {
 	}
 
 	private void makeActions() {
+	    addFeature = new AddFeatureAction();
+	    deleteFeature = new DeleteFeatureAction(viewer);
 	    expandAll = new ExpandAllAction(viewer);
         collapseAll = new CollapseAllAction(viewer);
 
-		action1 = new Action() {
-			public void run() {
-				showMessage("Action 1 executed");
-			}
-		};
-		action1.setText("Action 1");
-		action1.setToolTipText("Action 1 tooltip");
-		action1.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
-			getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
-
-
-
-
-		action2 = new Action() {
-			public void run() {
-				showMessage("Action 2 executed");
-			}
-		};
-		action2.setText("Action 2");
-		action2.setToolTipText("Action 2 tooltip");
-		action2.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
-				getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
 		doubleClickAction = new Action() {
 			public void run() {
 				ISelection selection = viewer.getSelection();
@@ -199,12 +182,6 @@ public class StudioBrowserView extends ViewPart {
 				doubleClickAction.run();
 			}
 		});
-	}
-	private void showMessage(String message) {
-		MessageDialog.openInformation(
-			viewer.getControl().getShell(),
-			"Studio Browser",
-			message);
 	}
 
 	/**

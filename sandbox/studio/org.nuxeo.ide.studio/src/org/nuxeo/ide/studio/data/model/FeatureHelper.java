@@ -74,13 +74,17 @@ public class FeatureHelper {
                     groups.put(groupName, group);
 
                     String categoryName = getGroupCategory(groupName);
-                    Category category = categories.get(categoryName);
-                    if ( category == null) { // create category
-                        category = new Category(categoryName, categoryName);
-                        categories.put(categoryName, category);
-                        root.getChildren().add(category);
+                    if ( categoryName != null) {
+                        Category category = categories.get(categoryName);
+                        if ( category == null) { // create category
+                            category = new Category(categoryName, categoryName);
+                            categories.put(categoryName, category);
+                            root.getChildren().add(category);
+                        }
+                        category.getChildren().add(group);
+                    } else {
+                        root.getChildren().add(group);
                     }
-                    category.getChildren().add(group);
 
                 }
                 group.getChildren().add(feature);
@@ -125,9 +129,42 @@ public class FeatureHelper {
 
     }
 
+
+    protected static Map<String, String> group2category = new HashMap<String, String>();
+    static {
+        group2category.put("Life Cycles",           "Content Model");
+        group2category.put("Structure Templates",   "Content Model");
+        group2category.put("Documents",             "Content Model");
+        group2category.put("Schemas",               "Content Model");
+
+        group2category.put("Content Views",         "Search And Listings");
+        group2category.put("Virtual Navigations",   "Search And Listings");
+        group2category.put("Advanced Search",       "Search And Listings");
+
+        group2category.put("Event Handlers",        "Automation");
+        group2category.put("User Actions",          "Automation");
+        group2category.put("Automation Chains",     "Automation");
+
+        group2category.put("Mail Templates",        "Templates");
+        group2category.put("Document Templates",    "Templates");
+
+        group2category.put("Users and Groups",      "Roles and Permisions");
+        group2category.put("Permissions",           "Roles and Permisions");
+
+        group2category.put("XML Extension",           "Advanced Settings");
+        group2category.put("Web Services Filtering",  "Advanced Settings");
+        group2category.put("Deployment Extensions",   "Advanced Settings");
+    }
+
     private static String getGroupCategory(String groupName) {
+        String cat = group2category.get(groupName);
+        if ( cat != null ) {
+            return cat;
+        }
         return "default";
     }
+
+
 
 
 }

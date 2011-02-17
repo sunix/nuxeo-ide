@@ -33,6 +33,10 @@ public class Icons {
 
     public static final String ACTION_CONNECT = ACTION_DIR + "connect.png";
 
+    public static final String ACTION_ADD_FEATURE = ACTION_DIR + "add.png";
+
+    public static final String ACTION_DELETE_FEATURE = ACTION_DIR + "delete.png";
+
     public static ImageDescriptor getIcon(String iconPath) {
         return StudioIDEPlugin.getImageDescriptor(iconPath);
     }
