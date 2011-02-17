@@ -133,7 +133,7 @@ public class StudioConnector {
         return null;
     }
     protected InputStream doGet(String path) throws Exception {
-        HttpGet get = new HttpGet();
+        HttpGet get = new HttpGet(url.getPath()+path);
         HttpResponse response = http.execute(host, get);
         HttpEntity entity = response.getEntity();
         if (entity != null) {
@@ -193,6 +193,12 @@ public class StudioConnector {
             }
 
         }
+
+    }
+
+    public static void main(String[] args) throws Exception {
+        StudioConnector con = new StudioConnector(new URL("http://localhost:8080/nuxeo/site/studio"), "b", "b");
+        System.out.println(con.doGetAsString("/list"));
 
     }
 
