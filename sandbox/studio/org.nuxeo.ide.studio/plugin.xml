@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+   <extension-point id="org.nuxeo.ide.studio.provider" name="Nuxeo Studio Workbench Provider" schema="schema/provider.exsd"/>
 
    <extension
          point="org.eclipse.ui.views">
@@ -33,6 +34,42 @@
       <contexts
             file="contexts.xml">
       </contexts>
+   </extension>
+   <extension
+         point="org.eclipse.jdt.core.classpathContainerInitializer">
+      <classpathContainerInitializer id="org.nuxeo.ide.studio.CLASSPATH_CONTAINER" class = "org.nuxeo.ide.studio.internal.jdt.ClasspathContainerInitializer"/>
+   </extension>
+   <extension
+         id="id1"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="org.nuxeo.ide.studio.NxStudioProjectNature">
+         </run>
+      </runtime>
+   </extension>
+   <extension
+         point="org.eclipse.jdt.ui.classpathContainerPage">
+      <classpathContainerPage
+            class="org.nuxeo.ide.studio.internal.jdt.ClasspathContainerPage"
+            id="org.nuxeo.ide.studio.classpathContainerPage1"
+            name="NX Studio">
+      </classpathContainerPage>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.nuxeo.ide.studio.internal.preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="Nuxeo"
+            class="org.nuxeo.ide.studio.internal.preferences.PreferencePage"
+            id="org.nuxeo.ide.studio.preferences.NxStudioPreferencePage"
+            name="Nuxeo Studio Preferences">
+      </page>
    </extension>
 
 </plugin>

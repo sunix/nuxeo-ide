@@ -2,23 +2,26 @@ package org.nuxeo.ide.studio;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.nuxeo.ide.studio.dto.NxStudioWorkbenchBean;
+import org.nuxeo.ide.studio.internal.extensions.ExtensionsReader;
+import org.nuxeo.ide.studio.mock.internal.MockWorbenchProvider;
 import org.osgi.framework.BundleContext;
 
 /**
  * The activator class controls the plug-in life cycle
  */
-public class Activator extends AbstractUIPlugin {
+public class NxStudioPlugin extends AbstractUIPlugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "org.nuxeo.ide.studio.views"; //$NON-NLS-1$
+	public static final String PLUGIN_ID = NxStudioConstants.PLUGIN_ID;
 
 	// The shared instance
-	private static Activator plugin;
+	private static NxStudioPlugin plugin;
 	
 	/**
 	 * The constructor
 	 */
-	public Activator() {
+	public NxStudioPlugin() {
 	}
 
 	/*
@@ -28,9 +31,15 @@ public class Activator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+//		loadExtensions();
 	}
 
-	/*
+//	protected void loadExtensions() {
+//	    ExtensionsReader reader = new ExtensionsReader();
+//        wbProviders = reader.
+//    }
+
+    /*
 	 * (non-Javadoc)
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
 	 */
@@ -38,13 +47,23 @@ public class Activator extends AbstractUIPlugin {
 		plugin = null;
 		super.stop(context);
 	}
+	
+	protected NxStudioWorkbenchProvider wbProvider = new MockWorbenchProvider();
+	
+	public NxStudioWorkbenchBean getStudioWorkbench() {
+	    return wbProvider.getWorkbench();
+	}
+
+	protected void setStudioWorkbenchProvider(NxStudioWorkbenchProvider provider) {
+	    wbProvider = provider;
+	}
 
 	/**
 	 * Returns the shared instance
 	 *
 	 * @return the shared instance
 	 */
-	public static Activator getDefault() {
+	public static NxStudioPlugin getDefault() {
 		return plugin;
 	}
 
@@ -58,4 +77,5 @@ public class Activator extends AbstractUIPlugin {
 	public static ImageDescriptor getImageDescriptor(String path) {
 		return imageDescriptorFromPlugin(PLUGIN_ID, path);
 	}
+
 }

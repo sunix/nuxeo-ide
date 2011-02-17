@@ -20,3 +20,5 @@ org.nuxeo.ide.releng/externals
 sites/*/plugins
 sites/*/features
 plugins/org.nuxeo.ide.archetype/features/
+*.bak
+*.zip
