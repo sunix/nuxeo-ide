@@ -11,6 +11,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 import org.nuxeo.ide.studio.data.Node;
+import org.nuxeo.ide.studio.internal.preferences.PreferencesStore;
 
 
 public class StudioEditor extends EditorPart {
@@ -56,7 +57,7 @@ public class StudioEditor extends EditorPart {
         parent.setLayout(new FillLayout());
         browser = new Browser(parent, SWT.NONE);
         Node node = (Node) getEditorInput().getAdapter(Node.class);
-        String url = "http://10.213.3.231:8080/nuxeo/site/studio/ide/dev" + node.getKey();
+        String url = PreferencesStore.INSTANCE.getConnectLocation()+"/ide/dev" + node.getKey();
         System.out.println(url);
         browser.setUrl(url);
         browser.addTitleListener(new TitleListener() {
