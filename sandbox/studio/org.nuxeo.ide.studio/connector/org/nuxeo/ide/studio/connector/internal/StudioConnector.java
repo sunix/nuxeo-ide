@@ -36,6 +36,7 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.protocol.ClientContext;
+import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
@@ -85,7 +86,8 @@ public class StudioConnector {
         // When HttpClient instance is no longer needed,
         // shut down the connection manager to ensure
         // immediate deallocation of all system resources
-        http.getConnectionManager().shutdown();
+        ClientConnectionManager connectionManager = http.getConnectionManager();
+        connectionManager.shutdown();
     }
 
     public String getFeatures(String projectId) throws Exception {

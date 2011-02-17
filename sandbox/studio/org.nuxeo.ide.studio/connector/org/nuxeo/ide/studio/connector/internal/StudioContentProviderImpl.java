@@ -54,7 +54,7 @@ public class StudioContentProviderImpl implements StudioIDEContentProvider {
     @Override
     public StudioIDEProject[] getProjects() {
         try {
-            return connector.getProjects();
+            return null;//connector.getProjects();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -63,7 +63,7 @@ public class StudioContentProviderImpl implements StudioIDEContentProvider {
     @Override
     public Feature[] getFeatures(String projectId) {
         try {
-            return connector.getFeatures(projectId);
+            return null;//connector.getFeatures(projectId);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
