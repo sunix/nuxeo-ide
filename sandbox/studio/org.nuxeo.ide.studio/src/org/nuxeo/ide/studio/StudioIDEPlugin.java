@@ -1,8 +1,11 @@
 package org.nuxeo.ide.studio;
 
+import java.net.URL;
+
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.nuxeo.ide.studio.connector.StudioIDEContentProvider;
+import org.nuxeo.ide.studio.internal.preferences.PreferencesStore;
 import org.nuxeo.ide.studio.mock.internal.MockIDEContentProvider;
 import org.osgi.framework.BundleContext;
 
@@ -17,10 +20,13 @@ public class StudioIDEPlugin extends AbstractUIPlugin {
 	// The shared instance
 	private static StudioIDEPlugin plugin;
 	
+	protected PreferencesStore prefs;
+	
 	/**
 	 * The constructor
 	 */
 	public StudioIDEPlugin() {
+	    prefs = new PreferencesStore();
 	}
 
 	/*
@@ -57,6 +63,14 @@ public class StudioIDEPlugin extends AbstractUIPlugin {
 	    return wbProvider;
 	}
 
+	public URL getConnectLocation() {
+	    return prefs.getConnectLocation();
+	}
+	
+	public PreferencesStore getPreferences() {
+	    return prefs;
+	}
+	
 	/**
 	 * Returns the shared instance
 	 *

@@ -19,7 +19,7 @@ public class MockIDEContentProvider implements StudioIDEContentProvider {
     } 
 
     protected void injectProjectURL(ProjectBean p) {
-        p.setBinaryPath("/target/" + p.getName() + ".jar");
+        p.setBinaryPath("/" + p.getName() + ".jar");
     }
     
     protected void populate() {
@@ -54,7 +54,7 @@ public class MockIDEContentProvider implements StudioIDEContentProvider {
 
     @Override
     public IPath find(String path) {
-        return new Path("/tmp/" + path);
+        return new Path(path);
     }
 
 }

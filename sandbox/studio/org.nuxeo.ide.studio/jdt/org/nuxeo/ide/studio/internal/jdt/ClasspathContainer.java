@@ -16,14 +16,16 @@
  */
 package org.nuxeo.ide.studio.internal.jdt;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
+import org.nuxeo.ide.studio.StudioIDEConstants;
 import org.nuxeo.ide.studio.StudioIDEPlugin;
+import org.nuxeo.ide.studio.connector.StudioIDEContentProvider;
 import org.nuxeo.ide.studio.connector.StudioIDEProject;
 
 /**
@@ -31,22 +33,39 @@ import org.nuxeo.ide.studio.connector.StudioIDEProject;
  *
  */
 public class ClasspathContainer implements IClasspathContainer {
-    
-    protected final IJavaProject project;
+            
+    protected final IClasspathEntry[] entries;
         
-    protected final List<IClasspathEntry> entries =
-        new ArrayList<IClasspathEntry>();
+    protected final IJavaProject ctx;
     
-    protected ClasspathContainer(IJavaProject java) {
-        this.project = java;
+    protected ClasspathContainer(IJavaProject ctx) {
+        this.ctx = ctx;
+        this.entries = buildEntries(ctx);
+    }
+
+    protected IClasspathEntry[] buildEntries(IJavaProject ctx) {
+        String name = StudioIDEPlugin.getDefault().getPreferences().getStudioProjectName(ctx);
+        StudioIDEContentProvider provider = StudioIDEPlugin.getDefault().getProvider();
+        String studiopath = getProject(provider, name).getBinaryPath();
+        IPath prjpath = provider.find(studiopath);
+        IFile lib = ctx.getProject().getFile(prjpath);
+        return new IClasspathEntry[] { JavaCore.newLibraryEntry(lib.getLocation(), null, null) };
     }
     
+    protected StudioIDEProject getProject(StudioIDEContentProvider provider, String name) {
+        if (name.isEmpty()) {
+            return provider.getDefaultProject();
+        }
+        return provider.getProject(name);
+    }
+   
+    
     public IClasspathEntry[] getClasspathEntries() {
-        return entries.toArray(new IClasspathEntry[entries.size()]);
+        return entries;
     }
 
     public String getDescription() {
-        return "Nuxeo Studio Classpath Container for " + project.getProject().getName();
+        return "Nuxeo Studio Classpath Container for " + ctx.getProject().getName();
     }
 
     public int getKind() {
@@ -54,12 +73,7 @@ public class ClasspathContainer implements IClasspathContainer {
     }
 
     public IPath getPath() {
-        return null;
-//        String studioPath = studio.getBinaryPath();
-//        if (studioPath == null) {
-//            return null;
-//        }
-//        return StudioIDEPlugin.getDefault().getProvider().find(studioPath);
+        return new Path(StudioIDEConstants.CLASSPATH_CONTAINER_ID);
     }
 
 }

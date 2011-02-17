@@ -6,8 +6,8 @@ import java.net.URL;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jdt.core.IJavaProject;
 import org.nuxeo.ide.studio.StudioIDEConstants;
 import org.nuxeo.ide.studio.StudioIDEPlugin;
@@ -17,7 +17,7 @@ import org.nuxeo.ide.studio.connector.StudioIDEProject;
 public class PreferencesStore {
     
     protected IEclipsePreferences getGlobalPreferences() {
-        return new DefaultScope().getNode(StudioIDEConstants.PLUGIN_ID);        
+        return new InstanceScope().getNode(StudioIDEConstants.PLUGIN_ID);        
     }
 
     protected IEclipsePreferences getProjectPreferences(IJavaProject ctx) {
@@ -38,13 +38,14 @@ public class PreferencesStore {
         getGlobalPreferences().put(PreferencesConstants.P_URL, text);
     }
 
-    public StudioIDEProject getStudioProject(IJavaProject ctx) {
+    
+    public String getStudioProjectName(IJavaProject ctx) {
         IEclipsePreferences preferences = getProjectPreferences(ctx);
         String name = preferences.get(PreferencesConstants.P_PROJECT, "");
         StudioIDEContentProvider provider = StudioIDEPlugin.getDefault().getProvider();
 
-        return name.isEmpty() ? provider.getDefaultProject() : provider.getProject(name);
-    
+        return name;
+  
     }
     
     public void setStudioProject(IJavaProject ctx, StudioIDEProject project) {
