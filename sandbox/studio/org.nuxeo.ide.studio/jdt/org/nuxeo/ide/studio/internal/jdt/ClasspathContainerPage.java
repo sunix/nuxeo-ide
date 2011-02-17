@@ -19,16 +19,16 @@ public class ClasspathContainerPage extends WizardPage implements
         IClasspathContainerPage, IClasspathContainerPageExtension {
 
     public ClasspathContainerPage() {
-        super("Nuxeo Studio Dependencies"); 
+        super("Nuxeo Studio Dependencies");
         provider = StudioIDEPlugin.getDefault().getProvider();
     }
 
     protected IClasspathEntry containerEntry;
-    
+
     protected final StudioIDEContentProvider provider;
-    
+
     protected String selectedProject;
-        
+
     @Override
     public void createControl(Composite parent) {
         setTitle("Manage Nuxeo Studio dependencies");
@@ -61,10 +61,10 @@ public class ClasspathContainerPage extends WizardPage implements
             IClasspathEntry[] currentEntries) {
         java = project;
     }
-    
+
     @Override
     public boolean finish() {
-        containerEntry = new ClasspathContainer(java, provider.getProject(selectedProject));
+//        containerEntry = new ClasspathContainer(java, provider.getProject(selectedProject));
         return true;
     }
 

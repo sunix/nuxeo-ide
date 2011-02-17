@@ -14,7 +14,7 @@
             icon="icons/sample.gif"
             category="org.nuxeo.ide.studio.views"
             class="org.nuxeo.ide.studio.views.StudioBrowserView"
-            id="org.nuxeo.ide.studio.views.views.StudioBrowserView">
+            id="org.nuxeo.ide.studio.views.StudioBrowserView">
       </view>
    </extension>
    <extension
@@ -23,9 +23,9 @@
             targetID="org.eclipse.jdt.ui.JavaPerspective">
          <view
                ratio="0.5"
-               relative="org.eclipse.ui.views.TaskList"
-               relationship="right"
-               id="org.nuxeo.ide.studio.views.views.StudioBrowserView">
+               relative="org.eclipse.ui.views.ResourceNavigator"
+               relationship="stack"
+               id="org.nuxeo.ide.studio.views.StudioBrowserView">
          </view>
       </perspectiveExtension>
    </extension>
@@ -36,6 +36,16 @@
       </contexts>
    </extension>
    <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.nuxeo.ide.studio.editors.StudioEditor"
+            default="false"
+            icon="icons/sample.gif"
+            id="org.nuxeo.ide.studio.editor"
+            name="Studio Editor">
+      </editor>
+   </extension>
+     <extension
          point="org.eclipse.jdt.core.classpathContainerInitializer">
       <classpathContainerInitializer id="org.nuxeo.ide.studio.CLASSPATH_CONTAINER" class = "org.nuxeo.ide.studio.internal.jdt.ClasspathContainerInitializer"/>
    </extension>

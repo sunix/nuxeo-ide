@@ -12,7 +12,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 
     @Override
     public void initializeDefaultPreferences() {
-        IEclipsePreferences node = DefaultScope.INSTANCE.getNode(StudioIDEConstants.PLUGIN_ID);
+        IEclipsePreferences node = new DefaultScope().getNode(StudioIDEConstants.PLUGIN_ID);
         node.put(PreferenceConstants.P_URL, "http://connect.nuxeo.com/site/studio/ide/xxx");
     }
 
