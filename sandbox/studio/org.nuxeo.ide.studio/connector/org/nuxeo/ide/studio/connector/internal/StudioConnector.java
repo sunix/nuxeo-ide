@@ -93,17 +93,17 @@ public class StudioConnector {
     }
 
     public String getFeatures(String projectId) throws Exception {
-        return doGetAsString(url.getPath() + "/projects/" + projectId
+        return doGetAsString("/projects/" + projectId
                 + "/features");
     }
 
     public String getProjects() throws Exception {
-        return doGetAsString(url.getPath() + "/list");
+        return doGetAsString("/list");
     }
 
     public File getJar(String projectId) throws Exception {
-        File file = doGetAsFile(url.getPath() + "/projects/" + projectId
-                + "/features");
+        File file = doGetAsFile("/projects/" + projectId
+                + "/jar");
         File f = new File(file.getParentFile(), projectId+".jar");
         f.delete();
         file.renameTo(f);
@@ -115,7 +115,9 @@ public class StudioConnector {
         InputStream in = doGet(path);
         if (in != null) {
             try {
-                return readStream(in);
+                String s = readStream(in);
+                System.out.println("================\n"+s+"\n==================");
+                return s;
             } finally {
                 in.close();
             }
@@ -201,7 +203,8 @@ public class StudioConnector {
 
     public static void main(String[] args) throws Exception {
         StudioConnector con = new StudioConnector(new URL("http://localhost:8080/nuxeo/site/studio"), "b", "b");
-        System.out.println(con.doGetAsString("/list"));
+        System.out.println(con.getProjects());
+        System.out.println(con.getFeatures("test1"));
 
     }
 
