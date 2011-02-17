@@ -33,3 +33,9 @@ Import-Package: org.eclipse.core.resources,
  org.osgi.framework
 Export-Package: org.nuxeo.ide.studio.connector,
  org.nuxeo.ide.studio.connector.internal
+Require-Bundle: org.nuxeo.net.sf.json-lib;bundle-version="2.2.1",
+ org.nuxeo.commons-lang;bundle-version="2.3.0",
+ org.apache.commons.logging;bundle-version="1.0.4",
+ org.nuxeo.net.sf.ezmorph;bundle-version="1.0.4",
+ org.nuxeo.commons-collections;bundle-version="3.1.0",
+ org.nuxeo.commons-beanutils.core;bundle-version="1.7.0"

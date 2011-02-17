@@ -2,6 +2,8 @@ package org.nuxeo.ide.studio.editors;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.browser.TitleEvent;
+import org.eclipse.swt.browser.TitleListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
@@ -54,7 +56,14 @@ public class StudioEditor extends EditorPart {
         parent.setLayout(new FillLayout());
         browser = new Browser(parent, SWT.NONE);
         Node node = (Node) getEditorInput().getAdapter(Node.class);
-        browser.setUrl(node.getUrl());
+        String url = "http://10.213.3.231:8080/nuxeo/site/studio/ide/dev" + node.getKey();
+        System.out.println(url);
+        browser.setUrl(url);
+        browser.addTitleListener(new TitleListener() {
+            public void changed(TitleEvent event) {
+                System.out.println("title changed :" + event.title);
+            }
+        });
     }
 
     @Override

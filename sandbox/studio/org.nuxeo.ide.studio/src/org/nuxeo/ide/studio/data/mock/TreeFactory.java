@@ -73,7 +73,7 @@ public class TreeFactory {
     private void addFeatures(Group group) {
         String id = group.getId();
         for ( int i = 0 ; i < 4 ; i++ ) {
-            Feature feature = new Feature(id + "/feature" + i  , "Feature " + i, "http://www.google.com");
+            Feature feature = new Feature(id + "/feature" + i , "feature" , "Feature " + i, "http://www.google.com");
             group.getChildren().add(feature);
         }
     }

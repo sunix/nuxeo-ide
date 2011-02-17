@@ -15,8 +15,6 @@
  *     eugen
  */
 package org.nuxeo.ide.studio.data.model;
-import static org.nuxeo.ide.studio.data.model.Constants.*;
-
 import org.nuxeo.ide.studio.data.NodeImpl;
 
 /**
@@ -31,8 +29,8 @@ public class Feature extends NodeImpl{
      * @param label
      * @param url
      */
-    public Feature(String id, String label, String url) {
-        super(id, TYPE_FEATURE, label, url);
+    public Feature(String id, String type, String label, String url) {
+        super(id, type, label, url);
     }
 
 }

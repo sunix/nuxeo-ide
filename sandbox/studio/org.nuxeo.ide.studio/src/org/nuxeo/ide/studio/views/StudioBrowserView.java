@@ -25,12 +25,12 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
-import org.nuxeo.ide.studio.StudioIDEPlugin;
+import org.nuxeo.ide.studio.actions.CollapseAllAction;
+import org.nuxeo.ide.studio.actions.ExpandAllAction;
 import org.nuxeo.ide.studio.data.Node;
-import org.nuxeo.ide.studio.data.mock.TreeFactory;
+import org.nuxeo.ide.studio.data.model.FeatureHelper;
 import org.nuxeo.ide.studio.editors.StudioEditor;
 import org.nuxeo.ide.studio.editors.StudioEditorInput;
-import org.nuxeo.ide.studio.ui.Icons;
 
 
 /**
@@ -87,7 +87,7 @@ public class StudioBrowserView extends ViewPart {
 		viewer.setContentProvider(new StudioContentProvider());
 		viewer.setLabelProvider(new StudioLabelProvider());
 		viewer.setSorter(new NameSorter());
-		viewer.setInput(TreeFactory.getInstance().buildTestTree());
+		viewer.setInput(FeatureHelper.buildFeatureTree(null));
 
 		// Create the help context id for the viewer's control
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(viewer.getControl(), "org.nuxeo.ide.studio.views.viewer");
@@ -139,24 +139,8 @@ public class StudioBrowserView extends ViewPart {
 	}
 
 	private void makeActions() {
-
-	    expandAll = new Action() {
-	        public void run() {
-	            viewer.expandAll();
-            }
-        };
-        expandAll.setText("Expand All");
-        expandAll.setToolTipText("Expand All");
-        expandAll.setImageDescriptor(Icons.getIcon(Icons.ACTION_EXPAND_ALL));
-
-        collapseAll = new Action() {
-            public void run() {
-                viewer.collapseAll();
-            }
-        };
-        collapseAll.setText("Collapse All");
-        collapseAll.setToolTipText("Collapse All");
-        collapseAll.setImageDescriptor(Icons.getIcon(Icons.ACTION_COLLAPSE_ALL));
+	    expandAll = new ExpandAllAction(viewer);
+        collapseAll = new CollapseAllAction(viewer);
 
 		action1 = new Action() {
 			public void run() {
@@ -188,7 +172,7 @@ public class StudioBrowserView extends ViewPart {
 
 				if ( obj instanceof Node) {
 				    Node node = (Node)obj;
-				    if ( node.getUrl() != null) {
+				    if ( node.getKey() != null) {
 				        try {
 		                    IWorkbenchWindow window=PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		                    IWorkbenchPage page = window.getActivePage();
