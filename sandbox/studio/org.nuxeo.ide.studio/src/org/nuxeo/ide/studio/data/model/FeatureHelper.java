@@ -17,19 +17,16 @@
 package org.nuxeo.ide.studio.data.model;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.nuxeo.ide.studio.StudioIDEPlugin;
 import org.nuxeo.ide.studio.data.Tree;
 import org.nuxeo.ide.studio.data.TreeImpl;
 
@@ -41,18 +38,18 @@ import org.nuxeo.ide.studio.data.TreeImpl;
 public class FeatureHelper {
 
 
-    public static Tree buildFeatureTree(String input){
+    public static Tree buildFeatureTree(String projectName){
         Tree root =  new TreeImpl("root", "root", "Root", null);
+        String input = StudioIDEPlugin.getDefault().getProvider().getFeatures(projectName);
         populate(root,input);
         return root;
     }
 
     protected static void populate(Tree root, String input) {
-        if ( input == null ){
-            input = fakeInput();
-        }
+//        if ( input == null ){
+//            input = fakeInput();
+//        }
 
-        List<Feature> features = new ArrayList<Feature>();
         JSONArray array = JSONArray.fromObject(input);
 
         Map<String, Group> groups = new HashMap<String, Group>();

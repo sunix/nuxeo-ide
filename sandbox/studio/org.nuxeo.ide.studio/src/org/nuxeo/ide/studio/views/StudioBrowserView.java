@@ -88,7 +88,7 @@ public class StudioBrowserView extends ViewPart {
 		viewer.setContentProvider(new StudioContentProvider());
 		viewer.setLabelProvider(new StudioLabelProvider());
 		viewer.setSorter(new NameSorter());
-		viewer.setInput(FeatureHelper.buildFeatureTree(null));
+		viewer.setInput(FeatureHelper.buildFeatureTree("test1"));
 
 		// Create the help context id for the viewer's control
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(viewer.getControl(), "org.nuxeo.ide.studio.views.viewer");

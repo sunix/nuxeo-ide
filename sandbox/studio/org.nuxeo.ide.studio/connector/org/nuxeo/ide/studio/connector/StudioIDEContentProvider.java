@@ -1,18 +1,15 @@
 package org.nuxeo.ide.studio.connector;
 
-import org.eclipse.core.runtime.IPath;
-import org.nuxeo.ide.studio.data.model.Feature;
+import java.io.File;
 
 public interface StudioIDEContentProvider {
 
-  StudioIDEProject getDefaultProject();
-
-  StudioIDEProject getProject(String name);
-
   StudioIDEProject[] getProjects();
 
-  Feature[] getFeatures(String projectId);
+  String getFeatures(String projectId);
 
-  IPath find(String path);
+  File getJar(String name);
+
+  void updateJar(String projectName);
 
 }

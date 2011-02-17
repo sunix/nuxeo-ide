@@ -4,24 +4,37 @@ import org.nuxeo.ide.studio.connector.StudioIDEProject;
 
 
 public class ProjectBean implements StudioIDEProject {
-   
+
     protected final String name;
-    
-    protected String binaryPath;
-    
+
+    protected String title;
+
+    protected String targetVersion;
+
     public ProjectBean(String name) {
         this.name = name;
     }
-    
+
     public String getName() {
         return name;
     }
-    
-    public String getBinaryPath() {
-        return binaryPath;
+
+    @Override
+    public String getTitle() {
+        return title;
     }
 
-    public void setBinaryPath(String path) {
-        this.binaryPath = path;
+    @Override
+    public String getTargetVersion() {
+        return targetVersion;
     }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setTargetVersion(String targetVersion) {
+        this.targetVersion = targetVersion;
+    }
+
 }

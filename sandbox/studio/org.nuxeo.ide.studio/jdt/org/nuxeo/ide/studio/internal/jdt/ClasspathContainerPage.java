@@ -16,7 +16,6 @@ import org.eclipse.swt.widgets.List;
 import org.nuxeo.ide.studio.StudioIDEConstants;
 import org.nuxeo.ide.studio.StudioIDEPlugin;
 import org.nuxeo.ide.studio.connector.StudioIDEContentProvider;
-import org.nuxeo.ide.studio.connector.StudioIDEProject;
 import org.nuxeo.ide.studio.connector.internal.ContentExtractor;
 import org.nuxeo.ide.studio.internal.preferences.PreferencesStore;
 
@@ -24,16 +23,16 @@ public class ClasspathContainerPage extends WizardPage implements
         IClasspathContainerPage, IClasspathContainerPageExtension {
 
     public ClasspathContainerPage() {
-        super("Nuxeo Studio Dependencies"); 
+        super("Nuxeo Studio Dependencies");
         provider = StudioIDEPlugin.getDefault().getProvider();
     }
 
     protected IClasspathEntry containerEntry;
-    
+
     protected final StudioIDEContentProvider provider;
-    
+
     protected String selectedProject;
-        
+
     @Override
     public void createControl(Composite parent) {
         setTitle("Manage Nuxeo Studio dependencies");
@@ -66,12 +65,11 @@ public class ClasspathContainerPage extends WizardPage implements
             IClasspathEntry[] currentEntries) {
         ctx = project;
     }
-    
+
     @Override
     public boolean finish() {
         PreferencesStore prefs = new PreferencesStore();
-        StudioIDEProject project = provider.getProject(selectedProject);
-        prefs.setStudioProject(ctx, project);
+        prefs.setStudioProject(ctx, selectedProject);
         Path path = new Path(StudioIDEConstants.CLASSPATH_CONTAINER_ID);
         containerEntry = JavaCore.newContainerEntry(path);
         return true;

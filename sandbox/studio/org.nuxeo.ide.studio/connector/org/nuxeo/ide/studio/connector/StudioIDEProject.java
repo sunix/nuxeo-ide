@@ -4,6 +4,8 @@ public interface StudioIDEProject {
 
     String getName();
 
-    String getBinaryPath();
+    String getTitle();
+
+    String getTargetVersion();
 
 }

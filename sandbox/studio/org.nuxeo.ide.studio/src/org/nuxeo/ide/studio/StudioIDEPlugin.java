@@ -5,8 +5,8 @@ import java.net.URL;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.nuxeo.ide.studio.connector.StudioIDEContentProvider;
+import org.nuxeo.ide.studio.connector.internal.StudioContentProviderImpl;
 import org.nuxeo.ide.studio.internal.preferences.PreferencesStore;
-import org.nuxeo.ide.studio.mock.internal.MockIDEContentProvider;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -53,7 +53,7 @@ public class StudioIDEPlugin extends AbstractUIPlugin {
 		super.stop(context);
 	}
 
-	protected StudioIDEContentProvider wbProvider = new MockIDEContentProvider();
+	protected StudioIDEContentProvider wbProvider = new StudioContentProviderImpl();//new MockIDEContentProvider();
 
 	protected void setProvider(StudioIDEContentProvider provider) {
 	    wbProvider = provider;

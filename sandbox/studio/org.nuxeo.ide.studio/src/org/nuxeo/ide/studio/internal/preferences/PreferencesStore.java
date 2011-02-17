@@ -28,7 +28,7 @@ public class PreferencesStore {
     }
 
     public URL getConnectLocation() {
-        String text = getGlobalPreferences().get(PreferencesConstants.P_URL, "http://connect.nuxeo.com/site/studio/ide/dev");
+        String text = getGlobalPreferences().get(PreferencesConstants.P_URL, "http://localhost:8080/site/studio/ide/dev");
         try {
             return new URL(text);
         } catch (MalformedURLException e) {
@@ -58,9 +58,9 @@ public class PreferencesStore {
         return name;
     }
 
-    public void setStudioProject(IJavaProject ctx, StudioIDEProject project) {
+    public void setStudioProject(IJavaProject ctx, String name) {
         IEclipsePreferences prefs = getProjectPreferences(ctx);
-        prefs.put(PreferencesConstants.P_PROJECT, project.getName());
+        prefs.put(PreferencesConstants.P_PROJECT, name);
     }
 
 }

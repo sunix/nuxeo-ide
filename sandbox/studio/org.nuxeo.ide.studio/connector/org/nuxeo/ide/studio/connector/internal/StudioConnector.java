@@ -100,8 +100,12 @@ public class StudioConnector {
     }
 
     public File getJar(String projectId) throws Exception {
-        return doGetAsFile(url.getPath() + "/projects/" + projectId
+        File file = doGetAsFile(url.getPath() + "/projects/" + projectId
                 + "/features");
+        File f = new File(file.getParentFile(), projectId+".jar");
+        f.delete();
+        file.renameTo(f);
+        return file;
     }
 
 
@@ -130,7 +134,7 @@ public class StudioConnector {
     }
     protected InputStream doGet(String path) throws Exception {
         HttpGet get = new HttpGet();
-        HttpResponse response = http.execute(get);
+        HttpResponse response = http.execute(host, get);
         HttpEntity entity = response.getEntity();
         if (entity != null) {
             return entity.getContent();

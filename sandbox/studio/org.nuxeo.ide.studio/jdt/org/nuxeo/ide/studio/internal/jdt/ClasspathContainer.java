@@ -16,6 +16,8 @@
  */
 package org.nuxeo.ide.studio.internal.jdt;
 
+import java.io.File;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -26,18 +28,17 @@ import org.eclipse.jdt.core.JavaCore;
 import org.nuxeo.ide.studio.StudioIDEConstants;
 import org.nuxeo.ide.studio.StudioIDEPlugin;
 import org.nuxeo.ide.studio.connector.StudioIDEContentProvider;
-import org.nuxeo.ide.studio.connector.StudioIDEProject;
 
 /**
  * @author <a href="mailto:slacoin@nuxeo.com">Stephane Lacoin</a>
  *
  */
 public class ClasspathContainer implements IClasspathContainer {
-            
+
     protected final IClasspathEntry[] entries;
-        
+
     protected final IJavaProject ctx;
-    
+
     protected ClasspathContainer(IJavaProject ctx) {
         this.ctx = ctx;
         this.entries = buildEntries(ctx);
@@ -46,20 +47,13 @@ public class ClasspathContainer implements IClasspathContainer {
     protected IClasspathEntry[] buildEntries(IJavaProject ctx) {
         String name = StudioIDEPlugin.getDefault().getPreferences().getStudioProjectName(ctx);
         StudioIDEContentProvider provider = StudioIDEPlugin.getDefault().getProvider();
-        String studiopath = getProject(provider, name).getBinaryPath();
-        IPath prjpath = provider.find(studiopath);
+        File file = provider.getJar(name);
+        IPath prjpath = new Path(file.getAbsolutePath());
         IFile lib = ctx.getProject().getFile(prjpath);
         return new IClasspathEntry[] { JavaCore.newLibraryEntry(lib.getLocation(), null, null) };
     }
-    
-    protected StudioIDEProject getProject(StudioIDEContentProvider provider, String name) {
-        if (name.isEmpty()) {
-            return provider.getDefaultProject();
-        }
-        return provider.getProject(name);
-    }
-   
-    
+
+
     public IClasspathEntry[] getClasspathEntries() {
         return entries;
     }

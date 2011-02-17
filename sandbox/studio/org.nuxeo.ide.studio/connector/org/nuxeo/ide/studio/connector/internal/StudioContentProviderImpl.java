@@ -16,10 +16,10 @@
  */
 package org.nuxeo.ide.studio.connector.internal;
 
-import org.eclipse.core.runtime.IPath;
+import java.io.File;
+
 import org.nuxeo.ide.studio.connector.StudioIDEContentProvider;
 import org.nuxeo.ide.studio.connector.StudioIDEProject;
-import org.nuxeo.ide.studio.data.model.Feature;
 import org.nuxeo.ide.studio.internal.preferences.PreferencesStore;
 
 /**
@@ -42,16 +42,6 @@ public class StudioContentProviderImpl implements StudioIDEContentProvider {
     }
 
     @Override
-    public StudioIDEProject getDefaultProject() {
-        return null;
-    }
-
-    @Override
-    public StudioIDEProject getProject(String name) {
-        return null;
-    }
-
-    @Override
     public StudioIDEProject[] getProjects() {
         try {
             return null;//connector.getProjects();
@@ -61,17 +51,29 @@ public class StudioContentProviderImpl implements StudioIDEContentProvider {
     }
 
     @Override
-    public Feature[] getFeatures(String projectId) {
+    public String getFeatures(String projectId) {
         try {
-            return null;//connector.getFeatures(projectId);
+            return connector.getFeatures(projectId);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public IPath find(String path) {
-        return null;
+    public File getJar(String name) {
+        try {
+            return connector.getJar(name);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    @Override
+    public void updateJar(String projectName) {
+        //TODO
+        System.out.println("Update JAR: " +projectName);
+
     }
 
 }
