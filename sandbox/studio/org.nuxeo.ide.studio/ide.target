@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.6"?>
+
+<target name="Studio IDE" sequenceNumber="9">
+<locations>
+<location path="${eclipse_home}" type="Directory"/>
+<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.apache.httpcomponents.httpcore" version="4.1.0.v201101201700"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/S20110124210048/repository"/>
+</location>
+</locations>
+</target>
