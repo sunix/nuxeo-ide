@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpException;
 import org.apache.http.HttpHost;
@@ -65,6 +66,7 @@ public class StudioConnector {
     }
 
     protected void init(UsernamePasswordCredentials upc) {
+        base64 = "Basic "+Base64.encode(upc.getUserName()+":"+upc.getPassword()); //"test1:test1"
         http = new DefaultHttpClient();
         http.getCredentialsProvider().setCredentials(
                 new AuthScope(url.getHost(), url.getPort()), upc);
@@ -134,6 +136,7 @@ public class StudioConnector {
     }
     protected InputStream doGet(String path) throws Exception {
         HttpGet get = new HttpGet(url.getPath()+path);
+        get.setHeader("Authorization", base64);
         HttpResponse response = http.execute(host, get);
         HttpEntity entity = response.getEntity();
         if (entity != null) {

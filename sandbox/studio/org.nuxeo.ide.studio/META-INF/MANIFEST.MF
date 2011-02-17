@@ -47,4 +47,6 @@ Require-Bundle: org.nuxeo.net.sf.json-lib;bundle-version="2.2.1",
  org.nuxeo.net.sf.ezmorph;bundle-version="1.0.4",
  org.nuxeo.commons-collections;bundle-version="3.1.0",
  org.nuxeo.commons-beanutils.core;bundle-version="1.7.0",
- org.nuxeo.org.apache.httpcomponents.httpclient
+ org.nuxeo.org.apache.httpcomponents.httpclient,
+ org.nuxeo.org.apache.httpcomponents.httpcore;bundle-version="4.0.1",
+ org.nuxeo.org.apache.httpcomponents.httpmime;bundle-version="4.0.1"
