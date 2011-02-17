@@ -15,14 +15,14 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.nuxeo.ide.studio.NxStudioPlugin;
+import org.nuxeo.ide.studio.StudioIDEPlugin;
 
 public class PreferencePage extends FieldEditorPreferencePage implements
         IWorkbenchPreferencePage {
 
     public PreferencePage() {
         super(GRID);
-        setPreferenceStore(NxStudioPlugin.getDefault().getPreferenceStore());
+        setPreferenceStore(StudioIDEPlugin.getDefault().getPreferenceStore());
     }
 
     @Override

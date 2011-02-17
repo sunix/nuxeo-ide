@@ -11,24 +11,24 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.List;
-import org.nuxeo.ide.studio.NxStudioPlugin;
-import org.nuxeo.ide.studio.dto.NxStudioWorkbenchBean;
-import org.nuxeo.ide.studio.dto.NxStudioWorkbenchExtractor;
+import org.nuxeo.ide.studio.StudioIDEPlugin;
+import org.nuxeo.ide.studio.connector.StudioIDEContentProvider;
+import org.nuxeo.ide.studio.connector.internal.ContentExtractor;
 
 public class ClasspathContainerPage extends WizardPage implements
         IClasspathContainerPage, IClasspathContainerPageExtension {
 
     public ClasspathContainerPage() {
-        super("Nuxeo Studio Dependencies");
+        super("Nuxeo Studio Dependencies"); 
+        provider = StudioIDEPlugin.getDefault().getProvider();
     }
 
     protected IClasspathEntry containerEntry;
-
-    protected String[] projects() {
-        NxStudioWorkbenchBean wb = NxStudioPlugin.getDefault().getStudioWorkbench();
-        return new NxStudioWorkbenchExtractor(wb).extractProjectNames();
-    }
     
+    protected final StudioIDEContentProvider provider;
+    
+    protected String selectedProject;
+        
     @Override
     public void createControl(Composite parent) {
         setTitle("Manage Nuxeo Studio dependencies");
@@ -38,12 +38,18 @@ public class ClasspathContainerPage extends WizardPage implements
         composite.setLayout(new GridLayout());
         setControl(composite);
 
-        List projects = new List(composite, SWT.NONE);
-        projects.setItems(projects());
+        final List projects = new List(composite, SWT.NONE);
+        projects.setItems(new ContentExtractor(provider).extractProjectNames());
         projects.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
-               // TODO configure something
-               return;
+               String[] selection = projects.getSelection();
+               if (selection.length != 1) {
+                   selectedProject = null;
+                   setPageComplete(false);
+                   return;
+               }
+               selectedProject = selection[0];
+               setPageComplete(true);
             }
         });
     }
@@ -55,10 +61,10 @@ public class ClasspathContainerPage extends WizardPage implements
             IClasspathEntry[] currentEntries) {
         java = project;
     }
-
+    
     @Override
     public boolean finish() {
-        
+        containerEntry = new ClasspathContainer(java, provider.getProject(selectedProject));
         return true;
     }
 

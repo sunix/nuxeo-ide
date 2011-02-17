@@ -1,6 +1,6 @@
 package org.nuxeo.ide.studio;
 
-public class NxStudioConstants {
+public class StudioIDEConstants {
 
     public static final String PLUGIN_ID = "org.nuxeo.ide.studio";
     

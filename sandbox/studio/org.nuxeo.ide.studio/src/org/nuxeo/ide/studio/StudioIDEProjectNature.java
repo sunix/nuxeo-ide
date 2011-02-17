@@ -10,9 +10,9 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
-import org.nuxeo.ide.studio.NxStudioConstants;
+import org.nuxeo.ide.studio.StudioIDEConstants;
 
-public class NxStudioProjectNature implements IProjectNature {
+public class StudioIDEProjectNature implements IProjectNature {
 
     protected IProject project;
     
@@ -20,7 +20,7 @@ public class NxStudioProjectNature implements IProjectNature {
     public void configure() throws CoreException {
         IJavaProject java = JavaCore.create(project);
         List<IClasspathEntry> cp = Arrays.asList(java.getRawClasspath());        
-        final Path p = new Path(NxStudioConstants.CLASSPATH_CONTAINER_ID);
+        final Path p = new Path(StudioIDEConstants.CLASSPATH_CONTAINER_ID);
         cp.add(JavaCore.newContainerEntry(p));
         java.setRawClasspath(cp.toArray(new IClasspathEntry[cp.size()]), null);
     }
@@ -29,7 +29,7 @@ public class NxStudioProjectNature implements IProjectNature {
     public void deconfigure() throws CoreException {
         IJavaProject java = JavaCore.create(project);
         List<IClasspathEntry> cp = Arrays.asList(java.getRawClasspath());        
-        final Path p = new Path(NxStudioConstants.CLASSPATH_CONTAINER_ID);
+        final Path p = new Path(StudioIDEConstants.CLASSPATH_CONTAINER_ID);
         cp.remove(p);
         java.setRawClasspath(cp.toArray(new IClasspathEntry[cp.size()]), null);
     }

@@ -2,26 +2,25 @@ package org.nuxeo.ide.studio;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.nuxeo.ide.studio.dto.NxStudioWorkbenchBean;
-import org.nuxeo.ide.studio.internal.extensions.ExtensionsReader;
-import org.nuxeo.ide.studio.mock.internal.MockWorbenchProvider;
+import org.nuxeo.ide.studio.connector.StudioIDEContentProvider;
+import org.nuxeo.ide.studio.mock.internal.MockIDEContentProvider;
 import org.osgi.framework.BundleContext;
 
 /**
  * The activator class controls the plug-in life cycle
  */
-public class NxStudioPlugin extends AbstractUIPlugin {
+public class StudioIDEPlugin extends AbstractUIPlugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = NxStudioConstants.PLUGIN_ID;
+	public static final String PLUGIN_ID = StudioIDEConstants.PLUGIN_ID;
 
 	// The shared instance
-	private static NxStudioPlugin plugin;
+	private static StudioIDEPlugin plugin;
 	
 	/**
 	 * The constructor
 	 */
-	public NxStudioPlugin() {
+	public StudioIDEPlugin() {
 	}
 
 	/*
@@ -48,14 +47,14 @@ public class NxStudioPlugin extends AbstractUIPlugin {
 		super.stop(context);
 	}
 	
-	protected NxStudioWorkbenchProvider wbProvider = new MockWorbenchProvider();
-	
-	public NxStudioWorkbenchBean getStudioWorkbench() {
-	    return wbProvider.getWorkbench();
-	}
+	protected StudioIDEContentProvider wbProvider = new MockIDEContentProvider();
 
-	protected void setStudioWorkbenchProvider(NxStudioWorkbenchProvider provider) {
+	protected void setProvider(StudioIDEContentProvider provider) {
 	    wbProvider = provider;
+	}
+	
+	public StudioIDEContentProvider getProvider() {
+	    return wbProvider;
 	}
 
 	/**
@@ -63,7 +62,7 @@ public class NxStudioPlugin extends AbstractUIPlugin {
 	 *
 	 * @return the shared instance
 	 */
-	public static NxStudioPlugin getDefault() {
+	public static StudioIDEPlugin getDefault() {
 		return plugin;
 	}
 

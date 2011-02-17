@@ -22,7 +22,10 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
-import org.nuxeo.ide.studio.NxStudioConstants;
+import org.nuxeo.ide.studio.StudioIDEConstants;
+import org.nuxeo.ide.studio.StudioIDEPlugin;
+import org.nuxeo.ide.studio.connector.StudioIDEContentProvider;
+import org.nuxeo.ide.studio.connector.StudioIDEProject;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -31,11 +34,13 @@ import org.nuxeo.ide.studio.NxStudioConstants;
 public class ClasspathContainerInitializer extends org.eclipse.jdt.core.ClasspathContainerInitializer {
 
     @Override
-    public void initialize(IPath containerPath, IJavaProject project)
+    public void initialize(IPath containerPath, IJavaProject java)
     throws CoreException {
-        JavaCore.setClasspathContainer(new Path(NxStudioConstants.CLASSPATH_CONTAINER_ID), 
-                new IJavaProject[] {project}, 
-                new IClasspathContainer[] { new ClasspathContainer(project) }, 
+        StudioIDEContentProvider provider = StudioIDEPlugin.getDefault().getProvider();
+        StudioIDEProject studio = provider.getDefaultProject();
+        JavaCore.setClasspathContainer(new Path(StudioIDEConstants.CLASSPATH_CONTAINER_ID), 
+                new IJavaProject[] {java}, 
+                new IClasspathContainer[] { new ClasspathContainer(java, studio) }, 
                 null);
     }
 
