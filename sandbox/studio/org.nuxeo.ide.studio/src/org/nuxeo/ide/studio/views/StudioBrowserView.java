@@ -25,6 +25,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
+import org.nuxeo.ide.studio.StudioIDEPlugin;
 import org.nuxeo.ide.studio.data.Node;
 import org.nuxeo.ide.studio.data.mock.TreeFactory;
 import org.nuxeo.ide.studio.editors.StudioEditor;
@@ -145,7 +146,7 @@ public class StudioBrowserView extends ViewPart {
         };
         expandAll.setText("Expand All");
         expandAll.setToolTipText("Expand All");
-        collapseAll.setImageDescriptor(Icons.getIcon(Icons.ACTION_COLLAPSE_ALL));
+        expandAll.setImageDescriptor(StudioIDEPlugin.getImageDescriptor("/icons/action/expand_all.gif"));
 
         collapseAll = new Action() {
             public void run() {
@@ -154,7 +155,7 @@ public class StudioBrowserView extends ViewPart {
         };
         collapseAll.setText("Collapse All");
         collapseAll.setToolTipText("Collapse All");
-        collapseAll.setImageDescriptor(Icons.getIcon(Icons.ACTION_COLLAPSE_ALL));
+        collapseAll.setImageDescriptor(StudioIDEPlugin.getImageDescriptor("/icons/action/collapse_all.gif"));
 
 		action1 = new Action() {
 			public void run() {
