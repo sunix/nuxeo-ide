@@ -3,7 +3,7 @@ package org.nuxeo.ide.studio.internal.preferences;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.nuxeo.ide.studio.StudioIDEConstants;
+import org.nuxeo.ide.studio.StudioConstants;
 
 public class PreferencesInitializer extends AbstractPreferenceInitializer {
 
@@ -12,7 +12,7 @@ public class PreferencesInitializer extends AbstractPreferenceInitializer {
 
     @Override
     public void initializeDefaultPreferences() {
-        IEclipsePreferences node = new DefaultScope().getNode(StudioIDEConstants.PLUGIN_ID);
+        IEclipsePreferences node = new DefaultScope().getNode(StudioConstants.PLUGIN_ID);
         node.put(PreferencesConstants.P_URL, "http://connect.nuxeo.com/site/studio/ide/xxx");
         node.put(PreferencesConstants.P_PROJECT, null);
     }

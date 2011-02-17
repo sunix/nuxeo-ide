@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Nuxeo Studio IDE
 Bundle-SymbolicName: org.nuxeo.ide.studio; singleton:=true
 Bundle-Version: 5.4.1.qualifier
-Bundle-Activator: org.nuxeo.ide.studio.StudioIDEPlugin
+Bundle-Activator: org.nuxeo.ide.studio.StudioPlugin
 Bundle-Vendor: Nuxeo
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy

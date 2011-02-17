@@ -3,21 +3,21 @@ package org.nuxeo.ide.studio.connector.internal;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.nuxeo.ide.studio.connector.StudioIDEContentProvider;
-import org.nuxeo.ide.studio.connector.StudioIDEProject;
+import org.nuxeo.ide.studio.StudioContentProvider;
+import org.nuxeo.ide.studio.StudioProject;
 
 public class ContentExtractor {
 
-    protected StudioIDEContentProvider provider;
+    protected StudioContentProvider provider;
     
-    public ContentExtractor(StudioIDEContentProvider p) {
+    public ContentExtractor(StudioContentProvider p) {
         provider = p;
     }
     
     public String[] extractProjectNames() {
-        StudioIDEProject[] projects = provider.getProjects();
+        StudioProject[] projects = provider.getProjects();
         List<String> names = new ArrayList<String>(projects.length);
-        for (StudioIDEProject project : projects) {
+        for (StudioProject project : projects) {
             names.add(project.getName());
         }
         return names.toArray(new String[names.size()]);

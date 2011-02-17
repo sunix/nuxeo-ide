@@ -1,10 +1,10 @@
-package org.nuxeo.ide.studio.connector;
+package org.nuxeo.ide.studio;
 
 import java.io.File;
 
-public interface StudioIDEContentProvider {
+public interface StudioContentProvider {
 
-  StudioIDEProject[] getProjects();
+  StudioProject[] getProjects();
 
   String getFeatures(String projectId);
 

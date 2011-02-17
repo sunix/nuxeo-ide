@@ -17,7 +17,7 @@
 package org.nuxeo.ide.studio.ui;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.nuxeo.ide.studio.StudioIDEPlugin;
+import org.nuxeo.ide.studio.StudioPlugin;
 
 /**
  * @author eugen
@@ -38,7 +38,7 @@ public class Icons {
     public static final String ACTION_DELETE_FEATURE = ACTION_DIR + "delete.png";
 
     public static ImageDescriptor getIcon(String iconPath) {
-        return StudioIDEPlugin.getImageDescriptor(iconPath);
+        return StudioPlugin.getImageDescriptor(iconPath);
     }
 
 }

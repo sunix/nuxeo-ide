@@ -1,9 +1,9 @@
 package org.nuxeo.ide.studio.connector.internal;
 
-import org.nuxeo.ide.studio.connector.StudioIDEProject;
+import org.nuxeo.ide.studio.StudioProject;
 
 
-public class ProjectBean implements StudioIDEProject {
+public class ProjectBean implements StudioProject {
 
     protected final String name;
 

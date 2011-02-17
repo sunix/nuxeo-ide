@@ -4,7 +4,6 @@ import java.net.URL;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.nuxeo.ide.studio.connector.StudioIDEContentProvider;
 import org.nuxeo.ide.studio.connector.internal.StudioContentProviderImpl;
 import org.nuxeo.ide.studio.internal.preferences.PreferencesStore;
 import org.osgi.framework.BundleContext;
@@ -12,20 +11,20 @@ import org.osgi.framework.BundleContext;
 /**
  * The activator class controls the plug-in life cycle
  */
-public class StudioIDEPlugin extends AbstractUIPlugin {
+public class StudioPlugin extends AbstractUIPlugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = StudioIDEConstants.PLUGIN_ID;
+	public static final String PLUGIN_ID = StudioConstants.PLUGIN_ID;
 
 	// The shared instance
-	private static StudioIDEPlugin plugin;
+	private static StudioPlugin plugin;
 
 	protected PreferencesStore prefs;
 
 	/**
 	 * The constructor
 	 */
-	public StudioIDEPlugin() {
+	public StudioPlugin() {
 	    prefs = new PreferencesStore();
 	}
 
@@ -53,13 +52,13 @@ public class StudioIDEPlugin extends AbstractUIPlugin {
 		super.stop(context);
 	}
 
-	protected StudioIDEContentProvider wbProvider = new StudioContentProviderImpl();//new MockIDEContentProvider();
+	protected StudioContentProvider wbProvider = new StudioContentProviderImpl();//new MockIDEContentProvider();
 
-	protected void setProvider(StudioIDEContentProvider provider) {
+	protected void setProvider(StudioContentProvider provider) {
 	    wbProvider = provider;
 	}
 
-	public StudioIDEContentProvider getProvider() {
+	public StudioContentProvider getProvider() {
 	    return wbProvider;
 	}
 
@@ -76,7 +75,7 @@ public class StudioIDEPlugin extends AbstractUIPlugin {
 	 *
 	 * @return the shared instance
 	 */
-	public static StudioIDEPlugin getDefault() {
+	public static StudioPlugin getDefault() {
 		return plugin;
 	}
 
