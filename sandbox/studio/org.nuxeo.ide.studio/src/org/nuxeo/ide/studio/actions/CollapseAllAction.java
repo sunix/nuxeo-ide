@@ -14,23 +14,28 @@
  * Contributors:
  *     eugen
  */
-package org.nuxeo.ide.studio.data.model;
-import org.nuxeo.ide.studio.data.NodeImpl;
+package org.nuxeo.ide.studio.actions;
+
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.nuxeo.ide.studio.ui.Icons;
 
 /**
  * @author eugen
  *
  */
-public class Feature extends NodeImpl{
+public class CollapseAllAction extends Action{
 
-    /**
-     * @param id
-     * @param type
-     * @param label
-     * @param url
-     */
-    public Feature(String id, String type, String label, String url) {
-        super(id, type, label, url);
+    TreeViewer treeViewer;
+
+    public CollapseAllAction(TreeViewer treeViewer) {
+        this.treeViewer = treeViewer;
+        setText("Collapse All");
+        setToolTipText("Collapse All");
+        setImageDescriptor(Icons.getIcon(Icons.ACTION_COLLAPSE_ALL));
     }
 
+    public void run() {
+        treeViewer.collapseAll();
+    }
 }

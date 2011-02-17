@@ -25,6 +25,6 @@ public interface Node {
     public String getId();
     public String getType();
     public String getLabel();
-    public String getUrl();
+    public String getKey();
 
 }

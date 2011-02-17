@@ -59,7 +59,7 @@ public abstract class NodeImpl implements Node {
     }
 
 
-    public String getUrl() {
+    public String getKey() {
         return url;
     }
 
