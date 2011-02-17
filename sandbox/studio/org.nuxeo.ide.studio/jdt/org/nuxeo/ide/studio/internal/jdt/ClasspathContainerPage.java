@@ -1,7 +1,9 @@
 package org.nuxeo.ide.studio.internal.jdt;
 
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.ui.wizards.IClasspathContainerPage;
 import org.eclipse.jdt.ui.wizards.IClasspathContainerPageExtension;
 import org.eclipse.jface.wizard.WizardPage;
@@ -11,24 +13,27 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.List;
+import org.nuxeo.ide.studio.StudioIDEConstants;
 import org.nuxeo.ide.studio.StudioIDEPlugin;
 import org.nuxeo.ide.studio.connector.StudioIDEContentProvider;
+import org.nuxeo.ide.studio.connector.StudioIDEProject;
 import org.nuxeo.ide.studio.connector.internal.ContentExtractor;
+import org.nuxeo.ide.studio.internal.preferences.PreferencesStore;
 
 public class ClasspathContainerPage extends WizardPage implements
         IClasspathContainerPage, IClasspathContainerPageExtension {
 
     public ClasspathContainerPage() {
-        super("Nuxeo Studio Dependencies");
+        super("Nuxeo Studio Dependencies"); 
         provider = StudioIDEPlugin.getDefault().getProvider();
     }
 
     protected IClasspathEntry containerEntry;
-
+    
     protected final StudioIDEContentProvider provider;
-
+    
     protected String selectedProject;
-
+        
     @Override
     public void createControl(Composite parent) {
         setTitle("Manage Nuxeo Studio dependencies");
@@ -54,17 +59,21 @@ public class ClasspathContainerPage extends WizardPage implements
         });
     }
 
-    protected IJavaProject java;
+    protected IJavaProject ctx;
 
     @Override
     public void initialize(IJavaProject project,
             IClasspathEntry[] currentEntries) {
-        java = project;
+        ctx = project;
     }
-
+    
     @Override
     public boolean finish() {
-//        containerEntry = new ClasspathContainer(java, provider.getProject(selectedProject));
+        PreferencesStore prefs = new PreferencesStore();
+        StudioIDEProject project = provider.getProject(selectedProject);
+        prefs.setStudioProject(ctx, project);
+        Path path = new Path(StudioIDEConstants.CLASSPATH_CONTAINER_ID);
+        containerEntry = JavaCore.newContainerEntry(path);
         return true;
     }
 

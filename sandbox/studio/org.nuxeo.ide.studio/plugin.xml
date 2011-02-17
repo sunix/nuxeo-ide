@@ -69,14 +69,14 @@
    <extension
          point="org.eclipse.core.runtime.preferences">
       <initializer
-            class="org.nuxeo.ide.studio.internal.preferences.PreferenceInitializer">
+            class="org.nuxeo.ide.studio.internal.preferences.PreferencesInitializer">
       </initializer>
    </extension>
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
             category="Nuxeo"
-            class="org.nuxeo.ide.studio.internal.preferences.PreferencePage"
+            class="org.nuxeo.ide.studio.internal.preferences.PreferencesPage"
             id="org.nuxeo.ide.studio.preferences.NxStudioPreferencePage"
             name="Nuxeo Studio Preferences">
       </page>

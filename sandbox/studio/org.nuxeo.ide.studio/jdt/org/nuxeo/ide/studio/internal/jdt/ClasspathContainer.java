@@ -33,15 +33,12 @@ import org.nuxeo.ide.studio.connector.StudioIDEProject;
 public class ClasspathContainer implements IClasspathContainer {
     
     protected final IJavaProject project;
-    
-    protected final StudioIDEProject studio;
-    
+        
     protected final List<IClasspathEntry> entries =
         new ArrayList<IClasspathEntry>();
     
-    protected ClasspathContainer(IJavaProject java, StudioIDEProject studio) {
+    protected ClasspathContainer(IJavaProject java) {
         this.project = java;
-        this.studio = studio;
     }
     
     public IClasspathEntry[] getClasspathEntries() {
@@ -57,11 +54,12 @@ public class ClasspathContainer implements IClasspathContainer {
     }
 
     public IPath getPath() {
-        String studioPath = studio.getBinaryPath();
-        if (studioPath == null) {
-            return null;
-        }
-        return StudioIDEPlugin.getDefault().getProvider().find(studioPath);
+        return null;
+//        String studioPath = studio.getBinaryPath();
+//        if (studioPath == null) {
+//            return null;
+//        }
+//        return StudioIDEPlugin.getDefault().getProvider().find(studioPath);
     }
 
 }

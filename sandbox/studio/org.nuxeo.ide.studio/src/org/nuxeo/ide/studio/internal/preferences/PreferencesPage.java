@@ -17,10 +17,10 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.nuxeo.ide.studio.StudioIDEPlugin;
 
-public class PreferencePage extends FieldEditorPreferencePage implements
+public class PreferencesPage extends FieldEditorPreferencePage implements
         IWorkbenchPreferencePage {
 
-    public PreferencePage() {
+    public PreferencesPage() {
         super(GRID);
         setPreferenceStore(StudioIDEPlugin.getDefault().getPreferenceStore());
     }
@@ -28,8 +28,10 @@ public class PreferencePage extends FieldEditorPreferencePage implements
     @Override
     public void createFieldEditors() {
 
-        addField(new StringFieldEditor(PreferenceConstants.P_URL,
+        addField(new StringFieldEditor(PreferencesConstants.P_URL,
                 "http://connect.nuxeo.com/site/studio/ide/xxx", getFieldEditorParent()));
+        
+        addField(new StringFieldEditor(PreferencesConstants.P_PROJECT, "", getFieldEditorParent()));
 
     }
 
