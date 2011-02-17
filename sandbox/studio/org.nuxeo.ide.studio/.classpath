@@ -6,6 +6,5 @@
 	<classpathentry kind="src" path="jdt"/>
 	<classpathentry kind="src" path="connector"/>
 	<classpathentry kind="src" path="mock"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

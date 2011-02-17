@@ -15,48 +15,52 @@ import org.nuxeo.ide.studio.connector.StudioIDEContentProvider;
 import org.nuxeo.ide.studio.connector.StudioIDEProject;
 
 public class PreferencesStore {
-    
+
+    public static PreferencesStore INSTANCE = new PreferencesStore();
+
+
     protected IEclipsePreferences getGlobalPreferences() {
-        return new InstanceScope().getNode(StudioIDEConstants.PLUGIN_ID);        
+        return new InstanceScope().getNode(StudioIDEConstants.PLUGIN_ID);
     }
 
     protected IEclipsePreferences getProjectPreferences(IJavaProject ctx) {
         return new ProjectScope(ctx.getProject()).getNode(StudioIDEConstants.PLUGIN_ID);
     }
-    
+
     public URL getConnectLocation() {
-        String text = getGlobalPreferences().get(PreferencesConstants.P_URL, "http://connect.nuxeo.com/site/studio/ide");
+        String text = getGlobalPreferences().get(PreferencesConstants.P_URL, "http://connect.nuxeo.com/site/studio/ide/dev");
         try {
             return new URL(text);
         } catch (MalformedURLException e) {
             throw new Error("Cannot convert " + text, e);
         }
     }
-    
+
+    public String getUsername() {
+        return "b";
+    }
+
+    public String getPassword() {
+        return "b";
+    }
+
     public void setConnectLocation(URL location) {
         String text = location.toExternalForm();
         getGlobalPreferences().put(PreferencesConstants.P_URL, text);
     }
 
-    
+
     public String getStudioProjectName(IJavaProject ctx) {
         IEclipsePreferences preferences = getProjectPreferences(ctx);
         String name = preferences.get(PreferencesConstants.P_PROJECT, "");
         StudioIDEContentProvider provider = StudioIDEPlugin.getDefault().getProvider();
 
         return name;
-  
     }
-    
+
     public void setStudioProject(IJavaProject ctx, StudioIDEProject project) {
         IEclipsePreferences prefs = getProjectPreferences(ctx);
         prefs.put(PreferencesConstants.P_PROJECT, project.getName());
     }
-    
-    public IPath getBinaryPath(IJavaProject ctx) {
-        return new Path("/...");
-//        StudioIDEProject prj = getStudioProject(ctx);
-//        String relpath = prj.getBinaryPath();
-//        return new Path(ctx.getPath(), "/xxxx/"+relpath);
-    }
+
 }

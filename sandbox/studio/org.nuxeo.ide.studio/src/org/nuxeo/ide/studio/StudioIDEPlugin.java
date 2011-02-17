@@ -19,9 +19,9 @@ public class StudioIDEPlugin extends AbstractUIPlugin {
 
 	// The shared instance
 	private static StudioIDEPlugin plugin;
-	
+
 	protected PreferencesStore prefs;
-	
+
 	/**
 	 * The constructor
 	 */
@@ -52,13 +52,13 @@ public class StudioIDEPlugin extends AbstractUIPlugin {
 		plugin = null;
 		super.stop(context);
 	}
-	
+
 	protected StudioIDEContentProvider wbProvider = new MockIDEContentProvider();
 
 	protected void setProvider(StudioIDEContentProvider provider) {
 	    wbProvider = provider;
 	}
-	
+
 	public StudioIDEContentProvider getProvider() {
 	    return wbProvider;
 	}
@@ -66,11 +66,11 @@ public class StudioIDEPlugin extends AbstractUIPlugin {
 	public URL getConnectLocation() {
 	    return prefs.getConnectLocation();
 	}
-	
+
 	public PreferencesStore getPreferences() {
 	    return prefs;
 	}
-	
+
 	/**
 	 * Returns the shared instance
 	 *
