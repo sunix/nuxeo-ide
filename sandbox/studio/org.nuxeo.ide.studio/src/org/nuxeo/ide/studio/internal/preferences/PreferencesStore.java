@@ -28,7 +28,7 @@ public class PreferencesStore {
     }
 
     public URL getConnectLocation() {
-        String text = getGlobalPreferences().get(PreferencesConstants.P_URL, "http://localhost:8080/site/studio");
+        String text = getGlobalPreferences().get(PreferencesConstants.P_URL, "http://localhost:8080/nuxeo/site/studio");
         try {
             return new URL(text);
         } catch (MalformedURLException e) {
