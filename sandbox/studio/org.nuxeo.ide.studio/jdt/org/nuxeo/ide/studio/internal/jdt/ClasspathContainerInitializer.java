@@ -40,7 +40,7 @@ public class ClasspathContainerInitializer extends org.eclipse.jdt.core.Classpat
         StudioIDEProject studio = provider.getDefaultProject();
         JavaCore.setClasspathContainer(new Path(StudioIDEConstants.CLASSPATH_CONTAINER_ID), 
                 new IJavaProject[] {java}, 
-                new IClasspathContainer[] { new ClasspathContainer(java, studio) }, 
+                new IClasspathContainer[] { new ClasspathContainer(java ) }, 
                 null);
     }
 

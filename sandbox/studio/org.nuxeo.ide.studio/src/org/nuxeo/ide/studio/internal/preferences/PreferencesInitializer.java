@@ -5,15 +5,16 @@ import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.nuxeo.ide.studio.StudioIDEConstants;
 
-public class PreferenceInitializer extends AbstractPreferenceInitializer {
+public class PreferencesInitializer extends AbstractPreferenceInitializer {
 
-    public PreferenceInitializer() {
+    public PreferencesInitializer() {
     }
 
     @Override
     public void initializeDefaultPreferences() {
         IEclipsePreferences node = new DefaultScope().getNode(StudioIDEConstants.PLUGIN_ID);
-        node.put(PreferenceConstants.P_URL, "http://connect.nuxeo.com/site/studio/ide/xxx");
+        node.put(PreferencesConstants.P_URL, "http://connect.nuxeo.com/site/studio/ide/xxx");
+        node.put(PreferencesConstants.P_PROJECT, null);
     }
 
 }
