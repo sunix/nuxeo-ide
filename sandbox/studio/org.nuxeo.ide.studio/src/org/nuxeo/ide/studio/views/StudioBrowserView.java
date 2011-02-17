@@ -139,6 +139,7 @@ public class StudioBrowserView extends ViewPart {
 	}
 
 	private void makeActions() {
+
 	    expandAll = new Action() {
 	        public void run() {
 	            viewer.expandAll();
@@ -146,7 +147,7 @@ public class StudioBrowserView extends ViewPart {
         };
         expandAll.setText("Expand All");
         expandAll.setToolTipText("Expand All");
-        expandAll.setImageDescriptor(StudioIDEPlugin.getImageDescriptor("/icons/action/expand_all.gif"));
+        expandAll.setImageDescriptor(Icons.getIcon(Icons.ACTION_EXPAND_ALL));
 
         collapseAll = new Action() {
             public void run() {
@@ -155,7 +156,7 @@ public class StudioBrowserView extends ViewPart {
         };
         collapseAll.setText("Collapse All");
         collapseAll.setToolTipText("Collapse All");
-        collapseAll.setImageDescriptor(StudioIDEPlugin.getImageDescriptor("/icons/action/collapse_all.gif"));
+        collapseAll.setImageDescriptor(Icons.getIcon(Icons.ACTION_COLLAPSE_ALL));
 
 		action1 = new Action() {
 			public void run() {

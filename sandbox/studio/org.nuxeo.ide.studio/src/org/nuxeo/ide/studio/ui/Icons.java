@@ -31,6 +31,8 @@ public class Icons {
 
     public static final String ACTION_COLLAPSE_ALL = ACTION_DIR + "collapse_all.gif";
 
+    public static final String ACTION_CONNECT = ACTION_DIR + "connect.png";
+
     public static ImageDescriptor getIcon(String iconPath) {
         return StudioIDEPlugin.getImageDescriptor(iconPath);
     }
