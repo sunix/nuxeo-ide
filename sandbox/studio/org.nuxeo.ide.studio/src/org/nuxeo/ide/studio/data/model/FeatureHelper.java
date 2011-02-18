@@ -16,10 +16,6 @@
  */
 package org.nuxeo.ide.studio.data.model;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -66,7 +62,9 @@ public class FeatureHelper {
             Group group = groupMap.get(feature.getType());
             if ( group  != null ){
                 if ( group.isGlobal() ) {
-                    vgroupMap.get(group.getLabel()).getChildren().add(feature);
+                    feature.setLabel(group.getName());
+                    VirtualGroup vg = vgroupMap.get(group.getLabel());
+                    vg.getChildren().add(feature);
                 } else {
                     group.getChildren().add(feature);
                 }

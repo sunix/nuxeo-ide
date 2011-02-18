@@ -25,7 +25,7 @@ public abstract class NodeImpl implements Node {
 
     protected final String id;
     protected final String type;
-    protected final String label;
+    protected String label;
     protected final String url;
 
 
@@ -67,4 +67,7 @@ public abstract class NodeImpl implements Node {
         return label;
     }
 
+    public void setLabel(String label) {
+        this.label = label;
+    }
 }
