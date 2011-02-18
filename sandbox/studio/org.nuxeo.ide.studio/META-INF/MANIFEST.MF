@@ -48,5 +48,3 @@ Import-Package: javax.print.attribute.standard,
  org.eclipse.ui.preferences,
  org.eclipse.ui.statushandlers,
  org.osgi.framework
-Export-Package: org.nuxeo.ide.studio.connector,
- org.nuxeo.ide.studio.connector.internal
