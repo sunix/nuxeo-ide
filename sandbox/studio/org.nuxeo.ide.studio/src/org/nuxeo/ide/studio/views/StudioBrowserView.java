@@ -194,7 +194,7 @@ public class StudioBrowserView extends ViewPart {
 	private void makeActions() {
 	    refresh = new RefreshAction(this);
 
-	    addFeature = new AddFeatureAction();
+	    addFeature = new AddFeatureAction(this);
 	    deleteFeature = new DeleteFeatureAction(viewer);
 	    expandAll = new ExpandAllAction(viewer);
         collapseAll = new CollapseAllAction(viewer);
@@ -274,6 +274,9 @@ public class StudioBrowserView extends ViewPart {
 
     }
 
+    public String getProjectName(){
+        return projectList.getText();
+    }
 
 
 }

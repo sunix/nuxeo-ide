@@ -24,13 +24,18 @@ import org.nuxeo.ide.studio.data.Node;
 import org.nuxeo.ide.studio.editors.StudioEditor;
 import org.nuxeo.ide.studio.editors.StudioEditorInput;
 import org.nuxeo.ide.studio.ui.Icons;
+import org.nuxeo.ide.studio.views.StudioBrowserView;
 
 /**
  * @author eugen
  *
  */
 public class AddFeatureAction extends Action {
-    public AddFeatureAction() {
+
+    StudioBrowserView browserView;
+
+    public AddFeatureAction(StudioBrowserView browserView) {
+        this.browserView=browserView;
         setText("Add Feature");
         setToolTipText("Add Feature");
         setImageDescriptor(Icons.getIcon(Icons.ACTION_ADD_FEATURE));
@@ -48,7 +53,7 @@ public class AddFeatureAction extends Action {
             }
             @Override
             public String getKey() {
-                return "?project=test1#@wiz.create";
+                return "?project="+browserView.getProjectName()+"#@wiz.create";
             }
             @Override
             public String getId() {
