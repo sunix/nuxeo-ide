@@ -5,6 +5,7 @@ import java.io.File;
 import org.nuxeo.ide.studio.StudioContentProvider;
 import org.nuxeo.ide.studio.StudioProject;
 import org.nuxeo.ide.studio.connector.internal.ProjectBean;
+import org.nuxeo.ide.studio.data.model.Feature;
 
 public class MockIDEContentProvider implements StudioContentProvider {
 
@@ -33,7 +34,7 @@ public class MockIDEContentProvider implements StudioContentProvider {
 
 
     @Override
-    public String getFeatures(String projectId) {
+    public Feature[] getFeatures(String projectId) {
         return null;
     }
 
