@@ -30,12 +30,12 @@ public class ClasspathContainerUpdater {
     public void refreshWorkspace() {
         IWorkspace ws = ResourcesPlugin.getWorkspace();
         for (IProject prj:Arrays.asList(ws.getRoot().getProjects())) {
-            IJavaProject java = (IJavaProject)prj.getAdapter(IJavaProject.class);
+            IJavaProject java = JavaCore.create(prj);
             if (java == null) {
                 continue;
             }
             try {
-                refreshClasspath(java, java.getReferencedClasspathEntries());
+                refreshClasspath(java, java.getRawClasspath());
             } catch (JavaModelException e) {
                 StatusManager.getManager().handle(e, StudioConstants.PLUGIN_ID);
             }
@@ -48,7 +48,13 @@ public class ClasspathContainerUpdater {
             if (!containerPath.equals(entry.getPath())) {
                 continue;
             }
-            refreshClasspathContainer(ctx, JavaCore.getClasspathContainer(entry.getPath(), ctx));            
+            IProject prj = ctx.getProject();
+            try {
+                prj.refreshLocal(0, null); // TODO refresh only referencing projets
+            } catch (CoreException e) {
+                throw new Error("Cannot refresh " + prj.getName());
+            }
+            // refreshClasspathContainer(ctx, JavaCore.getClasspathContainer(entry.getPath(), ctx));            
         }
     }
     
