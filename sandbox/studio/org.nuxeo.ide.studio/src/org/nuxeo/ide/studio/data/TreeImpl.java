@@ -43,4 +43,9 @@ public class TreeImpl extends NodeImpl implements Tree {
         return list;
     }
 
+    @Override
+    public String getIcon() {
+        return null;
+    }
+
 }

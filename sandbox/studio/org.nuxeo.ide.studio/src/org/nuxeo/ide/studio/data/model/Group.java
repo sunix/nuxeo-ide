@@ -59,4 +59,10 @@ public class Group extends TreeImpl{
         return id.equals(this.id);
     }
 
+    @Override
+    public String getIcon() {
+        return "icons/type/"+id+".gif";
+    }
+
+
 }

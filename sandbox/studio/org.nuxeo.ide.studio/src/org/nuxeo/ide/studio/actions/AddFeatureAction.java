@@ -59,6 +59,10 @@ public class AddFeatureAction extends Action {
             public String getId() {
                 return "create";
             }
+            @Override
+            public String getIcon() {
+                return null;
+            }
         };
         IWorkbenchWindow window=PlatformUI.getWorkbench().getActiveWorkbenchWindow();
         IWorkbenchPage page = window.getActivePage();

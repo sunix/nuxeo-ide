@@ -16,10 +16,13 @@
  */
 package org.nuxeo.ide.studio.views;
 
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
+import org.nuxeo.ide.studio.data.Node;
+import org.nuxeo.ide.studio.ui.Icons;
 
 /**
  * @author eugen
@@ -31,8 +34,15 @@ public class StudioLabelProvider extends LabelProvider{
         return obj.toString();
     }
     public Image getImage(Object obj) {
-        String imageKey = ISharedImages.IMG_OBJ_ELEMENT;
-        return PlatformUI.getWorkbench().getSharedImages().getImage(imageKey);
+        String imageKey = ((Node)obj).getIcon();
+        if (imageKey == null) {
+            return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT);
+        }
+        ImageDescriptor img = Icons.getIcon(imageKey);
+        if (img == null) {
+            return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT);
+        }
+        return img.createImage();
     }
 
 }

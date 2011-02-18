@@ -26,5 +26,5 @@ public interface Node {
     public String getType();
     public String getLabel();
     public String getKey();
-
+    public String getIcon();
 }

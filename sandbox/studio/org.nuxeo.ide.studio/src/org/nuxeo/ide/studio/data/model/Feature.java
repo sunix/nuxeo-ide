@@ -33,4 +33,8 @@ public class Feature extends NodeImpl{
         super(id, type, id, url);
     }
 
+    @Override
+    public String getIcon() {
+        return "icons/obj/"+type+".gif";
+    }
 }

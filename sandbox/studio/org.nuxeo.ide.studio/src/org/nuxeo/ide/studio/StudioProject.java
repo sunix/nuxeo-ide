@@ -1,6 +1,5 @@
 package org.nuxeo.ide.studio;
 
-import org.nuxeo.ide.studio.data.model.Group;
 
 public interface StudioProject {
 
@@ -10,5 +9,5 @@ public interface StudioProject {
 
     String getTarget();
 
-    Group[] getFeatureTypes();
+    FeatureTypeBean[] getFeatureTypes();
 }

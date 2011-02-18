@@ -23,12 +23,12 @@ import java.util.Map;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.nuxeo.ide.studio.FeatureTypeBean;
 import org.nuxeo.ide.studio.StudioActivatorHandler;
 import org.nuxeo.ide.studio.StudioContentProvider;
 import org.nuxeo.ide.studio.StudioPlugin;
 import org.nuxeo.ide.studio.StudioProject;
 import org.nuxeo.ide.studio.data.model.Feature;
-import org.nuxeo.ide.studio.data.model.Group;
 import org.nuxeo.ide.studio.internal.jdt.ClasspathContainerUpdater;
 import org.nuxeo.ide.studio.internal.preferences.Preferences;
 
@@ -63,10 +63,7 @@ public class StudioContentProviderImpl implements StudioContentProvider, StudioA
 
     @Override
     public StudioProject[] getProjects() {
-        if (projects == null) {
-            projects = fetchProjects();
-        }
-        return projects.values().toArray(new StudioProject[projects.size()]);
+        return getProjectsMap().values().toArray(new StudioProject[projects.size()]);
     }
 
     public Map<String, StudioProject> fetchProjects() {
@@ -85,19 +82,20 @@ public class StudioContentProviderImpl implements StudioContentProvider, StudioA
             b.setName(encoded.getString("name"));
             b.setTarget(encoded.getString("target"));
             JSONArray types = (JSONArray)encoded.get("types");
-            Group[] groups = new Group[types.size()];
-            for (int i=0; i<groups.length; i++) {
+            FeatureTypeBean[] ftypes = new FeatureTypeBean[types.size()];
+            for (int i=0; i<ftypes.length; i++) {
                 JSONObject to = types.getJSONObject(i);
                 String id = to.getString("id");
                 String name = to.getString("name");
                 String label = to.getString("label");
                 boolean global = to.getBoolean("global");
-                Group g = new Group(id, label);
-                g.setName(name);
-                g.setGlobal(global);
-                groups[i] = g;
+                FeatureTypeBean type = new FeatureTypeBean(id);
+                type.setLabel(label);
+                type.setName(name);
+                type.setGlobal(global);
+                ftypes[i] = type;
             }
-            b.setFeatureTypes(groups);
+            b.setFeatureTypes(ftypes);
             projects.put(b.id, b);
         }
 
@@ -144,7 +142,16 @@ public class StudioContentProviderImpl implements StudioContentProvider, StudioA
         if (projects == null) {
             projects = fetchProjects();
         }
-        return projects.get(id);
+        return getProjectsMap().get(id);
+    }
+
+    public Map<String, StudioProject> getProjectsMap() {
+//TODO remove cache for now
+//        if (projects == null) {
+//            projects = fetchProjects();
+//        }
+//        return projects;
+        return fetchProjects();
     }
 
 }

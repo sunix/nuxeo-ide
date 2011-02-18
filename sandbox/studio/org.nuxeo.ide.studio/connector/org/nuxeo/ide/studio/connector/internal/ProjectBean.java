@@ -1,7 +1,7 @@
 package org.nuxeo.ide.studio.connector.internal;
 
+import org.nuxeo.ide.studio.FeatureTypeBean;
 import org.nuxeo.ide.studio.StudioProject;
-import org.nuxeo.ide.studio.data.model.Group;
 
 
 public class ProjectBean implements StudioProject {
@@ -12,7 +12,7 @@ public class ProjectBean implements StudioProject {
 
     protected String target;
 
-    protected Group[] types;
+    protected FeatureTypeBean[] types;
 
 
 
@@ -44,11 +44,11 @@ public class ProjectBean implements StudioProject {
         target = t;
     }
 
-    public Group[] getFeatureTypes() {
+    public FeatureTypeBean[] getFeatureTypes() {
         return types;
     }
 
-    public void setFeatureTypes(Group[] types) {
+    public void setFeatureTypes(FeatureTypeBean[] types) {
         this.types = types;
     }
 

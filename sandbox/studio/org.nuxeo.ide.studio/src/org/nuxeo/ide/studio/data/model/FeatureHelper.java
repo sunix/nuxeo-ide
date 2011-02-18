@@ -19,6 +19,7 @@ package org.nuxeo.ide.studio.data.model;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.nuxeo.ide.studio.FeatureTypeBean;
 import org.nuxeo.ide.studio.StudioContentProvider;
 import org.nuxeo.ide.studio.StudioPlugin;
 import org.nuxeo.ide.studio.data.Tree;
@@ -35,7 +36,7 @@ public class FeatureHelper {
     public static Tree buildFeatureTree(String projectName){
         StudioContentProvider provider = StudioPlugin.getDefault().getProvider();
 
-        Group[] groups = provider.getProject(projectName).getFeatureTypes();
+        FeatureTypeBean[] types = provider.getProject(projectName).getFeatureTypes();
         Feature[] features = provider.getFeatures(projectName);
 
 
@@ -43,7 +44,10 @@ public class FeatureHelper {
         Map<String, Group> groupMap = new HashMap<String, Group>();
         Map<String, VirtualGroup> vgroupMap = new HashMap<String, VirtualGroup>();
 
-        for ( Group group : groups) {
+        for ( FeatureTypeBean ft : types) {
+            Group group = new Group(ft.getId(), ft.getLabel());
+            group.setName(ft.getName());
+            group.setGlobal(ft.isGlobal());
             if ( group.isGlobal() ){
                 VirtualGroup vg =(VirtualGroup) vgroupMap.get(group.getLabel());
                 if (vg == null) {
