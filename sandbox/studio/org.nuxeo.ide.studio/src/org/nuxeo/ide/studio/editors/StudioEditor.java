@@ -1,4 +1,5 @@
 package org.nuxeo.ide.studio.editors;
+import java.io.File;
 import java.net.URL;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -67,12 +68,19 @@ public class StudioEditor extends EditorPart {
         browser.setUrl(url.toExternalForm());
         browser.addTitleListener(new TitleListener() {
             public void changed(TitleEvent event) {
-                System.out.println(event.title);
                 //id:type:saved!
                 //id:type:created!
-                if (event.title.endsWith("Save Done!")) {
+                if (event.title.endsWith(":saved!")) {
                     StudioPlugin.logInfo("<- save done");
-                } else if (event.title.endsWith("created!")) {
+                    IWorkbenchWindow window=PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+                    IWorkbenchPage page = window.getActivePage();
+                    IViewPart view = page.findView(StudioBrowserView.ID);
+                    if (view != null) {
+                        StudioBrowserView studioBrowserView = (StudioBrowserView)view;
+                        File file = StudioPlugin.getDefault().getProvider().getJar(studioBrowserView.getProjectName());
+                        System.out.println(file);
+                    }
+                } else if (event.title.endsWith(":created!")) {
                     String id = null;
                     String[] s = event.title.split(":");
                     if ( s.length > 0 ){
@@ -90,13 +98,11 @@ public class StudioEditor extends EditorPart {
                         if ( id != null) {
                             Node node = studioBrowserView.selectNode(id);
                             if ( node != null ){
-                                setInput(new StudioEditorInput(node));
+                                setInputWithNotify(new StudioEditorInput(node));
                             }
                         }
 
                     }
-                    //TODO not working
-                    setPartName("TODO - find id");
                 }
             }
         });
