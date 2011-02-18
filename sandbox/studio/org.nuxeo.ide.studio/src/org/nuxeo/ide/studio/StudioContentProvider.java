@@ -2,11 +2,13 @@ package org.nuxeo.ide.studio;
 
 import java.io.File;
 
+import org.nuxeo.ide.studio.data.model.Feature;
+
 public interface StudioContentProvider {
 
   StudioProject[] getProjects();
 
-  String getEncodedFeatures(String projectId);
+  Feature[] getFeatures(String projectId);
 
   File getJar(String name);
 

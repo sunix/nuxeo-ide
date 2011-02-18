@@ -45,7 +45,7 @@ public class FeatureHelper {
         StudioProject project = provider.getProject(projectName);
 
         Tree root =  new TreeImpl("root", "root", "Root", null);
-        String input = StudioPlugin.getDefault().getProvider().getEncodedFeatures(projectName);
+        Feature[] features = StudioPlugin.getDefault().getProvider().getFeatures(projectName);
         //populate(root,input);
         return root;
     }
@@ -68,7 +68,7 @@ public class FeatureHelper {
                 String groupName = null; //jsonObject.getString("typeName");
                 String key = jsonObject.getString("key");
 
-                Feature feature = new Feature(id, type, id,  key);
+                Feature feature = new Feature(id, type,  key);
 
                 Group group = groups.get(groupName);
                 if ( group == null ){ // create group

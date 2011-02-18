@@ -33,7 +33,7 @@ public class MockIDEContentProvider implements StudioContentProvider {
 
 
     @Override
-    public String getEncodedFeatures(String projectId) {
+    public String getFeatures(String projectId) {
         return null;
     }
 

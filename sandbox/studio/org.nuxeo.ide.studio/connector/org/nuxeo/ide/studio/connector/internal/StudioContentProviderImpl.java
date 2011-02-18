@@ -27,6 +27,7 @@ import org.nuxeo.ide.studio.StudioActivatorHandler;
 import org.nuxeo.ide.studio.StudioContentProvider;
 import org.nuxeo.ide.studio.StudioPlugin;
 import org.nuxeo.ide.studio.StudioProject;
+import org.nuxeo.ide.studio.data.model.Feature;
 import org.nuxeo.ide.studio.data.model.Group;
 import org.nuxeo.ide.studio.internal.jdt.ClasspathContainerUpdater;
 import org.nuxeo.ide.studio.internal.preferences.Preferences;
@@ -102,9 +103,20 @@ public class StudioContentProviderImpl implements StudioContentProvider, StudioA
     }
 
     @Override
-    public String getEncodedFeatures(String projectId) {
+    public Feature[] getFeatures(String projectId) {
         try {
-            return connector.getFeatures(projectId);
+            String content = connector.getFeatures(projectId);
+            JSONArray array = JSONArray.fromObject(content);
+            Feature[] features = new Feature[array.size()];
+            for (int i=0; i<features.length; i++) {
+                JSONObject obj = array.getJSONObject(i);
+                String id = obj.getString("id");
+                String type = obj.getString("type");
+                String key = obj.getString("key");
+                Feature feature = new Feature(id, type,  key);
+                features[i] = feature;
+            }
+            return features;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

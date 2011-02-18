@@ -29,8 +29,8 @@ public class Feature extends NodeImpl{
      * @param label
      * @param url
      */
-    public Feature(String id, String type, String label, String url) {
-        super(id, type, label, url);
+    public Feature(String id, String type, String url) {
+        super(id, type, id, url);
     }
 
 }
