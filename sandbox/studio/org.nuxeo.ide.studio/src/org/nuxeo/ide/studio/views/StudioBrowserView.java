@@ -41,6 +41,7 @@ import org.nuxeo.ide.studio.actions.DeleteFeatureAction;
 import org.nuxeo.ide.studio.actions.ExpandAllAction;
 import org.nuxeo.ide.studio.actions.RefreshAction;
 import org.nuxeo.ide.studio.data.Node;
+import org.nuxeo.ide.studio.data.model.Feature;
 import org.nuxeo.ide.studio.data.model.FeatureHelper;
 import org.nuxeo.ide.studio.editors.StudioEditor;
 import org.nuxeo.ide.studio.editors.StudioEditorInput;
@@ -72,7 +73,8 @@ public class StudioBrowserView extends ViewPart {
 	public static final String ID = "org.nuxeo.ide.studio.views.StudioBrowserView";
 
 	private TreeViewer viewer;
-	private DrillDownAdapter drillDownAdapter;
+
+    private DrillDownAdapter drillDownAdapter;
 	private Action doubleClickAction;
 
 	private Combo projectList;
@@ -252,6 +254,26 @@ public class StudioBrowserView extends ViewPart {
         }
 	    refresh();
 	}
+
+    /**
+     * @param id2
+     */
+    public Node selectNode(String featureId) {
+        String projectName = projectList.getText();
+        if ( projectName != null) {
+            Feature[] features = StudioPlugin.getDefault().getProvider().getFeatures(projectName);
+            for ( Feature feature : features ){
+                if (featureId.equals(feature.getId())){
+                    viewer.setExpandedState(feature, true);
+                    viewer.expandToLevel(feature, 1);
+                    return feature;
+                }
+            }
+        }
+        return null;
+
+    }
+
 
 
 }

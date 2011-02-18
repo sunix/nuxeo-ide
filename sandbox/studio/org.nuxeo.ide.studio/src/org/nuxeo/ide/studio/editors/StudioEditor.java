@@ -67,15 +67,33 @@ public class StudioEditor extends EditorPart {
         browser.setUrl(url.toExternalForm());
         browser.addTitleListener(new TitleListener() {
             public void changed(TitleEvent event) {
+                System.out.println(event.title);
+                //id:type:saved!
+                //id:type:created!
                 if (event.title.endsWith("Save Done!")) {
                     StudioPlugin.logInfo("<- save done");
-                } else if (event.title.endsWith("Create Done!")) {
+                } else if (event.title.endsWith("created!")) {
+                    String id = null;
+                    String[] s = event.title.split(":");
+                    if ( s.length > 0 ){
+                        id = s[0];
+                    }
+
                     StudioPlugin.logInfo("<- create done");
                     IWorkbenchWindow window=PlatformUI.getWorkbench().getActiveWorkbenchWindow();
                     IWorkbenchPage page = window.getActivePage();
                     IViewPart view = page.findView(StudioBrowserView.ID);
                     if (view != null) {
-                        ((StudioBrowserView)view).refresh();
+                        StudioBrowserView studioBrowserView = (StudioBrowserView)view;
+                        studioBrowserView.refresh();
+
+                        if ( id != null) {
+                            Node node = studioBrowserView.selectNode(id);
+                            if ( node != null ){
+                                setInput(new StudioEditorInput(node));
+                            }
+                        }
+
                     }
                     //TODO not working
                     setPartName("TODO - find id");
