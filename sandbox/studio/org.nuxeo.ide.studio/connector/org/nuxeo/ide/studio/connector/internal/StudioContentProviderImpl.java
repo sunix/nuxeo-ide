@@ -22,6 +22,7 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.nuxeo.ide.studio.StudioContentProvider;
 import org.nuxeo.ide.studio.StudioProject;
+import org.nuxeo.ide.studio.internal.jdt.ClasspathContainerUpdater;
 import org.nuxeo.ide.studio.internal.preferences.PreferencesStore;
 
 /**
@@ -72,12 +73,8 @@ public class StudioContentProviderImpl implements StudioContentProvider {
 
 
     @Override
-    public void updateJar(String projectName) {
-        IWorkspace ws = ResourcesPlugin.getWorkspace();
-        ws.getRoot().getProjects();
-        //TODO
-        System.out.println("Update JAR: " +projectName);
-
+    public void updateJar(String name) {
+        new ClasspathContainerUpdater(name, null).refreshWorkspace();
     }
 
 }
