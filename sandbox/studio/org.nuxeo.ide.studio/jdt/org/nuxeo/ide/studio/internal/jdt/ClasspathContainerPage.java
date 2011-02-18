@@ -13,9 +13,9 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.List;
-import org.nuxeo.ide.studio.StudioIDEConstants;
-import org.nuxeo.ide.studio.StudioIDEPlugin;
-import org.nuxeo.ide.studio.connector.StudioIDEContentProvider;
+import org.nuxeo.ide.studio.StudioContentProvider;
+import org.nuxeo.ide.studio.StudioConstants;
+import org.nuxeo.ide.studio.StudioPlugin;
 import org.nuxeo.ide.studio.connector.internal.ContentExtractor;
 import org.nuxeo.ide.studio.internal.preferences.PreferencesStore;
 
@@ -24,12 +24,12 @@ public class ClasspathContainerPage extends WizardPage implements
 
     public ClasspathContainerPage() {
         super("Nuxeo Studio Dependencies");
-        provider = StudioIDEPlugin.getDefault().getProvider();
+        provider = StudioPlugin.getDefault().getProvider();
     }
 
     protected IClasspathEntry containerEntry;
 
-    protected final StudioIDEContentProvider provider;
+    protected final StudioContentProvider provider;
 
     protected String selectedProject;
 
@@ -70,7 +70,7 @@ public class ClasspathContainerPage extends WizardPage implements
     public boolean finish() {
         PreferencesStore prefs = new PreferencesStore();
         prefs.setStudioProject(ctx, selectedProject);
-        Path path = new Path(StudioIDEConstants.CLASSPATH_CONTAINER_ID);
+        Path path = new Path(StudioConstants.CLASSPATH_CONTAINER_ID);
         containerEntry = JavaCore.newContainerEntry(path);
         return true;
     }

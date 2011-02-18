@@ -18,15 +18,18 @@ package org.nuxeo.ide.studio.connector.internal;
 
 import java.io.File;
 
-import org.nuxeo.ide.studio.connector.StudioIDEContentProvider;
-import org.nuxeo.ide.studio.connector.StudioIDEProject;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.nuxeo.ide.studio.StudioContentProvider;
+import org.nuxeo.ide.studio.StudioProject;
+import org.nuxeo.ide.studio.internal.jdt.ClasspathContainerUpdater;
 import org.nuxeo.ide.studio.internal.preferences.PreferencesStore;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  *
  */
-public class StudioContentProviderImpl implements StudioIDEContentProvider {
+public class StudioContentProviderImpl implements StudioContentProvider {
 
     protected StudioConnector connector;
 
@@ -42,7 +45,7 @@ public class StudioContentProviderImpl implements StudioIDEContentProvider {
     }
 
     @Override
-    public StudioIDEProject[] getProjects() {
+    public StudioProject[] getProjects() {
         try {
             return null;//connector.getProjects();
         } catch (Exception e) {
@@ -70,10 +73,8 @@ public class StudioContentProviderImpl implements StudioIDEContentProvider {
 
 
     @Override
-    public void updateJar(String projectName) {
-        //TODO
-        System.out.println("Update JAR: " +projectName);
-
+    public void updateJar(String name) {
+        new ClasspathContainerUpdater(name, null).refreshWorkspace();
     }
 
 }

@@ -6,14 +6,14 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
-import org.nuxeo.ide.studio.StudioIDEConstants;
-import org.nuxeo.ide.studio.connector.StudioIDEContentProvider;
+import org.nuxeo.ide.studio.StudioContentProvider;
+import org.nuxeo.ide.studio.StudioConstants;
 
 public class ExtensionsReader {
     
-    StudioIDEContentProvider getWorkenchProvider() {
+    StudioContentProvider getWorkenchProvider() {
         IExtensionRegistry registry = Platform.getExtensionRegistry();
-        IExtensionPoint point = registry.getExtensionPoint(StudioIDEConstants.EXTENSION_WORKBENCH_PROVIDER);
+        IExtensionPoint point = registry.getExtensionPoint(StudioConstants.EXTENSION_WORKBENCH_PROVIDER);
         if (point == null) {
             throw new Error("No NxStudio workbench provider available");
         }
@@ -23,7 +23,7 @@ public class ExtensionsReader {
         }
         IConfigurationElement config = extensions[0].getConfigurationElements()[0];
         try {
-            StudioIDEContentProvider provider = (StudioIDEContentProvider)config.createExecutableExtension("class");
+            StudioContentProvider provider = (StudioContentProvider)config.createExecutableExtension("class");
             return provider;
         } catch (CoreException e) {
             throw new Error("Cannot load NxStudio workbench provider", e);

@@ -2,11 +2,11 @@ package org.nuxeo.ide.studio.mock.internal;
 
 import java.io.File;
 
-import org.nuxeo.ide.studio.connector.StudioIDEContentProvider;
-import org.nuxeo.ide.studio.connector.StudioIDEProject;
+import org.nuxeo.ide.studio.StudioContentProvider;
+import org.nuxeo.ide.studio.StudioProject;
 import org.nuxeo.ide.studio.connector.internal.ProjectBean;
 
-public class MockIDEContentProvider implements StudioIDEContentProvider {
+public class MockIDEContentProvider implements StudioContentProvider {
 
     protected ProjectBean[] projects = new ProjectBean[0];
 
@@ -27,7 +27,7 @@ public class MockIDEContentProvider implements StudioIDEContentProvider {
 
 
     @Override
-    public StudioIDEProject[] getProjects() {
+    public StudioProject[] getProjects() {
         return projects;
     }
 

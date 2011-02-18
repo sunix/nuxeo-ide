@@ -1,6 +1,6 @@
-package org.nuxeo.ide.studio.connector;
+package org.nuxeo.ide.studio;
 
-public interface StudioIDEProject {
+public interface StudioProject {
 
     String getName();
 

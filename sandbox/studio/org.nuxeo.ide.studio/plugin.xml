@@ -54,7 +54,7 @@
          point="org.eclipse.core.resources.natures">
       <runtime>
          <run
-               class="org.nuxeo.ide.studio.StudioIDEProjectNature">
+               class="org.nuxeo.ide.studio.StudioProjectNature">
          </run>
       </runtime>
    </extension>

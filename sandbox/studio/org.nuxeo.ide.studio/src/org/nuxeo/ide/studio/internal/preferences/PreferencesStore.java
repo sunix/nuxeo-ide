@@ -9,10 +9,10 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jdt.core.IJavaProject;
-import org.nuxeo.ide.studio.StudioIDEConstants;
-import org.nuxeo.ide.studio.StudioIDEPlugin;
-import org.nuxeo.ide.studio.connector.StudioIDEContentProvider;
-import org.nuxeo.ide.studio.connector.StudioIDEProject;
+import org.nuxeo.ide.studio.StudioContentProvider;
+import org.nuxeo.ide.studio.StudioConstants;
+import org.nuxeo.ide.studio.StudioPlugin;
+import org.nuxeo.ide.studio.StudioProject;
 
 public class PreferencesStore {
 
@@ -20,11 +20,11 @@ public class PreferencesStore {
 
 
     protected IEclipsePreferences getGlobalPreferences() {
-        return new InstanceScope().getNode(StudioIDEConstants.PLUGIN_ID);
+        return new InstanceScope().getNode(StudioConstants.PLUGIN_ID);
     }
 
     protected IEclipsePreferences getProjectPreferences(IJavaProject ctx) {
-        return new ProjectScope(ctx.getProject()).getNode(StudioIDEConstants.PLUGIN_ID);
+        return new ProjectScope(ctx.getProject()).getNode(StudioConstants.PLUGIN_ID);
     }
 
     public URL getConnectLocation() {
@@ -53,7 +53,7 @@ public class PreferencesStore {
     public String getStudioProjectName(IJavaProject ctx) {
         IEclipsePreferences preferences = getProjectPreferences(ctx);
         String name = preferences.get(PreferencesConstants.P_PROJECT, "");
-        StudioIDEContentProvider provider = StudioIDEPlugin.getDefault().getProvider();
+        StudioContentProvider provider = StudioPlugin.getDefault().getProvider();
 
         return name;
     }

@@ -25,9 +25,9 @@ import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
-import org.nuxeo.ide.studio.StudioIDEConstants;
-import org.nuxeo.ide.studio.StudioIDEPlugin;
-import org.nuxeo.ide.studio.connector.StudioIDEContentProvider;
+import org.nuxeo.ide.studio.StudioContentProvider;
+import org.nuxeo.ide.studio.StudioConstants;
+import org.nuxeo.ide.studio.StudioPlugin;
 
 /**
  * @author <a href="mailto:slacoin@nuxeo.com">Stephane Lacoin</a>
@@ -45,8 +45,8 @@ public class ClasspathContainer implements IClasspathContainer {
     }
 
     protected IClasspathEntry[] buildEntries(IJavaProject ctx) {
-        String name = StudioIDEPlugin.getDefault().getPreferences().getStudioProjectName(ctx);
-        StudioIDEContentProvider provider = StudioIDEPlugin.getDefault().getProvider();
+        String name = StudioPlugin.getDefault().getPreferences().getStudioProjectName(ctx);
+        StudioContentProvider provider = StudioPlugin.getDefault().getProvider();
         File file = provider.getJar(name);
         IPath prjpath = new Path(file.getAbsolutePath());
         IFile lib = ctx.getProject().getFile(prjpath);
@@ -67,7 +67,7 @@ public class ClasspathContainer implements IClasspathContainer {
     }
 
     public IPath getPath() {
-        return new Path(StudioIDEConstants.CLASSPATH_CONTAINER_ID);
+        return new Path(StudioConstants.CLASSPATH_CONTAINER_ID);
     }
 
 }

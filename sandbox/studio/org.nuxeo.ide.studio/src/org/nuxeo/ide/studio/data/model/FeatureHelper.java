@@ -26,7 +26,7 @@ import java.util.Map;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
-import org.nuxeo.ide.studio.StudioIDEPlugin;
+import org.nuxeo.ide.studio.StudioPlugin;
 import org.nuxeo.ide.studio.data.Tree;
 import org.nuxeo.ide.studio.data.TreeImpl;
 
@@ -40,7 +40,7 @@ public class FeatureHelper {
 
     public static Tree buildFeatureTree(String projectName){
         Tree root =  new TreeImpl("root", "root", "Root", null);
-        String input = StudioIDEPlugin.getDefault().getProvider().getFeatures(projectName);
+        String input = StudioPlugin.getDefault().getProvider().getFeatures(projectName);
         populate(root,input);
         return root;
     }

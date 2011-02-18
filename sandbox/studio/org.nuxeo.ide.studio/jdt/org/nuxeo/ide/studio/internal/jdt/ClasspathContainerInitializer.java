@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
-import org.nuxeo.ide.studio.StudioIDEConstants;
+import org.nuxeo.ide.studio.StudioConstants;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -33,7 +33,7 @@ public class ClasspathContainerInitializer extends org.eclipse.jdt.core.Classpat
     @Override
     public void initialize(IPath containerPath, IJavaProject java)
     throws CoreException {
-        JavaCore.setClasspathContainer(new Path(StudioIDEConstants.CLASSPATH_CONTAINER_ID), 
+        JavaCore.setClasspathContainer(new Path(StudioConstants.CLASSPATH_CONTAINER_ID), 
                 new IJavaProject[] {java}, 
                 new IClasspathContainer[] { new ClasspathContainer(java ) }, 
                 null);
