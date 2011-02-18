@@ -46,9 +46,9 @@ public class FeatureHelper {
     }
 
     protected static void populate(Tree root, String input) {
-//        if ( input == null ){
-//            input = fakeInput();
-//        }
+        if ( input == null ){
+            input = fakeInput();
+        }
 
         JSONArray array = JSONArray.fromObject(input);
 

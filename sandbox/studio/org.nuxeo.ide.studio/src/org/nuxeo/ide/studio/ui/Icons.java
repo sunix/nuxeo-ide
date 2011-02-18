@@ -37,6 +37,8 @@ public class Icons {
 
     public static final String ACTION_DELETE_FEATURE = ACTION_DIR + "delete.png";
 
+    public static final String ACTION_REFRESH = ACTION_DIR + "refresh.png";
+
     public static ImageDescriptor getIcon(String iconPath) {
         return StudioPlugin.getImageDescriptor(iconPath);
     }

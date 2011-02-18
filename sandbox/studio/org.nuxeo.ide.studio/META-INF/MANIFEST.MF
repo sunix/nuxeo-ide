@@ -48,3 +48,4 @@ Import-Package: javax.print.attribute.standard,
  org.eclipse.ui.preferences,
  org.eclipse.ui.statushandlers,
  org.osgi.framework
+Require-Bundle: org.eclipse.jface;bundle-version="3.6.1"

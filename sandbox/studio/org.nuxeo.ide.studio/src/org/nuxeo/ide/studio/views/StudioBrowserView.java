@@ -6,6 +6,8 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
@@ -13,7 +15,15 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchActionConstants;
@@ -27,6 +37,7 @@ import org.nuxeo.ide.studio.actions.AddFeatureAction;
 import org.nuxeo.ide.studio.actions.CollapseAllAction;
 import org.nuxeo.ide.studio.actions.DeleteFeatureAction;
 import org.nuxeo.ide.studio.actions.ExpandAllAction;
+import org.nuxeo.ide.studio.actions.RefreshAction;
 import org.nuxeo.ide.studio.data.Node;
 import org.nuxeo.ide.studio.data.model.FeatureHelper;
 import org.nuxeo.ide.studio.editors.StudioEditor;
@@ -62,7 +73,9 @@ public class StudioBrowserView extends ViewPart {
 	private DrillDownAdapter drillDownAdapter;
 	private Action doubleClickAction;
 
+	private Combo projectList;
 
+	private Action refresh;
 	private Action addFeature;
 	private Action deleteFeature;
 	private Action expandAll;
@@ -79,7 +92,10 @@ public class StudioBrowserView extends ViewPart {
 	}
 
 	public void refresh() {
-	    viewer.setInput(FeatureHelper.buildFeatureTree("test1"));
+	    String project = projectList.getText();
+	    if ( project != null && project.trim().length() > 0 ) {
+	        viewer.setInput(FeatureHelper.buildFeatureTree(project));
+	    }
 	}
 
 	/**
@@ -87,12 +103,25 @@ public class StudioBrowserView extends ViewPart {
 	 * to create the viewer and initialize it.
 	 */
 	public void createPartControl(Composite parent) {
-		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+
+	    Composite composite = new Composite(parent, SWT.NONE);
+        composite.setLayout(new GridLayout(1, false));
+
+
+	    // project navigator
+	    projectList = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
+	    GridDataFactory.fillDefaults().grab(true, false).applyTo(projectList);
+	    projectList.setItems(new String[] {"test1", "test2"});
+
+	    // the navigator
+		viewer = new TreeViewer(composite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+		GridDataFactory.fillDefaults().grab(true, true).applyTo(viewer.getControl());
+
 		drillDownAdapter = new DrillDownAdapter(viewer);
 		viewer.setContentProvider(new StudioContentProvider());
 		viewer.setLabelProvider(new StudioLabelProvider());
 		viewer.setSorter(new NameSorter());
-		viewer.setInput(FeatureHelper.buildFeatureTree("test1"));
+
 
 		// Create the help context id for the viewer's control
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(viewer.getControl(), "org.nuxeo.ide.studio.views.viewer");
@@ -100,6 +129,22 @@ public class StudioBrowserView extends ViewPart {
 		hookContextMenu();
 		hookDoubleClickAction();
 		contributeToActionBars();
+
+
+		projectList.addSelectionListener(new SelectionListener() {
+
+		    public void widgetSelected(SelectionEvent e) {
+		        refresh();
+		    }
+
+		    public void widgetDefaultSelected(SelectionEvent e) {
+
+		    }
+		});
+		if ( projectList.getItemCount() > 0 ) {
+		    projectList.select(0);
+		}
+		refresh();
 	}
 
 	private void hookContextMenu() {
@@ -136,6 +181,7 @@ public class StudioBrowserView extends ViewPart {
 	}
 
 	private void fillLocalToolBar(IToolBarManager manager) {
+	    manager.add(refresh);
 	    manager.add(addFeature);
 	    manager.add(deleteFeature);
 	    manager.add(new Separator());
@@ -146,6 +192,8 @@ public class StudioBrowserView extends ViewPart {
 	}
 
 	private void makeActions() {
+	    refresh = new RefreshAction(this);
+
 	    addFeature = new AddFeatureAction();
 	    deleteFeature = new DeleteFeatureAction(viewer);
 	    expandAll = new ExpandAllAction(viewer);
@@ -194,4 +242,6 @@ public class StudioBrowserView extends ViewPart {
 	public void setFocus() {
 		viewer.getControl().setFocus();
 	}
+
+
 }
