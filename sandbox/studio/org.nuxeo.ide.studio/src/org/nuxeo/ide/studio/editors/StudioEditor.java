@@ -99,7 +99,7 @@ public class StudioEditor extends EditorPart {
                             Node node = studioBrowserView.selectNode(id);
                             if ( node != null ){
                                 setInputWithNotify(new StudioEditorInput(node));
-                                setPartName("todo");
+                                setPartName(id);
                             }
                         }
 
