@@ -17,44 +17,68 @@
 package org.nuxeo.ide.studio.connector.internal;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
+import org.nuxeo.ide.studio.StudioActivatorHandler;
 import org.nuxeo.ide.studio.StudioContentProvider;
+import org.nuxeo.ide.studio.StudioPlugin;
 import org.nuxeo.ide.studio.StudioProject;
 import org.nuxeo.ide.studio.internal.jdt.ClasspathContainerUpdater;
-import org.nuxeo.ide.studio.internal.preferences.PreferencesStore;
+import org.nuxeo.ide.studio.internal.preferences.Preferences;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  *
  */
-public class StudioContentProviderImpl implements StudioContentProvider {
+public class StudioContentProviderImpl implements StudioContentProvider, StudioActivatorHandler {
 
     protected StudioConnector connector;
 
-
-    public StudioContentProviderImpl() {
+    public void reset() {
+        Preferences prefs = StudioPlugin.getPreferences();
+        connector = new StudioConnector(
+                prefs.getConnectLocation(),
+                prefs.getUsername(), prefs.getPassword());        
+    }
+    
+    public void handleReset() {
         reset();
     }
 
-    public void reset() {
-        connector = new StudioConnector(
-                PreferencesStore.INSTANCE.getConnectLocation(),
-                PreferencesStore.INSTANCE.getUsername(), PreferencesStore.INSTANCE.getPassword());
+    public void handleStart() {
+        reset();
     }
-
+    
+    public void handleStop() {
+        connector = null;
+    }
+    
     @Override
     public StudioProject[] getProjects() {
+        String input;
         try {
-            return null;//connector.getProjects();
+            input = connector.getProjects();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        JSONArray array = JSONArray.fromObject(input);
+        List<StudioProject> projects = new ArrayList<StudioProject>(array.size());
+        for (Object o:array) {
+            JSONObject encoded = (JSONObject)o;
+            ProjectBean b = new ProjectBean(encoded.getString("id"));
+            b.setName(encoded.getString("name"));
+            b.setTarget(encoded.getString("target"));
+            projects.add(b);
+        }
+        return projects.toArray(new StudioProject[projects.size()]);
     }
 
     @Override
-    public String getFeatures(String projectId) {
+    public String getEncodedFeatures(String projectId) {
         try {
             return connector.getFeatures(projectId);
         } catch (Exception e) {

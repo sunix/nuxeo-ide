@@ -1,20 +1,20 @@
 package org.nuxeo.ide.studio.internal.preferences;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
-import org.eclipse.core.runtime.preferences.DefaultScope;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.nuxeo.ide.studio.StudioConstants;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.nuxeo.ide.studio.StudioPlugin;
 
 public class PreferencesInitializer extends AbstractPreferenceInitializer {
 
+    protected IPreferenceStore pluginStore;
+    
     public PreferencesInitializer() {
+        pluginStore = StudioPlugin.getDefault().getPreferenceStore();
     }
 
     @Override
     public void initializeDefaultPreferences() {
-        IEclipsePreferences node = new DefaultScope().getNode(StudioConstants.PLUGIN_ID);
-        node.put(PreferencesConstants.P_URL, "http://connect.nuxeo.com/site/studio/ide/xxx");
-        node.put(PreferencesConstants.P_PROJECT, null);
+        pluginStore.setDefault(PreferencesConstants.P_CONNECT_LOCATION, "http://connect.nuxeo.com/nuxeo/site/studio");
     }
 
 }

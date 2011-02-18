@@ -45,12 +45,11 @@ public class ClasspathContainer implements IClasspathContainer {
     }
 
     protected IClasspathEntry[] buildEntries(IJavaProject ctx) {
-        String name = StudioPlugin.getDefault().getPreferences().getStudioProjectName(ctx);
+        String name = StudioPlugin.getPreferences().getStudioProjectName(ctx);
         StudioContentProvider provider = StudioPlugin.getDefault().getProvider();
         File file = provider.getJar(name);
-        IPath prjpath = new Path(file.getAbsolutePath());
-        IFile lib = ctx.getProject().getFile(prjpath);
-        return new IClasspathEntry[] { JavaCore.newLibraryEntry(lib.getLocation(), null, null) };
+        IPath path = new Path(file.getAbsolutePath());
+        return new IClasspathEntry[] { JavaCore.newLibraryEntry(path, null, null) };
     }
 
 

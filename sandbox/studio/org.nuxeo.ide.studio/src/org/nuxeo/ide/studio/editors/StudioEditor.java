@@ -1,4 +1,6 @@
 package org.nuxeo.ide.studio.editors;
+import java.net.URL;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
@@ -8,7 +10,6 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -16,10 +17,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 import org.nuxeo.ide.studio.StudioPlugin;
-import org.nuxeo.ide.studio.connector.internal.StudioConnector;
 import org.nuxeo.ide.studio.data.Node;
-import org.nuxeo.ide.studio.internal.jdt.ClasspathContainerUpdater;
-import org.nuxeo.ide.studio.internal.preferences.PreferencesStore;
 import org.nuxeo.ide.studio.views.StudioBrowserView;
 
 
@@ -64,9 +62,9 @@ public class StudioEditor extends EditorPart {
         parent.setLayout(new FillLayout());
         browser = new Browser(parent, SWT.NONE);
         Node node = (Node) getEditorInput().getAdapter(Node.class);
-        String url = PreferencesStore.INSTANCE.getConnectLocation()+"/ide/dev" + node.getKey();
+        URL url = StudioPlugin.getPreferences().getConnectLocation("ide", "dev", node.getKey());
         StudioPlugin.logInfo("-> " + url);
-        browser.setUrl(url);
+        browser.setUrl(url.toExternalForm());
         browser.addTitleListener(new TitleListener() {
             public void changed(TitleEvent event) {
                 if (event.title.endsWith("Save Done!")) {

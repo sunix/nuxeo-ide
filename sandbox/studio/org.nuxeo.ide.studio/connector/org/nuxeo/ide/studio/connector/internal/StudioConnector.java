@@ -42,6 +42,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.protocol.HttpContext;
+import org.nuxeo.ide.studio.StudioPlugin;
 
 /**
  * Should be reinstantiated each time URL or login changes.
@@ -103,10 +104,11 @@ public class StudioConnector {
     public File getJar(String projectId) throws Exception {
         File file = doGetAsFile("/projects/" + projectId
                 + "/jar");
-        File f = new File(file.getParentFile(), projectId+".jar");
+        String p = file.getParentFile() + "/" + projectId+".jar";
+        File f = new File(p);
         f.delete();
         file.renameTo(f);
-        return file;
+        return f;
     }
 
 
@@ -115,7 +117,7 @@ public class StudioConnector {
         if (in != null) {
             try {
                 String s = readStream(in);
-                System.out.println("================\n"+s+"\n==================");
+                StudioPlugin.logInfo("<- " + s);
                 return s;
             } finally {
                 in.close();

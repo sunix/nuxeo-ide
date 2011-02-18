@@ -28,10 +28,10 @@ public class PreferencesPage extends FieldEditorPreferencePage implements
     @Override
     public void createFieldEditors() {
 
-        addField(new StringFieldEditor(PreferencesConstants.P_URL,
+        addField(new StringFieldEditor(PreferencesConstants.P_CONNECT_LOCATION,
                 "http://connect.nuxeo.com/site/studio/ide/xxx", getFieldEditorParent()));
         
-        addField(new StringFieldEditor(PreferencesConstants.P_PROJECT, "", getFieldEditorParent()));
+        addField(new StringFieldEditor(PreferencesConstants.P_USER, "", getFieldEditorParent()));
 
     }
 

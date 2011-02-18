@@ -18,7 +18,7 @@ public class ContentExtractor {
         StudioProject[] projects = provider.getProjects();
         List<String> names = new ArrayList<String>(projects.length);
         for (StudioProject project : projects) {
-            names.add(project.getName());
+            names.add(project.getId());
         }
         return names.toArray(new String[names.size()]);
     }

@@ -5,36 +5,36 @@ import org.nuxeo.ide.studio.StudioProject;
 
 public class ProjectBean implements StudioProject {
 
-    protected final String name;
+    protected final String id;
 
-    protected String title;
+    protected String name;
 
-    protected String targetVersion;
+    protected String target;
 
-    public ProjectBean(String name) {
-        this.name = name;
+    public ProjectBean(String id) {
+        this.id = id;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    @Override
     public String getName() {
         return name;
     }
 
     @Override
-    public String getTitle() {
-        return title;
+    public String getTarget() {
+        return target;
     }
 
-    @Override
-    public String getTargetVersion() {
-        return targetVersion;
+    public void setName(String n) {
+        name = n;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setTargetVersion(String targetVersion) {
-        this.targetVersion = targetVersion;
+    public void setTarget(String t) {
+        target = t;
     }
 
 }

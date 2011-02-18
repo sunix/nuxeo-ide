@@ -1,15 +1,13 @@
 package org.nuxeo.ide.studio;
 
-import java.net.URL;
-
-import javax.print.attribute.standard.Severity;
-
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.statushandlers.StatusManager;
 import org.nuxeo.ide.studio.connector.internal.StudioContentProviderImpl;
-import org.nuxeo.ide.studio.internal.preferences.PreferencesStore;
+import org.nuxeo.ide.studio.internal.preferences.Preferences;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -23,15 +21,18 @@ public class StudioPlugin extends AbstractUIPlugin {
 	// The shared instance
 	private static StudioPlugin plugin;
 
-	protected PreferencesStore prefs;
+	protected Preferences prefs;
 
 	/**
 	 * The constructor
 	 */
 	public StudioPlugin() {
-	    prefs = new PreferencesStore();
+	    prefs = new Preferences();
+	    wbProvider = new StudioContentProviderImpl();
 	}
 
+	IPropertyChangeListener prefsListener;
+	
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
@@ -39,6 +40,18 @@ public class StudioPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+		if (wbProvider instanceof StudioActivatorHandler) {
+		    ((StudioActivatorHandler)wbProvider).handleStart();
+		}
+        prefs.registerListener(prefsListener = new IPropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent event) {
+                if (wbProvider instanceof StudioActivatorHandler) {
+                    ((StudioActivatorHandler) wbProvider).handleReset();
+                }
+            }
+        });
+		
 //		loadExtensions();
 	}
 
@@ -53,6 +66,7 @@ public class StudioPlugin extends AbstractUIPlugin {
 	 */
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
+		prefs.unregisterListener(prefsListener);
 		super.stop(context);
 	}
 
@@ -66,14 +80,10 @@ public class StudioPlugin extends AbstractUIPlugin {
 	    return wbProvider;
 	}
 
-	public URL getConnectLocation() {
-	    return prefs.getConnectLocation();
+	public static Preferences getPreferences() {
+	    return getDefault().prefs;
 	}
-
-	public PreferencesStore getPreferences() {
-	    return prefs;
-	}
-
+	
 	/**
 	 * Returns the shared instance
 	 *
@@ -96,6 +106,7 @@ public class StudioPlugin extends AbstractUIPlugin {
 
 	public static void logInfo(String format, Object... args) {
 	    String msg = String.format(format, args);
-	    StatusManager.getManager().handle(new Status(Status.INFO, StudioPlugin.PLUGIN_ID, msg));
+	    StatusManager.getManager().handle(new Status(Status.INFO, StudioPlugin.PLUGIN_ID, msg));	    
 	}
+
 }

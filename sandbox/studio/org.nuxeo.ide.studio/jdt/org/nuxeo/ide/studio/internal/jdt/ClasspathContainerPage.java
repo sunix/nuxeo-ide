@@ -17,7 +17,7 @@ import org.nuxeo.ide.studio.StudioContentProvider;
 import org.nuxeo.ide.studio.StudioConstants;
 import org.nuxeo.ide.studio.StudioPlugin;
 import org.nuxeo.ide.studio.connector.internal.ContentExtractor;
-import org.nuxeo.ide.studio.internal.preferences.PreferencesStore;
+import org.nuxeo.ide.studio.internal.preferences.Preferences;
 
 public class ClasspathContainerPage extends WizardPage implements
         IClasspathContainerPage, IClasspathContainerPageExtension {
@@ -68,7 +68,7 @@ public class ClasspathContainerPage extends WizardPage implements
 
     @Override
     public boolean finish() {
-        PreferencesStore prefs = new PreferencesStore();
+        Preferences prefs = new Preferences();
         prefs.setStudioProject(ctx, selectedProject);
         Path path = new Path(StudioConstants.CLASSPATH_CONTAINER_ID);
         containerEntry = JavaCore.newContainerEntry(path);
