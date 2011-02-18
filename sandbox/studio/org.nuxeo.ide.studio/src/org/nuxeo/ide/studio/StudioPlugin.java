@@ -2,8 +2,12 @@ package org.nuxeo.ide.studio;
 
 import java.net.URL;
 
+import javax.print.attribute.standard.Severity;
+
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.ui.statushandlers.StatusManager;
 import org.nuxeo.ide.studio.connector.internal.StudioContentProviderImpl;
 import org.nuxeo.ide.studio.internal.preferences.PreferencesStore;
 import org.osgi.framework.BundleContext;
@@ -90,4 +94,8 @@ public class StudioPlugin extends AbstractUIPlugin {
 		return imageDescriptorFromPlugin(PLUGIN_ID, path);
 	}
 
+	public static void logInfo(String format, Object... args) {
+	    String msg = String.format(format, args);
+	    StatusManager.getManager().handle(new Status(Status.INFO, StudioPlugin.PLUGIN_ID, msg));
+	}
 }

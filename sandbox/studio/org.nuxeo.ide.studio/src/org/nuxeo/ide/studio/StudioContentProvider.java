@@ -6,7 +6,7 @@ public interface StudioContentProvider {
 
   StudioProject[] getProjects();
 
-  String getFeatures(String projectId);
+  String getEncodedFeatures(String projectId);
 
   File getJar(String name);
 

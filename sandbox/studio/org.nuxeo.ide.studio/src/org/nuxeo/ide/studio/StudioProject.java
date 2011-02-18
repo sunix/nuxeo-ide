@@ -2,10 +2,10 @@ package org.nuxeo.ide.studio;
 
 public interface StudioProject {
 
+    String getId();
+
     String getName();
 
-    String getTitle();
-
-    String getTargetVersion();
+    String getTarget();
 
 }

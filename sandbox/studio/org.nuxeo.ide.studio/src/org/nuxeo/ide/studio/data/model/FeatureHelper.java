@@ -40,7 +40,7 @@ public class FeatureHelper {
 
     public static Tree buildFeatureTree(String projectName){
         Tree root =  new TreeImpl("root", "root", "Root", null);
-        String input = StudioPlugin.getDefault().getProvider().getFeatures(projectName);
+        String input = StudioPlugin.getDefault().getProvider().getEncodedFeatures(projectName);
         populate(root,input);
         return root;
     }

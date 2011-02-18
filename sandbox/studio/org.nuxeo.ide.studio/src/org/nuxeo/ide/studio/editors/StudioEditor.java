@@ -15,7 +15,10 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
+import org.nuxeo.ide.studio.StudioPlugin;
+import org.nuxeo.ide.studio.connector.internal.StudioConnector;
 import org.nuxeo.ide.studio.data.Node;
+import org.nuxeo.ide.studio.internal.jdt.ClasspathContainerUpdater;
 import org.nuxeo.ide.studio.internal.preferences.PreferencesStore;
 import org.nuxeo.ide.studio.views.StudioBrowserView;
 
@@ -62,14 +65,14 @@ public class StudioEditor extends EditorPart {
         browser = new Browser(parent, SWT.NONE);
         Node node = (Node) getEditorInput().getAdapter(Node.class);
         String url = PreferencesStore.INSTANCE.getConnectLocation()+"/ide/dev" + node.getKey();
-        System.out.println(url);
+        StudioPlugin.logInfo("-> " + url);
         browser.setUrl(url);
         browser.addTitleListener(new TitleListener() {
             public void changed(TitleEvent event) {
                 if (event.title.endsWith("Save Done!")) {
-                    System.out.println("save done");
+                    StudioPlugin.logInfo("<- save done");
                 } else if (event.title.endsWith("Create Done!")) {
-                    System.out.println("create done");
+                    StudioPlugin.logInfo("<- create done");
                     IWorkbenchWindow window=PlatformUI.getWorkbench().getActiveWorkbenchWindow();
                     IWorkbenchPage page = window.getActivePage();
                     IViewPart view = page.findView(StudioBrowserView.ID);
