@@ -23,12 +23,8 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
 import org.nuxeo.ide.studio.StudioContentProvider;
 import org.nuxeo.ide.studio.StudioPlugin;
-import org.nuxeo.ide.studio.StudioProject;
 import org.nuxeo.ide.studio.data.Tree;
 import org.nuxeo.ide.studio.data.TreeImpl;
 
@@ -42,95 +38,44 @@ public class FeatureHelper {
 
     public static Tree buildFeatureTree(String projectName){
         StudioContentProvider provider = StudioPlugin.getDefault().getProvider();
-        StudioProject project = provider.getProject(projectName);
 
-        Tree root =  new TreeImpl("root", "root", "Root", null);
-        Feature[] features = StudioPlugin.getDefault().getProvider().getFeatures(projectName);
-        //populate(root,input);
+        Group[] groups = provider.getProject(projectName).getFeatureTypes();
+        Feature[] features = provider.getFeatures(projectName);
+
+
+        Tree root = new TreeImpl("root", "root", "Root", null);
+        Map<String, Group> groupMap = new HashMap<String, Group>();
+        Map<String, VirtualGroup> vgroupMap = new HashMap<String, VirtualGroup>();
+
+        for ( Group group : groups) {
+            if ( group.isGlobal() ){
+                VirtualGroup vg =(VirtualGroup) vgroupMap.get(group.getLabel());
+                if (vg == null) {
+                    vg = new VirtualGroup(group.getLabel());
+                    root.getChildren().add(vg);
+                    vgroupMap.put(group.getLabel(), vg);
+                }
+                vg.getSubgroups().add(group.getId());
+            } else {
+                root.getChildren().add(group);
+            }
+            groupMap.put(group.getId(), group);
+        }
+
+        for ( Feature feature : features) {
+            Group group = groupMap.get(feature.getType());
+            if ( group  != null ){
+                if ( group.isGlobal() ) {
+                    vgroupMap.get(group.getLabel()).getChildren().add(feature);
+                } else {
+                    group.getChildren().add(feature);
+                }
+            } else {
+                root.getChildren().add(feature);
+            }
+        }
         return root;
     }
-
-    protected static void populate(Tree root, String input) {
-        if ( input == null ){
-            input = fakeInput();
-        }
-
-        JSONArray array = JSONArray.fromObject(input);
-
-        Map<String, Group> groups = new HashMap<String, Group>();
-        Map<String, Category> categories = new HashMap<String, Category>();
-
-        for ( Object o : array) {
-            if ( o instanceof JSONObject) {
-                JSONObject jsonObject = (JSONObject) o;
-                String id = jsonObject.getString("id");
-                String type = jsonObject.getString("type");
-                String groupName = null; //jsonObject.getString("typeName");
-                String key = jsonObject.getString("key");
-
-                Feature feature = new Feature(id, type,  key);
-
-                Group group = groups.get(groupName);
-                if ( group == null ){ // create group
-                    group = new Group(groupName, groupName);
-                    groups.put(groupName, group);
-
-                    String categoryName = getGroupCategory(groupName);
-                    if ( categoryName != null) {
-                        Category category = categories.get(categoryName);
-                        if ( category == null) { // create category
-                            category = new Category(categoryName, categoryName);
-                            categories.put(categoryName, category);
-                            root.getChildren().add(category);
-                        }
-                        category.getChildren().add(group);
-                    } else {
-                        root.getChildren().add(group);
-                    }
-
-                }
-                group.getChildren().add(feature);
-
-            }
-        }
-
-    }
-
-
-    /**
-     * @return
-     */
-    private static String fakeInput() {
-        StringBuffer contents = new StringBuffer();
-        BufferedReader reader = null;
-
-        try {
-            reader = new BufferedReader(new InputStreamReader(FeatureHelper.class.getResourceAsStream("/features")));
-            String text = null;
-
-            // repeat until all lines is read
-            while ((text = reader.readLine()) != null) {
-                contents.append(text)
-                .append(System.getProperty(
-                        "line.separator"));
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (reader != null) {
-                    reader.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return contents.toString();
-
-    }
-
 
     protected static Map<String, String> group2category = new HashMap<String, String>();
     static {

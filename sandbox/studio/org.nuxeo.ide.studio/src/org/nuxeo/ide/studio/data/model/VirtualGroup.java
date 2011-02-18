@@ -15,48 +15,29 @@
  *     eugen
  */
 package org.nuxeo.ide.studio.data.model;
-import static org.nuxeo.ide.studio.data.model.Constants.*;
 
-import org.nuxeo.ide.studio.data.TreeImpl;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author eugen
  *
  */
-public class Group extends TreeImpl{
+public class VirtualGroup extends Group{
 
-    protected String name;
+    protected List<String> subgroups = new ArrayList<String>();
 
-    protected boolean global;
-
-    public boolean isGlobal() {
-        return global;
+    public VirtualGroup(String id) {
+        super(id, id);
     }
 
-    public void setGlobal(boolean global) {
-        this.global = global;
+    public List<String> getSubgroups() {
+        return subgroups;
     }
 
-    /**
-     * @param id
-     * @param type
-     * @param label
-     * @param url
-     */
-    public Group(String id, String label) {
-        super(id, TYPE_GROUP, label, null);
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public boolean accept(String id){
-        return id.equals(this.id);
+    @Override
+    public boolean accept(String id) {
+        return subgroups.contains(id);
     }
 
 }

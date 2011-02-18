@@ -33,6 +33,8 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
+import org.nuxeo.ide.studio.StudioPlugin;
+import org.nuxeo.ide.studio.StudioProject;
 import org.nuxeo.ide.studio.actions.AddFeatureAction;
 import org.nuxeo.ide.studio.actions.CollapseAllAction;
 import org.nuxeo.ide.studio.actions.DeleteFeatureAction;
@@ -111,7 +113,6 @@ public class StudioBrowserView extends ViewPart {
 	    // project navigator
 	    projectList = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
 	    GridDataFactory.fillDefaults().grab(true, false).applyTo(projectList);
-	    projectList.setItems(new String[] {"test1", "test2"});
 
 	    // the navigator
 		viewer = new TreeViewer(composite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
@@ -141,10 +142,7 @@ public class StudioBrowserView extends ViewPart {
 
 		    }
 		});
-		if ( projectList.getItemCount() > 0 ) {
-		    projectList.select(0);
-		}
-		refresh();
+		refreshProjects();
 	}
 
 	private void hookContextMenu() {
@@ -241,6 +239,18 @@ public class StudioBrowserView extends ViewPart {
 	 */
 	public void setFocus() {
 		viewer.getControl().setFocus();
+	}
+
+	public void refreshProjects() {
+	    StudioProject[] projects  = StudioPlugin.getDefault().getProvider().getProjects();
+	    projectList.clearSelection();
+	    for ( StudioProject project : projects ){
+	        projectList.add(project.getId());
+	    }
+	    if ( projectList.getItemCount() > 0 ) {
+            projectList.select(0);
+        }
+	    refresh();
 	}
 
 

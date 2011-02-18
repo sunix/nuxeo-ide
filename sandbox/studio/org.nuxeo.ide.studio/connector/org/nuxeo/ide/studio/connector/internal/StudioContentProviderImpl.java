@@ -91,8 +91,10 @@ public class StudioContentProviderImpl implements StudioContentProvider, StudioA
                 String id = to.getString("id");
                 String name = to.getString("name");
                 String label = to.getString("label");
+                boolean global = to.getBoolean("global");
                 Group g = new Group(id, label);
                 g.setName(name);
+                g.setGlobal(global);
                 groups[i] = g;
             }
             b.setFeatureTypes(groups);
