@@ -1,5 +1,6 @@
 package org.nuxeo.ide.studio.internal.preferences;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -11,6 +12,7 @@ import org.eclipse.equinox.security.storage.ISecurePreferences;
 import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
 import org.eclipse.equinox.security.storage.StorageException;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jface.preference.IPersistentPreferenceStore;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
@@ -20,9 +22,9 @@ public class Preferences {
 
     public static Preferences INSTANCE = new Preferences();
 
-    protected final IPreferenceStore pluginStore;
+    protected final IPersistentPreferenceStore pluginStore;
 
-    protected IPreferenceStore projectPreferenceStore(IJavaProject java) {
+    protected IPersistentPreferenceStore projectPreferenceStore(IJavaProject java) {
 	    IProject project = java.getProject();
         IScopeContext scope = new ProjectScope(project);
         String qname = StudioConstants.makeConstant(project.getName());
@@ -85,6 +87,11 @@ public class Preferences {
     public void setConnectLocation(URL location) {
         String text = location.toExternalForm();
         pluginStore.setValue(PreferencesConstants.P_CONNECT_LOCATION, text);
+        try {
+            pluginStore.save();
+        } catch (IOException e) {
+            throw new Error("Cannot save location " + location, e);
+        }
     }
 
 
@@ -95,8 +102,13 @@ public class Preferences {
     }
 
     public void setStudioProject(IJavaProject ctx, String name) {
-        IPreferenceStore store = projectPreferenceStore(ctx);
+        IPersistentPreferenceStore store = projectPreferenceStore(ctx);
         store.setValue(PreferencesConstants.P_PROJECT, name);
+        try {
+            store.save();
+        } catch (IOException e) {
+            throw new Error("Cannot save selected studio project " + name, e);
+        }
     }
 
 }
