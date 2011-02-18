@@ -12,4 +12,6 @@ public interface StudioContentProvider {
 
   void updateJar(String projectName);
 
+  StudioProject getProject(String id);
+
 }

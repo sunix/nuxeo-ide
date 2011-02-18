@@ -26,7 +26,9 @@ import java.util.Map;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.nuxeo.ide.studio.StudioContentProvider;
 import org.nuxeo.ide.studio.StudioPlugin;
+import org.nuxeo.ide.studio.StudioProject;
 import org.nuxeo.ide.studio.data.Tree;
 import org.nuxeo.ide.studio.data.TreeImpl;
 
@@ -39,9 +41,12 @@ public class FeatureHelper {
 
 
     public static Tree buildFeatureTree(String projectName){
+        StudioContentProvider provider = StudioPlugin.getDefault().getProvider();
+        StudioProject project = provider.getProject(projectName);
+
         Tree root =  new TreeImpl("root", "root", "Root", null);
         String input = StudioPlugin.getDefault().getProvider().getEncodedFeatures(projectName);
-        populate(root,input);
+        //populate(root,input);
         return root;
     }
 
@@ -60,7 +65,7 @@ public class FeatureHelper {
                 JSONObject jsonObject = (JSONObject) o;
                 String id = jsonObject.getString("id");
                 String type = jsonObject.getString("type");
-                String groupName = jsonObject.getString("typeName");
+                String groupName = null; //jsonObject.getString("typeName");
                 String key = jsonObject.getString("key");
 
                 Feature feature = new Feature(id, type, id,  key);

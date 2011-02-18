@@ -32,7 +32,7 @@ public class StudioPlugin extends AbstractUIPlugin {
 	}
 
 	IPropertyChangeListener prefsListener;
-	
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
@@ -51,7 +51,7 @@ public class StudioPlugin extends AbstractUIPlugin {
                 }
             }
         });
-		
+
 //		loadExtensions();
 	}
 
@@ -83,7 +83,7 @@ public class StudioPlugin extends AbstractUIPlugin {
 	public static Preferences getPreferences() {
 	    return getDefault().prefs;
 	}
-	
+
 	/**
 	 * Returns the shared instance
 	 *
@@ -104,9 +104,8 @@ public class StudioPlugin extends AbstractUIPlugin {
 		return imageDescriptorFromPlugin(PLUGIN_ID, path);
 	}
 
-	public static void logInfo(String format, Object... args) {
-	    String msg = String.format(format, args);
-	    StatusManager.getManager().handle(new Status(Status.INFO, StudioPlugin.PLUGIN_ID, msg));	    
+	public static void logInfo(String msg) {
+	    StatusManager.getManager().handle(new Status(Status.INFO, StudioPlugin.PLUGIN_ID, msg));
 	}
 
 }

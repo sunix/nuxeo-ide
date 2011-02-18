@@ -54,4 +54,9 @@ public class MockIDEContentProvider implements StudioContentProvider {
         // TODO Auto-generated method stub
 
     }
+
+    @Override
+    public StudioProject getProject(String id) {
+        return null;
+    }
 }

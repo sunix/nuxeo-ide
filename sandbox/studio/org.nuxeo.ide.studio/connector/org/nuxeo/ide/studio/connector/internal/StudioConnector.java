@@ -118,6 +118,7 @@ public class StudioConnector {
             try {
                 String s = readStream(in);
                 StudioPlugin.logInfo("<- " + s);
+                System.out.println(s);
                 return s;
             } finally {
                 in.close();

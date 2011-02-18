@@ -21,14 +21,14 @@ public class Preferences {
     public static Preferences INSTANCE = new Preferences();
 
     protected final IPreferenceStore pluginStore;
-    
+
     protected IPreferenceStore projectPreferenceStore(IJavaProject java) {
 	    IProject project = java.getProject();
         IScopeContext scope = new ProjectScope(project);
         String qname = StudioConstants.makeConstant(project.getName());
 	    return new ScopedPreferenceStore(scope, qname);
     }
-	
+
     public Preferences() {
         pluginStore = new ScopedPreferenceStore(new InstanceScope(), StudioConstants.PLUGIN_ID);
     }
@@ -36,11 +36,11 @@ public class Preferences {
     public void registerListener(IPropertyChangeListener listener) {
         pluginStore.addPropertyChangeListener(listener);
     }
-    
+
     public void unregisterListener(IPropertyChangeListener listener) {
         pluginStore.removePropertyChangeListener(listener);
     }
-    
+
     public URL getConnectLocation(String... segments) {
         String base = pluginStore.getString(PreferencesConstants.P_CONNECT_LOCATION);
         String path = path(base, segments);
@@ -59,18 +59,20 @@ public class Preferences {
     }
 
     public String getUsername() {
-        return pluginStore.getString(PreferencesConstants.P_USER);
+        return "b";
+        //return pluginStore.getString(PreferencesConstants.P_USER);
     }
 
     public String getPassword() {
-        ISecurePreferences root = SecurePreferencesFactory.getDefault();
-        try {
-            return root.get(StudioConstants.makeConstant("password"), "");
-        } catch (StorageException e) {
-            throw new Error("Cannot get password in secure storage", e);
-        }
+        return "b";
+//        ISecurePreferences root = SecurePreferencesFactory.getDefault();
+//        try {
+//            return root.get(StudioConstants.makeConstant("password"), "");
+//        } catch (StorageException e) {
+//            throw new Error("Cannot get password in secure storage", e);
+//        }
     }
-    
+
     public void setPassword(String password) {
         ISecurePreferences root = SecurePreferencesFactory.getDefault();
         try {

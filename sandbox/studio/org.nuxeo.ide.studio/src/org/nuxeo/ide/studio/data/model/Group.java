@@ -25,6 +25,8 @@ import org.nuxeo.ide.studio.data.TreeImpl;
  */
 public class Group extends TreeImpl{
 
+    protected String name;
+
     /**
      * @param id
      * @param type
@@ -33,6 +35,14 @@ public class Group extends TreeImpl{
      */
     public Group(String id, String label) {
         super(id, TYPE_GROUP, label, null);
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 
 }

@@ -17,8 +17,8 @@
 package org.nuxeo.ide.studio.connector.internal;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -27,6 +27,7 @@ import org.nuxeo.ide.studio.StudioActivatorHandler;
 import org.nuxeo.ide.studio.StudioContentProvider;
 import org.nuxeo.ide.studio.StudioPlugin;
 import org.nuxeo.ide.studio.StudioProject;
+import org.nuxeo.ide.studio.data.model.Group;
 import org.nuxeo.ide.studio.internal.jdt.ClasspathContainerUpdater;
 import org.nuxeo.ide.studio.internal.preferences.Preferences;
 
@@ -38,13 +39,15 @@ public class StudioContentProviderImpl implements StudioContentProvider, StudioA
 
     protected StudioConnector connector;
 
+    protected Map<String, StudioProject> projects;
+
     public void reset() {
         Preferences prefs = StudioPlugin.getPreferences();
         connector = new StudioConnector(
                 prefs.getConnectLocation(),
-                prefs.getUsername(), prefs.getPassword());        
+                prefs.getUsername(), prefs.getPassword());
     }
-    
+
     public void handleReset() {
         reset();
     }
@@ -52,13 +55,21 @@ public class StudioContentProviderImpl implements StudioContentProvider, StudioA
     public void handleStart() {
         reset();
     }
-    
+
     public void handleStop() {
         connector = null;
     }
-    
+
     @Override
     public StudioProject[] getProjects() {
+        if (projects == null) {
+            projects = fetchProjects();
+        }
+        return projects.values().toArray(new StudioProject[projects.size()]);
+    }
+
+    public Map<String, StudioProject> fetchProjects() {
+        projects = new HashMap<String, StudioProject>();
         String input;
         try {
             input = connector.getProjects();
@@ -66,15 +77,28 @@ public class StudioContentProviderImpl implements StudioContentProvider, StudioA
             throw new RuntimeException(e);
         }
         JSONArray array = JSONArray.fromObject(input);
-        List<StudioProject> projects = new ArrayList<StudioProject>(array.size());
+        HashMap<String, StudioProject> projects = new HashMap<String, StudioProject>(array.size());
         for (Object o:array) {
             JSONObject encoded = (JSONObject)o;
             ProjectBean b = new ProjectBean(encoded.getString("id"));
             b.setName(encoded.getString("name"));
             b.setTarget(encoded.getString("target"));
-            projects.add(b);
+            JSONArray types = (JSONArray)encoded.get("types");
+            Group[] groups = new Group[types.size()];
+            for (int i=0; i<groups.length; i++) {
+                JSONObject to = types.getJSONObject(i);
+                String id = to.getString("id");
+                String name = to.getString("name");
+                String label = to.getString("label");
+                Group g = new Group(id, label);
+                g.setName(name);
+                groups[i] = g;
+            }
+            b.setFeatureTypes(groups);
+            projects.put(b.id, b);
         }
-        return projects.toArray(new StudioProject[projects.size()]);
+
+        return projects;
     }
 
     @Override
@@ -99,6 +123,14 @@ public class StudioContentProviderImpl implements StudioContentProvider, StudioA
     @Override
     public void updateJar(String name) {
         new ClasspathContainerUpdater(name, null).refreshWorkspace();
+    }
+
+    @Override
+    public StudioProject getProject(String id) {
+        if (projects == null) {
+            projects = fetchProjects();
+        }
+        return projects.get(id);
     }
 
 }
