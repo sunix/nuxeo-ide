@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension-point id="org.nuxeo.ide.studio.provider" name="Nuxeo Studio Workbench Provider" schema="schema/provider.exsd"/>
 
    <extension
          point="org.eclipse.ui.views">
@@ -13,7 +12,7 @@
             name="Studio Browser"
             icon="icons/sample.gif"
             category="org.nuxeo.ide.studio.views"
-            class="org.nuxeo.ide.studio.views.StudioBrowserView"
+            class="org.nuxeo.ide.studio.ui.internal.views.StudioBrowserView"
             id="org.nuxeo.ide.studio.views.StudioBrowserView">
       </view>
    </extension>
@@ -38,7 +37,7 @@
    <extension
          point="org.eclipse.ui.editors">
       <editor
-            class="org.nuxeo.ide.studio.editors.StudioEditor"
+            class="org.nuxeo.ide.studio.ui.internal.editors.StudioEditor"
             default="false"
             icon="icons/sample.gif"
             id="org.nuxeo.ide.studio.editor"
@@ -69,14 +68,14 @@
    <extension
          point="org.eclipse.core.runtime.preferences">
       <initializer
-            class="org.nuxeo.ide.studio.internal.preferences.PreferencesInitializer">
+            class="org.nuxeo.ide.studio.preferences.PreferencesInitializer">
       </initializer>
    </extension>
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
             category="Nuxeo"
-            class="org.nuxeo.ide.studio.internal.preferences.PreferencesPage"
+            class="org.nuxeo.ide.studio.preferences.PreferencesPage"
             id="org.nuxeo.ide.studio.preferences.NxStudioPreferencePage"
             name="Nuxeo Studio Preferences">
       </page>

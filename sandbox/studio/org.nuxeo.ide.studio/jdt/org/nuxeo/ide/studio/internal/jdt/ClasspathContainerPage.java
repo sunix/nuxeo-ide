@@ -17,7 +17,7 @@ import org.nuxeo.ide.studio.StudioContentProvider;
 import org.nuxeo.ide.studio.StudioConstants;
 import org.nuxeo.ide.studio.StudioPlugin;
 import org.nuxeo.ide.studio.connector.internal.ContentExtractor;
-import org.nuxeo.ide.studio.internal.preferences.Preferences;
+import org.nuxeo.ide.studio.preferences.Preferences;
 
 public class ClasspathContainerPage extends WizardPage implements
         IClasspathContainerPage, IClasspathContainerPageExtension {

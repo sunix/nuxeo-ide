@@ -6,8 +6,8 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.statushandlers.StatusManager;
-import org.nuxeo.ide.studio.connector.internal.StudioContentProviderImpl;
-import org.nuxeo.ide.studio.internal.preferences.Preferences;
+import org.nuxeo.ide.studio.connector.internal.ClientProvider;
+import org.nuxeo.ide.studio.preferences.Preferences;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -28,7 +28,7 @@ public class StudioPlugin extends AbstractUIPlugin {
 	 */
 	public StudioPlugin() {
 	    prefs = new Preferences();
-	    wbProvider = new StudioContentProviderImpl();
+	    wbProvider = new ClientProvider();
 	}
 
 	IPropertyChangeListener prefsListener;
@@ -70,14 +70,14 @@ public class StudioPlugin extends AbstractUIPlugin {
 		super.stop(context);
 	}
 
-	protected StudioContentProvider wbProvider = new StudioContentProviderImpl();//new MockIDEContentProvider();
+	protected StudioContentProvider wbProvider = new ClientProvider();//new MockIDEContentProvider();
 
 	protected void setProvider(StudioContentProvider provider) {
 	    wbProvider = provider;
 	}
 
-	public StudioContentProvider getProvider() {
-	    return wbProvider;
+	public static StudioContentProvider getProvider() {
+	    return plugin.wbProvider;
 	}
 
 	public static Preferences getPreferences() {
@@ -108,4 +108,11 @@ public class StudioPlugin extends AbstractUIPlugin {
 	    StatusManager.getManager().handle(new Status(Status.INFO, StudioPlugin.PLUGIN_ID, msg));
 	}
 
+	public static void logError(Throwable e) {
+	    StatusManager.getManager().handle(new Status(Status.ERROR, StudioPlugin.PLUGIN_ID, e.getMessage(), e));
+	}
+	
+	public static void showInfo(String msg) {
+	    StatusManager.getManager().handle(new Status(Status.INFO, StudioPlugin.PLUGIN_ID, msg), StatusManager.LOG|StatusManager.SHOW);
+	}
 }

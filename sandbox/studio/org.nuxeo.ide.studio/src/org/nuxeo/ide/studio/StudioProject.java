@@ -1,6 +1,7 @@
 package org.nuxeo.ide.studio;
 
 
+
 public interface StudioProject {
 
     String getId();
@@ -9,5 +10,5 @@ public interface StudioProject {
 
     String getTarget();
 
-    FeatureTypeBean[] getFeatureTypes();
+    StudioFeatureType[] getFeatureTypes();
 }
