@@ -1,0 +1,244 @@
+[
+    {
+    "id": "test1",
+    "name": "Test 1",
+    "target": "dm-5.4.1",
+    "types":     [
+            {
+        "id": "mail",
+        "name": "Mail Template",
+        "label": "Mail Templates",
+        "global": false
+      },
+            {
+        "id": "users",
+        "name": "Users & Groups",
+        "label": "Advanced Settings",
+        "global": true
+      },
+            {
+        "id": "contentView",
+        "name": "Content View",
+        "label": "Content Views",
+        "global": false
+      },
+            {
+        "id": "virtualNavigation",
+        "name": "Virtual Navigation",
+        "label": "Virtual Navigations",
+        "global": false
+      },
+            {
+        "id": "search_form",
+        "name": "Advanced search",
+        "label": "Global Settings",
+        "global": true
+      },
+            {
+        "id": "voc",
+        "name": "Vocabulary",
+        "label": "Vocabularies",
+        "global": false
+      },
+            {
+        "id": "xml",
+        "name": "XML Extension",
+        "label": "XML Extensions",
+        "global": false
+      },
+            {
+        "id": "oprest",
+        "name": "Web Services Filtering",
+        "label": "Advanced Settings",
+        "global": true
+      },
+            {
+        "id": "deploy",
+        "name": "Deployment Extensions",
+        "label": "Advanced Settings",
+        "global": true
+      },
+            {
+        "id": "perm",
+        "name": "Permission",
+        "label": "Permissions",
+        "global": false
+      },
+            {
+        "id": "doctemp",
+        "name": "Document Template",
+        "label": "Document Templates",
+        "global": false
+      },
+            {
+        "id": "lf",
+        "name": "Life Cycle",
+        "label": "Life Cycles",
+        "global": false
+      },
+            {
+        "id": "evt",
+        "name": "Event Handler",
+        "label": "Event Handlers",
+        "global": false
+      },
+            {
+        "id": "tpl",
+        "name": "Structure Template",
+        "label": "Structure Templates",
+        "global": false
+      },
+            {
+        "id": "action",
+        "name": "Action Feature",
+        "label": "User Actions",
+        "global": false
+      },
+            {
+        "id": "doc",
+        "name": "Document Type",
+        "label": "Documents",
+        "global": false
+      },
+            {
+        "id": "branding",
+        "name": "Branding",
+        "label": "Global Settings",
+        "global": true
+      },
+            {
+        "id": "ds",
+        "name": "Document Schema",
+        "label": "Schemas",
+        "global": false
+      },
+            {
+        "id": "ops",
+        "name": "Automation Chain",
+        "label": "Automation Chains",
+        "global": false
+      }
+    ]
+  },
+    {
+    "id": "test2",
+    "name": "Test 2",
+    "target": "dm-5.4.1",
+    "types":     [
+            {
+        "id": "mail",
+        "name": "Mail Template",
+        "label": "Mail Templates",
+        "global": false
+      },
+            {
+        "id": "users",
+        "name": "Users & Groups",
+        "label": "Advanced Settings",
+        "global": true
+      },
+            {
+        "id": "contentView",
+        "name": "Content View",
+        "label": "Content Views",
+        "global": false
+      },
+            {
+        "id": "virtualNavigation",
+        "name": "Virtual Navigation",
+        "label": "Virtual Navigations",
+        "global": false
+      },
+            {
+        "id": "search_form",
+        "name": "Advanced search",
+        "label": "Global Settings",
+        "global": true
+      },
+            {
+        "id": "voc",
+        "name": "Vocabulary",
+        "label": "Vocabularies",
+        "global": false
+      },
+            {
+        "id": "xml",
+        "name": "XML Extension",
+        "label": "XML Extensions",
+        "global": false
+      },
+            {
+        "id": "oprest",
+        "name": "Web Services Filtering",
+        "label": "Advanced Settings",
+        "global": true
+      },
+            {
+        "id": "deploy",
+        "name": "Deployment Extensions",
+        "label": "Advanced Settings",
+        "global": true
+      },
+            {
+        "id": "perm",
+        "name": "Permission",
+        "label": "Permissions",
+        "global": false
+      },
+            {
+        "id": "doctemp",
+        "name": "Document Template",
+        "label": "Document Templates",
+        "global": false
+      },
+            {
+        "id": "lf",
+        "name": "Life Cycle",
+        "label": "Life Cycles",
+        "global": false
+      },
+            {
+        "id": "evt",
+        "name": "Event Handler",
+        "label": "Event Handlers",
+        "global": false
+      },
+            {
+        "id": "tpl",
+        "name": "Structure Template",
+        "label": "Structure Templates",
+        "global": false
+      },
+            {
+        "id": "action",
+        "name": "Action Feature",
+        "label": "User Actions",
+        "global": false
+      },
+            {
+        "id": "doc",
+        "name": "Document Type",
+        "label": "Documents",
+        "global": false
+      },
+            {
+        "id": "branding",
+        "name": "Branding",
+        "label": "Global Settings",
+        "global": true
+      },
+            {
+        "id": "ds",
+        "name": "Document Schema",
+        "label": "Schemas",
+        "global": false
+      },
+            {
+        "id": "ops",
+        "name": "Automation Chain",
+        "label": "Automation Chains",
+        "global": false
+      }
+    ]
+  }
+]

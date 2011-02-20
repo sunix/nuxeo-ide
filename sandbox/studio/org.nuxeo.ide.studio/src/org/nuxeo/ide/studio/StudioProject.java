@@ -10,5 +10,5 @@ public interface StudioProject {
 
     String getTarget();
 
-    StudioFeatureType[] getFeatureTypes();
+    StudioFeatureType[] getTypes();
 }

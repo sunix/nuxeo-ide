@@ -40,7 +40,7 @@ public class TreeBuilder {
     public TreeBuilder(StudioContentProvider provider, String projectId) {
         project = provider.getProject(projectId);
 	    features = provider.getFeatures(projectId);
-        types = project.getFeatureTypes();
+        types = project.getTypes();
     }
     
     public Tree build(){
@@ -67,7 +67,7 @@ public class TreeBuilder {
         }
 
         for ( StudioFeature f : features) {
-            Feature feature = new Feature(f.getId(), f.getType(), f.getLocation());
+            Feature feature = new Feature(f.getId(), f.getType(), f.getKey());
             Group group = groupMap.get(feature.getType());
             if ( group  != null ){
                 if ( group.isGlobal() ) {

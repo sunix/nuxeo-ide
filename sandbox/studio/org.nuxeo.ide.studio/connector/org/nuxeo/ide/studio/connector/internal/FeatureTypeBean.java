@@ -16,6 +16,8 @@
  */
 package org.nuxeo.ide.studio.connector.internal;
 
+import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.nuxeo.ide.studio.StudioFeatureType;
 
 /**
@@ -29,7 +31,8 @@ public class FeatureTypeBean implements StudioFeatureType {
     protected String label;
     protected boolean isGlobal;
 
-    public FeatureTypeBean(String id) {
+    @JsonCreator 
+    public FeatureTypeBean(@JsonProperty("id")String id) {
         this.id = id;
     }
 

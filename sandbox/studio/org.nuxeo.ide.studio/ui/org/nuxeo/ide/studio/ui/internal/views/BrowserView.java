@@ -21,11 +21,13 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
 import org.nuxeo.ide.studio.StudioContentProvider;
@@ -63,7 +65,7 @@ import org.nuxeo.ide.studio.ui.internal.tree.TreeBuilder;
  * <p>
  */
 
-public class StudioBrowserView extends ViewPart {
+public class BrowserView extends ViewPart {
 
 	/**
 	 * The ID of the view as specified by the extension.
@@ -87,7 +89,7 @@ public class StudioBrowserView extends ViewPart {
 
     protected final StudioContentProvider provider;
 	
-    public StudioBrowserView() {
+    public BrowserView() {
         provider = StudioPlugin.getProvider();
     }
     
@@ -123,7 +125,9 @@ public class StudioBrowserView extends ViewPart {
 		viewer.setSorter(new ViewerSorter());
 
 		// Create the help context id for the viewer's control
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(viewer.getControl(), "org.nuxeo.ide.studio.views.viewer");
+		final IWorkbench workbench = PlatformUI.getWorkbench();
+        final IWorkbenchHelpSystem helpSystem = workbench.getHelpSystem();
+        helpSystem.setHelp(viewer.getControl(), "org.nuxeo.ide.studio.views.viewer");
 		makeActions();
 		hookContextMenu();
 		hookDoubleClickAction();
@@ -148,7 +152,7 @@ public class StudioBrowserView extends ViewPart {
 		menuMgr.setRemoveAllWhenShown(true);
 		menuMgr.addMenuListener(new IMenuListener() {
 			public void menuAboutToShow(IMenuManager manager) {
-				StudioBrowserView.this.fillContextMenu(manager);
+				BrowserView.this.fillContextMenu(manager);
 			}
 		});
 		Menu menu = menuMgr.createContextMenu(viewer.getControl());
@@ -256,7 +260,7 @@ public class StudioBrowserView extends ViewPart {
         StudioFeature[] features = provider.getFeatures(projectId);
         for (StudioFeature f : features) {
             if (featureId.equals(f.getId())) {
-                Feature feature = new Feature(f.getId(), f.getType(), f.getLocation());
+                Feature feature = new Feature(f.getId(), f.getType(), f.getKey());
                 viewer.setExpandedState(feature, true);
                 viewer.expandToLevel(feature, 1);
                 return feature;

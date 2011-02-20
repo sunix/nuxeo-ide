@@ -1,5 +1,7 @@
 package org.nuxeo.ide.studio.connector.internal;
 
+import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.nuxeo.ide.studio.StudioFeatureType;
 import org.nuxeo.ide.studio.StudioProject;
 
@@ -11,9 +13,10 @@ public class ProjectBean implements StudioProject {
 
     protected String target;
 
-    protected StudioFeatureType[] types;
+    protected FeatureTypeBean[] types;
 
-    public ProjectBean(String id) {
+    @JsonCreator
+    public ProjectBean(@JsonProperty("id")String id) {
         this.id = id;
     }
 
@@ -39,11 +42,11 @@ public class ProjectBean implements StudioProject {
         target = t;
     }
 
-    public StudioFeatureType[] getFeatureTypes() {
+    public FeatureTypeBean[] getTypes() {
         return types;
     }
 
-    public void setFeatureTypes(StudioFeatureType[] types) {
+    public void setTypes(FeatureTypeBean[] types) {
         this.types = types;
     }
 

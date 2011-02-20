@@ -17,16 +17,16 @@
 package org.nuxeo.ide.studio.ui.internal.actions;
 
 import org.eclipse.jface.action.Action;
-import org.nuxeo.ide.studio.ui.internal.views.StudioBrowserView;
+import org.nuxeo.ide.studio.ui.internal.views.BrowserView;
 
 /**
  * @author eugen
  *
  */
 public class RefreshAction extends Action {
-    StudioBrowserView studioBrowserView;
+    BrowserView studioBrowserView;
 
-    public RefreshAction(StudioBrowserView studioBrowserView) {
+    public RefreshAction(BrowserView studioBrowserView) {
         this.studioBrowserView = studioBrowserView;
         setText("Refresh");
         setToolTipText("Refresh");

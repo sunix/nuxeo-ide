@@ -19,7 +19,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 import org.nuxeo.ide.studio.StudioPlugin;
 import org.nuxeo.ide.studio.ui.internal.tree.Node;
-import org.nuxeo.ide.studio.ui.internal.views.StudioBrowserView;
+import org.nuxeo.ide.studio.ui.internal.views.BrowserView;
 
 
 public class StudioEditor extends EditorPart {
@@ -74,9 +74,9 @@ public class StudioEditor extends EditorPart {
                     StudioPlugin.logInfo("<- save done");
                     IWorkbenchWindow window=PlatformUI.getWorkbench().getActiveWorkbenchWindow();
                     IWorkbenchPage page = window.getActivePage();
-                    IViewPart view = page.findView(StudioBrowserView.ID);
+                    IViewPart view = page.findView(BrowserView.ID);
                     if (view != null) {
-                        StudioBrowserView studioBrowserView = (StudioBrowserView)view;
+                        BrowserView studioBrowserView = (BrowserView)view;
                         File file = StudioPlugin.getProvider().getJar(studioBrowserView.getProjectId());
                         StudioPlugin.logInfo("updated " + file);
                     }
@@ -90,9 +90,9 @@ public class StudioEditor extends EditorPart {
                     StudioPlugin.logInfo("<- create done");
                     IWorkbenchWindow window=PlatformUI.getWorkbench().getActiveWorkbenchWindow();
                     IWorkbenchPage page = window.getActivePage();
-                    IViewPart view = page.findView(StudioBrowserView.ID);
+                    IViewPart view = page.findView(BrowserView.ID);
                     if (view != null) {
-                        StudioBrowserView studioBrowserView = (StudioBrowserView)view;
+                        BrowserView studioBrowserView = (BrowserView)view;
                         studioBrowserView.refresh();
 
                         if ( id != null) {

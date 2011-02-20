@@ -17,21 +17,17 @@
 package org.nuxeo.ide.studio.connector.internal;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 import org.nuxeo.ide.studio.StudioActivatorHandler;
 import org.nuxeo.ide.studio.StudioContentProvider;
 import org.nuxeo.ide.studio.StudioFeature;
-import org.nuxeo.ide.studio.StudioFeatureType;
 import org.nuxeo.ide.studio.StudioPlugin;
 import org.nuxeo.ide.studio.StudioProject;
 import org.nuxeo.ide.studio.internal.jdt.ClasspathContainerUpdater;
 import org.nuxeo.ide.studio.preferences.Preferences;
-import org.nuxeo.ide.studio.ui.internal.tree.Feature;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -39,87 +35,58 @@ import org.nuxeo.ide.studio.ui.internal.tree.Feature;
  */
 public class ClientProvider implements StudioContentProvider, StudioActivatorHandler {
 
-    protected StudioConnector connector;
+    protected Connector connector;
 
     protected Map<String, StudioProject> projects;
 
-    public void reset() {
-        Preferences prefs = StudioPlugin.getPreferences();
-        connector = new StudioConnector(
-                prefs.getConnectLocation(),
-                prefs.getUsername(), prefs.getPassword());
+    
+    public void connect(Preferences prefs) {
+        connector = new Connector(prefs.getConnectLocation());
+        connector.setPreemptiveBasicAuth(prefs.getUsername(), prefs.getPassword());
     }
-
-    public void handleReset() {
-        reset();
-    }
-
-    public void handleStart() {
-        reset();
-    }
-
-    public void handleStop() {
+    
+    public void disconnect() {
+        connector.shutdown();
         connector = null;
     }
 
-    @Override
-    public StudioProject[] getProjects() {
-        return getProjectsMap().values().toArray(new StudioProject[projects.size()]);
+    public void handleReset() {
+        disconnect();
+        connect(StudioPlugin.getPreferences());
     }
 
-    public Map<String, StudioProject> fetchProjects() {
-        projects = new HashMap<String, StudioProject>();
-        String input;
-        try {
-            input = connector.getProjects();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        JSONArray array = JSONArray.fromObject(input);
-        HashMap<String, StudioProject> projects = new HashMap<String, StudioProject>(array.size());
-        for (Object o:array) {
-            JSONObject encoded = (JSONObject)o;
-            ProjectBean b = new ProjectBean(encoded.getString("id"));
-            b.setName(encoded.getString("name"));
-            b.setTarget(encoded.getString("target"));
-            JSONArray types = (JSONArray)encoded.get("types");
-            StudioFeatureType[] ftypes = new StudioFeatureType[types.size()];
-            for (int i=0; i<ftypes.length; i++) {
-                JSONObject to = types.getJSONObject(i);
-                String id = to.getString("id");
-                String name = to.getString("name");
-                String label = to.getString("label");
-                boolean global = to.getBoolean("global");
-                FeatureTypeBean type = new FeatureTypeBean(id);
-                type.setLabel(label);
-                type.setName(name);
-                type.setGlobal(global);
-                ftypes[i] = type;
-            }
-            b.setFeatureTypes(ftypes);
-            projects.put(b.id, b);
-        }
+    public void handleStart() {
+        connect(StudioPlugin.getPreferences());
+    }
 
-        return projects;
+    public void handleStop() {
+        disconnect();
+    }
+
+    @Override
+    public ProjectBean[] getProjects() {
+        InputStream input = connector.getProjects();
+        return new ProjectsDecoder(input).decode();
+    }
+
+    @Override
+    public StudioProject getProject(String id) {
+        return getProjectsMap().get(id);
+    }
+
+    public Map<String, StudioProject> getProjectsMap() {
+        ProjectBean[] beans = getProjects();
+        Map<String,StudioProject> map = new HashMap<String,StudioProject>();
+        for (ProjectBean b:beans) {
+            map.put(b.id, b);
+        }
+        return map;
     }
 
     @Override
     public StudioFeature[] getFeatures(String projectId) {
-        try {
-            String content = connector.getFeatures(projectId);
-            JSONArray array = JSONArray.fromObject(content);
-            StudioFeature[] features = new StudioFeature[array.size()];
-            for (int i=0; i<features.length; i++) {
-                JSONObject obj = array.getJSONObject(i);
-                FeatureBean feature = new FeatureBean(obj.getString("id"));
-                feature.setType(obj.getString("type"));
-                feature.setLocation(obj.getString("key"));
-                features[i] = feature;
-            }
-            return features;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        InputStream input = connector.getFeatures(projectId);
+        return new FeaturesDecoder(input).decode();
     }
 
     @Override
@@ -135,23 +102,6 @@ public class ClientProvider implements StudioContentProvider, StudioActivatorHan
     @Override
     public void updateJar(String name) {
         new ClasspathContainerUpdater(name, null).refreshWorkspace();
-    }
-
-    @Override
-    public StudioProject getProject(String id) {
-        if (projects == null) {
-            projects = fetchProjects();
-        }
-        return getProjectsMap().get(id);
-    }
-
-    public Map<String, StudioProject> getProjectsMap() {
-//TODO remove cache for now
-//        if (projects == null) {
-//            projects = fetchProjects();
-//        }
-//        return projects;
-        return fetchProjects();
     }
 
 }

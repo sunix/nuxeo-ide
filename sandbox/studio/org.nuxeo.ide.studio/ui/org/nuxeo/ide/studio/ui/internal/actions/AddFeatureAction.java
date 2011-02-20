@@ -24,7 +24,7 @@ import org.nuxeo.ide.studio.StudioPlugin;
 import org.nuxeo.ide.studio.ui.internal.editors.StudioEditor;
 import org.nuxeo.ide.studio.ui.internal.editors.EditorInput;
 import org.nuxeo.ide.studio.ui.internal.tree.Node;
-import org.nuxeo.ide.studio.ui.internal.views.StudioBrowserView;
+import org.nuxeo.ide.studio.ui.internal.views.BrowserView;
 
 /**
  * @author eugen
@@ -32,9 +32,9 @@ import org.nuxeo.ide.studio.ui.internal.views.StudioBrowserView;
  */
 public class AddFeatureAction extends Action {
 
-    StudioBrowserView browserView;
+    BrowserView browserView;
 
-    public AddFeatureAction(StudioBrowserView browserView) {
+    public AddFeatureAction(BrowserView browserView) {
         this.browserView = browserView;
         setText("Add Feature");
         setToolTipText("Add Feature");
