@@ -23,6 +23,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
@@ -30,14 +38,18 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.AuthCache;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.params.ClientPNames;
 import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 /**
  * Should be reinstantiated each time URL or login changes.
@@ -59,6 +71,12 @@ public class Connector {
         host = new HttpHost(url.getHost(), url.getPort());
         basepath = url.getPath();
         http = multiThreadedHttpClient();
+        setupHttp();
+    }
+
+    private void setupHttp() {
+        HttpParams params = http.getParams();
+        params.setParameter(ClientPNames.ALLOW_CIRCULAR_REDIRECTS, true);
     }
     
     protected DefaultHttpClient multiThreadedHttpClient() {
@@ -71,13 +89,35 @@ public class Connector {
                 http.getCredentialsProvider().setCredentials(
                     new AuthScope(host.getHostName(), host.getPort()),
                     upc);
-
             AuthCache authCache = new BasicAuthCache();                                                                                                                                  
             authCache.put(host, new BasicScheme());
             authctx = new BasicHttpContext();
             authctx.setAttribute(ClientContext.AUTH_CACHE, authCache);
+//       HttpGet root = new HttpGet(basepath);
+//        try {
+//            HttpResponse response = http.execute(host, root, authctx);
+//            for (Cookie cookie:http.getCookieStore().getCookies()) {
+//                if ("JSESSIONID".equals(cookie.getName()) && "/cas".equals(cookie.getPath())) {
+//                    postCAS(response.getEntity(), username, password);
+//                }
+//            }
+//        } catch (Exception e) {
+//            throw new Error("Cannot fetch studio root page "
+//                    + root.getURI().toASCIIString(), e);
+//        }
     }
-    
+
+    protected void postCAS(HttpEntity entity, String username, String password) throws XPathExpressionException, ParserConfigurationException, SAXException, IOException {
+        InputStream input = entity.getContent();
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        DocumentBuilder db = dbf.newDocumentBuilder();
+        Document dom = db.parse(input);
+        XPathFactory xpf = XPathFactory.newInstance();
+        XPath xp = xpf.newXPath();
+        XPathExpression xpe = xp.compile("//*[@id='fm1']");
+        String form = xpe.evaluate(dom);
+        return;
+    }
 
     public void shutdown() {
         // When HttpClient instance is no longer needed,
@@ -130,7 +170,7 @@ public class Connector {
             return entity.getContent();
         } catch (Exception e) {
             throw new Error("Cannot fetch content of "
-                    + get.getURI().toASCIIString());
+                    + get.getURI().toASCIIString(), e);
         }
     }
 
@@ -158,7 +198,7 @@ public class Connector {
         return file;
     }
     
-    protected static String readStream(InputStream in) throws IOException {
+    public static String readStream(InputStream in) throws IOException {
         int r;
         StringBuilder buf = new StringBuilder();
         byte[] tmp = new byte[4096*4];
@@ -168,7 +208,7 @@ public class Connector {
         return buf.toString();
     }
     
-    protected static void closeStream(Closeable stream) {
+    public static void closeStream(Closeable stream) {
         try {
             stream.close();
         } catch (IOException e) {

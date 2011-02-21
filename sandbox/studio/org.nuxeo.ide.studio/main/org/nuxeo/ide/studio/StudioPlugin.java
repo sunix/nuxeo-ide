@@ -4,6 +4,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.statushandlers.StatusManager;
 import org.nuxeo.ide.studio.connector.internal.ClientProvider;
@@ -40,9 +41,9 @@ public class StudioPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-		if (wbProvider instanceof StudioActivatorHandler) {
-		    ((StudioActivatorHandler)wbProvider).handleStart();
-		}
+        if (wbProvider instanceof StudioActivatorHandler) {
+            ((StudioActivatorHandler) wbProvider).handleStart();
+        }
         prefs.registerListener(prefsListener = new IPropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent event) {

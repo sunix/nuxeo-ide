@@ -7,15 +7,19 @@ Bundle-Activator: org.nuxeo.ide.studio.StudioPlugin
 Bundle-Vendor: Nuxeo
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Import-Package: org.apache.http,
+Import-Package: javax.xml.parsers,
+ javax.xml.xpath,
+ org.apache.http,
  org.apache.http.auth,
  org.apache.http.client,
  org.apache.http.client.methods,
  org.apache.http.client.protocol,
  org.apache.http.conn,
+ org.apache.http.cookie;version="4.1.0",
  org.apache.http.impl.auth,
  org.apache.http.impl.client,
  org.apache.http.impl.conn.tsccm;version="4.1.0",
+ org.apache.http.params;version="4.1.0",
  org.apache.http.protocol,
  org.codehaus.jackson.annotate,
  org.codehaus.jackson.map,
@@ -48,4 +52,6 @@ Import-Package: org.apache.http,
  org.eclipse.ui.plugin,
  org.eclipse.ui.preferences,
  org.eclipse.ui.statushandlers,
- org.osgi.framework
+ org.osgi.framework,
+ org.w3c.dom,
+ org.xml.sax

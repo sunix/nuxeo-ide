@@ -19,6 +19,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbench;
@@ -240,16 +241,20 @@ public class BrowserView extends ViewPart {
 	}
 
 	public void refreshProjects() {
-	    StudioProject[] projects  = StudioPlugin.getProvider().getProjects();
-	    projectList.clearSelection();
-	    for ( StudioProject project : projects ){
-	        projectList.add(project.getId());
-	    }
-	    if ( projectList.getItemCount() > 0 ) {
-            projectList.select(0);
-            projectId = projects[0].getId();
-        }
-	    refresh();
+	    Display.getDefault().asyncExec(new Runnable() {
+            public void run() {
+                StudioProject[] projects  = StudioPlugin.getProvider().getProjects();
+                projectList.clearSelection();
+                for ( StudioProject project : projects ){
+                    projectList.add(project.getId());
+                }
+                if ( projectList.getItemCount() > 0 ) {
+                    projectList.select(0);
+                    projectId = projects[0].getId();
+                }
+                refresh();
+            }
+         });
 	}
 
     public Node selectNode(String featureId) {
