@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Nuxeo Studio IDE
 Bundle-SymbolicName: org.nuxeo.ide.studio; singleton:=true
-Bundle-Version: 5.4.1.qualifier
+Bundle-Version: 0.0.0.qualifier
 Bundle-Activator: org.nuxeo.ide.studio.StudioPlugin
 Bundle-Vendor: Nuxeo
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
@@ -13,6 +13,7 @@ Import-Package: javax.xml.parsers,
  org.apache.http.auth,
  org.apache.http.client,
  org.apache.http.client.methods,
+ org.apache.http.client.params;version="4.1.0",
  org.apache.http.client.protocol,
  org.apache.http.conn,
  org.apache.http.cookie;version="4.1.0",
@@ -25,8 +26,10 @@ Import-Package: javax.xml.parsers,
  org.codehaus.jackson.map,
  org.codehaus.jackson.map.type,
  org.codehaus.jackson.type,
+ org.eclipse.core.commands.common,
  org.eclipse.core.resources,
  org.eclipse.core.runtime,
+ org.eclipse.core.runtime.jobs,
  org.eclipse.core.runtime.preferences,
  org.eclipse.debug.core,
  org.eclipse.equinox.security.storage,
@@ -34,6 +37,7 @@ Import-Package: javax.xml.parsers,
  org.eclipse.jdt.launching,
  org.eclipse.jdt.ui.wizards,
  org.eclipse.jface.action,
+ org.eclipse.jface.dialogs,
  org.eclipse.jface.layout,
  org.eclipse.jface.preference,
  org.eclipse.jface.resource,

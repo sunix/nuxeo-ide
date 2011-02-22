@@ -1,0 +1,32 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.nuxeo.ide</groupId>
+  <artifactId>nuxeo-ide-studio-feature</artifactId>
+  <name>Nuxeo IDE Studio Feature</name>
+  <description>...</description>
+  <url>http://www.nuxeo.org/</url>
+  <packaging>eclipse-feature</packaging>
+
+  <parent>
+    <groupId>org.nuxeo.ide</groupId>
+    <artifactId>nuxeo-ide-studio-tycho</artifactId>
+    <version>0.0.0-SNAPSHOT</version>
+    <relativePath>../org.nuxeo.ide.studio.tycho/pom.xml</relativePath>
+  </parent>
+
+  <build>
+    <plugins>
+      <plugin>
+	<groupId>org.sonatype.tycho</groupId>
+	<artifactId>target-platform-configuration</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.sonatype.tycho</groupId>
+        <artifactId>tycho-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>
