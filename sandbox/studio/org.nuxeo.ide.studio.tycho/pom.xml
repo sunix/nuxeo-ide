@@ -23,9 +23,10 @@
     <eclipse-version>helios</eclipse-version>
     <orbit-version>S20110124210048</orbit-version>
 
+    <nuxeo-osgi-url>http://osgi.nuxeo.org/repository</nuxeo-osgi-url>
     <eclipse-mirror-url>http://download.eclipse.org</eclipse-mirror-url>
     <equinox-site>${eclipse-mirror-url}/eclipse/updates/3.6</equinox-site>
-    <orbit-site>http://localhost/p2/studio/orbit/${orbit-version}</orbit-site>
+    <orbit-site>${nuxeo-osgi-url}/ide-studio/orbit/${orbit-version}</orbit-site>
   </properties>
 
   <repositories>
