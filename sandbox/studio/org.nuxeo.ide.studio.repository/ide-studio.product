@@ -30,8 +30,8 @@
    </plugins>
 
    <features>
-      <feature id="org.nuxeo.ide.studio.feature" version="0.0.0.qualifier"/>
-      <feature id="org.nuxeo.ide.studio.orbit.feature" version="0.0.0.qualifier"/>
+      <feature id="org.nuxeo.ide.studio" version="0.0.0.qualifier"/>
+      <feature id="org.nuxeo.ide.studio.orbit" version="0.0.0.qualifier"/>
    </features>
 
 
