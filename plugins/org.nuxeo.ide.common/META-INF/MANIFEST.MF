@@ -20,3 +20,8 @@ Require-Bundle: org.eclipse.equinox.registry,
 Bundle-Activator: org.nuxeo.ide.common.Activator
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: Nuxeo
+Export-Package: org.nuxeo.ide.common,
+ org.nuxeo.ide.common.forms,
+ org.nuxeo.ide.common.forms.model,
+ org.nuxeo.ide.common.forms.widgets,
+ org.nuxeo.ide.common.wizards

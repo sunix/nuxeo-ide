@@ -14,16 +14,24 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.common.forms;
+
+package ${rootPackage};
+
+import org.nuxeo.runtime.model.ComponentContext;
+import org.nuxeo.runtime.model.DefaultComponent;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
- * 
+ *
  */
-public interface FormData {
+public class MyComponent extends DefaultComponent {
 
-    void load(Form form) throws Exception;
+    @Override
+    public void activate(ComponentContext context) throws Exception {
+    }
 
-    void store(Form form) throws Exception;
-
+    @Override
+    public void deactivate(ComponentContext context) throws Exception {
+    }
+    
 }

@@ -16,8 +16,6 @@
  */
 package org.nuxeo.ide.common.wizards;
 
-import java.awt.Container;
-
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.PageChangedEvent;

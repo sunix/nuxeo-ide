@@ -14,16 +14,34 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.common.forms;
+package org.nuxeo.ide.sdk.ui.wizards.project;
+
+import org.eclipse.swt.widgets.Composite;
+import org.nuxeo.ide.common.wizards.FormWizardPage;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public interface FormData {
+public class NuxeoProjectPage3 extends FormWizardPage<TemplateContext>
+        implements Constants {
 
-    void load(Form form) throws Exception;
+    public NuxeoProjectPage3() {
+        super("nuxeoProjectPage3", "Select a template for the project", null);
+    }
 
-    void store(Form form) throws Exception;
+    @Override
+    public void createControl(Composite parent) {
+        super.createControl(parent);
+    }
+
+    public String getTemplate() {
+        return form.getWidgetValueAsString(PROJECT_TEMPLATE);
+    }
+
+    @Override
+    public void update(TemplateContext ctx) {
+        ctx.setTemplate(getTemplate());
+    }
 
 }

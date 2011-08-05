@@ -265,6 +265,14 @@ public class Form {
         return false;
     }
 
+    public boolean setWidgetValue(String id, Object value) {
+        UIObject<?> obj = getWidget(id);
+        if (obj instanceof HasValue) {
+            ((HasValue) obj).setValue(value);
+        }
+        return false;
+    }
+
     public Object getWidgetValue(String id) {
         UIObject<?> obj = getWidget(id);
         if (obj instanceof HasValue) {

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+    <extension 
+       point="org.eclipse.ui.preferencePages"> 
+      <page 
+         id="org.nuxeo.ide.prefs.server" 
+         name="Local Server" 
+         class="org.nuxeo.ide.sdk.ui.server.ServerPreferencePage" 
+         category="org.nuxeo.ide.prefs"> 
+      </page> 
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <wizard
+            category="org.nuxeo.ide.project.newWizards"
+            class="org.nuxeo.ide.sdk.ui.wizards.project.NuxeoProjectWizard"
+            id="org.nuxeo.ide.templates.NewProjectWizard"
+            name="New Nuxeo Plugin"
+            project="true">
+      </wizard>
+      <category
+            id="org.nuxeo.ide.project.newWizards"
+            name="Nuxeo Projects">
+      </category>
+   </extension>
+   <extension
+         point="org.eclipse.jdt.core.classpathContainerInitializer">
+      <classpathContainerInitializer
+            class="org.nuxeo.ide.sdk.ui.SDKClassPathContainerInitializer"
+            id="org.nuxeo.ide.SDK_CONTAINER">
+      </classpathContainerInitializer>
+   </extension>
+   <extension
+         point="org.eclipse.jdt.ui.classpathContainerPage">
+      <classpathContainerPage
+            class="org.nuxeo.ide.sdk.ui.SDKClassPathContainerPage"
+            id="org.nuxeo.ide.SDK_CONTAINER"
+            name="Nuxeo SDK">
+      </classpathContainerPage>
+   </extension>
+   
+
+</plugin>
