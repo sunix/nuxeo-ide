@@ -1,0 +1,37 @@
+<panel cols="1" layout="grid">
+
+<frame cols='2' layout="grid" label="First Group"  hfill="true">
+
+<!-- text>My label:</text -->
+<button id="btn1">My Button1</button>
+<button id="btn2">My Button2</button>
+
+<checkbox id="mycheck" colspan="2" value="true">Select this</checkbox>
+<widget id="mytoggle" colspan="2" value="true">Toggle this</widget>
+
+<text colspan="2">This is some text ... </text>
+
+<text>Username:</text>
+<textbox id="username" hfill="true" value="bstef">
+<validator type="regex" value="[A-Za-z0-9_]+">Validation Error</validator>
+</textbox>
+<text>Password:</text><password id="password" hfill="true"></password>
+
+</frame>
+
+<frame cols='2' layout="grid" label="Second Group" hfill="true">
+
+<!-- text>My label:</text -->
+<button id="btn1">My Button1</button>
+<button id="btn2">My Button2</button>
+
+<widget id="mytoggle" colspan="2">Toggle this</widget>
+
+<text colspan="2">This is some text ... </text>
+<!-- link colspan="2">This is some text with links 
+<a href='htttp://google.com'>Google</a> ... 
+</link-->
+
+</frame>
+
+</panel>

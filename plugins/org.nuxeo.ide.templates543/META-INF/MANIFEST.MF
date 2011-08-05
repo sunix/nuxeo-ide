@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Project Templates for Nuxeo 5.4.3
+Bundle-SymbolicName: org.nuxeo.ide.templates543
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Nuxeo
+Fragment-Host: org.nuxeo.ide.common;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Nuxeo-ProjectTemplates: 
+ Empty Project;path=templates/default;version=5.4.3

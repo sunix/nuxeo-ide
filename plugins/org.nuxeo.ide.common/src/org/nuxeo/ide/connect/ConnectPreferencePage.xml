@@ -1,0 +1,31 @@
+<panel cols="1" layout="grid">
+
+<frame cols='2' layout="grid" label="Connect Account"  hfill="true">
+
+<link colspan="2" hfill="true" wrap="true" trim="false">Enter your Nuxeo Connect account information and click on 'connect' button to retrieve 
+the 'Studio' projects associated with your account.
+This step is required if you want to bind your Nuxeo plugins to a Studio project. 
+
+For more information on Nuxeo Connect and Nuxeo Studio click here: 
+<a href="http://connect.nuxeo.com">http://connect.nuxeo.com</a>
+</link>
+
+<text>Username:</text><textbox id="username" hfill="true"/>
+<text>Password:</text><password id="password" hfill="true"/>
+
+<panel colspan="2" halign="right">
+<button id="reset">Reset</button><button id="connect">Connect</button>
+</panel>
+
+</frame>
+
+<frame cols='1' layout="grid" label="Studio Projects" hfill="true" id="studio" vfill="true">
+<text hfill="true">
+The Studio projects associated with your account:
+</text>
+<listbox id="projects" hfill="true" vfill="true"></listbox>
+
+</frame>
+
+
+</panel>

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+   <extension
+         id="org.nuxeo.ide.NuxeoNature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="org.nuxeo.ide.common.NuxeoNature">
+         </run>
+      </runtime>
+      <requires-nature id="org.eclipse.jdt.core.javanature" />
+   </extension>
+
+   <extension                                                                                                                                               
+         point="org.eclipse.ui.popupMenus"> 
+    <objectContribution                                                                                                                                   
+            objectClass="org.eclipse.core.resources.IProject"                                                                                               
+            adaptable="true"                                                                                                                                
+            id="org.nuxeo.ide.pluginProjectToolSet">                                                                                                   
+         <menu                                                                                                                                              
+               label="Nuxeo Tools"                                                                                                            
+               id="org.nuxeo.ide.tools">                                                                                                       
+            <separator                                                                                                                                      
+               name="group0">                                                                                                                               
+            </separator>                                                                                                                                    
+         </menu>                                                                                                                                            
+         <visibility>                   
+                                                                                                                             
+                <not>                                                                                                                                       
+                <or>                                                                                                                                        
+            <objectState                                                                                                                                    
+                    name="projectNature"                                                                                                                    
+                    value="org.nuxeo.ide.NuxeoNature"/>                                                                                                  
+                <objectState                                                                                                                                
+                        name="open"                                                                                                                         
+                        value="false"/>                                                                                                                     
+            </or>                                                                                                                                           
+            </not>                                                                                                                                          
+         </visibility>                                                                                                                                      
+                                                                                                                                                            
+         <action
+            label="Add Nuxeo Nature"                                                                                                                       
+            class="org.nuxeo.ide.common.AddNuxeoNature"                                                                         
+            menubarPath="org.nuxeo.ide.tools/group0"                                                                                           
+            enablesFor="+"                                                                                                                                  
+            id="org.nuxeo.ide.tools.addNuxeoNature">                                                                                                 
+        </action>                                                                                                                                           
+      </objectContribution> 
+          <objectContribution                                                                                                                                   
+            objectClass="org.eclipse.core.resources.IProject"                                                                                               
+            adaptable="true"                                                                                                                                
+            id="org.nuxeo.ide.tools.pluginProjectToolSet">                                                                                                   
+         <menu                                                                                                                                              
+               label="Nuxeo Tools"                                                                                                            
+               id="org.nuxeo.ide.tools">                                                                                                       
+            <separator                                                                                                                                      
+               name="group0">                                                                                                                               
+            </separator>                                                                                                                                    
+         </menu>                                                                                                                                            
+         <visibility>                                                                                                                                       
+                <and>                                                                                                                                        
+            <objectState                                                                                                                                    
+                    name="projectNature"                                                                                                                    
+                    value="org.nuxeo.ide.NuxeoNature"/>    
+                <objectState                                                                                                                                
+                        name="open"                                                                                                                         
+                        value="true"/>                                                                                                                     
+            </and>                                                                                                                                           
+         </visibility>                                                                                                                                      
+                                                                                                                                                            
+         <action                                                                                                                                            
+            label="Remove Nuxeo Nature"                                                                                                                       
+            class="org.nuxeo.ide.common.RemoveNuxeoNature"                                                                         
+            menubarPath="org.nuxeo.ide.tools/group0"                                                                                           
+            enablesFor="+"                                                                                                                                  
+            id="org.nuxeo.ide.tools.removeNuxeoNature">                                                                                         
+        </action>                                                                                                                                           
+      </objectContribution> 
+      </extension>
+      
+    <extension 
+       point="org.eclipse.ui.preferencePages"> 
+      <page 
+         id="org.nuxeo.ide.prefs" 
+         name="Nuxeo Tools" 
+         class="org.nuxeo.ide.common.NuxeoPreferencePage">
+      </page> 
+      <page 
+         id="org.nuxeo.ide.prefs.connect" 
+         name="Connect Account" 
+         class="org.nuxeo.ide.connect.ConnectPreferencePage" 
+         category="org.nuxeo.ide.prefs"> 
+      </page> 
+      <page 
+         id="org.nuxeo.ide.prefs.server" 
+         name="Local Server" 
+         class="org.nuxeo.ide.server.ServerPreferencePage" 
+         category="org.nuxeo.ide.prefs"> 
+      </page> 
+   </extension>
+      
+   <extension point="org.eclipse.ui.propertyPages">
+     <page
+       class="org.nuxeo.ide.common.NuxeoPropertyPage"
+       id="org.nuxeo.ide.project.props"
+       name="Nuxeo Tools">
+         <enabledWhen>                                                                                                                                      
+            <adapt                                                                                                                                          
+                  type="org.eclipse.core.resources.IProject">                                                                                               
+               <test                                                                                                                                        
+                     property="org.eclipse.core.resources.projectNature"                                                                                    
+                     value="org.nuxeo.ide.NuxeoNature">                                                                                               
+               </test>                                                                                                                                      
+            </adapt>                                                                                                                                        
+         </enabledWhen>
+     </page>
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <wizard
+            category="org.nuxeo.ide.project.newWizards"
+            class="org.nuxeo.ide.sdk.wizards.templates.NuxeoProjectWizard"
+            id="org.nuxeo.ide.templates.NewProjectWizard"
+            name="New Nuxeo Plugin"
+            project="true">
+      </wizard>
+      <category
+            id="org.nuxeo.ide.project.newWizards"
+            name="Nuxeo Projects">
+      </category>
+   </extension>
+   <extension
+         point="org.eclipse.jdt.core.classpathContainerInitializer">
+      <classpathContainerInitializer
+            class="org.nuxeo.ide.sdk.SDKClassPathContainerInitializer"
+            id="org.nuxeo.ide.SDK_CONTAINER">
+      </classpathContainerInitializer>
+   </extension>
+   <extension
+         point="org.eclipse.jdt.ui.classpathContainerPage">
+      <classpathContainerPage
+            class="org.nuxeo.ide.sdk.SDKClassPathContainerPage"
+            id="org.nuxeo.ide.SDK_CONTAINER"
+            name="Nuxeo SDK">
+      </classpathContainerPage>
+   </extension>
+   
+         
+</plugin>

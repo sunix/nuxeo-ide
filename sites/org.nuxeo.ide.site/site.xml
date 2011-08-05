@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/org.nuxeo.ide.webengine.feature_1.0.0.200901281632.jar" id="org.nuxeo.ide.webengine.feature" version="1.0.0.200901281632">
+      <category name="org.nuxeo.ide.webengine"/>
+   </feature>
+   <category-def name="org.nuxeo.ide.webengine" label="Nuxeo IDE Webengine">
+      <description>
+         Eclipse Tools for helping developping Webengine components
+      </description>
+   </category-def>
+</site>
