@@ -16,6 +16,7 @@
  */
 package org.nuxeo.ide.sdk;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,17 +24,20 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
 import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.sdk.server.ServerController;
 import org.nuxeo.ide.sdk.ui.NuxeoNature;
-import org.nuxeo.ide.sdk.ui.SDKClassPathContainer;
+import org.nuxeo.ide.sdk.ui.SDKClassPathBuilder;
+import org.nuxeo.ide.sdk.ui.SDKClassPathContainerInitializer;
 import org.osgi.service.prefs.BackingStoreException;
 
 /**
@@ -83,7 +87,7 @@ public class NuxeoSDK {
             instance = sdk;
             fireSDKChanged(sdk);
             try {
-                rebuildNuxeoProjects();
+                reloadSDKClasspathContainer();
             } catch (CoreException e) {
                 UI.showError("Failed to rebuild Nuxeo Projects", e);
             }
@@ -112,11 +116,12 @@ public class NuxeoSDK {
 
     protected SDKInfo info;
 
+    protected File root;
+
     /**
-     * Singleton classpath container used by project that use SDK deps and not
-     * maven. Only initialized at demand.
+     * SDK classpath cache
      */
-    protected volatile SDKClassPathContainer cp;
+    protected volatile IClasspathEntry[] classpath;
 
     // /**
     // * Class index (class -> artifact). ONly initialized at demand. Used to
@@ -128,6 +133,11 @@ public class NuxeoSDK {
 
     public NuxeoSDK(SDKInfo info) {
         this.info = info;
+        this.root = info.getInstallDirectory();
+    }
+
+    public File getRoot() {
+        return root;
     }
 
     public SDKInfo getInfo() {
@@ -138,15 +148,34 @@ public class NuxeoSDK {
         return new ServerController(info);
     }
 
-    public SDKClassPathContainer getClassPathContainer(IPath containerPath) {
-        SDKClassPathContainer _cp = cp;
-        if (_cp == null) {
+    public File getLibDir() {
+        return new File(root, "nxserver/lib");
+    }
+
+    public File getBundlesDir() {
+        return new File(root, "nxserver/bundles");
+    }
+
+    public File getLibSrcDir() {
+        return new File(root, "nxserver/sdk/lib");
+    }
+
+    public File getBundlesSrcDir() {
+        return new File(root, "nxserver/sdk/bundles");
+    }
+
+    public IClasspathEntry[] getClasspathEntries() {
+        IClasspathEntry[] cache = classpath;
+        if (cache == null) {
             synchronized (this) {
-                _cp = new SDKClassPathContainer(containerPath);
-                cp = _cp;
+                cache = classpath;
+                if (cache == null) {
+                    classpath = SDKClassPathBuilder.build(this);
+                    cache = classpath;
+                }
             }
         }
-        return _cp;
+        return cache;
     }
 
     public static void rebuildProjects() {
@@ -154,13 +183,10 @@ public class NuxeoSDK {
     }
 
     public static void rebuildNuxeoProjects() throws CoreException {
-        ArrayList<IProject> nxProjects = new ArrayList<IProject>();
-        for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
-            if (project.hasNature(NuxeoNature.ID)) {
-                nxProjects.add(project);
-            }
+        List<IProject> nxProjects = getNuxeoProjects();
+        if (!nxProjects.isEmpty()) {
+            doBuildOperation(IncrementalProjectBuilder.FULL_BUILD, nxProjects);
         }
-        doBuildOperation(IncrementalProjectBuilder.FULL_BUILD, nxProjects);
     }
 
     private static void doBuildOperation(final int buildType,
@@ -198,6 +224,41 @@ public class NuxeoSDK {
         };
         buildJob.setUser(true);
         buildJob.schedule();
+    }
+
+    public static List<IProject> getNuxeoProjects() throws CoreException {
+        ArrayList<IProject> nxProjects = new ArrayList<IProject>();
+        for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
+            if (project.hasNature(NuxeoNature.ID)) {
+                nxProjects.add(project);
+            }
+        }
+        return nxProjects;
+    }
+
+    public static List<IJavaProject> getNuxeoJavaProjects()
+            throws CoreException {
+        ArrayList<IJavaProject> nxProjects = new ArrayList<IJavaProject>();
+        for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
+            if (project.hasNature(NuxeoNature.ID)) {
+                nxProjects.add(JavaCore.create(project));
+            }
+        }
+        return nxProjects;
+    }
+
+    /**
+     * TODO must reload only projects that use the SDK classpath and not all
+     * Nuxeo projects.
+     * 
+     * @throws CoreException
+     */
+    private static void reloadSDKClasspathContainer() throws CoreException {
+        List<IJavaProject> nxProjects = getNuxeoJavaProjects();
+        if (!nxProjects.isEmpty()) {
+            SDKClassPathContainerInitializer initializer = new SDKClassPathContainerInitializer();
+            initializer.initialize(nxProjects.toArray(new IJavaProject[nxProjects.size()]));
+        }
     }
 
 }

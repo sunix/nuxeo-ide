@@ -18,6 +18,7 @@ package org.nuxeo.ide.sdk.ui;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.ClasspathContainerInitializer;
 import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IJavaProject;
@@ -44,4 +45,24 @@ public class SDKClassPathContainerInitializer extends
                     new IClasspathContainer[] { container }, null);
         }
     }
+
+    /**
+     * Only used to rebuil classpaths after a SDK change
+     * 
+     * @param projects
+     * @throws CoreException
+     */
+    public void initialize(IJavaProject[] projects) throws CoreException {
+        IPath containerPath = new Path("org.nuxeo.ide.SDK_CONTAINER");
+        if (projects.length == 0) {
+            return;
+        }
+        SDKClassPathContainer[] containers = new SDKClassPathContainer[projects.length];
+        for (int i = 0; i < containers.length; i++) {
+            containers[i] = new SDKClassPathContainer(containerPath);
+        }
+        JavaCore.setClasspathContainer(containerPath, projects, containers,
+                null);
+    }
+
 }

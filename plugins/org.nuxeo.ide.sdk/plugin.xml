@@ -110,22 +110,23 @@
                         value="true"/>                                                                                                                     
             </and>                                                                                                                                           
          </visibility>                                                                                                                                      
-                                                
-        <action
-            label="Deploy"                                                                                                                       
-            class="org.nuxeo.ide.sdk.ui.server.DeployProject"                                                                         
-            menubarPath="org.nuxeo.ide.tools/group0"                                                                                           
-            enablesFor="+"                                                                                                                                  
-            id="org.nuxeo.ide.tools.deployProject">                                                                                                 
-        </action>                                                                                                                                           
-                                                                                                                                                            
+                                                                                                                                                                                                            
          <action                                                                                                                                            
             label="Remove Nuxeo Nature"                                                                                                                       
             class="org.nuxeo.ide.sdk.ui.actions.RemoveNuxeoNature"                                                                         
             menubarPath="org.nuxeo.ide.tools/group0"                                                                                           
             enablesFor="+"                                                                                                                                  
             id="org.nuxeo.ide.tools.removeNuxeoNature">                                                                                         
+        </action>                               
+        
+        <action
+            label="Deploy"                                                                                                                       
+            class="org.nuxeo.ide.sdk.ui.server.DeployProject"                                                                         
+            menubarPath="org.nuxeo.ide.tools/group1"                                                                                           
+            enablesFor="+"                                                                                                                                  
+            id="org.nuxeo.ide.tools.deployProject">                                                                                                 
         </action>                                                                                                                                           
+
       </objectContribution> 
       </extension>
       
