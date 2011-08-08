@@ -3,7 +3,7 @@ package org.nuxeo.ide.sdk;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.nuxeo.ide.common.forms.PreferencesFormData;
-import org.nuxeo.ide.sdk.templates.TemplateRegistry;
+import org.nuxeo.ide.sdk.templates.TemplateManager;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -17,7 +17,7 @@ public class SDKPlugin extends AbstractUIPlugin {
     // The shared instance
     private static SDKPlugin plugin;
 
-    protected TemplateRegistry tempReg;
+    protected TemplateManager tempMgr;
 
     /**
      * The constructor
@@ -25,21 +25,21 @@ public class SDKPlugin extends AbstractUIPlugin {
     public SDKPlugin() {
     }
 
-    public TemplateRegistry getTemplateRegistry() {
-        return tempReg;
+    public TemplateManager getTemplateManager() {
+        return tempMgr;
     }
 
     public void start(BundleContext context) throws Exception {
         super.start(context);
-        tempReg = new TemplateRegistry();
-        tempReg.loadtemplates(context.getBundle());
+        tempMgr = new TemplateManager();
+        tempMgr.loadTemplates(context.getBundle());
         plugin = this;
         NuxeoSDK.initialize();
     }
 
     public void stop(BundleContext context) throws Exception {
         plugin = null;
-        tempReg = null;
+        tempMgr = null;
         NuxeoSDK.dispose();
         super.stop(context);
     }

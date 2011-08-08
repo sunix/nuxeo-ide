@@ -17,6 +17,7 @@
 package org.nuxeo.ide.sdk.ui.wizards.project;
 
 import org.nuxeo.ide.common.wizards.AbstractWizard;
+import org.nuxeo.ide.sdk.NuxeoSDK;
 import org.nuxeo.ide.sdk.templates.TemplateRegistry;
 
 /**
@@ -29,9 +30,13 @@ public class NuxeoProjectWizard extends AbstractWizard<TemplateContext> {
     }
 
     public void addPages() {
-        addPage(new NuxeoProjectPage1());
-        addPage(new NuxeoProjectPage2());
-        addPage(new NuxeoProjectPage3());
+        if (NuxeoSDK.getDefault() != null) {
+            addPage(new NuxeoProjectPage1());
+            addPage(new NuxeoProjectPage2());
+            addPage(new NuxeoProjectPage3());
+        } else {
+            addPage(new UndefinedNuxeoSDKPage());
+        }
     }
 
     public boolean performCancel() {

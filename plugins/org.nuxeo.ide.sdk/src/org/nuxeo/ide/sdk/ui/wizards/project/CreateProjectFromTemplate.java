@@ -29,6 +29,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.nuxeo.ide.common.wizards.ImportProject;
 import org.nuxeo.ide.sdk.SDKPlugin;
+import org.nuxeo.ide.sdk.templates.TemplateRegistry;
 
 import freemarker.core.Environment;
 import freemarker.template.Configuration;
@@ -70,8 +71,12 @@ public class CreateProjectFromTemplate extends ImportProject {
             throw new IOException("The target project file already exists: "
                     + projectRoot);
         }
-        SDKPlugin.getDefault().getTemplateRegistry().copyTemplate(
-                ctx.getTemplate(), projectRoot);
+        TemplateRegistry tempReg = SDKPlugin.getDefault().getTemplateManager().getDefaultRegistry();
+        if (tempReg != null) {
+            tempReg.copyTemplate(ctx.getTemplate(), projectRoot);
+        } else {
+            throw new IllegalStateException("NuxeoSDK is not configured!");
+        }
         // now we need to rename the src/main/java/rootPackage and
         // src/main/test/java/rootPackage to the real name.
         String rootPackage = ctx.getProperty(Constants.PROJECT_ROOT_PACKAGE);

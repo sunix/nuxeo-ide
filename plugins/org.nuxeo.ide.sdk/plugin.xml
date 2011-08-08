@@ -5,7 +5,7 @@
     <extension 
        point="org.eclipse.ui.preferencePages"> 
       <page 
-         id="org.nuxeo.ide.prefs.server" 
+         id="org.nuxeo.ide.prefs.sdk" 
          name="Nuxeo SDK" 
          class="org.nuxeo.ide.sdk.ui.server.SDKPreferencePage" 
          category="org.nuxeo.ide.prefs"> 

@@ -170,7 +170,9 @@ public class ServerView extends ViewPart implements ISelectionProvider,
     @Override
     public void removeSelectionChangedListener(
             ISelectionChangedListener listener) {
-        selectionListeners.remove(listener);
+        if (selectionListeners != null) {
+            selectionListeners.remove(listener);
+        }
     }
 
     @Override

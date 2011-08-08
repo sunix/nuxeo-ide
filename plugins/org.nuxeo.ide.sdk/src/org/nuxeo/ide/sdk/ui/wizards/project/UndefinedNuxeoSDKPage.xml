@@ -1,0 +1,6 @@
+<panel cols="1" layout="grid">
+
+<link id="configureSDK">In order to create Nuxeo Projects you must <a>configure a Nuxeo SDK</a></link>
+
+
+</panel>
