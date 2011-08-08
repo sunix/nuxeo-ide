@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.nuxeo.ide.common.FormPreferencePage;
+import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.common.forms.ActionHandler;
 import org.nuxeo.ide.common.forms.Form;
 import org.nuxeo.ide.common.forms.UIObject;
@@ -49,8 +50,7 @@ public class SDKPreferencePage extends FormPreferencePage implements
 
     public SDKInfo getSelectedSDK() {
         IStructuredSelection selection = ((IStructuredSelection) ((SDKTableWidget) form.getWidget("sdks")).viewer.getSelection());
-        return selection == null ? null
-                : (SDKInfo) selection.getFirstElement();
+        return selection == null ? null : (SDKInfo) selection.getFirstElement();
     }
 
     public SDKInfo getCheckedSDK() {
@@ -107,9 +107,12 @@ public class SDKPreferencePage extends FormPreferencePage implements
         DirectoryDialog dlg = new DirectoryDialog(getShell());
         String dir = dlg.open();
         if (dir != null) {
-            // TODO NuxeoSDK sdk = NuxeoSDK.loadSDK(new File(dir));
-            SDKInfo sdk = new SDKInfo(dir, "1.0.0");
-            sdkWidget.viewer.add(sdk);
+            try {
+                SDKInfo sdk = SDKInfo.loadSDK(new File(dir));
+                sdkWidget.viewer.add(sdk);
+            } catch (Exception e) {
+                UI.showError("Not a valid Nuxeo SDK", e);
+            }
         }
         updateButtonBar();
     }

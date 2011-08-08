@@ -16,7 +16,6 @@
  */
 package org.nuxeo.ide.sdk;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,13 +57,7 @@ public class NuxeoSDK {
     }
 
     public static NuxeoSDK getDefault() {
-        // TODO
-        return new NuxeoSDK(
-                new SDKInfo(
-                        new File(
-                                "/Users/bstefanescu/work/nuxeo/nuxeo-distribution/nuxeo-distribution-tomcat/target/nuxeo-dm-5.4.3-SNAPSHOT-tomcat"),
-                        "5.4.3"));
-        // return instance;
+        return instance;
     }
 
     public static NuxeoSDK setDefault(SDKInfo info) {
@@ -96,6 +89,11 @@ public class NuxeoSDK {
             }
         }
         return sdk;
+    }
+
+    public static void dispose() {
+        listeners = null;
+        instance = null;
     }
 
     public static void addSDKChangedListener(SDKChangedListener listener) {

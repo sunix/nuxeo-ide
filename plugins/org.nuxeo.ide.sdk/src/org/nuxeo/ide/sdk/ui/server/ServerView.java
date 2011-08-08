@@ -16,11 +16,13 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.sdk.NuxeoSDK;
+import org.nuxeo.ide.sdk.SDKChangedListener;
 import org.nuxeo.ide.sdk.server.ServerConstants;
 import org.nuxeo.ide.sdk.server.ServerController;
 import org.nuxeo.ide.sdk.server.ServerLifeCycleAdapter;
 
-public class ServerView extends ViewPart implements ISelectionProvider {
+public class ServerView extends ViewPart implements ISelectionProvider,
+        SDKChangedListener {
 
     /**
      * The ID of the view as specified by the extension.
@@ -42,6 +44,7 @@ public class ServerView extends ViewPart implements ISelectionProvider {
         selectionListeners = new ListenerList();
         listener = new MyServerLifeCycleListener();
         initServer();
+        NuxeoSDK.addSDKChangedListener(this);
     }
 
     protected void initServer() {
@@ -62,7 +65,15 @@ public class ServerView extends ViewPart implements ISelectionProvider {
         if (sdk != null) {
             ctrl = new ServerController(sdk.getInfo());
             ctrl.addServerLifeCycleListener(listener);
+            System.out.println("Server initialized");
         }
+        setSelection(getSelection());
+    }
+
+    @Override
+    public void handleSDKChanged(NuxeoSDK sdk) {
+        System.out.println("SDK changed");
+        initServer();
     }
 
     public Text getConsole() {
@@ -93,6 +104,7 @@ public class ServerView extends ViewPart implements ISelectionProvider {
 
     @Override
     public void dispose() {
+        NuxeoSDK.removeSDKChangedListener(this);
         if (listener != null) {
             ctrl.removeServerLifeCycleListener(listener);
             listener = null;

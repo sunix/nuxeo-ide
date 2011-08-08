@@ -124,6 +124,7 @@ public class SDKRegistry {
             prefs.put("defaultSDK", sdk.getId());
         }
         prefs.flush();
+        NuxeoSDK.setDefault(sdk);
     }
 
     public static SDKInfo getDefaultSDK() throws BackingStoreException {

@@ -38,9 +38,7 @@ public class SDKFormData implements FormData {
         SDKTableWidget w = (SDKTableWidget) form.getWidget("sdks");
         SDKRegistry.save(w.getSDKs());
         SDKInfo sdk = w.getDefaultSDK();
-        if (sdk != null) {
-            SDKRegistry.setDefaultSDK(sdk);
-        }
+        SDKRegistry.setDefaultSDK(sdk);
     }
 
 }

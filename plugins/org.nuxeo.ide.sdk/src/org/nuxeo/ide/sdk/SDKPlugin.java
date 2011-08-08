@@ -29,30 +29,18 @@ public class SDKPlugin extends AbstractUIPlugin {
         return tempReg;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext
-     * )
-     */
     public void start(BundleContext context) throws Exception {
         super.start(context);
         tempReg = new TemplateRegistry();
         tempReg.loadtemplates(context.getBundle());
         plugin = this;
+        NuxeoSDK.initialize();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext
-     * )
-     */
     public void stop(BundleContext context) throws Exception {
         plugin = null;
         tempReg = null;
+        NuxeoSDK.dispose();
         super.stop(context);
     }
 
