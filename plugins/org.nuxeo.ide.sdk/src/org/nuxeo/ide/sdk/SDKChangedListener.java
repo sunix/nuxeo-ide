@@ -14,17 +14,14 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.common;
+package org.nuxeo.ide.sdk;
 
 /**
- * Fake add nature - used as an example
- * 
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class AddNuxeoNature extends AddNaturesAction {
+public interface SDKChangedListener {
 
-    public AddNuxeoNature() {
-        super(NuxeoNature.ID);
-    }
+    void handleSDKChanged(NuxeoSDK sdk);
+
 }

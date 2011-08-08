@@ -15,6 +15,9 @@ Require-Bundle: org.eclipse.ui,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Import-Package: org.eclipse.jdt.core,
+ org.eclipse.jdt.internal.ui.util,
  org.eclipse.jdt.internal.ui.workingsets,
  org.eclipse.jdt.launching,
+ org.eclipse.jdt.ui,
+ org.eclipse.jdt.ui.jarpackager,
  org.eclipse.jdt.ui.wizards

@@ -14,35 +14,26 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.common;
+package org.nuxeo.ide.sdk.ui;
 
-import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.ui.IWorkbenchPropertyPage;
+import org.eclipse.ui.dialogs.PropertyPage;
 
 /**
- * The root preference page for Nuxeo Tools.
- * 
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class NuxeoPreferencePage extends PreferencePage implements
-        IWorkbenchPreferencePage {
-
-    @Override
-    public void init(IWorkbench workbench) {
-    }
+public class NuxeoPropertyPage extends PropertyPage implements
+        IWorkbenchPropertyPage {
 
     @Override
     protected Control createContents(Composite parent) {
         Label control = new Label(parent, SWT.NONE);
-        control.setText("Expand the tree to configure Nuxeo Tools.");
-        Dialog.applyDialogFont(control);
+        control.setText("Expand the tree to configure Nuxeo Tools for your project.");
         return control;
     }
 

@@ -14,36 +14,23 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.common.forms.model;
-
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Layout;
-import org.nuxeo.ide.common.forms.LayoutManager;
-import org.nuxeo.ide.common.forms.UIObject;
-import org.w3c.dom.Element;
+package org.nuxeo.ide.sdk.server;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class FillLayoutManager extends LayoutManager {
+public class ServerLifeCycleAdapter implements ServerLifeCycleListener {
 
-    public FillLayoutManager() {
-        super("fill");
+    @Override
+    public void serverStateChanged(ServerController ctrl, int state) {
     }
 
     @Override
-    public Layout getLayout(Element element) {
-        boolean isVertical = UIObject.getBooleanAttribute(element, "vertical",
-                false);
-        return isVertical ? new FillLayout(SWT.VERTICAL) : new FillLayout();
+    public void handleConsoleText(ServerController ctrl, String text) {
     }
 
     @Override
-    public void applyLayout(Control ctrl, Element element) {
-        // do nothing
+    public void handleConsoleError(ServerController ctrl, Throwable t) {
     }
-
 }

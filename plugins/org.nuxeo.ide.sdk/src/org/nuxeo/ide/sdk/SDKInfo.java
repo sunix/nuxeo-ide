@@ -1,0 +1,139 @@
+/*
+ * (C) Copyright 2006-2010 Nuxeo SAS (http://nuxeo.com/) and contributors.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Lesser General Public License
+ * (LGPL) version 2.1 which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/lgpl.html
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * Contributors:
+ *     bstefanescu
+ */
+package org.nuxeo.ide.sdk;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+
+import org.nuxeo.ide.common.UI;
+
+/**
+ * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
+ * 
+ */
+public class SDKInfo {
+
+    protected String id;
+
+    protected String version;
+
+    protected String path;
+
+    public SDKInfo(String path, String version) {
+        this.path = path;
+        this.version = version;
+        String rawid = new StringBuilder(256).append(version).append('#').append(
+                path).toString();
+        try {
+            // the id should not contain '/' so we encode it.
+            this.id = URLEncoder.encode(rawid, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            UI.showError("UTF-8 not supported for enconding IDs", e);
+        }
+    }
+
+    public SDKInfo(File installFile, String version) {
+        this(installFile.getAbsolutePath(), version);
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public File getInstallDirectory() {
+        return new File(path);
+    }
+
+    public String getTitle() {
+        return "Nuxeo SDK ".concat(version);
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (obj instanceof SDKInfo) {
+            return ((SDKInfo) obj).id.equals(id);
+        }
+        return false;
+    }
+
+    public static SDKInfo loadSDK(File dir) throws IOException {
+        if (!dir.isDirectory()) {
+            throw new FileNotFoundException(
+                    "The given file is not a directory: " + dir);
+        }
+        File file = new File(dir, "nxserver/config/nuxeo.properties");
+        if (!file.isFile()) {
+            throw new FileNotFoundException("Not a Nuxeo SDK: " + dir);
+        }
+        Properties props = new Properties();
+        FileInputStream in = new FileInputStream(file);
+        try {
+            props.load(in);
+        } finally {
+            in.close();
+        }
+        String version = props.getProperty("org.nuxeo.ecm.product.version",
+                "0.0.0");
+        SDKInfo sdk = new SDKInfo(dir, version);
+        // TODO sdk.index();
+        return sdk;
+    }
+
+    // public static void main(String[] args) throws Exception {
+    // // HashMap<String, String> index = new HashMap<String, String>();
+    // // buildIndex(
+    // // new File(
+    // //
+    // "/Users/bstefanescu/work/osgi/bundles/org.apache.felix.dependencymanager-3.0.0.jar"),
+    // // index);
+    // // System.out.println(index.size());
+    //
+    // File[] roots = new File[2];
+    // roots[0] = new File(
+    // "/Users/bstefanescu/work/nuxeo/nuxeo-distribution/nuxeo-distribution-tomcat/target/nuxeo-dm-5.4.3-SNAPSHOT-tomcat/nxserver/bundles");
+    // roots[1] = new File(
+    // "/Users/bstefanescu/work/nuxeo/nuxeo-distribution/nuxeo-distribution-tomcat/target/nuxeo-dm-5.4.3-SNAPSHOT-tomcat/nxserver/lib");
+    // Map<String, String> index = buildIndex(roots);
+    // System.out.println(index.size());
+    // System.out.println("");
+    // }
+}

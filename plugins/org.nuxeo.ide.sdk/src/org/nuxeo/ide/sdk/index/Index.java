@@ -31,7 +31,8 @@ import jdbm.helper.StringComparator;
 import jdbm.helper.Tuple;
 import jdbm.helper.TupleBrowser;
 
-import org.nuxeo.ide.sdk.NuxeoSDK;
+import org.nuxeo.ide.sdk.SDKInfo;
+import org.nuxeo.ide.sdk.SDKIndex;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -95,7 +96,7 @@ public class Index {
                 "/Users/bstefanescu/work/nuxeo/nuxeo-distribution/nuxeo-distribution-tomcat/target/nuxeo-dm-5.4.3-SNAPSHOT-tomcat/nxserver/bundles");
         roots[1] = new File(
                 "/Users/bstefanescu/work/nuxeo/nuxeo-distribution/nuxeo-distribution-tomcat/target/nuxeo-dm-5.4.3-SNAPSHOT-tomcat/nxserver/lib");
-        Map<String, String> map = NuxeoSDK.buildIndex(roots);
+        Map<String, String> map = SDKIndex.buildIndex(roots);
         for (Map.Entry<String, String> entry : map.entrySet()) {
             tree.insert(entry.getKey(), entry.getValue(), false);
         }

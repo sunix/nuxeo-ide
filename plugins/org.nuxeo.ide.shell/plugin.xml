@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="Nuxeo"
+            id="org.nuxeo.ide.views">
+      </category>
+      <view
+            name="Nuxeo Shell"
+            icon="icons/terminal.png"
+            category="org.nuxeo.ide.views"
+            class="org.nuxeo.ide.shell.views.ShellView"
+            id="org.nuxeo.ide.shell.views.ShellView">
+      </view>
+   </extension>
+
+</plugin>

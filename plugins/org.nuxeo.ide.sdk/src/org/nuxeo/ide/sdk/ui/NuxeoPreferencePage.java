@@ -14,36 +14,36 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.common.forms.model;
+package org.nuxeo.ide.sdk.ui;
 
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Layout;
-import org.nuxeo.ide.common.forms.LayoutManager;
-import org.nuxeo.ide.common.forms.UIObject;
-import org.w3c.dom.Element;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPreferencePage;
 
 /**
+ * The root preference page for Nuxeo Tools.
+ * 
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class FillLayoutManager extends LayoutManager {
+public class NuxeoPreferencePage extends PreferencePage implements
+        IWorkbenchPreferencePage {
 
-    public FillLayoutManager() {
-        super("fill");
+    @Override
+    public void init(IWorkbench workbench) {
     }
 
     @Override
-    public Layout getLayout(Element element) {
-        boolean isVertical = UIObject.getBooleanAttribute(element, "vertical",
-                false);
-        return isVertical ? new FillLayout(SWT.VERTICAL) : new FillLayout();
-    }
-
-    @Override
-    public void applyLayout(Control ctrl, Element element) {
-        // do nothing
+    protected Control createContents(Composite parent) {
+        Label control = new Label(parent, SWT.NONE);
+        control.setText("Expand the tree to configure Nuxeo Tools.");
+        Dialog.applyDialogFont(control);
+        return control;
     }
 
 }

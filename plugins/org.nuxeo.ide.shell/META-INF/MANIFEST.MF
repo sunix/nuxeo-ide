@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Nuxeo Shell
+Bundle-SymbolicName: org.nuxeo.ide.shell;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.nuxeo.ide.shell.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ClassPath: .,
+ lib/nuxeo-shell-5.4.2-SNAPSHOT.jar
+Export-Package: org.nuxeo.ide.shell,
+ org.nuxeo.ide.shell.views

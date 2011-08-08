@@ -14,36 +14,38 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.common.forms.model;
+package org.nuxeo.ide.sdk.server;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Layout;
-import org.nuxeo.ide.common.forms.LayoutManager;
-import org.nuxeo.ide.common.forms.UIObject;
-import org.w3c.dom.Element;
+import java.io.File;
+
+import org.nuxeo.ide.common.UI;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class FillLayoutManager extends LayoutManager {
+public class StopServer extends ProcessRunner {
 
-    public FillLayoutManager() {
-        super("fill");
+    protected ServerController ctrl;
+
+    public StopServer(ServerController ctrl) {
+        super(new ProcessBuilder(
+                new File(ctrl.root, "bin/nuxeoctl").getAbsolutePath(), "stop"));
+        this.ctrl = ctrl;
     }
 
     @Override
-    public Layout getLayout(Element element) {
-        boolean isVertical = UIObject.getBooleanAttribute(element, "vertical",
-                false);
-        return isVertical ? new FillLayout(SWT.VERTICAL) : new FillLayout();
+    protected void started() {
+        ctrl.fireServerStopping();
     }
 
     @Override
-    public void applyLayout(Control ctrl, Element element) {
-        // do nothing
+    protected void terminated(int status, Throwable e) {
+        if (e != null) {
+            UI.showError("Failed to stop Nuxeo Server" + e.getMessage(), e);
+        } else {
+            ctrl.fireServerStopped();
+        }
     }
 
 }

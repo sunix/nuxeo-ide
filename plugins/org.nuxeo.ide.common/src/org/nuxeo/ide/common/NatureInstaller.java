@@ -83,7 +83,7 @@ public class NatureInstaller {
                     if (obj instanceof IProject) {
                         IProject project = (IProject) obj;
                         for (String natureId : natureIds) {
-                            if (project.getNature(NuxeoNature.ID) != null) {
+                            if (project.getNature(natureId) != null) {
                                 uninstall(project, natureId);
                             }
                         }

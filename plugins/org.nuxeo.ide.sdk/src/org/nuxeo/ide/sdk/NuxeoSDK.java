@@ -17,13 +17,25 @@
 package org.nuxeo.ide.sdk;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.ListenerList;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.jobs.Job;
+import org.nuxeo.ide.common.UI;
+import org.nuxeo.ide.sdk.server.ServerController;
+import org.nuxeo.ide.sdk.ui.NuxeoNature;
+import org.nuxeo.ide.sdk.ui.SDKClassPathContainer;
+import org.osgi.service.prefs.BackingStoreException;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -31,78 +43,163 @@ import java.util.zip.ZipInputStream;
  */
 public class NuxeoSDK {
 
-    public static Map<String, String> buildIndex(File... roots)
-            throws IOException {
-        HashMap<String, String> result = new HashMap<String, String>();
-        for (File root : roots) {
-            buildIndex(root, result);
+    /**
+     * The Nuxeo SDK instance on the active Eclipse Workspace.
+     */
+    private static volatile NuxeoSDK instance = null;
+
+    private static ListenerList listeners = new ListenerList();
+
+    static void initialize() throws BackingStoreException {
+        SDKInfo info = SDKRegistry.getDefaultSDK();
+        if (info != null) {
+            instance = new NuxeoSDK(info);
         }
-        return result;
     }
 
-    public static void buildIndex(File root, Map<String, String> result)
-            throws IOException {
-        File[] jars = root.listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                return name.endsWith(".jar");
-            }
-        });
-
-        if (jars != null) {
-            for (File jar : jars) {
-                buildJarIndex(jar, result);
-            }
-        }
-
+    public static NuxeoSDK getDefault() {
+        // TODO
+        return new NuxeoSDK(
+                new SDKInfo(
+                        new File(
+                                "/Users/bstefanescu/work/nuxeo/nuxeo-distribution/nuxeo-distribution-tomcat/target/nuxeo-dm-5.4.3-SNAPSHOT-tomcat"),
+                        "5.4.3"));
+        // return instance;
     }
 
-    public static void buildJarIndex(File jar, Map<String, String> result)
-            throws IOException {
-        ZipInputStream zin = new ZipInputStream(new FileInputStream(jar));
-        try {
+    public static NuxeoSDK setDefault(SDKInfo info) {
+        boolean changed = false;
+        NuxeoSDK sdk = getDefault();
+        if (sdk == null) {
+            if (info != null) {
+                sdk = new NuxeoSDK(info);
+                changed = true;
+            }
+        } else {
+            if (info == null) {
+                sdk = null;
+                changed = true;
+            } else {
+                if (!sdk.info.equals(info)) {
+                    sdk = new NuxeoSDK(info);
+                    changed = true;
+                }
+            }
+        }
+        if (changed) {
+            instance = sdk;
+            fireSDKChanged(sdk);
             try {
-                collectClasses(jar.getName(), zin, result);
-            } catch (IOException e) {
-                // ignore
-                e.printStackTrace(); // TODO collect errors
+                rebuildNuxeoProjects();
+            } catch (CoreException e) {
+                UI.showError("Failed to rebuild Nuxeo Projects", e);
             }
-        } finally {
-            zin.close();
+        }
+        return sdk;
+    }
+
+    public static void addSDKChangedListener(SDKChangedListener listener) {
+        listeners.add(listener);
+    }
+
+    public static void removeSDKChangedListener(SDKChangedListener listener) {
+        listeners.remove(listener);
+    }
+
+    private static void fireSDKChanged(NuxeoSDK sdk) {
+        for (Object listener : listeners.getListeners()) {
+            ((SDKChangedListener) listener).handleSDKChanged(sdk);
         }
     }
 
-    protected static void collectClasses(String jarName, ZipInputStream zin,
-            Map<String, String> result) throws IOException {
-        ZipEntry entry = zin.getNextEntry();
-        while (entry != null) {
-            String name = entry.getName();
-            if (!entry.isDirectory() && name.endsWith(".class")) {
-                name = name.replace('/', '.');
-                name = name.replace('$', '.');
-                name = name.substring(0, name.length() - 6);
-                // System.out.println(jarName + ": " + name);
-                result.put(name, jarName);
+    protected SDKInfo info;
+
+    /**
+     * Singleton classpath container used by project that use SDK deps and not
+     * maven. Only initialized at demand.
+     */
+    protected volatile SDKClassPathContainer cp;
+
+    // /**
+    // * Class index (class -> artifact). ONly initialized at demand. Used to
+    // * generate maven dependencies.
+    // */
+    // protected volatile Index index;
+
+    protected ServerController server;
+
+    public NuxeoSDK(SDKInfo info) {
+        this.info = info;
+    }
+
+    public SDKInfo getInfo() {
+        return info;
+    }
+
+    public ServerController getServer() {
+        return new ServerController(info);
+    }
+
+    public SDKClassPathContainer getClassPathContainer(IPath containerPath) {
+        SDKClassPathContainer _cp = cp;
+        if (_cp == null) {
+            synchronized (this) {
+                _cp = new SDKClassPathContainer(containerPath);
+                cp = _cp;
             }
-            entry = zin.getNextEntry();
         }
+        return _cp;
     }
 
-    public static void main(String[] args) throws Exception {
-        // HashMap<String, String> index = new HashMap<String, String>();
-        // buildIndex(
-        // new File(
-        // "/Users/bstefanescu/work/osgi/bundles/org.apache.felix.dependencymanager-3.0.0.jar"),
-        // index);
-        // System.out.println(index.size());
-
-        File[] roots = new File[2];
-        roots[0] = new File(
-                "/Users/bstefanescu/work/nuxeo/nuxeo-distribution/nuxeo-distribution-tomcat/target/nuxeo-dm-5.4.3-SNAPSHOT-tomcat/nxserver/bundles");
-        roots[1] = new File(
-                "/Users/bstefanescu/work/nuxeo/nuxeo-distribution/nuxeo-distribution-tomcat/target/nuxeo-dm-5.4.3-SNAPSHOT-tomcat/nxserver/lib");
-        Map<String, String> index = buildIndex(roots);
-        System.out.println(index.size());
-        System.out.println("");
+    public static void rebuildProjects() {
+        doBuildOperation(IncrementalProjectBuilder.FULL_BUILD, null);
     }
+
+    public static void rebuildNuxeoProjects() throws CoreException {
+        ArrayList<IProject> nxProjects = new ArrayList<IProject>();
+        for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
+            if (project.hasNature(NuxeoNature.ID)) {
+                nxProjects.add(project);
+            }
+        }
+        doBuildOperation(IncrementalProjectBuilder.FULL_BUILD, nxProjects);
+    }
+
+    private static void doBuildOperation(final int buildType,
+            final List<IProject> projects) {
+        Job buildJob = new Job("Building Workspace") {
+            protected IStatus run(IProgressMonitor monitor) {
+                int ticks = 100;
+                String message = "Rebuilding All ...";
+                if (projects != null) {
+                    ticks = projects.size();
+                    message = "Rebuilding Nuxeo Projects ...";
+                }
+                monitor.beginTask(message, ticks);
+                try {
+                    if (projects == null) {
+                        ResourcesPlugin.getWorkspace().build(buildType,
+                                new SubProgressMonitor(monitor, 100));
+                    } else {
+                        for (IProject project : projects) {
+                            project.build(buildType, new SubProgressMonitor(
+                                    monitor, 1));
+                        }
+                    }
+                } catch (CoreException e) {
+                    return e.getStatus();
+                } finally {
+                    monitor.done();
+                }
+                return Status.OK_STATUS;
+            }
+
+            public boolean belongsTo(Object family) {
+                return ResourcesPlugin.FAMILY_MANUAL_BUILD == family;
+            }
+        };
+        buildJob.setUser(true);
+        buildJob.schedule();
+    }
+
 }

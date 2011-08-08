@@ -1,0 +1,25 @@
+<panel cols="1" layout="grid">
+
+<text hfill="true" wrap="true" trim="false">Select a Nuxeo SDK for using in your Nuxeo projects. 
+If not SDKs are available, then click on 'Download' button to download the SDK of your choice 
+and then install it into Eclipse by using the 'Add' button.
+Note that the selected SDK becomes the default SDK in your current Eclipse Workspace.
+
+A Nuxeo SDK is intended to manage the classpath of your Nuxeo Plugin projects and 
+to be able to start a Nuxeo server from Eclipse and in order to test your plugins.
+</text>
+
+<hr hfill="true"/>
+
+<panel hfill="true" vfill="true" layout="grid" cols="2">
+<text colspan="2">SDKs:</text>
+<sdks id="sdks" hfill="true" vfill="true"/>
+<panel vertical="true" valign="top">
+<button id="add">Add</button>
+<button id="download">Download</button>
+<button id="remove" enabled="false">Remove</button>
+<button id="reload" enabled= "false">Reload</button>
+</panel>
+</panel>
+
+</panel>

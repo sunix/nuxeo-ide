@@ -1,9 +1,0 @@
-<panel cols="2" layout="grid">
-
-<text colspan="2" hfill="true" wrap="true" trim="false">Enter the location of your local Nuxeo server.
-This information is used by the 'Nuxeo Server View' to be able to control the server from Eclipse. 
-</text>
-
-<text>Server Location:</text><directory id="server.location" hfill="true"/>
-
-</panel>

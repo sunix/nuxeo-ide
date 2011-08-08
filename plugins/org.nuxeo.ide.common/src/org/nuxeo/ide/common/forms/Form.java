@@ -37,6 +37,7 @@ import org.nuxeo.ide.common.forms.model.FileChooserWidget;
 import org.nuxeo.ide.common.forms.model.FillLayoutManager;
 import org.nuxeo.ide.common.forms.model.FramePanel;
 import org.nuxeo.ide.common.forms.model.GridLayoutManager;
+import org.nuxeo.ide.common.forms.model.HorizontalLine;
 import org.nuxeo.ide.common.forms.model.LinkWidget;
 import org.nuxeo.ide.common.forms.model.ListBoxWidget;
 import org.nuxeo.ide.common.forms.model.NotNullValidator;
@@ -48,6 +49,7 @@ import org.nuxeo.ide.common.forms.model.TextAreaWidget;
 import org.nuxeo.ide.common.forms.model.TextBoxWidget;
 import org.nuxeo.ide.common.forms.model.TextWidget;
 import org.nuxeo.ide.common.forms.model.ToggleButtonWidget;
+import org.nuxeo.ide.common.forms.model.VerticalLine;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -88,6 +90,8 @@ public class Form {
         addLayoutManager(new FillLayoutManager());
         addLayoutManager(new GridLayoutManager());
 
+        addWidgetType(HorizontalLine.class);
+        addWidgetType(VerticalLine.class);
         addWidgetType(Panel.class);
         addWidgetType(FramePanel.class);
         addWidgetType(TextWidget.class);

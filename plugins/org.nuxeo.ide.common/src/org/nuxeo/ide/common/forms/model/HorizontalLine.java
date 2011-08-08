@@ -14,27 +14,28 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.common;
+package org.nuxeo.ide.common.forms.model;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.ui.IWorkbenchPropertyPage;
-import org.eclipse.ui.dialogs.PropertyPage;
+import org.nuxeo.ide.common.forms.BindingContext;
+import org.nuxeo.ide.common.forms.UIObject;
+import org.nuxeo.ide.common.forms.WidgetName;
+import org.w3c.dom.Element;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class NuxeoPropertyPage extends PropertyPage implements
-        IWorkbenchPropertyPage {
+@WidgetName("hr")
+public class HorizontalLine extends UIObject<Label> {
 
     @Override
-    protected Control createContents(Composite parent) {
-        Label control = new Label(parent, SWT.NONE);
-        control.setText("Expand the tree to configure Nuxeo Tools for your project.");
-        return control;
+    protected Label createControl(Composite parent, Element element,
+            BindingContext ctx) {
+        return new Label(parent, SWT.SEPARATOR | SWT.SHADOW_OUT
+                | SWT.HORIZONTAL);
     }
 
 }

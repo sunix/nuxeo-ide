@@ -14,36 +14,33 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.common.forms.model;
+package org.nuxeo.ide.sdk.ui.server;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Layout;
-import org.nuxeo.ide.common.forms.LayoutManager;
-import org.nuxeo.ide.common.forms.UIObject;
-import org.w3c.dom.Element;
+import org.nuxeo.ide.common.forms.Form;
+import org.nuxeo.ide.common.forms.FormData;
+import org.nuxeo.ide.sdk.SDKInfo;
+import org.nuxeo.ide.sdk.SDKRegistry;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class FillLayoutManager extends LayoutManager {
+public class SDKFormData implements FormData {
 
-    public FillLayoutManager() {
-        super("fill");
+    @Override
+    public void load(Form form) throws Exception {
+        SDKTableWidget w = (SDKTableWidget) form.getWidget("sdks");
+        w.setDefaultSDK(SDKRegistry.getDefaultSDKId());
     }
 
     @Override
-    public Layout getLayout(Element element) {
-        boolean isVertical = UIObject.getBooleanAttribute(element, "vertical",
-                false);
-        return isVertical ? new FillLayout(SWT.VERTICAL) : new FillLayout();
-    }
-
-    @Override
-    public void applyLayout(Control ctrl, Element element) {
-        // do nothing
+    public void store(Form form) throws Exception {
+        SDKTableWidget w = (SDKTableWidget) form.getWidget("sdks");
+        SDKRegistry.save(w.getSDKs());
+        SDKInfo sdk = w.getDefaultSDK();
+        if (sdk != null) {
+            SDKRegistry.setDefaultSDK(sdk);
+        }
     }
 
 }

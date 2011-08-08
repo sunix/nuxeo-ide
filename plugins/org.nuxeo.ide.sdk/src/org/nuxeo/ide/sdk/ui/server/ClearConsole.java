@@ -14,36 +14,35 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.common.forms.model;
+package org.nuxeo.ide.sdk.ui.server;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Layout;
-import org.nuxeo.ide.common.forms.LayoutManager;
-import org.nuxeo.ide.common.forms.UIObject;
-import org.w3c.dom.Element;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.ui.IViewActionDelegate;
+import org.eclipse.ui.IViewPart;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class FillLayoutManager extends LayoutManager {
+public class ClearConsole implements IViewActionDelegate {
 
-    public FillLayoutManager() {
-        super("fill");
+    protected ServerView view;
+
+    @Override
+    public void run(IAction action) {
+        if (view.console != null) {
+            view.console.setText("");
+        }
     }
 
     @Override
-    public Layout getLayout(Element element) {
-        boolean isVertical = UIObject.getBooleanAttribute(element, "vertical",
-                false);
-        return isVertical ? new FillLayout(SWT.VERTICAL) : new FillLayout();
+    public void selectionChanged(IAction action, ISelection selection) {
     }
 
     @Override
-    public void applyLayout(Control ctrl, Element element) {
-        // do nothing
+    public void init(IViewPart view) {
+        this.view = (ServerView) view;
     }
 
 }

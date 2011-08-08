@@ -77,7 +77,7 @@ public abstract class UIValueObject<T extends Control> extends UIObject<T>
     public void valueChanged() {
         HasValue obj = (HasValue) this;
         List<Validator> validators = obj.getValidators();
-        if (validators == null) {
+        if (validators == null || validators.isEmpty()) {
             return;
         }
         Object value = obj.getValue();

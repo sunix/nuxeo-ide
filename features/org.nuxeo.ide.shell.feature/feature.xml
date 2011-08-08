@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.nuxeo.ide.shell.feature"
+      label="%featureName"
+      version="1.0.0.qualifier"
+      provider-name="%providerName">
+
+   <description>
+      Provides a remote Shell View to a ECR server.
+   </description>
+
+   <copyright>%copyright</copyright>
+
+   <license url="%licenseURL">%license</license>
+
+   <plugin
+         id="org.nuxeo.ide.shell"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>

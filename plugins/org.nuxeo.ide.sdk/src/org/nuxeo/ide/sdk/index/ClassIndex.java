@@ -14,17 +14,12 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.common;
+package org.nuxeo.ide.sdk.index;
 
 /**
- * Fake remove nature - used as an example
- * 
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
- * 
+ *
  */
-public class RemoveNuxeoNature extends RemoveNaturesAction {
+public class ClassIndex {
 
-    public RemoveNuxeoNature() {
-        super(NuxeoNature.ID);
-    }
 }

@@ -17,33 +17,24 @@
 package org.nuxeo.ide.common.forms.model;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Layout;
-import org.nuxeo.ide.common.forms.LayoutManager;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+import org.nuxeo.ide.common.forms.BindingContext;
 import org.nuxeo.ide.common.forms.UIObject;
+import org.nuxeo.ide.common.forms.WidgetName;
 import org.w3c.dom.Element;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class FillLayoutManager extends LayoutManager {
-
-    public FillLayoutManager() {
-        super("fill");
-    }
+@WidgetName("vr")
+public class VerticalLine extends UIObject<Label> {
 
     @Override
-    public Layout getLayout(Element element) {
-        boolean isVertical = UIObject.getBooleanAttribute(element, "vertical",
-                false);
-        return isVertical ? new FillLayout(SWT.VERTICAL) : new FillLayout();
-    }
-
-    @Override
-    public void applyLayout(Control ctrl, Element element) {
-        // do nothing
+    protected Label createControl(Composite parent, Element element,
+            BindingContext ctx) {
+        return new Label(parent, SWT.SEPARATOR | SWT.SHADOW_IN | SWT.VERTICAL);
     }
 
 }
