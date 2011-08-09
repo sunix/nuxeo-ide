@@ -32,7 +32,7 @@ public class SDKPlugin extends AbstractUIPlugin {
     public void start(BundleContext context) throws Exception {
         super.start(context);
         tempMgr = new TemplateManager();
-        tempMgr.loadTemplates(context.getBundle());
+        tempMgr.loadRegistry(context.getBundle());
         plugin = this;
         NuxeoSDK.initialize();
     }

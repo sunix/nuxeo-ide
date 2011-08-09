@@ -136,12 +136,20 @@ public class NuxeoSDK {
         this.root = info.getInstallDirectory();
     }
 
-    public File getRoot() {
+    public File getInstallDirectory() {
         return root;
     }
 
     public SDKInfo getInfo() {
         return info;
+    }
+
+    public String getVersion() {
+        return info.getVersion();
+    }
+
+    public String getLocation() {
+        return info.getPath();
     }
 
     public ServerController getServer() {

@@ -44,8 +44,6 @@ import org.w3c.dom.Element;
 public class NuxeoProjectPage1 extends FormWizardPage<TemplateContext>
         implements Constants {
 
-    protected boolean changedProjectName;
-
     public NuxeoProjectPage1() {
         super("nuxeoProjectPage1", "Create a Nuxeo Project", null);
     }
@@ -70,7 +68,6 @@ public class NuxeoProjectPage1 extends FormWizardPage<TemplateContext>
         UIObject<?> obj = form.getWidget(PROJECT_LOCATION);
         ((HasValue) obj).setValue(getDefaultPath());
 
-        final Text nameText = (Text) form.getWidgetControl(PROJECT_NAME);
         final Text idText = (Text) (Text) form.getWidgetControl(PROJECT_ID);
         idText.addKeyListener(new KeyAdapter() {
             @Override
@@ -82,16 +79,6 @@ public class NuxeoProjectPage1 extends FormWizardPage<TemplateContext>
                         NuxeoProjectPage1.this.setPageComplete(false);
                     }
                 }
-                String name = nameText.getText();
-                if (!changedProjectName || name.length() == 0) {
-                    nameText.setText(text);
-                }
-            }
-        });
-        nameText.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(org.eclipse.swt.events.KeyEvent e) {
-                changedProjectName = true;
             }
         });
     }
@@ -111,10 +98,6 @@ public class NuxeoProjectPage1 extends FormWizardPage<TemplateContext>
 
     public String getProjectId() {
         return form.getWidgetValueAsString(PROJECT_ID);
-    }
-
-    public String getProjectName() {
-        return form.getWidgetValueAsString(PROJECT_NAME);
     }
 
     public String getProjectRootPackage() {
@@ -153,10 +136,6 @@ public class NuxeoProjectPage1 extends FormWizardPage<TemplateContext>
         return ((HasValue) form.getWidget("jre")).getValueAsString();
     }
 
-    public String getTargetVersion() {
-        return form.getWidgetValueAsString(TARGET_VERSION);
-    }
-
     public String getStudioProject() {
         return form.getWidgetValueAsString("studio");
     }
@@ -166,10 +145,10 @@ public class NuxeoProjectPage1 extends FormWizardPage<TemplateContext>
         ctx.setProjectLocation(new File(getSelectedLocationFile(),
                 getProjectId()));
         ctx.setWorkingSets(getSelectedWorkingSets());
-        ctx.setProperty(form, PROJECT_ID, ARTIFACT_ID);
-        ctx.setProperty(form, PROJECT_NAME, ARTIFACT_NAME);
-        ctx.setProperty(form, TARGET_VERSION, PARENT_VERSION, BUNDLE_VERSION);
-        String v = ctx.setProperty(form, PROJECT_ROOT_PACKAGE);
+        String v = ctx.setProperty(form, PROJECT_ID, ARTIFACT_ID, ARTIFACT_NAME);
+        ctx.put(PROJECT_NAME, v);
+        ctx.setProperty(form, PROJECT_ID, ARTIFACT_ID, ARTIFACT_NAME);
+        v = ctx.setProperty(form, PROJECT_ROOT_PACKAGE);
         int i = v.lastIndexOf('.');
         if (i > 0) {
             ctx.put(GROUP_ID, v.substring(0, i));

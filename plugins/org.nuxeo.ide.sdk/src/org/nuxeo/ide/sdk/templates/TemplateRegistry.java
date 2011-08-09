@@ -22,46 +22,112 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.osgi.framework.Bundle;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
 public class TemplateRegistry {
 
-    public static final String DEFAULT_TEMPLATE = "Empty Project";
+    public static final String DEFAULT_TEMPLATE = "default";
 
-    protected Map<String, Template> templates;
+    protected Bundle bundle;
+
+    protected String version;
+
+    protected Map<String, ProjectTemplate> projects;
+
+    protected Map<String, ComponentTemplate> components;
 
     public TemplateRegistry() {
-        this.templates = new HashMap<String, Template>();
+        this.projects = new HashMap<String, ProjectTemplate>();
+        this.components = new HashMap<String, ComponentTemplate>();
     }
 
-    public synchronized void reset() {
-        templates.clear();
+    public TemplateRegistry(Bundle bundle) {
+        this();
+        this.bundle = bundle;
     }
 
-    public synchronized Template[] getTemplates() {
-        return templates.values().toArray(new Template[templates.size()]);
+    public Bundle getBundle() {
+        return bundle;
     }
 
-    public synchronized Template getTemplate(String key) {
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public ProjectTemplate[] getProjectTemplates() {
+        return projects.values().toArray(new ProjectTemplate[projects.size()]);
+    }
+
+    public ProjectTemplate getProjectTemplate(String key) {
         if (key == null) {
             key = DEFAULT_TEMPLATE;
         }
-        return templates.get(key);
+        return projects.get(key);
     }
 
-    public synchronized void addTemplate(Template temp) {
-        templates.put(temp.getName(), temp);
+    public void addProjectTemplate(ProjectTemplate temp) {
+        projects.put(temp.getId(), temp);
     }
 
-    public void copyTemplate(String name, File projectRoot) throws IOException {
-        Template temp = getTemplate(name);
+    public void copyProjectTemplate(String id, File projectRoot)
+            throws IOException {
+        ProjectTemplate temp = getProjectTemplate(id);
         if (temp == null) {
-            throw new FileNotFoundException("Template " + name
-                    + " was not found");
+            throw new FileNotFoundException("Template " + id + " was not found");
         }
-        temp.copyTo(projectRoot);
+        temp.copyTo(bundle, projectRoot);
+    }
+
+    public void addComponentTemplate(ComponentTemplate temp) {
+        components.put(temp.getId(), temp);
+    }
+
+    public ComponentTemplate[] getComponentTemplates() {
+        return components.values().toArray(
+                new ComponentTemplate[components.size()]);
+    }
+
+    public ComponentTemplate getComponentTemplate(String id) {
+        return components.get(id);
+    }
+
+    public void applyComponentTemplate(String id, File projectRoot)
+            throws IOException {
+        ComponentTemplate temp = getComponentTemplate(id);
+        if (temp == null) {
+            throw new FileNotFoundException("Template " + id + " was not found");
+        }
+        temp.apply(projectRoot);
+    }
+
+    protected static TemplateRegistry load(Element element) {
+        TemplateRegistry registry = new TemplateRegistry();
+        String version = DomUtil.getAttribute(element, "version", "0.0.0");
+        registry.version = version;
+        Node child = element.getFirstChild();
+        while (child != null) {
+            if (child.getNodeType() == Node.ELEMENT_NODE) {
+                Element el = (Element) child;
+                String tag = child.getNodeName();
+                if ("project".equals(tag)) {
+                    registry.addProjectTemplate(ProjectTemplate.load(el));
+                } else if ("component".equals(tag)) {
+                    registry.addComponentTemplate(ComponentTemplate.load(el));
+                }
+            }
+            child = child.getNextSibling();
+        }
+        return registry;
     }
 
 }

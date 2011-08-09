@@ -53,7 +53,7 @@ public class SDKClassPathContainerInitializer extends
      * @throws CoreException
      */
     public void initialize(IJavaProject[] projects) throws CoreException {
-        IPath containerPath = new Path("org.nuxeo.ide.SDK_CONTAINER");
+        IPath containerPath = new Path(SDKClassPathContainer.ID);
         if (projects.length == 0) {
             return;
         }

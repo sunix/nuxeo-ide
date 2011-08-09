@@ -73,7 +73,7 @@ public class CreateProjectFromTemplate extends ImportProject {
         }
         TemplateRegistry tempReg = SDKPlugin.getDefault().getTemplateManager().getDefaultRegistry();
         if (tempReg != null) {
-            tempReg.copyTemplate(ctx.getTemplate(), projectRoot);
+            tempReg.copyProjectTemplate(ctx.getTemplate(), projectRoot);
         } else {
             throw new IllegalStateException("NuxeoSDK is not configured!");
         }

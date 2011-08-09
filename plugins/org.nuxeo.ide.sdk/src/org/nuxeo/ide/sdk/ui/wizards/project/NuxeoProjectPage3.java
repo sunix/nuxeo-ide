@@ -16,8 +16,14 @@
  */
 package org.nuxeo.ide.sdk.ui.wizards.project;
 
+import java.util.Arrays;
+
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.List;
 import org.nuxeo.ide.common.wizards.FormWizardPage;
+import org.nuxeo.ide.sdk.SDKPlugin;
+import org.nuxeo.ide.sdk.templates.ProjectTemplate;
+import org.nuxeo.ide.sdk.templates.TemplateRegistry;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -26,17 +32,36 @@ import org.nuxeo.ide.common.wizards.FormWizardPage;
 public class NuxeoProjectPage3 extends FormWizardPage<TemplateContext>
         implements Constants {
 
+    protected ProjectTemplate[] templates;
+
     public NuxeoProjectPage3() {
         super("nuxeoProjectPage3", "Select a template for the project", null);
+        TemplateRegistry reg = SDKPlugin.getDefault().getTemplateManager().getDefaultRegistry();
+        if (reg != null) {
+            templates = reg.getProjectTemplates();
+            Arrays.sort(templates);
+        }
     }
 
     @Override
     public void createControl(Composite parent) {
         super.createControl(parent);
+        List list = (List) form.getWidgetControl(PROJECT_TEMPLATE);
+        if (templates != null) {
+            for (ProjectTemplate temp : templates) {
+                list.add(temp.getName());
+            }
+        }
     }
 
     public String getTemplate() {
-        return form.getWidgetValueAsString(PROJECT_TEMPLATE);
+        if (templates == null) {
+            return TemplateRegistry.DEFAULT_TEMPLATE;
+        }
+        List list = (List) form.getWidgetControl(PROJECT_TEMPLATE);
+        int i = list.getSelectionIndex();
+        return i > -1 ? templates[i].getId()
+                : TemplateRegistry.DEFAULT_TEMPLATE;
     }
 
     @Override

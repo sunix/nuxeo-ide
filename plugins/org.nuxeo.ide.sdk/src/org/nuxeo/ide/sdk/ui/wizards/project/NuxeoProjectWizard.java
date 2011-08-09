@@ -19,6 +19,7 @@ package org.nuxeo.ide.sdk.ui.wizards.project;
 import org.nuxeo.ide.common.wizards.AbstractWizard;
 import org.nuxeo.ide.sdk.NuxeoSDK;
 import org.nuxeo.ide.sdk.templates.TemplateRegistry;
+import org.nuxeo.ide.sdk.ui.SDKClassPathContainer;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -48,7 +49,17 @@ public class NuxeoProjectWizard extends AbstractWizard<TemplateContext> {
         TemplateContext ctx = new TemplateContext();
         // initialize defaults
         ctx.setTemplate(TemplateRegistry.DEFAULT_TEMPLATE);
-        ctx.put(Constants.CLASSPATH_CONTAINER, "org.nuxeo.ide.SDK_CONTAINER");
+        String version = NuxeoSDK.getDefault().getVersion();
+        String osgiVersion = version;
+        if (version.endsWith("-SNAPSHOT")) {
+            osgiVersion = version.substring(0,
+                    version.length() - "-SNAPSHOT".length())
+                    + ".qualifier";
+        }
+        ctx.put(Constants.TARGET_VERSION, version);
+        ctx.put(Constants.PARENT_VERSION, version);
+        ctx.put(Constants.BUNDLE_VERSION, osgiVersion);
+        ctx.put(Constants.CLASSPATH_CONTAINER, SDKClassPathContainer.ID);
         return ctx;
     }
 

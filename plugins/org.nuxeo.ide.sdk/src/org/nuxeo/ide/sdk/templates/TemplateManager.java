@@ -16,13 +16,21 @@
  */
 package org.nuxeo.ide.sdk.templates;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.net.URL;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.eclipse.core.runtime.Platform;
 import org.nuxeo.ide.sdk.NuxeoSDK;
 import org.osgi.framework.Bundle;
+import org.w3c.dom.Document;
 
 /**
  * Manage project templates.
@@ -74,48 +82,66 @@ public class TemplateManager {
         return getRegistry(v);
     }
 
-    public Template getDefaultTemplate(String templateName) {
+    public ProjectTemplate getDefaultTemplate(String id) {
         TemplateRegistry reg = getDefaultRegistry();
         if (reg != null) {
-            reg.getTemplate(templateName);
+            reg.getProjectTemplate(id);
         }
         return null;
     }
 
-    public void loadTemplates(Bundle bundle) {
+    public void loadRegistry(Bundle bundle) {
+        synchronized (this) {
+            if (!regs.isEmpty()) {
+                regs = new HashMap<String, TemplateRegistry>();
+            }
+        }
         Bundle[] bundles = Platform.getFragments(bundle);
         if (bundles == null) {
             return;
         }
         for (Bundle fragment : bundles) {
-            String expr = (String) fragment.getHeaders().get(
-                    "Nuxeo-ProjectTemplates");
-            if (expr != null) {
-                String[] ar = expr.split("\\s*,\\s*");
-                if (ar != null) {
-                    String v = (String) fragment.getHeaders().get(
-                            "Nuxeo-TargetVersion");
-                    String[] versions = v == null ? new String[] { "0.0.0" }
-                            : v.split("\\s*,\\s*");
-                    TemplateRegistry reg = new TemplateRegistry();
-                    for (int i = 0; i < ar.length; i++) {
-                        try {
-                            Template temp = Template.fromString(fragment, ar[i]);
-                            reg.addTemplate(temp);
-                        } catch (ParseException e) {
-                            // ignore and log
-                            System.err.println("Failed to parse template definition:"
-                                    + e.getMessage());
-                        }
-                    }
-                    synchronized (this) {
-                        for (String version : versions) {
-                            regs.put(version, reg);
-                        }
-                    }
+            URL url = fragment.getEntry("templates.xml");
+            if (url != null) {
+                try {
+                    TemplateRegistry reg = loadRegistry(fragment, url);
+                    regs.put(reg.getVersion(), reg);
+                } catch (Exception e) {
+                    e.printStackTrace(); // TODO log
                 }
             }
         }
+    }
+
+    public static TemplateRegistry loadRegistry(Bundle bundle, File file)
+            throws Exception {
+        InputStream in = new FileInputStream(file);
+        try {
+            return loadRegistry(bundle, in);
+        } finally {
+            in.close();
+        }
+    }
+
+    public static TemplateRegistry loadRegistry(Bundle bundle, URL url)
+            throws Exception {
+        InputStream in = url.openStream();
+        try {
+            return loadRegistry(bundle, in);
+        } finally {
+            in.close();
+        }
+    }
+
+    public static TemplateRegistry loadRegistry(Bundle bundle, InputStream in)
+            throws Exception {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setNamespaceAware(false);
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document document = builder.parse(in);
+        TemplateRegistry reg = TemplateRegistry.load(document.getDocumentElement());
+        reg.bundle = bundle;
+        return reg;
     }
 
 }

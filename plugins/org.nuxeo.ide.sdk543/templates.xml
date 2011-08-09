@@ -1,0 +1,21 @@
+<templates version="0.0.0">
+
+  <project id="default" src="projects/default">
+    <name>Empty Project</name>
+    <description>An empty Nuxeo project</description>
+  </project>
+
+  <project id="service" src="projects/service">
+    <name>Service Example</name>
+    <description>A project containing a Nuxeo service</description>
+  </project>
+
+  <component id ="operation" src="components/automation/project">
+    <name>Operation</name>
+    <description>An operation object</description>
+    
+    <extension src="components/automation/extension.xml"/>
+    <!--  dependency/ -->
+  </component>
+
+</templates>

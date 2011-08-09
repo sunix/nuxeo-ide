@@ -27,6 +27,8 @@ import org.nuxeo.ide.sdk.NuxeoSDK;
  */
 public class SDKClassPathContainer implements IClasspathContainer {
 
+    public final static String ID = "org.nuxeo.ide.SDK_CONTAINER";
+
     public static final IClasspathEntry[] EMPTY_CP = new IClasspathEntry[0];
 
     protected IPath containerPath;

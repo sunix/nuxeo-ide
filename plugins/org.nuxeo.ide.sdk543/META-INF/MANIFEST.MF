@@ -6,7 +6,3 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Nuxeo
 Fragment-Host: org.nuxeo.ide.sdk;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Nuxeo-TargetPlatform: 5.4.3
-Nuxeo-ProjectTemplates: 
- Empty Project;path=templates/default;version=5.4.3,
- Service Example;path=templates/service;version=5.4.3

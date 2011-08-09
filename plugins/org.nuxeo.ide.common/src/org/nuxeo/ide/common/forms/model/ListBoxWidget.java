@@ -47,10 +47,12 @@ public class ListBoxWidget extends UIValueObject<List> implements HasValue {
         String content = element.getTextContent();
         if (content != null) {
             content = content.trim();
-            if (content.length() > 0) {
-                String[] items = content.split("\\s*,\\s*");
-                for (String item : items) {
-                    list.add(item);
+            if (content.length() != 0) {
+                if (content.length() > 0) {
+                    String[] items = content.split("\\s*,\\s*");
+                    for (String item : items) {
+                        list.add(item);
+                    }
                 }
             }
         }

@@ -18,6 +18,7 @@ package org.nuxeo.ide.sdk.ui.wizards.project;
 
 import org.eclipse.swt.widgets.Composite;
 import org.nuxeo.ide.common.wizards.FormWizardPage;
+import org.nuxeo.ide.sdk.NuxeoSDK;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -92,12 +93,8 @@ public class NuxeoProjectPage2 extends FormWizardPage<TemplateContext>
     public void enterPage() {
         String projectId = getPreviousPage().getForm().getWidgetValueAsString(
                 PROJECT_ID);
-        String projectName = getPreviousPage().getForm().getWidgetValueAsString(
-                PROJECT_NAME);
         String rootPackage = getPreviousPage().getForm().getWidgetValueAsString(
                 PROJECT_ROOT_PACKAGE);
-        String version = getPreviousPage().getForm().getWidgetValueAsString(
-                TARGET_VERSION);
 
         int i = rootPackage.lastIndexOf('.');
         if (i > 0) {
@@ -107,7 +104,8 @@ public class NuxeoProjectPage2 extends FormWizardPage<TemplateContext>
         form.setWidgetValueIfEmpty(GROUP_ID, rootPackage);
         form.setWidgetValueIfEmpty(ARTIFACT_ID, projectId);
         // form.setWidgetValueIfEmpty("maven.artifact.version", version);
-        form.setWidgetValueIfEmpty(ARTIFACT_NAME, projectName);
-        form.setWidgetValueIfEmpty(PARENT_VERSION, version);
+        form.setWidgetValueIfEmpty(ARTIFACT_NAME, projectId);
+        form.setWidgetValueIfEmpty(PARENT_VERSION,
+                NuxeoSDK.getDefault().getVersion());
     }
 }

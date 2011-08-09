@@ -18,9 +18,7 @@ package org.nuxeo.ide.sdk.ui.wizards.project;
 
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.dialogs.PreferencesUtil;
-import org.eclipse.ui.internal.Workbench;
 import org.nuxeo.ide.common.forms.ActionHandler;
 import org.nuxeo.ide.common.forms.Form;
 import org.nuxeo.ide.common.forms.UIObject;

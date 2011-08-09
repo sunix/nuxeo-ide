@@ -46,6 +46,10 @@ import org.nuxeo.ide.common.Activator;
  * 
  * See WizardProjectsImportPage
  * 
+ * If project to import is already located into eclipse workspace then the
+ * project name must be the same as the project file name, otherwise you will
+ * have exceptions.
+ * 
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
