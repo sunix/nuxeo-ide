@@ -8,7 +8,7 @@
 <!-- text>Project Name:</text><textbox id="projectName" hfill="true"/ -->
 
 <text>Root Package:</text>
-<textbox id="rootPackage" hfill="true" value="org.nuxeo.sample">
+<textbox id="package" hfill="true" value="org.nuxeo.sample">
    <validator type="regex" value="[A-Za-z0-9_]+(.[A-Za-z0-9_]+)*">Not a valid Java package name</validator>
 </textbox>
 

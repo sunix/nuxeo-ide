@@ -18,7 +18,6 @@ package org.nuxeo.ide.sdk.templates;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -79,13 +78,14 @@ public class TemplateRegistry {
         projects.put(temp.getId(), temp);
     }
 
-    public void copyProjectTemplate(String id, File projectRoot)
-            throws IOException {
+    public void processTemplate(String id, TemplateContext ctx, File projectRoot)
+            throws Exception {
         ProjectTemplate temp = getProjectTemplate(id);
         if (temp == null) {
-            throw new FileNotFoundException("Template " + id + " was not found");
+            throw new FileNotFoundException("Project Template " + id
+                    + " was not found");
         }
-        temp.copyTo(bundle, projectRoot);
+        temp.process(bundle, ctx, projectRoot);
     }
 
     public void addComponentTemplate(ComponentTemplate temp) {
@@ -101,18 +101,9 @@ public class TemplateRegistry {
         return components.get(id);
     }
 
-    public void applyComponentTemplate(String id, File projectRoot)
-            throws IOException {
-        ComponentTemplate temp = getComponentTemplate(id);
-        if (temp == null) {
-            throw new FileNotFoundException("Template " + id + " was not found");
-        }
-        temp.apply(projectRoot);
-    }
-
     protected static TemplateRegistry load(Element element) {
         TemplateRegistry registry = new TemplateRegistry();
-        String version = DomUtil.getAttribute(element, "version", "0.0.0");
+        String version = Util.getAttribute(element, "version", "0.0.0");
         registry.version = version;
         Node child = element.getFirstChild();
         while (child != null) {

@@ -33,6 +33,7 @@ import org.nuxeo.ide.common.forms.HasValue;
 import org.nuxeo.ide.common.forms.UIObject;
 import org.nuxeo.ide.common.wizards.FormWizardPage;
 import org.nuxeo.ide.common.wizards.ImportProject;
+import org.nuxeo.ide.sdk.templates.Constants;
 import org.nuxeo.ide.sdk.ui.widgets.JREList;
 import org.nuxeo.ide.sdk.ui.widgets.WorkingSetsPanel;
 import org.w3c.dom.Element;
@@ -41,8 +42,10 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class NuxeoProjectPage1 extends FormWizardPage<TemplateContext>
+public class NuxeoProjectPage1 extends FormWizardPage<ProjectTemplateContext>
         implements Constants {
+
+    public final static String PROJECT_LOCATION = "projectLocation";
 
     public NuxeoProjectPage1() {
         super("nuxeoProjectPage1", "Create a Nuxeo Project", null);
@@ -101,7 +104,7 @@ public class NuxeoProjectPage1 extends FormWizardPage<TemplateContext>
     }
 
     public String getProjectRootPackage() {
-        return form.getWidgetValueAsString(PROJECT_ROOT_PACKAGE);
+        return form.getWidgetValueAsString(PROJECT_PACKAGE);
     }
 
     public IPath getSelectedLocation() {
@@ -141,14 +144,14 @@ public class NuxeoProjectPage1 extends FormWizardPage<TemplateContext>
     }
 
     @Override
-    public void update(TemplateContext ctx) {
+    public void update(ProjectTemplateContext ctx) {
         ctx.setProjectLocation(new File(getSelectedLocationFile(),
                 getProjectId()));
         ctx.setWorkingSets(getSelectedWorkingSets());
         String v = ctx.setProperty(form, PROJECT_ID, ARTIFACT_ID, ARTIFACT_NAME);
         ctx.put(PROJECT_NAME, v);
         ctx.setProperty(form, PROJECT_ID, ARTIFACT_ID, ARTIFACT_NAME);
-        v = ctx.setProperty(form, PROJECT_ROOT_PACKAGE);
+        v = ctx.setProperty(form, PROJECT_PACKAGE);
         int i = v.lastIndexOf('.');
         if (i > 0) {
             ctx.put(GROUP_ID, v.substring(0, i));

@@ -19,12 +19,13 @@ package org.nuxeo.ide.sdk.ui.wizards.project;
 import org.eclipse.swt.widgets.Composite;
 import org.nuxeo.ide.common.wizards.FormWizardPage;
 import org.nuxeo.ide.sdk.NuxeoSDK;
+import org.nuxeo.ide.sdk.templates.Constants;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class NuxeoProjectPage2 extends FormWizardPage<TemplateContext>
+public class NuxeoProjectPage2 extends FormWizardPage<ProjectTemplateContext>
         implements Constants {
 
     public NuxeoProjectPage2() {
@@ -75,7 +76,7 @@ public class NuxeoProjectPage2 extends FormWizardPage<TemplateContext>
     }
 
     @Override
-    public void update(TemplateContext ctx) {
+    public void update(ProjectTemplateContext ctx) {
         ctx.setPropertyIfNotNull(form, ARTIFACT_ID);
         ctx.setPropertyIfNotNull(form, ARTIFACT_VERSION, BUNDLE_VERSION);
         ctx.setPropertyIfNotNull(form, GROUP_ID);
@@ -94,7 +95,7 @@ public class NuxeoProjectPage2 extends FormWizardPage<TemplateContext>
         String projectId = getPreviousPage().getForm().getWidgetValueAsString(
                 PROJECT_ID);
         String rootPackage = getPreviousPage().getForm().getWidgetValueAsString(
-                PROJECT_ROOT_PACKAGE);
+                PROJECT_PACKAGE);
 
         int i = rootPackage.lastIndexOf('.');
         if (i > 0) {

@@ -14,24 +14,19 @@
  * Contributors:
  *     bstefanescu
  */
+package org.nuxeo.ide.sdk.templates;
 
-package ${rootPackage};
-
-import org.nuxeo.runtime.model.ComponentContext;
-import org.nuxeo.runtime.model.DefaultComponent;
+import java.io.File;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
- *
+ * 
  */
-public class MyComponent extends DefaultComponent {
+public interface TemplateEngine {
 
-    @Override
-    public void activate(ComponentContext context) throws Exception {
-    }
+    public void expandVars(TemplateContext ctx, File root) throws Exception;
 
-    @Override
-    public void deactivate(ComponentContext context) throws Exception {
-    }
-    
+    public String expandVars(TemplateContext ctx, String content)
+            throws Exception;
+
 }

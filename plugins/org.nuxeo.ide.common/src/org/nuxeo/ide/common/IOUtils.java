@@ -23,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -57,6 +58,27 @@ public class IOUtils {
             } else { // allows renaming dest dir
                 dst.mkdirs();
             }
+            File[] files = src.listFiles();
+            for (File file : files) {
+                copyTree(file, dst);
+            }
+        }
+    }
+
+    /**
+     * Copy the files contained by 'src' directory into the destination 'dst'
+     * directory. if destination directory doesn't exists it will be created.
+     * 
+     * If src is a file and not a directory then copy it inside the dst
+     * directory.
+     * 
+     * @throws IOException
+     */
+    public static void copyTreeContent(File src, File dst) throws IOException {
+        if (src.isFile()) {
+            copyFile(src, dst);
+        } else if (src.isDirectory()) {
+            dst.mkdirs();
             File[] files = src.listFiles();
             for (File file : files) {
                 copyTree(file, dst);
@@ -216,4 +238,58 @@ public class IOUtils {
             entry = in.getNextEntry();
         }
     }
+
+    public static void deleteTree(File root) {
+        File[] files = root.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                deleteTree(file);
+            }
+        }
+        root.delete();
+    }
+
+    public static File createTempDir(File root) throws IOException {
+        File file = File.createTempFile("nuxeo-ide-", ".tmp", root);
+        // TODO not atomic ...
+        file.delete();
+        file.mkdir();
+        return file;
+    }
+
+    public static String readFile(File file) throws IOException {
+        FileInputStream in = null;
+        try {
+            in = new FileInputStream(file);
+            return read(in);
+        } finally {
+            if (in != null) {
+                in.close();
+            }
+        }
+    }
+
+    public static String read(URL url) throws IOException {
+        InputStream in = url.openStream();
+        try {
+            return read(in);
+        } finally {
+            in.close();
+        }
+    }
+
+    public static String read(InputStream in) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        byte[] buffer = createBuffer(in.available());
+        try {
+            int read;
+            while ((read = in.read(buffer)) != -1) {
+                sb.append(new String(buffer, 0, read));
+            }
+        } finally {
+            in.close();
+        }
+        return sb.toString();
+    }
+
 }

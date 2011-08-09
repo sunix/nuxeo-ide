@@ -17,12 +17,7 @@
 package org.nuxeo.ide.sdk.templates;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 
-import org.eclipse.core.runtime.FileLocator;
 import org.nuxeo.ide.common.IOUtils;
 import org.osgi.framework.Bundle;
 import org.w3c.dom.Element;
@@ -32,85 +27,28 @@ import org.w3c.dom.Node;
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class ProjectTemplate implements Comparable<ProjectTemplate> {
+public class ProjectTemplate extends Template {
 
-    protected String id;
-
-    protected String name;
-
-    protected String description;
-
-    protected String src;
-
-    private ProjectTemplate(String id) {
-        this.id = id;
-        this.name = id;
+    public ProjectTemplate(String id) {
+        super(id);
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setSrc(String src) {
-        this.src = src;
-    }
-
-    public String getSrc() {
-        return src;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getPath() {
-        return src;
-    }
-
-    public void copyTo(Bundle bundle, File dir) throws IOException {
-        if (src.endsWith(".zip")) {
-            URL url = bundle.getEntry(src);
-            if (url == null) {
-                throw new FileNotFoundException("Template " + name
-                        + " not found in bundle " + bundle.getSymbolicName()
-                        + " at " + src);
-            }
-            InputStream in = url.openStream();
-            try {
-                IOUtils.unzip(in, dir);
-            } finally {
-                in.close();
-            }
-        } else {
-            File bundleFile = FileLocator.getBundleFile(bundle);
-            if (bundleFile.isDirectory()) {
-                IOUtils.copyTree(new File(bundleFile, src), dir);
-            } else {
-                IOUtils.unzip(bundleFile, src, dir);
+    @Override
+    public void process(Bundle bundle, TemplateContext ctx, File dir)
+            throws Exception {
+        // create a temporary directory in the same parent as the final
+        // directory
+        // (to be sure renameTo will work)
+        File tmp = IOUtils.createTempDir(dir.getParentFile());
+        try {
+            expand(bundle, ctx, tmp);
+            tmp.renameTo(dir);
+        } finally {
+            if (tmp.exists()) {
+                IOUtils.deleteTree(tmp);
             }
         }
-    }
 
-    @Override
-    public int compareTo(ProjectTemplate temp) {
-        return name.compareTo(temp.name);
-    }
-
-    @Override
-    public String toString() {
-        return id + " [" + src + "]";
     }
 
     public static ProjectTemplate load(Element element) {

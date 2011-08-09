@@ -29,8 +29,9 @@ import org.nuxeo.ide.sdk.templates.TemplateRegistry;
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class NuxeoProjectPage3 extends FormWizardPage<TemplateContext>
-        implements Constants {
+public class NuxeoProjectPage3 extends FormWizardPage<ProjectTemplateContext> {
+
+    public static final String PROJECT_TEMPLATE = "template";
 
     protected ProjectTemplate[] templates;
 
@@ -65,7 +66,7 @@ public class NuxeoProjectPage3 extends FormWizardPage<TemplateContext>
     }
 
     @Override
-    public void update(TemplateContext ctx) {
+    public void update(ProjectTemplateContext ctx) {
         ctx.setTemplate(getTemplate());
     }
 

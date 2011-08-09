@@ -14,15 +14,16 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.sdk.ui.wizards.project;
+package org.nuxeo.ide.sdk.templates;
 
 import java.io.File;
 import java.util.HashMap;
 
-import org.eclipse.ui.IWorkingSet;
 import org.nuxeo.ide.common.forms.Form;
 
 /**
+ * The base class for all template contexts.
+ * 
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
@@ -32,8 +33,6 @@ public class TemplateContext extends HashMap<String, Object> {
     protected String template;
 
     protected File projectLocation;
-
-    protected IWorkingSet[] workingSets;
 
     public String getTemplate() {
         return template;
@@ -49,14 +48,6 @@ public class TemplateContext extends HashMap<String, Object> {
 
     public void setTemplate(String template) {
         this.template = template;
-    }
-
-    public void setWorkingSets(IWorkingSet[] workingSets) {
-        this.workingSets = workingSets;
-    }
-
-    public IWorkingSet[] getWorkingSets() {
-        return workingSets;
     }
 
     public String getProperty(String key) {

@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,8 +50,15 @@ public class TemplateManager {
 
     protected Map<String, TemplateRegistry> regs;
 
+    protected TemplateEngine engine;
+
     public TemplateManager() {
         regs = new HashMap<String, TemplateRegistry>();
+        engine = new FreemarkerEngine();
+    }
+
+    public TemplateEngine getEngine() {
+        return engine;
     }
 
     public synchronized void addRegistry(String targetVersion,

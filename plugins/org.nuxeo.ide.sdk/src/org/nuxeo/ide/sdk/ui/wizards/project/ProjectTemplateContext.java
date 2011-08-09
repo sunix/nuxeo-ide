@@ -14,30 +14,26 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.sdk.templates;
+package org.nuxeo.ide.sdk.ui.wizards.project;
 
-import org.w3c.dom.Element;
+import org.eclipse.ui.IWorkingSet;
+import org.nuxeo.ide.sdk.templates.TemplateContext;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class DomUtil {
+@SuppressWarnings("serial")
+public class ProjectTemplateContext extends TemplateContext {
 
-    public static String getAttribute(Element element, String key) {
-        return getAttribute(element, key, null);
+    protected IWorkingSet[] workingSets;
+
+    public void setWorkingSets(IWorkingSet[] workingSets) {
+        this.workingSets = workingSets;
     }
 
-    public static String getAttribute(Element element, String key,
-            String defValue) {
-        String v = element.getAttribute(key);
-        return v.length() == 0 ? defValue : v;
-    }
-
-    public static boolean getBooleanAttribute(Element element, String key,
-            boolean defValue) {
-        String v = element.getAttribute(key);
-        return v.length() == 0 ? defValue : Boolean.parseBoolean(v);
+    public IWorkingSet[] getWorkingSets() {
+        return workingSets;
     }
 
 }

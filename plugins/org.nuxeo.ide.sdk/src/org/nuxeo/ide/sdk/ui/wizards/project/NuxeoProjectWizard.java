@@ -18,6 +18,7 @@ package org.nuxeo.ide.sdk.ui.wizards.project;
 
 import org.nuxeo.ide.common.wizards.AbstractWizard;
 import org.nuxeo.ide.sdk.NuxeoSDK;
+import org.nuxeo.ide.sdk.templates.Constants;
 import org.nuxeo.ide.sdk.templates.TemplateRegistry;
 import org.nuxeo.ide.sdk.ui.SDKClassPathContainer;
 
@@ -25,7 +26,7 @@ import org.nuxeo.ide.sdk.ui.SDKClassPathContainer;
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class NuxeoProjectWizard extends AbstractWizard<TemplateContext> {
+public class NuxeoProjectWizard extends AbstractWizard<ProjectTemplateContext> {
 
     public NuxeoProjectWizard() {
     }
@@ -45,8 +46,8 @@ public class NuxeoProjectWizard extends AbstractWizard<TemplateContext> {
     }
 
     @Override
-    protected TemplateContext createExecutionContext() {
-        TemplateContext ctx = new TemplateContext();
+    protected ProjectTemplateContext createExecutionContext() {
+        ProjectTemplateContext ctx = new ProjectTemplateContext();
         // initialize defaults
         ctx.setTemplate(TemplateRegistry.DEFAULT_TEMPLATE);
         String version = NuxeoSDK.getDefault().getVersion();
@@ -64,7 +65,11 @@ public class NuxeoProjectWizard extends AbstractWizard<TemplateContext> {
     }
 
     @Override
-    protected boolean execute(TemplateContext ctx) {
+    protected boolean execute(ProjectTemplateContext ctx) {
+        String v = (String) ctx.get(Constants.PROJECT_PACKAGE);
+        if (v != null) {
+            ctx.put(Constants.PROJECT_PACKAGE_PATH, v.replace('.', '/'));
+        }
         CreateProjectFromTemplate op = new CreateProjectFromTemplate(ctx);
         return CreateProjectFromTemplate.run(getShell(), getContainer(), op);
     }

@@ -14,17 +14,15 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.sdk.ui.wizards.project;
+package org.nuxeo.ide.sdk.templates;
 
 /**
- * The key variables that are iput in the template context
+ * The set of built-in keys of a template context
  * 
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
 public interface Constants {
-
-    public final static String PROJECT_TEMPLATE = "template";
 
     public static final String CLASSPATH_CONTAINER = "classpathContainer";
 
@@ -32,9 +30,12 @@ public interface Constants {
 
     public final static String PROJECT_NAME = "projectName";
 
-    public final static String PROJECT_ROOT_PACKAGE = "rootPackage";
+    public final static String PROJECT_PACKAGE = "package";
 
-    public final static String PROJECT_LOCATION = "projectLocation";
+    /**
+     * The '/' separated path of the java PROJECT_PACKAGE
+     */
+    public final static String PROJECT_PACKAGE_PATH = "packagePath";
 
     public final static String TARGET_VERSION = "targetVersion";
 
