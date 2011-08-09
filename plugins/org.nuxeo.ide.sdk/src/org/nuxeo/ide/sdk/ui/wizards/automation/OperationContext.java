@@ -14,28 +14,15 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.common.forms.model;
+package org.nuxeo.ide.sdk.ui.wizards.automation;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Text;
-import org.nuxeo.ide.common.forms.BindingContext;
-import org.nuxeo.ide.common.forms.WidgetName;
-import org.w3c.dom.Element;
+import org.nuxeo.ide.sdk.templates.TemplateContext;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-@WidgetName("textarea")
-public class TextAreaWidget extends TextBoxWidget {
-
-    @Override
-    protected Text createControl(Composite parent, Element element,
-            BindingContext ctx) {
-        Text text = new Text(parent, SWT.MULTI | SWT.BORDER);
-        text.setText(element.getTextContent());
-        return text;
-    }
+@SuppressWarnings("serial")
+public class OperationContext extends TemplateContext {
 
 }

@@ -21,16 +21,20 @@
 
 </frame>
 
-<frame label="Additional Information" cols="2" layout="grid" hfill="true" vfill="true">
-    <text>Name:</text><textbox id="artifactName" hfill="true"/>
-    <text colspan="2">Description:</text><textarea id="artifactDescription" colspan="2" hfill="true" vfill="true"/>
-</frame>
-
-
 <frame label="Parent POM" cols="2" layout="grid" hfill="true">
     <text>Parent Group Id:</text><textbox id="parentGroupId" hfill="true" value="org.nuxeo.ecm.platform" />
     <text>Parent Artifact Id:</text><textbox id="parentArtifactId" hfill="true" value="nuxeo-features-parent"/>
     <text>Parent Version:</text><textbox id="parentVersion" hfill="true"/>
+</frame>
+
+<frame label="Additional Information" cols="2" layout="grid" hfill="true" vfill="true">
+    <text>Name:</text><textbox id="artifactName" hfill="true"/>
+    <text colspan="2">Description:</text>
+    <textarea id="artifactDescription" colspan="2" hfill="true" vfill="true">
+    
+    
+    
+    </textarea>
 </frame>
 
 </panel>

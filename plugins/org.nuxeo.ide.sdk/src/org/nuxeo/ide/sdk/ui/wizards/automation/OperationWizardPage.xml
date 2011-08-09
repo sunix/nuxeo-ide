@@ -1,0 +1,17 @@
+<panel cols="2"  layout="grid">
+
+<text>Project:</text><textbox id="project" hfill="true"/>
+<text>Package:</text><textbox id="package" hfill="true"/>
+<text>Name:</text><textbox id="className" hfill="true"/>
+
+<frame layout="grid" cols="2" label="Operation Info" hfill="true" vfill="true" colspan="2">
+<text>Operation Id:</text><textbox id="operationId" hfill="true"/>
+<text>Description:</text><textarea colspan="2" id="operationDescription" hfill="true" vfill="true"/>
+</frame>
+
+<!-- frame layout="grid" cols="2" label="Java Type" hfill="true" colspan="2">
+<text>Superclass:</text><textbox id="superClass" hfill="true"/>
+<text>Interfaces:</text><listbox colspan="2" id="interfaces" hfill="true"/>
+</frame-->
+
+</panel>

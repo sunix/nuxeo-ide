@@ -14,8 +14,9 @@
     <name>Operation</name>
     <description>An operation object</description>
     
-    <extension src="components/automation/extension.xml"/>
-    <!--  dependency/ -->
+    <extension src="components/automation/extensions.xml"/>
+    
+    <dependency groupId="org.nuxeo.ecm.automation" artifactId="nuxeo-automation-core"/>    
   </component>
 
 </templates>

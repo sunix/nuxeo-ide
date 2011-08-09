@@ -16,26 +16,21 @@
  */
 package org.nuxeo.ide.sdk.ui.wizards.automation;
 
-import org.eclipse.jdt.ui.wizards.NewTypeWizardPage;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
+import org.nuxeo.ide.common.wizards.FormWizardPage;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class OperationWizardPage extends NewTypeWizardPage {
+public class OperationWizardPage extends FormWizardPage<OperationContext> {
 
     public OperationWizardPage() {
-        super(true, "Create Operation");
+        super("createOperation1", "Create Operation", null);
     }
 
     @Override
-    public void createControl(Composite parent) {
-        Label label = new Label(parent, SWT.NONE);
-        label.setText("TODO");
-        setControl(label);
+    public void update(OperationContext ctx) {
+
     }
 
 }

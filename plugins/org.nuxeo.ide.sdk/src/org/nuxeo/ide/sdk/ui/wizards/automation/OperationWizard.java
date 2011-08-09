@@ -16,13 +16,19 @@
  */
 package org.nuxeo.ide.sdk.ui.wizards.automation;
 
+import java.io.File;
+
+import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.nuxeo.ide.common.wizards.AbstractWizard;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class OperationWizard extends AbstractWizard<Void> {
+public class OperationWizard extends AbstractWizard<OperationContext> {
 
     @Override
     public void addPages() {
@@ -30,12 +36,21 @@ public class OperationWizard extends AbstractWizard<Void> {
     }
 
     @Override
-    protected Void createExecutionContext() {
-        return null;
+    protected OperationContext createExecutionContext() {
+        OperationContext ctx = new OperationContext();
+        ISelection selection = getSelection();
+        if (selection instanceof IStructuredSelection) {
+            Object obj = ((IStructuredSelection) selection).getFirstElement();
+            if (obj instanceof IJavaElement) {
+                IJavaProject project = ((IJavaElement) obj).getJavaProject();
+                ctx.setProjectLocation(new File(project.getPath().toOSString()));
+            }
+        }
+        return ctx;
     }
 
     @Override
-    protected boolean execute(Void context) {
+    protected boolean execute(OperationContext context) {
         return false;
     }
 
