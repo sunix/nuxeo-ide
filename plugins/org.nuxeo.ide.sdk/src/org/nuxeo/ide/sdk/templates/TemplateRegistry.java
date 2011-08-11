@@ -88,6 +88,16 @@ public class TemplateRegistry {
         temp.process(bundle, ctx, projectRoot);
     }
 
+    public void processComponentTemplate(String id, TemplateContext ctx,
+            File projectRoot) throws Exception {
+        ComponentTemplate temp = getComponentTemplate(id);
+        if (temp == null) {
+            throw new FileNotFoundException("Component Template " + id
+                    + " was not found");
+        }
+        temp.process(bundle, ctx, projectRoot);
+    }
+
     public void addComponentTemplate(ComponentTemplate temp) {
         components.put(temp.getId(), temp);
     }

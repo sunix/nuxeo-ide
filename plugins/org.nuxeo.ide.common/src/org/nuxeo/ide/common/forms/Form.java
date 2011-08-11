@@ -21,6 +21,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
@@ -43,6 +44,7 @@ import org.nuxeo.ide.common.forms.model.ListBoxWidget;
 import org.nuxeo.ide.common.forms.model.NotNullValidator;
 import org.nuxeo.ide.common.forms.model.Panel;
 import org.nuxeo.ide.common.forms.model.PasswordWidget;
+import org.nuxeo.ide.common.forms.model.RadioGroupWidget;
 import org.nuxeo.ide.common.forms.model.RadioWidget;
 import org.nuxeo.ide.common.forms.model.RegexValidator;
 import org.nuxeo.ide.common.forms.model.TextAreaWidget;
@@ -99,6 +101,7 @@ public class Form {
         addWidgetType(ButtonWidget.class);
         addWidgetType(CheckBoxWidget.class);
         addWidgetType(RadioWidget.class);
+        addWidgetType(RadioGroupWidget.class);
         addWidgetType(ToggleButtonWidget.class);
         addWidgetType(TextBoxWidget.class);
         addWidgetType(PasswordWidget.class);
@@ -175,8 +178,14 @@ public class Form {
             return;
         }
         errors.remove(obj.getId());
-        if (errors.isEmpty()) {
-            errorHandler.hideError(obj);
+        errorHandler.hideError(obj);
+        if (!errors.isEmpty()) {
+            Iterator<Map.Entry<String, String>> it = errors.entrySet().iterator();
+            if (it.hasNext()) {
+                Map.Entry<String, String> entry = it.next();
+                errorHandler.showError(getWidget(entry.getKey()),
+                        entry.getValue());
+            }
         }
         errorHandler.setErrorCount(errors.size());
     }
@@ -349,6 +358,14 @@ public class Form {
             }
         }
         return values;
+    }
+
+    public void validate() {
+        for (UIObject<?> obj : widgets.values()) {
+            if (obj instanceof HasValue) {
+                ((HasValue) obj).validate();
+            }
+        }
     }
 
     public void handleAction(UIObject<?> obj, Object event) {

@@ -66,6 +66,7 @@ public abstract class FormWizardPage<T> extends AbstractWizardPage<T> implements
             Control control = root.getControl();
             Dialog.applyDialogFont(control);
             setControl(control);
+            form.validate();
         } catch (Exception e) {
             UI.showError("Faield to load wizard page", e);
         }

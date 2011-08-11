@@ -34,8 +34,6 @@ public interface HasValue {
 
     List<Validator> getValidators();
 
-    boolean validate(Object value);
-
-    void valueChanged();
+    void validate();
 
 }

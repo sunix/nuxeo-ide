@@ -34,8 +34,9 @@ public class NotNullValidator extends AbstractValidator {
     }
 
     @Override
-    public boolean validate(Object value) {
-        return value != null && value.toString().trim().length() == 0;
+    public boolean validate(Object value, String stringValue) {
+        return stringValue != null
+                && stringValue.toString().trim().length() > 0;
     }
 
 }

@@ -64,7 +64,7 @@ public abstract class UIObject<T extends Control> {
         return this instanceof HasValue;
     }
 
-    public void valueChanged() {
+    public void validate() {
     }
 
     public void setControl(T ctrl) {
@@ -74,18 +74,18 @@ public abstract class UIObject<T extends Control> {
             ctrl.addFocusListener(new FocusAdapter() {
                 @Override
                 public void focusLost(FocusEvent e) {
-                    valueChanged();
+                    validate();
                 }
 
                 @Override
                 public void focusGained(FocusEvent e) {
-                    valueChanged();
+                    validate();
                 }
             });
             ctrl.addKeyListener(new KeyAdapter() {
                 @Override
                 public void keyReleased(KeyEvent e) {
-                    valueChanged();
+                    validate();
                 }
             });
         }

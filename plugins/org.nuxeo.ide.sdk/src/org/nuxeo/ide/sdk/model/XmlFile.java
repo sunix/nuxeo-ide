@@ -16,6 +16,7 @@
  */
 package org.nuxeo.ide.sdk.model;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -24,6 +25,7 @@ import java.io.Writer;
 import java.net.URL;
 
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -48,7 +50,9 @@ public class XmlFile {
     }
 
     public XmlFile(String xml) throws Exception {
-        this.doc = factory.newDocumentBuilder().parse(xml);
+        ByteArrayInputStream in = new ByteArrayInputStream(
+                xml.getBytes("UTF-8"));
+        this.doc = factory.newDocumentBuilder().parse(in);
     }
 
     public XmlFile(File file) throws Exception {
@@ -73,6 +77,8 @@ public class XmlFile {
 
     public void write(File file) throws Exception {
         Transformer transformer = trFactory.newTransformer();
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty(OutputKeys.STANDALONE, "yes");
         DOMSource src = new DOMSource(doc);
         StreamResult result = new StreamResult(file);
         transformer.transform(src, result);
@@ -80,6 +86,8 @@ public class XmlFile {
 
     public void write(OutputStream out) throws Exception {
         Transformer transformer = trFactory.newTransformer();
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty(OutputKeys.STANDALONE, "yes");
         DOMSource src = new DOMSource(doc);
         StreamResult result = new StreamResult(out);
         transformer.transform(src, result);
@@ -87,6 +95,8 @@ public class XmlFile {
 
     public void write(Writer out) throws Exception {
         Transformer transformer = trFactory.newTransformer();
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty(OutputKeys.STANDALONE, "yes");
         DOMSource src = new DOMSource(doc);
         StreamResult result = new StreamResult(out);
         transformer.transform(src, result);
@@ -95,6 +105,8 @@ public class XmlFile {
     public String toXML() throws Exception {
         StringWriter writer = new StringWriter();
         Transformer transformer = trFactory.newTransformer();
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty(OutputKeys.STANDALONE, "yes");
         DOMSource src = new DOMSource(doc);
         StreamResult result = new StreamResult(writer);
         transformer.transform(src, result);

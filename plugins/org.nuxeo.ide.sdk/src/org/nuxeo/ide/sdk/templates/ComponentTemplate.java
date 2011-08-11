@@ -215,7 +215,7 @@ public class ComponentTemplate extends Template {
                     dep.version = Util.getAttribute(el, "version");
                     deps.add(dep);
                 } else if ("extension".equals(tag)) {
-                    String src = Util.getAttribute(element, "src");
+                    String src = Util.getAttribute(el, "src");
                     if (src != null) {
                         extensions.add(src);
                     }

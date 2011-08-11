@@ -56,6 +56,8 @@ public class GridLayoutManager extends LayoutManager {
         int rowspan = UIObject.getIntAttribute(element, "rowspan", 0);
         boolean hfill = UIObject.getBooleanAttribute(element, "hfill", false);
         boolean vfill = UIObject.getBooleanAttribute(element, "vfill", false);
+        int width = UIObject.getIntAttribute(element, "width", SWT.DEFAULT);
+        int height = UIObject.getIntAttribute(element, "height", SWT.DEFAULT);
 
         if (hfill) {
             gd.grabExcessHorizontalSpace = true;
@@ -100,6 +102,8 @@ public class GridLayoutManager extends LayoutManager {
             gd.verticalSpan = rowspan;
         }
 
+        gd.widthHint = width;
+        gd.heightHint = height;
     }
 
 }

@@ -44,11 +44,15 @@ public abstract class TextChooser extends Composite {
         createControl(btnLabel);
     }
 
+    protected Text createText() {
+        return new Text(this, SWT.BORDER);
+    }
+
     protected void createControl(String btnLabel) {
         GridLayout layout = new GridLayout();
         layout.numColumns = 2;
         setLayout(layout);
-        text = new Text(this, SWT.BORDER);
+        text = createText();
         GridData gd = new GridData();
         gd.horizontalAlignment = SWT.FILL;
         gd.grabExcessHorizontalSpace = true;

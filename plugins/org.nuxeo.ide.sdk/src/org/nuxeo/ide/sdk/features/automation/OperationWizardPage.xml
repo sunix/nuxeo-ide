@@ -1,0 +1,66 @@
+<panel cols="2"  layout="grid">
+
+<text>Project:</text>
+<project id="project" hfill="true">
+<validator type="required">The project field is required</validator>
+</project>
+<text>Package:</text>
+<package id="package" hfill="true">
+<validator type="regex" value="[A-Za-z_]+(.[A-Za-z0-9_]+)*">Not a valid package name</validator>
+</package>
+<text>Name:</text>
+<textbox id="className" hfill="true">
+<validator type="regex" value="[A-Za-z]+[A-Za-z0-9_]*">Not a valid class name</validator>
+</textbox>
+
+<frame layout="grid" cols="2" label="Operation Info" hfill="true" colspan="2">
+<text>Operation Id:</text><textbox id="operationId" hfill="true"/>
+<text>Category:</text>
+<combo id="category" hfill="true" readonly="true">    
+    CAT_DOCUMENT,
+    CAT_BLOB, 
+    CAT_NOTIFICATION, 
+    CAT_SERVICES, 
+    CAT_CONVERSION, 
+    CAT_USERS_GROUPS, 
+    CAT_UI,
+    CAT_FETCH, 
+    CAT_SCRIPTING,
+    CAT_EXECUTION,
+    CAT_EXECUTION_STACK,
+    CAT_SUBCHAIN_EXECUTION,    
+    CAT_LOCAL_CONFIGURATION
+</combo>
+<checkbox id="seam" value="false" colspan="2">Requires Seam Context</checkbox>
+</frame>
+
+<frame layout="grid" cols="2" label="Operation Signature" hfill="true" vfill="true" colspan="2">
+<text>Input:</text>
+<radioGroup id="input" hfill="true">
+  <item id="DocumentModel" selected="true">Document</item>
+  <item id="Blob">Blob</item>
+  <item id="void">Void</item>
+  <item id="Object">Custom</item>
+</radioGroup>
+<text>Output:</text>
+<radioGroup id="output" hfill="true">
+  <item id="DocumentModel" selected="true">Document</item>
+  <item id="Blob">Blob</item>
+  <item id="void">Void</item>
+  <item id="Object">Custom</item>
+</radioGroup>
+
+<checkbox id="iterable" value="true" colspan="2">Iterable Operation</checkbox>
+<!-- 
+<text>Label:</text><textbox id="label" hfill="true"/>
+<text colspan="2">Description:</text>
+<textarea colspan="2" id="operationDescription" hfill="true" vfill="true" height="50" />
+-->
+</frame>
+
+<!-- frame layout="grid" cols="2" label="Java Type" hfill="true" colspan="2">
+<text>Superclass:</text><textbox id="superClass" hfill="true"/>
+<text>Interfaces:</text><listbox colspan="2" id="interfaces" hfill="true"/>
+</frame-->
+
+</panel>

@@ -42,19 +42,6 @@ public abstract class UIValueObject<T extends Control> extends UIObject<T>
         return validators;
     }
 
-    @Override
-    public boolean validate(Object value) {
-        if (validators == null) {
-            return true;
-        }
-        for (Validator v : validators) {
-            if (!v.validate(value)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     protected abstract void doSetValue(Object value);
 
     @Override
@@ -66,23 +53,24 @@ public abstract class UIValueObject<T extends Control> extends UIObject<T>
         }
         if (value != null) {
             if (!value.equals(oldValue)) {
-                valueChanged();
+                validate();
             }
         } else {
-            valueChanged();
+            validate();
         }
     }
 
     @Override
-    public void valueChanged() {
+    public void validate() {
         HasValue obj = (HasValue) this;
         List<Validator> validators = obj.getValidators();
         if (validators == null || validators.isEmpty()) {
             return;
         }
         Object value = obj.getValue();
+        String strvalue = obj.getValueAsString();
         for (Validator v : validators) {
-            if (!v.validate(value)) {
+            if (!v.validate(value, strvalue)) {
                 form.addError(this, v.getMessage());
                 return;
             }

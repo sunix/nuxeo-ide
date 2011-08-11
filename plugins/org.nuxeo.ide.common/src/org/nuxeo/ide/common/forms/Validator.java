@@ -30,6 +30,6 @@ public interface Validator {
 
     String getValue();
 
-    boolean validate(Object value);
+    boolean validate(Object value, String stringValue);
 
 }

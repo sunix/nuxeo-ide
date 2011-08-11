@@ -14,23 +14,28 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.sdk.ui.wizards.automation;
+package org.nuxeo.ide.sdk.features;
 
-import org.nuxeo.ide.common.wizards.FormWizardPage;
+import org.nuxeo.ide.common.wizards.AbstractWizard;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class OperationWizardPage extends FormWizardPage<OperationContext> {
+public class FakeWizard extends AbstractWizard<Void> {
 
-    public OperationWizardPage() {
-        super("createOperation1", "Create Operation", null);
+    @Override
+    public void addPages() {
     }
 
     @Override
-    public void update(OperationContext ctx) {
+    protected Void createExecutionContext() {
+        return null;
+    }
 
+    @Override
+    protected boolean execute(Void context) {
+        return false;
     }
 
 }

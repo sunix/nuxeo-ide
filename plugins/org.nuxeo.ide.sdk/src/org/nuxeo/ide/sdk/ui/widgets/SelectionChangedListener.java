@@ -14,15 +14,14 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.sdk.ui.wizards.automation;
-
-import org.nuxeo.ide.sdk.templates.TemplateContext;
+package org.nuxeo.ide.sdk.ui.widgets;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-@SuppressWarnings("serial")
-public class OperationContext extends TemplateContext {
+public interface SelectionChangedListener {
+
+    public void selectionChanged(Object source, Object selectedValue);
 
 }

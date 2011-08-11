@@ -14,39 +14,24 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.common.forms.model;
+package org.nuxeo.ide.sdk.ui.widgets;
 
-import java.util.regex.Pattern;
+import org.eclipse.swt.widgets.Composite;
+import org.nuxeo.ide.common.forms.BindingContext;
+import org.nuxeo.ide.common.forms.WidgetName;
+import org.w3c.dom.Element;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class RegexValidator extends AbstractValidator {
-
-    protected Pattern pattern;
-
-    public RegexValidator() {
-    }
-
-    public void setValue(String value) {
-        pattern = Pattern.compile(value);
-    }
+@WidgetName("project")
+public class ProjectChooserWidget extends ObjectChooserWidget<ProjectChooser> {
 
     @Override
-    public String getValue() {
-        return pattern == null ? null : pattern.toString();
-    }
-
-    @Override
-    public boolean validate(Object value, String stringValue) {
-        if (pattern == null) {
-            return true;
-        }
-        if (value == null) {
-            return false;
-        }
-        return pattern.matcher(stringValue).matches();
+    protected ProjectChooser createControl(Composite parent, Element element,
+            BindingContext ctx) {
+        return new ProjectChooser(parent);
     }
 
 }

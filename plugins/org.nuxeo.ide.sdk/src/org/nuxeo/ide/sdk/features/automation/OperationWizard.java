@@ -14,28 +14,23 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.sdk.ui.wizards;
+package org.nuxeo.ide.sdk.features.automation;
 
-import org.nuxeo.ide.common.wizards.AbstractWizard;
+import org.nuxeo.ide.sdk.features.FeatureCreationWizard;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class FakeWizard extends AbstractWizard<Void> {
+public class OperationWizard extends FeatureCreationWizard {
+
+    public OperationWizard() {
+        super("operation");
+    }
 
     @Override
     public void addPages() {
-    }
-
-    @Override
-    protected Void createExecutionContext() {
-        return null;
-    }
-
-    @Override
-    protected boolean execute(Void context) {
-        return false;
+        addPage(new OperationWizardPage());
     }
 
 }

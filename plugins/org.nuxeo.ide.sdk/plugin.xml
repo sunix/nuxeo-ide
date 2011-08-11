@@ -36,14 +36,14 @@
       
       <wizard
             category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.service.newWizards"
-            class="org.nuxeo.ide.sdk.ui.wizards.FakeWizard"
+            class="org.nuxeo.ide.sdk.features.FakeWizard"
             icon="icons/operation.gif"
             id="org.nuxeo.ide.service.ServiceWizard"
             name="Service">
       </wizard>
       <wizard
             category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.service.newWizards"
-            class="org.nuxeo.ide.sdk.ui.wizards.FakeWizard"
+            class="org.nuxeo.ide.sdk.features.FakeWizard"
             icon="icons/operation.gif"
             id="org.nuxeo.ide.service.ExtensionPointWizard"
             name="Extension Point">
@@ -57,7 +57,7 @@
       
             <wizard
             category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.automation.newWizards"
-            class="org.nuxeo.ide.sdk.ui.wizards.automation.OperationWizard"
+            class="org.nuxeo.ide.sdk.features.automation.OperationWizard"
             icon="icons/operation.gif"
             id="org.nuxeo.ide.automation.operationWizard"
             name="Operation">
@@ -71,21 +71,21 @@
       
       <wizard
             category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.webengine.newWizards"
-            class="org.nuxeo.ide.sdk.ui.wizards.FakeWizard"
+            class="org.nuxeo.ide.sdk.features.FakeWizard"
             icon="icons/operation.gif"
             id="org.nuxeo.ide.webengine.webRootWizard"
             name="Web Root">
       </wizard>
       <wizard
             category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.webengine.newWizards"
-            class="org.nuxeo.ide.sdk.ui.wizards.FakeWizard"
+            class="org.nuxeo.ide.sdk.features.FakeWizard"
             icon="icons/operation.gif"
             id="org.nuxeo.ide.webengine.webObjectWizard"
             name="Web Object">
       </wizard>
       <wizard
             category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.webengine.newWizards"
-            class="org.nuxeo.ide.sdk.ui.wizards.FakeWizard"
+            class="org.nuxeo.ide.sdk.features.FakeWizard"
             icon="icons/operation.gif"
             id="org.nuxeo.ide.webengine.webViewWizard"
             name="Web View">
@@ -99,14 +99,14 @@
       
       <wizard
             category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.core.newWizards"
-            class="org.nuxeo.ide.sdk.ui.wizards.FakeWizard"
+            class="org.nuxeo.ide.sdk.features.FakeWizard"
             icon="icons/operation.gif"
             id="org.nuxeo.ide.core.listenerWizard"
             name="Document Listener">
       </wizard>
       <wizard
             category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.core.newWizards"
-            class="org.nuxeo.ide.sdk.ui.wizards.FakeWizard"
+            class="org.nuxeo.ide.sdk.features.FakeWizard"
             icon="icons/operation.gif"
             id="org.nuxeo.ide.core.adapterWizard"
             name="Document Adapter">
@@ -120,7 +120,7 @@
       
       <wizard
             category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.seam.newWizards"
-            class="org.nuxeo.ide.sdk.ui.wizards.FakeWizard"
+            class="org.nuxeo.ide.sdk.features.FakeWizard"
             icon="icons/operation.gif"
             id="org.nuxeo.ide.seam.seamBeanWizard"
             name="Seam Bean">
@@ -134,7 +134,7 @@
       
       <wizard
             category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.gadget.newWizards"
-            class="org.nuxeo.ide.sdk.ui.wizards.FakeWizard"
+            class="org.nuxeo.ide.sdk.features.FakeWizard"
             icon="icons/operation.gif"
             id="org.nuxeo.ide.Gadget.gadgetWizard"
             name="Gadget">
