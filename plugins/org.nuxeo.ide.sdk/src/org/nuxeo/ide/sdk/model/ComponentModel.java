@@ -31,31 +31,31 @@ import org.w3c.dom.Node;
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class XMLComponent extends XmlFile {
+public class ComponentModel extends XmlFile {
 
-    public XMLComponent() throws Exception {
+    public ComponentModel() throws Exception {
         this.doc = factory.newDocumentBuilder().newDocument();
         Element root = doc.createElement("component");
         this.doc.appendChild(root);
     }
 
-    public XMLComponent(String xml) throws Exception {
+    public ComponentModel(String xml) throws Exception {
         super(xml);
     }
 
-    public XMLComponent(File file) throws Exception {
+    public ComponentModel(File file) throws Exception {
         super(file);
     }
 
-    public XMLComponent(Document doc) {
+    public ComponentModel(Document doc) {
         super(doc);
     }
 
-    public XMLComponent(URL url) throws Exception {
+    public ComponentModel(URL url) throws Exception {
         super(url);
     }
 
-    public XMLComponent(InputStream in) throws Exception {
+    public ComponentModel(InputStream in) throws Exception {
         super(in);
     }
 
@@ -97,7 +97,7 @@ public class XMLComponent extends XmlFile {
      * 
      * @param comp
      */
-    public void copyExtensionsTo(XMLComponent comp) {
+    public void copyExtensionsTo(ComponentModel comp) {
         Element root = comp.doc.getDocumentElement();
         for (Element el : getExtensions()) {
             Node node = comp.doc.importNode(el, true);
@@ -105,7 +105,7 @@ public class XMLComponent extends XmlFile {
         }
     }
 
-    public void moveExtensionsTo(XMLComponent comp) {
+    public void moveExtensionsTo(ComponentModel comp) {
         Element root = comp.doc.getDocumentElement();
         for (Element el : getExtensions()) {
             try {

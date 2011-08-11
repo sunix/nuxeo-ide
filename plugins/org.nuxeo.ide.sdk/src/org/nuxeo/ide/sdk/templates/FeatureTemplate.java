@@ -29,7 +29,7 @@ import java.util.jar.Manifest;
 
 import org.nuxeo.ide.common.IOUtils;
 import org.nuxeo.ide.sdk.SDKPlugin;
-import org.nuxeo.ide.sdk.model.XMLComponent;
+import org.nuxeo.ide.sdk.model.ComponentModel;
 import org.osgi.framework.Bundle;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -151,12 +151,12 @@ public class FeatureTemplate extends Template {
             return;
         }
         File file = Util.getExtensions(dir);
-        XMLComponent dst = null;
+        ComponentModel dst = null;
         if (!file.isFile()) {
-            dst = new XMLComponent();
+            dst = new ComponentModel();
             dst.setName(dir.getName() + ".extensions");
         } else {
-            dst = new XMLComponent(file);
+            dst = new ComponentModel(file);
         }
         TemplateEngine engine = SDKPlugin.getDefault().getTemplateManager().getEngine();
         for (String src : extensions) {
@@ -164,7 +164,7 @@ public class FeatureTemplate extends Template {
             if (url != null) {
                 String content = IOUtils.read(url);
                 content = engine.expandVars(ctx, content);
-                XMLComponent comp = new XMLComponent(content);
+                ComponentModel comp = new ComponentModel(content);
                 comp.copyExtensionsTo(dst);
             }
         }

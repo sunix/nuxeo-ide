@@ -20,6 +20,6 @@ package org.nuxeo.ide.sdk.model;
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  *
  */
-public class Pom {
+public class PomModel {
 
 }
