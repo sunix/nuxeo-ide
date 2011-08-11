@@ -7,7 +7,7 @@
       <page 
          id="org.nuxeo.ide.prefs.sdk" 
          name="Nuxeo SDK" 
-         class="org.nuxeo.ide.sdk.ui.server.SDKPreferencePage" 
+         class="org.nuxeo.ide.sdk.server.ui.SDKPreferencePage" 
          category="org.nuxeo.ide.prefs"> 
       </page> 
    </extension>
@@ -20,7 +20,7 @@
       </category>
       <wizard
             category="org.nuxeo.ide.project.newWizards"
-            class="org.nuxeo.ide.sdk.ui.wizards.project.NuxeoProjectWizard"
+            class="org.nuxeo.ide.sdk.projects.plugin.NuxeoProjectWizard"
             icon="icons/nx.gif"
             id="org.nuxeo.ide.templates.NewProjectWizard"
             name="Nuxeo Plugin"
@@ -235,7 +235,7 @@
         
         <action
             label="Deploy"                                                                                                                       
-            class="org.nuxeo.ide.sdk.ui.server.DeployProject"                                                                         
+            class="org.nuxeo.ide.sdk.server.ui.DeployProject"                                                                         
             menubarPath="org.nuxeo.ide.tools/group1"                                                                                           
             enablesFor="+"                                                                                                                                  
             id="org.nuxeo.ide.tools.deployProject">                                                                                                 
@@ -280,7 +280,7 @@
             name="Nuxeo Server"
             icon="icons/server.gif"
             category="org.nuxeo.ide.views"
-            class="org.nuxeo.ide.sdk.ui.server.ServerView"
+            class="org.nuxeo.ide.sdk.server.ui.ServerView"
             id="org.nuxeo.ide.sdk.ui.server.ServerView">
       </view>
    </extension>
@@ -296,7 +296,7 @@
               toolbarPath="additions" 
               icon="icons/browser.gif" 
               tooltip="Open Nuxeo in Web Browser"
-              class="org.nuxeo.ide.sdk.ui.server.OpenBrowser">  
+              class="org.nuxeo.ide.sdk.server.ui.OpenBrowser">  
        </action>      
        <action id="org.nuxeo.ide.sdk.ui.server.clearAction" 
               label="Clear" 
@@ -304,7 +304,7 @@
               toolbarPath="console" 
               icon="icons/clear.gif" 
               tooltip="Clear the server console"
-              class="org.nuxeo.ide.sdk.ui.server.ClearConsole">  
+              class="org.nuxeo.ide.sdk.server.ui.ClearConsole">  
        </action>
        <action id="org.nuxeo.ide.sdk.ui.server.deployAction" 
               label="Auto-Deploy" 
@@ -312,7 +312,7 @@
               toolbarPath="ctrl" 
               icon="icons/deploy.gif" 
               tooltip="Configure auto deployment"
-              class="org.nuxeo.ide.sdk.ui.server.AutoDeployConfiguration">  
+              class="org.nuxeo.ide.sdk.server.ui.AutoDeployConfiguration">  
        </action>             
        <action id="org.nuxeo.ide.sdk.ui.server.stopAction" 
               label="Stop" 
@@ -320,7 +320,7 @@
               toolbarPath="ctrl" 
               icon="icons/stop.gif" 
               tooltip="Stop the server"
-              class="org.nuxeo.ide.sdk.ui.server.StopServer">  
+              class="org.nuxeo.ide.sdk.server.ui.StopServer">  
        </action>
        <action id="org.nuxeo.ide.sdk.ui.server.startAction" 
               label="Start" 
@@ -328,7 +328,7 @@
               toolbarPath="ctrl" 
               icon="icons/start.gif" 
               tooltip="Start the server"
-              class="org.nuxeo.ide.sdk.ui.server.StartServer">  
+              class="org.nuxeo.ide.sdk.server.ui.StartServer">  
        </action>       
       </viewContribution>
  </extension>

@@ -14,38 +14,45 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.sdk.ui.server;
+package org.nuxeo.ide.sdk.server.ui;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.ui.IObjectActionDelegate;
-import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IViewActionDelegate;
+import org.eclipse.ui.IViewPart;
+import org.nuxeo.ide.common.UI;
+import org.nuxeo.ide.sdk.server.ServerConstants;
+import org.nuxeo.ide.sdk.server.ui.ServerView.ServerState;
 
 /**
- * Fake add nature - used as an example
- * 
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class AutoDeployConfiguration implements IObjectActionDelegate {
+public class StartServer implements IViewActionDelegate, ServerConstants {
 
-    protected ISelection selection;
+    protected ServerView view;
 
-    protected IWorkbenchPart part;
-
-    public AutoDeployConfiguration() {
-    }
-
-    public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-        part = targetPart;
-    }
-
+    @Override
     public void run(IAction action) {
-        // TODO
+        System.out.println("run server");
+        try {
+            view.start();
+        } catch (Exception e) {
+            UI.showError("Failed to start Nuxeo Server", e);
+        }
     }
 
+    @Override
     public void selectionChanged(IAction action, ISelection selection) {
-        this.selection = selection;
+        if (selection instanceof ServerState) {
+            ServerState ss = (ServerState) selection;
+            action.setEnabled(ss.getState() == STOPPED);
+        }
+    }
+
+    @Override
+    public void init(IViewPart view) {
+        this.view = (ServerView) view;
     }
 
 }

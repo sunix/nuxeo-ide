@@ -14,10 +14,11 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.sdk.ui.server;
+package org.nuxeo.ide.sdk.server.ui;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.swt.program.Program;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 
@@ -25,15 +26,13 @@ import org.eclipse.ui.IViewPart;
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class ClearConsole implements IViewActionDelegate {
+public class OpenBrowser implements IViewActionDelegate {
 
     protected ServerView view;
 
     @Override
     public void run(IAction action) {
-        if (view.console != null) {
-            view.console.setText("");
-        }
+        Program.launch("http://localhost:8080/nuxeo");
     }
 
     @Override

@@ -18,6 +18,7 @@ package org.nuxeo.ide.sdk.templates;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -37,7 +38,7 @@ import org.w3c.dom.Node;
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class ComponentTemplate extends Template {
+public class FeatureTemplate extends Template {
 
     protected ManifestModification[] manifestModifs;
 
@@ -45,7 +46,7 @@ public class ComponentTemplate extends Template {
 
     protected Dependency[] dependencies;
 
-    public ComponentTemplate(String id) {
+    public FeatureTemplate(String id) {
         super(id);
     }
 
@@ -112,21 +113,35 @@ public class ComponentTemplate extends Template {
         }
         File file = Util.getManifest(dir);
         InputStream in = new FileInputStream(file);
+        boolean modified = false;
+        Manifest mf = new Manifest(in);
         try {
-            Manifest mf = new Manifest(in);
             Attributes attrs = mf.getMainAttributes();
             for (ManifestModification mm : manifestModifs) {
                 String v = attrs.getValue(mm.key);
                 if (v == null) {
                     attrs.putValue(mm.key, mm.value);
+                    modified = true;
                 } else if (mm.overwrite) {
                     attrs.putValue(mm.key, mm.value);
+                    modified = true;
                 } else if (mm.append) { // append
-                    attrs.putValue(mm.key, v + ", " + mm.value);
+                    if (!v.contains(mm.value)) {
+                        attrs.putValue(mm.key, v + ", " + mm.value);
+                        modified = true;
+                    }
                 } // else let it as is
             }
         } finally {
             in.close();
+            if (modified) {
+                FileOutputStream out = new FileOutputStream(file);
+                try {
+                    mf.write(out);
+                } finally {
+                    out.close();
+                }
+            }
         }
     }
 
@@ -182,12 +197,11 @@ public class ComponentTemplate extends Template {
         String type;
     }
 
-    public static ComponentTemplate load(Element element) {
-        ComponentTemplate temp = new ComponentTemplate(
-                element.getAttribute("id"));
+    public static FeatureTemplate load(Element element) {
+        FeatureTemplate temp = new FeatureTemplate(element.getAttribute("id"));
         Node child = element.getFirstChild();
         temp.src = Util.getAttribute(element, "src");
-        List<ManifestModification> manifest = new ArrayList<ComponentTemplate.ManifestModification>();
+        List<ManifestModification> manifest = new ArrayList<FeatureTemplate.ManifestModification>();
         List<String> extensions = new ArrayList<String>();
         List<Dependency> deps = new ArrayList<Dependency>();
         while (child != null) {

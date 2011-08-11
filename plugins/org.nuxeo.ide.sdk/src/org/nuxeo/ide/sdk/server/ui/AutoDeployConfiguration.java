@@ -14,46 +14,38 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.sdk.ui.server;
+package org.nuxeo.ide.sdk.server.ui;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.ui.IViewActionDelegate;
-import org.eclipse.ui.IViewPart;
-import org.nuxeo.ide.common.UI;
-import org.nuxeo.ide.sdk.server.ServerConstants;
-import org.nuxeo.ide.sdk.ui.server.ServerView.ServerState;
+import org.eclipse.ui.IObjectActionDelegate;
+import org.eclipse.ui.IWorkbenchPart;
 
 /**
+ * Fake add nature - used as an example
+ * 
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class StopServer implements IViewActionDelegate, ServerConstants {
+public class AutoDeployConfiguration implements IObjectActionDelegate {
 
-    protected ServerView view;
+    protected ISelection selection;
 
-    @Override
+    protected IWorkbenchPart part;
+
+    public AutoDeployConfiguration() {
+    }
+
+    public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+        part = targetPart;
+    }
+
     public void run(IAction action) {
-        System.out.println("stop server");
-        try {
-            view.stop();
-        } catch (Exception e) {
-            UI.showError("Failed to stop Nuxeo Server", e);
-        }
+        // TODO
     }
 
-    @Override
-    public void init(IViewPart view) {
-        this.view = (ServerView) view;
-    }
-
-    @Override
     public void selectionChanged(IAction action, ISelection selection) {
-        if (selection instanceof ServerState) {
-            ServerState ss = (ServerState) selection;
-            int state = ss.getState();
-            action.setEnabled(state == STARTED);
-        }
+        this.selection = selection;
     }
 
 }

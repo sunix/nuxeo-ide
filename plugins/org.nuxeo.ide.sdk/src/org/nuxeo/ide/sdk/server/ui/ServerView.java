@@ -1,4 +1,4 @@
-package org.nuxeo.ide.sdk.ui.server;
+package org.nuxeo.ide.sdk.server.ui;
 
 import java.io.IOException;
 

@@ -14,31 +14,26 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.sdk.ui.server;
+package org.nuxeo.ide.sdk.projects;
 
-import org.nuxeo.ide.common.forms.Form;
-import org.nuxeo.ide.common.forms.FormData;
-import org.nuxeo.ide.sdk.SDKInfo;
-import org.nuxeo.ide.sdk.SDKRegistry;
+import org.eclipse.ui.IWorkingSet;
+import org.nuxeo.ide.sdk.templates.TemplateContext;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class SDKFormData implements FormData {
+@SuppressWarnings("serial")
+public class ProjectTemplateContext extends TemplateContext {
 
-    @Override
-    public void load(Form form) throws Exception {
-        SDKTableWidget w = (SDKTableWidget) form.getWidget("sdks");
-        w.setDefaultSDK(SDKRegistry.getDefaultSDKId());
+    protected IWorkingSet[] workingSets;
+
+    public void setWorkingSets(IWorkingSet[] workingSets) {
+        this.workingSets = workingSets;
     }
 
-    @Override
-    public void store(Form form) throws Exception {
-        SDKTableWidget w = (SDKTableWidget) form.getWidget("sdks");
-        SDKRegistry.save(w.getSDKs());
-        SDKInfo sdk = w.getDefaultSDK();
-        SDKRegistry.setDefaultSDK(sdk);
+    public IWorkingSet[] getWorkingSets() {
+        return workingSets;
     }
 
 }

@@ -10,13 +10,15 @@
     <description>A project containing a Nuxeo service</description>
   </project>
 
-  <component id ="operation" src="features/automation/project">
+  <feature id ="operation" src="features/automation/project">
     <name>Operation</name>
     <description>An operation object</description>
+    
+    <manifest key="Nuxeo-Component" value="OSGI-INF/extensions.xml" append="true"/>
     
     <extension src="features/automation/extensions.xml"/>
     
     <dependency groupId="org.nuxeo.ecm.automation" artifactId="nuxeo-automation-core"/>    
-  </component>
+  </feature>
 
 </templates>

@@ -14,34 +14,31 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.sdk.ui.server;
+package org.nuxeo.ide.sdk.server.ui;
 
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.swt.program.Program;
-import org.eclipse.ui.IViewActionDelegate;
-import org.eclipse.ui.IViewPart;
+import org.nuxeo.ide.common.forms.Form;
+import org.nuxeo.ide.common.forms.FormData;
+import org.nuxeo.ide.sdk.SDKInfo;
+import org.nuxeo.ide.sdk.SDKRegistry;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class OpenBrowser implements IViewActionDelegate {
-
-    protected ServerView view;
+public class SDKFormData implements FormData {
 
     @Override
-    public void run(IAction action) {
-        Program.launch("http://localhost:8080/nuxeo");
+    public void load(Form form) throws Exception {
+        SDKTableWidget w = (SDKTableWidget) form.getWidget("sdks");
+        w.setDefaultSDK(SDKRegistry.getDefaultSDKId());
     }
 
     @Override
-    public void selectionChanged(IAction action, ISelection selection) {
-    }
-
-    @Override
-    public void init(IViewPart view) {
-        this.view = (ServerView) view;
+    public void store(Form form) throws Exception {
+        SDKTableWidget w = (SDKTableWidget) form.getWidget("sdks");
+        SDKRegistry.save(w.getSDKs());
+        SDKInfo sdk = w.getDefaultSDK();
+        SDKRegistry.setDefaultSDK(sdk);
     }
 
 }

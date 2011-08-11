@@ -14,11 +14,12 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.sdk.ui.wizards.project;
+package org.nuxeo.ide.sdk.projects.plugin;
 
 import org.eclipse.swt.widgets.Composite;
 import org.nuxeo.ide.common.wizards.FormWizardPage;
 import org.nuxeo.ide.sdk.NuxeoSDK;
+import org.nuxeo.ide.sdk.projects.ProjectTemplateContext;
 import org.nuxeo.ide.sdk.templates.Constants;
 
 /**

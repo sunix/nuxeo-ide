@@ -63,7 +63,7 @@ public class CreateFeatureFromTemplate extends WorkspaceModifyOperation {
             }
             TemplateRegistry tempReg = SDKPlugin.getDefault().getTemplateManager().getDefaultRegistry();
             if (tempReg != null) {
-                tempReg.processComponentTemplate(ctx.getTemplate(), ctx,
+                tempReg.processFeatureTemplate(ctx.getTemplate(), ctx,
                         projectRoot);
             } else {
                 throw new IllegalStateException("NuxeoSDK is not configured!");

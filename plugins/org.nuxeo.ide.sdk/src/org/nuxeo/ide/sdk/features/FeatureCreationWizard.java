@@ -56,6 +56,10 @@ public abstract class FeatureCreationWizard extends
     public void init(IWorkbench workbench, IStructuredSelection currentSelection) {
         super.init(workbench, currentSelection);
         selectedElement = getInitialJavaElement(currentSelection);
+        if (selectedElement == null && !currentSelection.isEmpty()) {
+            // TODO if not a java resource we still need to select the current
+            // project
+        }
     }
 
     public IJavaProject getSelectedNuxeoProject() {

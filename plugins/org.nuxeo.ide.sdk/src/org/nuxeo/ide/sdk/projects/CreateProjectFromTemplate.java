@@ -14,7 +14,7 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.sdk.ui.wizards.project;
+package org.nuxeo.ide.sdk.projects;
 
 import java.io.IOException;
 
@@ -51,7 +51,7 @@ public class CreateProjectFromTemplate extends ImportProject {
         }
         TemplateRegistry tempReg = SDKPlugin.getDefault().getTemplateManager().getDefaultRegistry();
         if (tempReg != null) {
-            tempReg.processTemplate(ctx.getTemplate(), ctx, projectRoot);
+            tempReg.processProjectTemplate(ctx.getTemplate(), ctx, projectRoot);
         } else {
             throw new IllegalStateException("NuxeoSDK is not configured!");
         }

@@ -14,10 +14,13 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.sdk.ui.wizards.project;
+package org.nuxeo.ide.sdk.projects.plugin;
 
 import org.nuxeo.ide.common.wizards.AbstractWizard;
 import org.nuxeo.ide.sdk.NuxeoSDK;
+import org.nuxeo.ide.sdk.projects.CreateProjectFromTemplate;
+import org.nuxeo.ide.sdk.projects.ProjectTemplateContext;
+import org.nuxeo.ide.sdk.projects.UndefinedNuxeoSDKPage;
 import org.nuxeo.ide.sdk.templates.Constants;
 import org.nuxeo.ide.sdk.templates.TemplateRegistry;
 import org.nuxeo.ide.sdk.ui.SDKClassPathContainer;

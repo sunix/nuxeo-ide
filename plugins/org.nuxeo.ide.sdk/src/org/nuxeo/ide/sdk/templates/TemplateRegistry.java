@@ -39,11 +39,11 @@ public class TemplateRegistry {
 
     protected Map<String, ProjectTemplate> projects;
 
-    protected Map<String, ComponentTemplate> components;
+    protected Map<String, FeatureTemplate> features;
 
     public TemplateRegistry() {
         this.projects = new HashMap<String, ProjectTemplate>();
-        this.components = new HashMap<String, ComponentTemplate>();
+        this.features = new HashMap<String, FeatureTemplate>();
     }
 
     public TemplateRegistry(Bundle bundle) {
@@ -78,8 +78,8 @@ public class TemplateRegistry {
         projects.put(temp.getId(), temp);
     }
 
-    public void processTemplate(String id, TemplateContext ctx, File projectRoot)
-            throws Exception {
+    public void processProjectTemplate(String id, TemplateContext ctx,
+            File projectRoot) throws Exception {
         ProjectTemplate temp = getProjectTemplate(id);
         if (temp == null) {
             throw new FileNotFoundException("Project Template " + id
@@ -88,27 +88,26 @@ public class TemplateRegistry {
         temp.process(bundle, ctx, projectRoot);
     }
 
-    public void processComponentTemplate(String id, TemplateContext ctx,
+    public void processFeatureTemplate(String id, TemplateContext ctx,
             File projectRoot) throws Exception {
-        ComponentTemplate temp = getComponentTemplate(id);
+        FeatureTemplate temp = getFeatureTemplate(id);
         if (temp == null) {
-            throw new FileNotFoundException("Component Template " + id
+            throw new FileNotFoundException("Feature Template " + id
                     + " was not found");
         }
         temp.process(bundle, ctx, projectRoot);
     }
 
-    public void addComponentTemplate(ComponentTemplate temp) {
-        components.put(temp.getId(), temp);
+    public void addFeatureTemplate(FeatureTemplate temp) {
+        features.put(temp.getId(), temp);
     }
 
-    public ComponentTemplate[] getComponentTemplates() {
-        return components.values().toArray(
-                new ComponentTemplate[components.size()]);
+    public FeatureTemplate[] getFeatureTemplates() {
+        return features.values().toArray(new FeatureTemplate[features.size()]);
     }
 
-    public ComponentTemplate getComponentTemplate(String id) {
-        return components.get(id);
+    public FeatureTemplate getFeatureTemplate(String id) {
+        return features.get(id);
     }
 
     protected static TemplateRegistry load(Element element) {
@@ -122,8 +121,8 @@ public class TemplateRegistry {
                 String tag = child.getNodeName();
                 if ("project".equals(tag)) {
                     registry.addProjectTemplate(ProjectTemplate.load(el));
-                } else if ("component".equals(tag)) {
-                    registry.addComponentTemplate(ComponentTemplate.load(el));
+                } else if ("feature".equals(tag)) {
+                    registry.addFeatureTemplate(FeatureTemplate.load(el));
                 }
             }
             child = child.getNextSibling();

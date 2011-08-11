@@ -14,7 +14,7 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.sdk.ui.wizards.project;
+package org.nuxeo.ide.sdk.projects;
 
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -30,7 +30,7 @@ import org.nuxeo.ide.common.wizards.FormWizardPage;
  */
 public class UndefinedNuxeoSDKPage extends FormWizardPage<Void> {
 
-    protected UndefinedNuxeoSDKPage() {
+    public UndefinedNuxeoSDKPage() {
         super("noNuxeoSDK", "No NuxeoSDK was defined", null);
     }
 
