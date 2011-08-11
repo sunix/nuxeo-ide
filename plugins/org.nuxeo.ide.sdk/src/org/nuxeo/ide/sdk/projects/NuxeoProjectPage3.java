@@ -14,7 +14,7 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.sdk.projects.plugin;
+package org.nuxeo.ide.sdk.projects;
 
 import java.util.Arrays;
 
@@ -22,7 +22,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.List;
 import org.nuxeo.ide.common.wizards.FormWizardPage;
 import org.nuxeo.ide.sdk.SDKPlugin;
-import org.nuxeo.ide.sdk.projects.ProjectTemplateContext;
 import org.nuxeo.ide.sdk.templates.ProjectTemplate;
 import org.nuxeo.ide.sdk.templates.TemplateRegistry;
 

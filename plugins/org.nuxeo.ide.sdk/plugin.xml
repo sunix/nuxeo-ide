@@ -20,10 +20,28 @@
       </category>
       <wizard
             category="org.nuxeo.ide.project.newWizards"
-            class="org.nuxeo.ide.sdk.projects.plugin.NuxeoProjectWizard"
+            class="org.nuxeo.ide.sdk.projects.plugin.PluginProjectWizard"
             icon="icons/nx.gif"
-            id="org.nuxeo.ide.templates.NewProjectWizard"
+            id="org.nuxeo.ide.templates.PluginProjectWizard"
             name="Nuxeo Plugin"
+            preferredPerspectives="org.eclipse.jdt.ui.JavaPerspective,org.eclipse.jdt.ui.JavaBrowsingPerspective,org.eclipse.jdt.ui.JavaHierarchyPerspective"
+            project="true">
+      </wizard>
+      <wizard
+            category="org.nuxeo.ide.project.newWizards"
+            class="org.nuxeo.ide.sdk.projects.webengine.WebengineProjectWizard"
+            icon="icons/nx.gif"
+            id="org.nuxeo.ide.templates.WebengineProjectWizard"
+            name="WebEngine Application"
+            preferredPerspectives="org.eclipse.jdt.ui.JavaPerspective,org.eclipse.jdt.ui.JavaBrowsingPerspective,org.eclipse.jdt.ui.JavaHierarchyPerspective"
+            project="true">
+      </wizard>
+      <wizard
+            category="org.nuxeo.ide.project.newWizards"
+            class="org.nuxeo.ide.sdk.projects.jaxrs.JAXRSProjectWizard"
+            icon="icons/nx.gif"
+            id="org.nuxeo.ide.templates.JAXRSProjectWizard"
+            name="JAX-RS Application"
             preferredPerspectives="org.eclipse.jdt.ui.JavaPerspective,org.eclipse.jdt.ui.JavaBrowsingPerspective,org.eclipse.jdt.ui.JavaHierarchyPerspective"
             project="true">
       </wizard>

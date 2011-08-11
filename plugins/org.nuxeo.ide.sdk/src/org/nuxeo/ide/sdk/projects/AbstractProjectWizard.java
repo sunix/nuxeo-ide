@@ -14,13 +14,11 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.sdk.projects.plugin;
+package org.nuxeo.ide.sdk.projects;
 
+import org.eclipse.jface.wizard.WizardPage;
 import org.nuxeo.ide.common.wizards.AbstractWizard;
 import org.nuxeo.ide.sdk.NuxeoSDK;
-import org.nuxeo.ide.sdk.projects.CreateProjectFromTemplate;
-import org.nuxeo.ide.sdk.projects.ProjectTemplateContext;
-import org.nuxeo.ide.sdk.projects.UndefinedNuxeoSDKPage;
 import org.nuxeo.ide.sdk.templates.Constants;
 import org.nuxeo.ide.sdk.templates.TemplateRegistry;
 import org.nuxeo.ide.sdk.ui.SDKClassPathContainer;
@@ -29,30 +27,36 @@ import org.nuxeo.ide.sdk.ui.SDKClassPathContainer;
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class NuxeoProjectWizard extends AbstractWizard<ProjectTemplateContext> {
+public abstract class AbstractProjectWizard extends
+        AbstractWizard<ProjectTemplateContext> {
 
-    public NuxeoProjectWizard() {
+    protected String defaultTemplate;
+
+    public AbstractProjectWizard() {
+        this(TemplateRegistry.DEFAULT_TEMPLATE);
     }
+
+    public AbstractProjectWizard(String templateName) {
+        this.defaultTemplate = templateName;
+    }
+
+    protected abstract WizardPage[] createPages();
 
     public void addPages() {
         if (NuxeoSDK.getDefault() != null) {
-            addPage(new NuxeoProjectPage1());
-            addPage(new NuxeoProjectPage2());
-            addPage(new NuxeoProjectPage3());
+            for (WizardPage page : createPages()) {
+                addPage(page);
+            }
         } else {
             addPage(new UndefinedNuxeoSDKPage());
         }
-    }
-
-    public boolean performCancel() {
-        return super.performCancel();
     }
 
     @Override
     protected ProjectTemplateContext createExecutionContext() {
         ProjectTemplateContext ctx = new ProjectTemplateContext();
         // initialize defaults
-        ctx.setTemplate(TemplateRegistry.DEFAULT_TEMPLATE);
+        ctx.setTemplate(defaultTemplate);
         String version = NuxeoSDK.getDefault().getVersion();
         String osgiVersion = version;
         if (version.endsWith("-SNAPSHOT")) {

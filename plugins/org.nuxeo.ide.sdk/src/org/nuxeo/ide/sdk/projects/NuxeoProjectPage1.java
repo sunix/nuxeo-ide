@@ -14,7 +14,7 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.sdk.projects.plugin;
+package org.nuxeo.ide.sdk.projects;
 
 import java.io.File;
 import java.net.URI;
@@ -33,7 +33,6 @@ import org.nuxeo.ide.common.forms.HasValue;
 import org.nuxeo.ide.common.forms.UIObject;
 import org.nuxeo.ide.common.wizards.FormWizardPage;
 import org.nuxeo.ide.common.wizards.ImportProject;
-import org.nuxeo.ide.sdk.projects.ProjectTemplateContext;
 import org.nuxeo.ide.sdk.templates.Constants;
 import org.nuxeo.ide.sdk.ui.widgets.JREList;
 import org.nuxeo.ide.sdk.ui.widgets.WorkingSetsPanel;
