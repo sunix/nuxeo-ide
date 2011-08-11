@@ -30,7 +30,7 @@
       <wizard
             category="org.nuxeo.ide.project.newWizards"
             class="org.nuxeo.ide.sdk.projects.webengine.WebengineProjectWizard"
-            icon="icons/nx.gif"
+            icon="icons/web.gif"
             id="org.nuxeo.ide.templates.WebengineProjectWizard"
             name="WebEngine Application"
             preferredPerspectives="org.eclipse.jdt.ui.JavaPerspective,org.eclipse.jdt.ui.JavaBrowsingPerspective,org.eclipse.jdt.ui.JavaHierarchyPerspective"
@@ -39,7 +39,7 @@
       <wizard
             category="org.nuxeo.ide.project.newWizards"
             class="org.nuxeo.ide.sdk.projects.jaxrs.JAXRSProjectWizard"
-            icon="icons/nx.gif"
+            icon="icons/jaxrs.gif"
             id="org.nuxeo.ide.templates.JAXRSProjectWizard"
             name="JAX-RS Application"
             preferredPerspectives="org.eclipse.jdt.ui.JavaPerspective,org.eclipse.jdt.ui.JavaBrowsingPerspective,org.eclipse.jdt.ui.JavaHierarchyPerspective"
@@ -55,14 +55,14 @@
       <wizard
             category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.service.newWizards"
             class="org.nuxeo.ide.sdk.features.FakeWizard"
-            icon="icons/operation.gif"
+            icon="icons/service.gif"
             id="org.nuxeo.ide.service.ServiceWizard"
             name="Service">
       </wizard>
       <wizard
             category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.service.newWizards"
             class="org.nuxeo.ide.sdk.features.FakeWizard"
-            icon="icons/operation.gif"
+            icon="icons/xpoint.gif"
             id="org.nuxeo.ide.service.ExtensionPointWizard"
             name="Extension Point">
       </wizard>
@@ -90,21 +90,21 @@
       <wizard
             category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.webengine.newWizards"
             class="org.nuxeo.ide.sdk.features.FakeWizard"
-            icon="icons/operation.gif"
+            icon="icons/webroot.gif"
             id="org.nuxeo.ide.webengine.webRootWizard"
             name="Web Root">
       </wizard>
       <wizard
             category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.webengine.newWizards"
             class="org.nuxeo.ide.sdk.features.FakeWizard"
-            icon="icons/operation.gif"
+            icon="icons/webobject.gif"
             id="org.nuxeo.ide.webengine.webObjectWizard"
             name="Web Object">
       </wizard>
       <wizard
             category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.webengine.newWizards"
             class="org.nuxeo.ide.sdk.features.FakeWizard"
-            icon="icons/operation.gif"
+            icon="icons/webview.gif"
             id="org.nuxeo.ide.webengine.webViewWizard"
             name="Web View">
       </wizard>
@@ -118,14 +118,14 @@
       <wizard
             category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.core.newWizards"
             class="org.nuxeo.ide.sdk.features.FakeWizard"
-            icon="icons/operation.gif"
+            icon="icons/listener.gif"
             id="org.nuxeo.ide.core.listenerWizard"
             name="Document Listener">
       </wizard>
       <wizard
             category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.core.newWizards"
             class="org.nuxeo.ide.sdk.features.FakeWizard"
-            icon="icons/operation.gif"
+            icon="icons/adapter.gif"
             id="org.nuxeo.ide.core.adapterWizard"
             name="Document Adapter">
       </wizard>
@@ -139,7 +139,7 @@
       <wizard
             category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.seam.newWizards"
             class="org.nuxeo.ide.sdk.features.FakeWizard"
-            icon="icons/operation.gif"
+            icon="icons/seam.gif"
             id="org.nuxeo.ide.seam.seamBeanWizard"
             name="Seam Bean">
       </wizard>
@@ -153,7 +153,7 @@
       <wizard
             category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.gadget.newWizards"
             class="org.nuxeo.ide.sdk.features.FakeWizard"
-            icon="icons/operation.gif"
+            icon="icons/gadget.gif"
             id="org.nuxeo.ide.Gadget.gadgetWizard"
             name="Gadget">
       </wizard>
@@ -309,10 +309,10 @@
          id="org.nuxeo.ide.sdk.ui.server.toolbar" 
          targetID="org.nuxeo.ide.sdk.ui.server.ServerView">
        <action id="org.nuxeo.ide.sdk.ui.server.openBrowser" 
-              label="Clear" 
+              label="Browse" 
           menubarPath="additions"
               toolbarPath="additions" 
-              icon="icons/browser.gif" 
+              icon="icons/web.gif" 
               tooltip="Open Nuxeo in Web Browser"
               class="org.nuxeo.ide.sdk.server.ui.OpenBrowser">  
        </action>      

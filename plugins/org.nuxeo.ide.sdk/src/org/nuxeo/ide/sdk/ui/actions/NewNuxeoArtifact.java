@@ -1,6 +1,8 @@
 package org.nuxeo.ide.sdk.ui.actions;
 
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -11,12 +13,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.dialogs.NewWizard;
-import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
-import org.eclipse.ui.internal.ide.IIDEHelpContextIds;
-import org.eclipse.ui.internal.registry.WizardsRegistryReader;
-import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.dialogs.MessageDialog;
 
 /**
  * TODO: example fo how to create a new action that opens a new wizard only with
@@ -35,7 +32,7 @@ public class NewNuxeoArtifact implements IWorkbenchWindowActionDelegate {
     /**
      * The wizard dialog height
      */
-    private static final int SIZING_WIZARD_HEIGHT = 500;
+    private static final int SIZING_WIZARD_HEIGHT = 600;
 
     private IWorkbenchWindow window;
 
@@ -75,6 +72,7 @@ public class NewNuxeoArtifact implements IWorkbenchWindowActionDelegate {
         // Create wizard selection wizard.
         IWorkbench workbench = PlatformUI.getWorkbench();
         NewWizard wizard = new NewWizard();
+        // wizard.setProjectsOnly(true);
         wizard.setCategoryId("org.nuxeo.ide.project.newWizards");
 
         ISelection selection = window.getSelectionService().getSelection();
@@ -84,9 +82,9 @@ public class NewNuxeoArtifact implements IWorkbenchWindowActionDelegate {
         }
         wizard.init(workbench, selectionToPass);
         IDialogSettings workbenchSettings = IDEWorkbenchPlugin.getDefault().getDialogSettings();
-        IDialogSettings wizardSettings = workbenchSettings.getSection("NuxeoSDKWizards"); //$NON-NLS-1$
+        IDialogSettings wizardSettings = workbenchSettings.getSection("NewWizardAction"); //$NON-NLS-1$
         if (wizardSettings == null) {
-            wizardSettings = workbenchSettings.addNewSection("NuxeoSDKWizards"); //$NON-NLS-1$
+            wizardSettings = workbenchSettings.addNewSection("NewWizardAction"); //$NON-NLS-1$
         }
         wizard.setDialogSettings(wizardSettings);
         wizard.setForcePreviousAndNextButtons(true);
@@ -95,6 +93,7 @@ public class NewNuxeoArtifact implements IWorkbenchWindowActionDelegate {
         Shell parent = window.getShell();
         WizardDialog dialog = new WizardDialog(parent, wizard);
         dialog.create();
+
         wizard.setWindowTitle("New Nuxeo Artifact");
         dialog.getShell().setSize(
                 Math.max(SIZING_WIZARD_WIDTH, dialog.getShell().getSize().x),
@@ -105,5 +104,4 @@ public class NewNuxeoArtifact implements IWorkbenchWindowActionDelegate {
         // Open wizard.
         dialog.open();
     }
-
 }
