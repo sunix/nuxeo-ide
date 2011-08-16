@@ -26,19 +26,20 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.CompositeChange;
 import org.eclipse.ltk.core.refactoring.NullChange;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext;
 import org.eclipse.ltk.core.refactoring.participants.MoveParticipant;
-import org.eclipse.ltk.core.refactoring.participants.RenameParticipant;
 import org.eclipse.ltk.core.refactoring.participants.ResourceChangeChecker;
 import org.eclipse.ltk.core.refactoring.resource.DeleteResourceChange;
 import org.nuxeo.ide.common.IOUtils;
 import org.nuxeo.ide.sdk.SDKPlugin;
 import org.nuxeo.ide.sdk.model.ExtensionModel;
 import org.nuxeo.ide.sdk.model.ManifestWriter;
+import org.nuxeo.ide.sdk.ui.NuxeoNature;
 
 ;
 
@@ -51,28 +52,28 @@ public class MoveFeatureParticipant extends MoveParticipant {
 
     protected FeatureType type;
 
-    protected String id;
-
-    protected String newId;
+    protected IPackageFragment pkg;
 
     public MoveFeatureParticipant() {
     }
 
     @Override
     protected boolean initialize(Object element) {
-        if (true) {
-            System.out.println(">>> dest: " + getArguments().getDestination());
-            return false;
+        Object obj = getArguments().getDestination();
+        if (obj instanceof IPackageFragment) {
+            pkg = (IPackageFragment) obj;
+            try {
+                if (!pkg.getJavaProject().getProject().isNatureEnabled(
+                        NuxeoNature.ID)) {
+                    pkg = null;
+                }
+            } catch (Exception e) {
+                // do nothing
+            }
         }
         type = FeatureType.fromElement(element);
         if (type != null && type.file.exists()) {
-            String pkgName = type.type.getPackageFragment().getElementName();
-            // newId = pkgName + "." + getArguments().getNewName();
-            if (newId.endsWith(".java")) {
-                newId = newId.substring(0, newId.length() - ".java".length());
-            }
-            id = type.type.getFullyQualifiedName();
-            System.out.println("Move " + id + " -> " + newId);
+            System.out.println("Move " + type.type + " -> " + pkg);
             return true;
         }
         return false;
@@ -83,52 +84,82 @@ public class MoveFeatureParticipant extends MoveParticipant {
         return "Extension Synchronizer";
     }
 
+    protected IFile getExtensionSrc() {
+        if (type == null) {
+            return null;
+        }
+        return type.getProject().getFile(
+                ExtensionModel.getPath(type.type.getFullyQualifiedName()));
+    }
+
+    protected IFile getExtensionDst() {
+        if (pkg == null && type == null) {
+            return null;
+        }
+        String dstId = pkg.getElementName() + "." + type.type.getElementName();
+        return pkg.getJavaProject().getProject().getFile(
+                ExtensionModel.getPath(dstId));
+    }
+
+    protected IFile getExtensionRuntimeDst() {
+        if (pkg == null && type == null) {
+            return null;
+        }
+        String dstId = pkg.getElementName() + "." + type.type.getElementName();
+        return pkg.getJavaProject().getProject().getFile(
+                ExtensionModel.getRuntimePath(dstId));
+    }
+
     @Override
     public RefactoringStatus checkConditions(IProgressMonitor pm,
             CheckConditionsContext context) throws OperationCanceledException {
         if (type == null) {
             return new RefactoringStatus();
         }
+        IFile mf = type.getProject().getFile(ManifestWriter.PATH);
         ResourceChangeChecker checker = (ResourceChangeChecker) context.getChecker(ResourceChangeChecker.class);
         IResourceChangeDescriptionFactory deltaFactory = checker.getDeltaFactory();
-        // deltaFactory.move(type.file,
-        // type.file.getFullPath().removeLastSegments(1).append(getArguments().getNewName()))
-        IFile dst = type.getProject().getFile(ExtensionModel.getPath(newId));
-        IFile src = type.getProject().getFile(ExtensionModel.getPath(id));
-        if (dst.exists()) {
-            RefactoringStatus status = new RefactoringStatus();
-            status.addError("Extension file already exists: " + dst.getName());
-            return status;
-        }
-        deltaFactory.create(dst);
-        deltaFactory.delete(src);
-        IFile mf = type.getProject().getFile(ManifestWriter.PATH);
+        // remove
+        deltaFactory.delete(getExtensionSrc());
         deltaFactory.change(mf);
+        if (pkg != null) {
+            // then add
+            IFile mvExt = getExtensionDst();
+            deltaFactory.create(mvExt);
+            mf = pkg.getJavaProject().getProject().getFile(ManifestWriter.PATH);
+            deltaFactory.change(mf);
+        }
         RefactoringStatus status = new RefactoringStatus();
-        status.addInfo("Renaming extension file: " + type.file.getName());
+        status.addInfo("Moving extension file: " + type.file.getName());
         return status;
     }
 
     @Override
     public Change createChange(IProgressMonitor pm) throws CoreException,
             OperationCanceledException {
-        IFile src = type.getProject().getFile(ExtensionModel.getPath(id));
-        String content = getContent(src);
+        String content = getContent(getExtensionSrc());
         if (content == null) {
             return new NullChange("No extension found for renamed class");
         }
+        String id = type.type.getFullyQualifiedName();
+        String newId = pkg.getElementName() + "." + type.type.getElementName();
         content = content.replace(id, newId);
         CompositeChange result = new CompositeChange("Synchronizing extensions");
-        result.add(new ExtensionChange(type.getProject().getFile(
-                ExtensionModel.getPath(newId)), content, false));
-        result.add(new DeleteResourceChange(type.getProject().getFile(
-                ExtensionModel.getPath(id)).getFullPath(), true));
+        result.add(new DeleteResourceChange(getExtensionSrc().getFullPath(),
+                true));
         IFile mf = type.getProject().getFile(ManifestWriter.PATH);
         if (mf.exists()) {
             ManifestChange change = new ManifestChange(mf);
             change.remove("Nuxeo-Component", ExtensionModel.getRuntimePath(id));
-            change.append("Nuxeo-Component",
-                    ExtensionModel.getRuntimePath(newId));
+            result.add(change);
+        }
+        if (pkg != null) {
+            result.add(new ExtensionChange(getExtensionDst(), content, false));
+            mf = pkg.getJavaProject().getProject().getFile(ManifestWriter.PATH);
+            ManifestChange change = new ManifestChange(mf);
+            change.append(
+                    "Nuxeo-Component",
+                    getExtensionRuntimeDst().getProjectRelativePath().toString());
             result.add(change);
         }
         return result;

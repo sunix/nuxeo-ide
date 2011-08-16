@@ -19,6 +19,7 @@ package org.nuxeo.ide.sdk.features;
 import java.io.ByteArrayInputStream;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -30,6 +31,7 @@ import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.resource.DeleteResourceChange;
 import org.eclipse.ltk.core.refactoring.resource.ResourceChange;
 import org.nuxeo.ide.sdk.SDKPlugin;
+import org.nuxeo.ide.sdk.model.ExtensionModel;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -86,6 +88,7 @@ public class ExtensionChange extends ResourceChange {
             if (file.exists()) {
                 file.setContents(in, true, true, pm);
             } else {
+                ExtensionModel.createFolder((IFolder) file.getParent(), pm);
                 file.create(in, true, pm);
             }
         } catch (CoreException e) {
