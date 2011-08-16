@@ -62,9 +62,10 @@ public abstract class FeatureWizardPage extends
         OperationWizard wiz = (OperationWizard) getWizard();
         IJavaProject project = wiz.getSelectedNuxeoProject();
         projChooser.setNature(NuxeoNature.ID);
-        projChooser.setValue(project);
-
-        pkgChooser.setProject(project);
+        if (project != null) {
+            projChooser.setValue(project);
+            pkgChooser.setProject(project);
+        }
         pkgChooser.setValue(wiz.getSelectedPackageFragment());
         projChooser.addValueChangedListener(new ObjectChooser.ValueChangedListener<IJavaProject>() {
             @Override

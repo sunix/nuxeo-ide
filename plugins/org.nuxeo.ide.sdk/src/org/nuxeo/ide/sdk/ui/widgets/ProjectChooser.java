@@ -86,9 +86,6 @@ public class ProjectChooser extends ObjectChooser<IJavaProject> {
         IJavaProject[] prjs = JavaCore.create(wsRoot).getJavaProjects();
         ArrayList<IJavaProject> list = new ArrayList<IJavaProject>();
         for (IJavaProject prj : prjs) {
-            if (!prj.isOpen()) {
-                continue;
-            }
             if (nature != null && !prj.getProject().isNatureEnabled(nature)) {
                 continue;
             } else {

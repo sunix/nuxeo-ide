@@ -16,20 +16,25 @@
  */
 package org.nuxeo.ide.sdk.features;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.internal.ui.JavaPlugin;
+import org.eclipse.jdt.internal.ui.viewsupport.IViewPartInputProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.views.contentoutline.ContentOutline;
 import org.nuxeo.ide.common.wizards.AbstractWizard;
-import org.nuxeo.ide.sdk.features.CreateFeatureFromTemplate;
-import org.nuxeo.ide.sdk.features.FeatureTemplateContext;
 import org.nuxeo.ide.sdk.ui.NuxeoNature;
 
 /**
@@ -57,8 +62,11 @@ public abstract class FeatureCreationWizard extends
         super.init(workbench, currentSelection);
         selectedElement = getInitialJavaElement(currentSelection);
         if (selectedElement == null && !currentSelection.isEmpty()) {
-            // TODO if not a java resource we still need to select the current
-            // project
+            Object obj = currentSelection.getFirstElement();
+            if (obj instanceof IResource) {
+                IProject project = ((IResource) obj).getProject();
+                selectedElement = asJavaProject(project);
+            }
         }
     }
 
@@ -132,45 +140,75 @@ public abstract class FeatureCreationWizard extends
                             jelem = (IJavaElement) resource.getAdapter(IJavaElement.class);
                         }
                         if (jelem == null) {
-                            jelem = JavaCore.create(resource); // java project
+                            jelem = asJavaProject(resource); // java project
                         }
                     }
                 }
             }
         }
-        // if (jelem == null) {
-        // IWorkbenchPart part = JavaPlugin.getActivePage().getActivePart();
-        // if (part instanceof ContentOutline) {
-        // part = JavaPlugin.getActivePage().getActiveEditor();
-        // }
-        //
-        // if (part instanceof IViewPartInputProvider) {
-        // Object elem = ((IViewPartInputProvider) part).getViewPartInput();
-        // if (elem instanceof IJavaElement) {
-        // jelem = (IJavaElement) elem;
-        // }
-        // }
-        // }
-        //
-        // if (jelem == null || jelem.getElementType() ==
-        // IJavaElement.JAVA_MODEL) {
-        // try {
-        // IJavaProject[] projects =
-        // JavaCore.create(getWorkspaceRoot()).getJavaProjects();
-        // if (projects.length == 1) {
-        // IClasspathEntry[] rawClasspath = projects[0].getRawClasspath();
-        // for (int i = 0; i < rawClasspath.length; i++) {
-        // if (rawClasspath[i].getEntryKind() == IClasspathEntry.CPE_SOURCE) {
-        // jelem = projects[0];
-        // break;
-        // }
-        // }
-        // }
-        // } catch (JavaModelException e) {
-        // e.printStackTrace(); // TODO
-        // }
-        // }
+
+        if (jelem == null) {
+            jelem = findOpenedElement();
+        }
+
+        if (jelem == null || jelem.getElementType() == IJavaElement.JAVA_MODEL) {
+            jelem = findDefaultElement();
+        }
         return jelem;
+    }
+
+    protected IJavaProject asJavaProject(IResource resource) {
+        try {
+            IProject project = resource.getProject();
+            if (project.isNatureEnabled(JavaCore.NATURE_ID)) {
+                return JavaCore.create(project);
+            }
+        } catch (Exception e) {
+            // do nothing
+        }
+        return null;
+    }
+
+    /**
+     * This method uses internal Eclipse JDT api to find the current class
+     * opened for edition.
+     * 
+     * @return
+     */
+    protected IJavaElement findOpenedElement() {
+        IJavaElement jelem = null;
+        IWorkbenchPart part = JavaPlugin.getActivePage().getActivePart();
+        if (part instanceof ContentOutline) {
+            part = JavaPlugin.getActivePage().getActiveEditor();
+        }
+
+        if (part instanceof IViewPartInputProvider) {
+            Object elem = ((IViewPartInputProvider) part).getViewPartInput();
+            if (elem instanceof IJavaElement) {
+                jelem = (IJavaElement) elem;
+            }
+        }
+        return jelem;
+    }
+
+    protected IJavaElement findDefaultElement() {
+        try {
+            IJavaElement jelem = null;
+            IJavaProject[] projects = JavaCore.create(getWorkspaceRoot()).getJavaProjects();
+            if (projects.length == 1) {
+                IClasspathEntry[] rawClasspath = projects[0].getRawClasspath();
+                for (int i = 0; i < rawClasspath.length; i++) {
+                    if (rawClasspath[i].getEntryKind() == IClasspathEntry.CPE_SOURCE) {
+                        jelem = projects[0];
+                        break;
+                    }
+                }
+            }
+            return jelem;
+        } catch (JavaModelException e) {
+            e.printStackTrace(); // TODO
+        }
+        return null;
     }
 
     public IWorkspaceRoot getWorkspaceRoot() {
