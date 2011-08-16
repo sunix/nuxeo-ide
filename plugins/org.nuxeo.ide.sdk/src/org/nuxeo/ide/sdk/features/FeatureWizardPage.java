@@ -65,8 +65,8 @@ public abstract class FeatureWizardPage extends
         if (project != null) {
             projChooser.setValue(project);
             pkgChooser.setProject(project);
+            pkgChooser.setValue(wiz.getSelectedPackageFragment());
         }
-        pkgChooser.setValue(wiz.getSelectedPackageFragment());
         projChooser.addValueChangedListener(new ObjectChooser.ValueChangedListener<IJavaProject>() {
             @Override
             public void valueChanged(ObjectChooser<IJavaProject> source,
