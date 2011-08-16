@@ -292,4 +292,20 @@ public class IOUtils {
         return sb.toString();
     }
 
+    public static void writeFile(File file, byte[] buf) throws IOException {
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(file);
+            fos.write(buf);
+        } finally {
+            if (fos != null) {
+                fos.close();
+            }
+        }
+    }
+
+    public static void writeFile(File file, String buf) throws IOException {
+        writeFile(file, buf.getBytes());
+    }
+
 }

@@ -28,6 +28,10 @@ import org.eclipse.core.runtime.CoreException;
  */
 public class NuxeoNature implements IProjectNature {
 
+    public static boolean isNuxeoProject(IProject project) throws CoreException {
+        return project.isNatureEnabled(ID);
+    }
+
     public final static String ID = "org.nuxeo.ide.NuxeoNature";
 
     protected IProject project;
@@ -47,11 +51,45 @@ public class NuxeoNature implements IProjectNature {
     }
 
     public void configure() throws CoreException {
-        System.out.println("Added Nuxeo Nature");
+
+        // IProjectDescription desc = project.getDescription();
+        // ICommand[] commands = desc.getBuildSpec();
+        // boolean found = false;
+        //
+        // for (int i = 0; i < commands.length; ++i) {
+        // if (commands[i].getBuilderName().equals(ExtensionsBuilder.ID)) {
+        // found = true;
+        // break;
+        // }
+        // }
+        // if (!found) {
+        // // add builder to project
+        // ICommand command = desc.newCommand();
+        // command.setBuilderName(ExtensionsBuilder.ID);
+        // ICommand[] newCommands = new ICommand[commands.length + 1];
+        //
+        // // Add it after other builders.
+        // System.arraycopy(commands, 0, newCommands, 0, commands.length);
+        // newCommands[commands.length] = command;
+        // desc.setBuildSpec(newCommands);
+        // project.setDescription(desc, null);
+        // }
     }
 
     public void deconfigure() throws CoreException {
-        System.out.println("Removed Nuxeo Nature");
+        // IProjectDescription desc = project.getDescription();
+        // ICommand[] commands = desc.getBuildSpec();
+        // ArrayList<ICommand> newCommands = new ArrayList<ICommand>();
+        // for (ICommand cmd : commands) {
+        // if (!ExtensionsBuilder.ID.equals(cmd.getBuilderName())) {
+        // newCommands.add(cmd);
+        // }
+        // }
+        // if (newCommands.size() != commands.length) {
+        // desc.setBuildSpec(newCommands.toArray(new
+        // ICommand[newCommands.size()]));
+        // project.setDescription(desc, null);
+        // }
     }
 
 }

@@ -14,12 +14,16 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.sdk.model;
+package org.nuxeo.ide.sdk.model.operations;
+
+import org.nuxeo.ide.sdk.model.ComponentModel;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
- *
+ * 
  */
-public class ManifestModel {
+public interface ExtensionOperation {
+
+    public void execute(ComponentModel model);
 
 }

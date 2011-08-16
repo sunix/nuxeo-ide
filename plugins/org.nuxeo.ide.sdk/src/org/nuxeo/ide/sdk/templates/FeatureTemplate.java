@@ -29,7 +29,8 @@ import java.util.jar.Manifest;
 
 import org.nuxeo.ide.common.IOUtils;
 import org.nuxeo.ide.sdk.SDKPlugin;
-import org.nuxeo.ide.sdk.model.ComponentModel;
+import org.nuxeo.ide.sdk.features.FeatureTemplateContext;
+import org.nuxeo.ide.sdk.model.ExtensionModel;
 import org.osgi.framework.Bundle;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -42,7 +43,7 @@ public class FeatureTemplate extends Template {
 
     protected ManifestModification[] manifestModifs;
 
-    protected String[] extensions;
+    protected String extensions;
 
     protected Dependency[] dependencies;
 
@@ -63,7 +64,7 @@ public class FeatureTemplate extends Template {
         return manifestModifs;
     }
 
-    public void setExtensions(String[] extensions) {
+    public void setExtensions(String extensions) {
         this.extensions = extensions;
     }
 
@@ -72,7 +73,7 @@ public class FeatureTemplate extends Template {
      * 
      * @return
      */
-    public String[] getExtensions() {
+    public String getExtensions() {
         return extensions;
     }
 
@@ -150,25 +151,22 @@ public class FeatureTemplate extends Template {
         if (extensions == null) {
             return;
         }
-        File file = Util.getExtensions(dir);
-        ComponentModel dst = null;
-        if (!file.isFile()) {
-            dst = new ComponentModel();
-            dst.setName(dir.getName() + ".extensions");
-        } else {
-            dst = new ComponentModel(file);
+        String className = ctx.getProperty(FeatureTemplateContext.CLASS_NAME);
+        if (className == null) {
+            return;
+        }
+        String packageName = ctx.getProperty(FeatureTemplateContext.PACKAGE_NAME);
+        if (packageName == null) {
+            return;
         }
         TemplateEngine engine = SDKPlugin.getDefault().getTemplateManager().getEngine();
-        for (String src : extensions) {
-            URL url = bundle.getEntry(src);
-            if (url != null) {
-                String content = IOUtils.read(url);
-                content = engine.expandVars(ctx, content);
-                ComponentModel comp = new ComponentModel(content);
-                comp.copyExtensionsTo(dst);
-            }
+        URL url = bundle.getEntry(extensions);
+        if (url != null) {
+            String content = IOUtils.read(url);
+            content = engine.expandVars(ctx, content);
+            new ExtensionModel(packageName + "." + className).setContent(dir,
+                    content);
         }
-        dst.write(file);
     }
 
     protected void applyDependencies(File dir) throws IOException {
@@ -202,7 +200,6 @@ public class FeatureTemplate extends Template {
         Node child = element.getFirstChild();
         temp.src = Util.getAttribute(element, "src");
         List<ManifestModification> manifest = new ArrayList<FeatureTemplate.ManifestModification>();
-        List<String> extensions = new ArrayList<String>();
         List<Dependency> deps = new ArrayList<Dependency>();
         while (child != null) {
             if (child.getNodeType() == Node.ELEMENT_NODE) {
@@ -229,19 +226,13 @@ public class FeatureTemplate extends Template {
                     dep.version = Util.getAttribute(el, "version");
                     deps.add(dep);
                 } else if ("extension".equals(tag)) {
-                    String src = Util.getAttribute(el, "src");
-                    if (src != null) {
-                        extensions.add(src);
-                    }
+                    temp.extensions = el.getAttribute("src").trim();
                 }
             }
             child = child.getNextSibling();
         }
         if (!manifest.isEmpty()) {
             temp.manifestModifs = manifest.toArray(new ManifestModification[manifest.size()]);
-        }
-        if (!extensions.isEmpty()) {
-            temp.extensions = extensions.toArray(new String[extensions.size()]);
         }
         if (!deps.isEmpty()) {
             temp.dependencies = deps.toArray(new Dependency[deps.size()]);

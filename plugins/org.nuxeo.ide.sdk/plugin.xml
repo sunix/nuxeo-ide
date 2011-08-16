@@ -12,6 +12,17 @@
       </page> 
    </extension>
 
+   <!--extension
+      id="org.nuxeo.ide.sdk.builders.ExtensionsBuilder" 
+      name="Nuxeo Extensions Builder" 
+        point="org.eclipse.core.resources.builders">
+      <builder>
+         <run 
+            class="org.nuxeo.ide.sdk.features.ExtensionsBuilder">
+         </run>
+      </builder>
+   </extension-->
+
    <extension
          point="org.eclipse.ui.newWizards">
       <category
@@ -374,5 +385,89 @@
       </action>
    </actionSet>
 </extension>
- 
+<extension
+      point="org.eclipse.ltk.core.refactoring.deleteParticipants">
+   <deleteParticipant
+         class="org.nuxeo.ide.sdk.features.DeleteFeatureParticipant"
+         id="org.nuxeo.ide.sdk.deleteFeatureParticipant"
+         name="Synchronizing Extensions">
+      <enablement>
+      <with variable="affectedNatures">
+        <iterate operator="or">
+          <equals value="org.nuxeo.ide.NuxeoNature"/>
+        </iterate>
+      </with>
+      <with variable="element">
+        <instanceof value="org.eclipse.jdt.core.ICompilationUnit"/>
+      </with>               
+      </enablement>
+   </deleteParticipant>
+   <deleteParticipant
+         class="org.nuxeo.ide.sdk.features.DeleteExtensionParticipant"
+         id="org.nuxeo.ide.sdk.deleteExtensionParticipant"
+         name="Synchronizing Manifest">
+      <enablement>
+      <with variable="affectedNatures">
+        <iterate operator="or">
+          <equals value="org.nuxeo.ide.NuxeoNature"/>
+        </iterate>
+      </with>
+      <with variable="element">
+        <instanceof value="org.eclipse.core.resources.IFile"/>
+      </with>      
+      </enablement>
+   </deleteParticipant>
+</extension>
+<extension
+      point="org.eclipse.ltk.core.refactoring.renameParticipants">
+   <renameParticipant
+         class="org.nuxeo.ide.sdk.features.RenameFeatureParticipant"
+         id="org.nuxeo.ide.sdk.renameFeatureParticipant"
+         name="Synchronizing Extensions">
+         <enablement>
+      <with variable="affectedNatures">
+        <iterate operator="or">
+          <equals value="org.nuxeo.ide.NuxeoNature"/>
+        </iterate>
+      </with>
+      <with variable="element">
+        <instanceof value="org.eclipse.jdt.core.ICompilationUnit"/>
+      </with>                        
+         </enablement>
+   </renameParticipant>
+   <renameParticipant
+         class="org.nuxeo.ide.sdk.features.RenameExtensionParticipant"
+         id="org.nuxeo.ide.sdk.renameExtensionParticipant"
+         name="Synchronizing Manifest">         
+         <enablement>
+      <with variable="affectedNatures">
+        <iterate operator="or">
+          <equals value="org.nuxeo.ide.NuxeoNature"/>
+        </iterate>
+      </with>
+      <with variable="element">
+        <instanceof value="org.eclipse.core.resources.IFile"/>
+      </with>         
+         </enablement>
+   </renameParticipant>
+</extension>   
+<extension
+      point="org.eclipse.ltk.core.refactoring.moveParticipants">
+   <moveParticipant
+         class="org.nuxeo.ide.sdk.features.MoveFeatureParticipant"
+         id="org.nuxeo.ide.sdk.moveFeatureParticipant"
+         name="Synchronizing Extensions">
+         <enablement>
+      <with variable="affectedNatures">
+        <iterate operator="or">
+          <equals value="org.nuxeo.ide.NuxeoNature"/>
+        </iterate>
+      </with>
+      <with variable="element">
+        <instanceof value="org.eclipse.jdt.core.ICompilationUnit"/>
+      </with>                        
+         </enablement>
+   </moveParticipant>
+</extension>
+
 </plugin>

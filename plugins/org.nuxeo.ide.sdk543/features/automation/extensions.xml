@@ -1,4 +1,4 @@
-<component>
+<component name="${package}.${className}">
 
   <extension target="org.nuxeo.ecm.core.operation.OperationServiceComponent"
     point="operations" >

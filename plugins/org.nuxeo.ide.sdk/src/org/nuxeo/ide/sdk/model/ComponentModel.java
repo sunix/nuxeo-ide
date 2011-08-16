@@ -33,6 +33,8 @@ import org.w3c.dom.Node;
  */
 public class ComponentModel extends XmlFile {
 
+    public final static String EXTENSIONS_PATH = "src/main/resources/OSGI-INF/extensions.xml";
+
     public ComponentModel() throws Exception {
         this.doc = factory.newDocumentBuilder().newDocument();
         Element root = doc.createElement("component");
@@ -90,6 +92,67 @@ public class ComponentModel extends XmlFile {
             node = node.getNextSibling();
         }
         return xts;
+    }
+
+    public List<Element> getExtensions(String target, String point) {
+        ArrayList<Element> xts = new ArrayList<Element>();
+        Node node = doc.getDocumentElement().getFirstChild();
+        while (node != null) {
+            if (node.getNodeType() == Node.ELEMENT_NODE
+                    && "extension".equals(node.getNodeName())) {
+                Element xt = (Element) node;
+                if (target.equals(xt.getAttribute("target"))
+                        && point.equals(xt.getAttribute("point"))) {
+                    xts.add((Element) node);
+                }
+            }
+            node = node.getNextSibling();
+        }
+        return xts;
+    }
+
+    public List<Element> getExtensions(String target) {
+        ArrayList<Element> xts = new ArrayList<Element>();
+        Node node = doc.getDocumentElement().getFirstChild();
+        while (node != null) {
+            if (node.getNodeType() == Node.ELEMENT_NODE
+                    && "extension".equals(node.getNodeName())) {
+                Element xt = (Element) node;
+                if (target.equals(xt.getAttribute("target"))) {
+                    xts.add((Element) node);
+                }
+            }
+            node = node.getNextSibling();
+        }
+        return xts;
+    }
+
+    public static Element getFirstElementMatchingAttribute(Element parent,
+            String attrKey, String attrValue) {
+        Node node = parent.getFirstChild();
+        while (node != null) {
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                Element el = (Element) node;
+                String v = el.getAttribute(attrKey);
+                if (attrValue.equals(v)) {
+                    return el;
+                }
+            }
+            node = node.getNextSibling();
+        }
+        return null;
+    }
+
+    public static boolean isExtensionEmpty(Element element) {
+        Node node = element.getFirstChild();
+        while (node != null) {
+            if (node.getNodeType() == Node.ELEMENT_NODE
+                    && !"documentation".equals(node.getNodeName())) {
+                return false;
+            }
+            node = node.getNextSibling();
+        }
+        return true;
     }
 
     /**

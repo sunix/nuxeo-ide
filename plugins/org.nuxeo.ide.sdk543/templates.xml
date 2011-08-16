@@ -14,8 +14,6 @@
     <name>Operation</name>
     <description>An operation object</description>
     
-    <manifest key="Nuxeo-Component" value="OSGI-INF/extensions.xml" append="true"/>
-    
     <extension src="features/automation/extensions.xml"/>
     
     <dependency groupId="org.nuxeo.ecm.automation" artifactId="nuxeo-automation-core"/>    

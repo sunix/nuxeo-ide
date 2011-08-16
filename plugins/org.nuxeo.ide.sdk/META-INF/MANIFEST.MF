@@ -11,10 +11,12 @@ Require-Bundle: org.eclipse.ui,
  jdbm;bundle-version="1.0.0",
  org.eclipse.core.resources;bundle-version="3.6.0",
  org.eclipse.ui.ide;bundle-version="3.6.1",
- org.freemarker;bundle-version="2.3.16"
+ org.freemarker;bundle-version="2.3.16",
+ org.eclipse.ltk.core.refactoring;bundle-version="3.5.100"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Import-Package: org.eclipse.jdt.core,
+ org.eclipse.jdt.core.dom,
  org.eclipse.jdt.internal.ui.util,
  org.eclipse.jdt.internal.ui.workingsets,
  org.eclipse.jdt.launching,
