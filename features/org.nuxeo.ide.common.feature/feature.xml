@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.nuxeo.ide.common.feature"
-      label="Nuxeo IDE Common Feature"
+      id="org.nuxeo.ide.sdk.feature"
+      label="Nuxeo IDE SDK Feature"
       version="1.0.0.qualifier"
       provider-name="Nuxeo">
 
@@ -30,6 +30,28 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
          download-size="0"
          install-size="0"
          version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.nuxeo.ide.connect"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.nuxeo.ide.sdk"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.nuxeo.ide.sdk543"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
          unpack="false"/>
 
 </feature>

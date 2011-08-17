@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Nuxeo IDE Common
 Bundle-SymbolicName: org.nuxeo.ide.common;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: org.eclipse.equinox.registry,
  org.eclipse.core.runtime;bundle-version="3.4.0",
  org.eclipse.core.resources,
@@ -25,3 +24,4 @@ Export-Package: org.nuxeo.ide.common,
  org.nuxeo.ide.common.forms.model,
  org.nuxeo.ide.common.forms.widgets,
  org.nuxeo.ide.common.wizards
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

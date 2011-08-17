@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/org.nuxeo.ide.webengine.feature_1.0.0.200901281632.jar" id="org.nuxeo.ide.webengine.feature" version="1.0.0.200901281632">
-      <category name="org.nuxeo.ide.webengine"/>
+   <description name="Nuxeo IDE">
+   Nuxeo IDE Eclipse Plugin
+   </description>
+   <feature url="features/org.nuxeo.ide.sdk.feature_1.0.0.qualifier.jar" id="org.nuxeo.ide.sdk.feature" version="1.0.0.qualifier">
+      <category name="org.nuxeo.ide.category"/>
    </feature>
-   <category-def name="org.nuxeo.ide.webengine" label="Nuxeo IDE Webengine">
+   <feature url="features/org.nuxeo.ide.shell.feature_1.0.0.qualifier.jar" id="org.nuxeo.ide.shell.feature" version="1.0.0.qualifier">
+      <category name="org.nuxeo.ide.shell.category"/>
+   </feature>
+   <category-def name="org.nuxeo.ide.category" label="Nuxeo IDE">
       <description>
-         Eclipse Tools for helping developping Webengine components
+         Provides wizards and tools for developing Nuxeo projects
+      </description>
+   </category-def>
+   <category-def name="org.nuxeo.ide.shell.category" label="Nuxeo Shell">
+      <description>
+         Provide a Nuxeo Shell view to interact with remote Nuxeo servers
       </description>
    </category-def>
 </site>
