@@ -96,21 +96,40 @@ public class SDKInfo {
                     "The given file is not a directory: " + dir);
         }
         File file = new File(dir, "nxserver/config/nuxeo.properties");
-        if (!file.isFile()) {
+        String version = null;
+        if (file.isFile()) {
+            Properties props = new Properties();
+            FileInputStream in = new FileInputStream(file);
+            try {
+                props.load(in);
+            } finally {
+                in.close();
+            }
+            version = props.getProperty("org.nuxeo.ecm.product.version",
+                    "0.0.0");
+        } else {
+            version = getVersionFromBundles(new File(dir, "nxserver/bundles"));
+        }
+        if (version == null) {
             throw new FileNotFoundException("Not a Nuxeo SDK: " + dir);
         }
-        Properties props = new Properties();
-        FileInputStream in = new FileInputStream(file);
-        try {
-            props.load(in);
-        } finally {
-            in.close();
-        }
-        String version = props.getProperty("org.nuxeo.ecm.product.version",
-                "0.0.0");
         SDKInfo sdk = new SDKInfo(dir, version);
         // TODO sdk.index();
         return sdk;
+    }
+
+    public static String getVersionFromBundles(File bundles) {
+        String[] list = bundles.list();
+        if (list == null) {
+            return null;
+        }
+        for (String name : list) {
+            if (name.startsWith("nuxeo-common-") && name.endsWith(".jar")) {
+                return name.substring("nuxeo-common-".length(), name.length()
+                        - ".jar".length());
+            }
+        }
+        return null;
     }
 
     // public static void main(String[] args) throws Exception {

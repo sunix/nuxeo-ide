@@ -220,6 +220,9 @@ public class IOUtils {
      */
     public static void unzip(ZipInputStream in, String prefix, File dir)
             throws IOException {
+        if (!prefix.endsWith("/")) {
+            prefix = prefix.concat("/");
+        }
         int prefixLen = prefix.length();
         dir.mkdirs();
         ZipEntry entry = in.getNextEntry();
@@ -227,6 +230,7 @@ public class IOUtils {
             // System.out.println("Extracting "+entry.getName());
             String name = entry.getName();
             if (name.length() > prefixLen && name.startsWith(prefix)) {
+                name = name.substring(prefixLen);
                 File file = new File(dir, name);
                 if (entry.isDirectory()) {
                     file.mkdirs();
