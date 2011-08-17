@@ -3,11 +3,13 @@
   <project id="default" src="projects/default">
     <name>Empty Project</name>
     <description>An empty Nuxeo project</description>
+    <mkdir path="src/main/java/${packagePath}" />
   </project>
 
   <project id="service" src="projects/service">
     <name>Service Example</name>
     <description>A project containing a Nuxeo service</description>
+    <rename path="src/main/java/~packagePath~/MyComponent.java" to="src/main/java/${packagePath}/MyComponent.java" />
   </project>
 
   <feature id ="operation" src="features/automation/project">
@@ -16,7 +18,9 @@
     
     <extension src="features/automation/extensions.xml"/>
     
-    <dependency groupId="org.nuxeo.ecm.automation" artifactId="nuxeo-automation-core"/>    
+    <dependency groupId="org.nuxeo.ecm.automation" artifactId="nuxeo-automation-core"/>
+    
+    <rename path="src/main/java/~packagePath~/~className~.java" to="src/main/java/${packagePath}/${className}.java" />    
   </feature>
 
 </templates>

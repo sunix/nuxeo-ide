@@ -19,6 +19,7 @@ package org.nuxeo.ide.sdk.templates;
 import java.io.File;
 
 import org.nuxeo.ide.common.IOUtils;
+import org.nuxeo.ide.sdk.templates.cmd.Command;
 import org.osgi.framework.Bundle;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -43,6 +44,7 @@ public class ProjectTemplate extends Template {
         try {
             expand(bundle, ctx, tmp);
             tmp.renameTo(dir);
+            processCommands(bundle, ctx, dir);
         } finally {
             if (tmp.exists()) {
                 IOUtils.deleteTree(tmp);
@@ -51,7 +53,8 @@ public class ProjectTemplate extends Template {
 
     }
 
-    public static ProjectTemplate load(Element element) {
+    public static ProjectTemplate load(TemplateManager manager, Element element)
+            throws Exception {
         ProjectTemplate temp = new ProjectTemplate(element.getAttribute("id"));
         temp.src = element.getAttribute("src");
         Node child = element.getFirstChild();
@@ -63,6 +66,10 @@ public class ProjectTemplate extends Template {
                     temp.name = el.getTextContent().trim();
                 } else if ("description".equals(tag)) {
                     temp.description = el.getTextContent().trim();
+                } else {
+                    Command cmd = manager.getCommand(tag);
+                    cmd.init(el);
+                    temp.commands.add(cmd);
                 }
             }
             child = child.getNextSibling();

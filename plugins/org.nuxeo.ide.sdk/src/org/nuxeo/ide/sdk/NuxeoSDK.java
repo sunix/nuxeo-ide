@@ -255,13 +255,7 @@ public class NuxeoSDK {
         return nxProjects;
     }
 
-    /**
-     * TODO must reload only projects that use the SDK classpath and not all
-     * Nuxeo projects.
-     * 
-     * @throws CoreException
-     */
-    private static void reloadSDKClasspathContainer() throws CoreException {
+    public static void reloadSDKClasspathContainer() throws CoreException {
         List<IJavaProject> nxProjects = getNuxeoJavaProjects();
         if (!nxProjects.isEmpty()) {
             SDKClassPathContainerInitializer initializer = new SDKClassPathContainerInitializer();

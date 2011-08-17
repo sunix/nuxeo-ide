@@ -229,8 +229,10 @@ public class IOUtils {
         while (entry != null) {
             // System.out.println("Extracting "+entry.getName());
             String name = entry.getName();
+            System.out.println("unzip: " + name + " ... Prefix is: " + prefix);
             if (name.length() > prefixLen && name.startsWith(prefix)) {
                 name = name.substring(prefixLen);
+                System.out.println("unzip OK: " + name);
                 File file = new File(dir, name);
                 if (entry.isDirectory()) {
                     file.mkdirs();
@@ -238,6 +240,8 @@ public class IOUtils {
                     file.getParentFile().mkdirs();
                     copyToFile(in, file);
                 }
+            } else {
+                System.out.println("Unzip not OK");
             }
             entry = in.getNextEntry();
         }

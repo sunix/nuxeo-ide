@@ -41,7 +41,7 @@ public class TemplateRegistry {
 
     protected Map<String, FeatureTemplate> features;
 
-    public TemplateRegistry() {
+    TemplateRegistry() {
         this.projects = new HashMap<String, ProjectTemplate>();
         this.features = new HashMap<String, FeatureTemplate>();
     }
@@ -110,7 +110,8 @@ public class TemplateRegistry {
         return features.get(id);
     }
 
-    protected static TemplateRegistry load(Element element) {
+    protected static TemplateRegistry load(TemplateManager manager,
+            Element element) throws Exception {
         TemplateRegistry registry = new TemplateRegistry();
         String version = Util.getAttribute(element, "version", "0.0.0");
         registry.version = version;
@@ -120,9 +121,11 @@ public class TemplateRegistry {
                 Element el = (Element) child;
                 String tag = child.getNodeName();
                 if ("project".equals(tag)) {
-                    registry.addProjectTemplate(ProjectTemplate.load(el));
+                    registry.addProjectTemplate(ProjectTemplate.load(manager,
+                            el));
                 } else if ("feature".equals(tag)) {
-                    registry.addFeatureTemplate(FeatureTemplate.load(el));
+                    registry.addFeatureTemplate(FeatureTemplate.load(manager,
+                            el));
                 }
             }
             child = child.getNextSibling();

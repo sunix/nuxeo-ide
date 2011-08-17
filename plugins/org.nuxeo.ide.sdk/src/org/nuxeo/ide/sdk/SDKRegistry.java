@@ -19,6 +19,7 @@ package org.nuxeo.ide.sdk;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.preferences.ConfigurationScope;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.osgi.service.prefs.BackingStoreException;
@@ -133,6 +134,22 @@ public class SDKRegistry {
             return null;
         }
         return getSDK(v);
+    }
+
+    public static void setUseSDKClasspath(Boolean useSDKClasspath)
+            throws CoreException {
+        Boolean oldUseSdk = useSDKClasspath();
+        Preferences prefs = getWorkspacePreferences();
+        prefs.putBoolean("useSDKClasspath",
+                useSDKClasspath == null ? Boolean.TRUE : useSDKClasspath);
+        if (!oldUseSdk.equals(useSDKClasspath)) {
+            NuxeoSDK.reloadSDKClasspathContainer();
+        }
+    }
+
+    public static Boolean useSDKClasspath() {
+        return getWorkspacePreferences().getBoolean("useSDKClasspath",
+                Boolean.TRUE);
     }
 
     public static String getDefaultSDKId() {

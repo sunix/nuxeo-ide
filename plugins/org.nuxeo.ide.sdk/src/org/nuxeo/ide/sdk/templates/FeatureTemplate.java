@@ -31,6 +31,7 @@ import org.nuxeo.ide.common.IOUtils;
 import org.nuxeo.ide.sdk.SDKPlugin;
 import org.nuxeo.ide.sdk.features.FeatureTemplateContext;
 import org.nuxeo.ide.sdk.model.ExtensionModel;
+import org.nuxeo.ide.sdk.templates.cmd.Command;
 import org.osgi.framework.Bundle;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -100,6 +101,7 @@ public class FeatureTemplate extends Template {
         try {
             expand(bundle, ctx, tmp);
             IOUtils.copyTreeContent(tmp, dir);
+            processCommands(bundle, ctx, dir);
         } finally {
             IOUtils.deleteTree(tmp);
         }
@@ -195,7 +197,8 @@ public class FeatureTemplate extends Template {
         String type;
     }
 
-    public static FeatureTemplate load(Element element) {
+    public static FeatureTemplate load(TemplateManager manager, Element element)
+            throws Exception {
         FeatureTemplate temp = new FeatureTemplate(element.getAttribute("id"));
         Node child = element.getFirstChild();
         temp.src = Util.getAttribute(element, "src");
@@ -227,6 +230,10 @@ public class FeatureTemplate extends Template {
                     deps.add(dep);
                 } else if ("extension".equals(tag)) {
                     temp.extensions = el.getAttribute("src").trim();
+                } else {
+                    Command cmd = manager.getCommand(tag);
+                    cmd.init(el);
+                    temp.commands.add(cmd);
                 }
             }
             child = child.getNextSibling();

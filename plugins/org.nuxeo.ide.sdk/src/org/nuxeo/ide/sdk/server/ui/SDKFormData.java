@@ -31,6 +31,7 @@ public class SDKFormData implements FormData {
     public void load(Form form) throws Exception {
         SDKTableWidget w = (SDKTableWidget) form.getWidget("sdks");
         w.setDefaultSDK(SDKRegistry.getDefaultSDKId());
+        form.setWidgetValue("nosdkcp", !SDKRegistry.useSDKClasspath());
     }
 
     @Override
@@ -39,6 +40,7 @@ public class SDKFormData implements FormData {
         SDKRegistry.save(w.getSDKs());
         SDKInfo sdk = w.getDefaultSDK();
         SDKRegistry.setDefaultSDK(sdk);
+        SDKRegistry.setUseSDKClasspath(!(Boolean) form.getWidgetValue("nosdkcp"));
     }
 
 }

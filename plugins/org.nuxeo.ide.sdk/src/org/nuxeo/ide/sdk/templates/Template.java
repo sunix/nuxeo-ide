@@ -21,10 +21,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.nuxeo.ide.common.IOUtils;
 import org.nuxeo.ide.sdk.SDKPlugin;
+import org.nuxeo.ide.sdk.templates.cmd.Command;
 import org.osgi.framework.Bundle;
 
 /**
@@ -41,9 +44,16 @@ public abstract class Template implements Comparable<Template> {
 
     protected String src;
 
+    protected List<Command> commands;
+
     protected Template(String id) {
         this.id = id;
         this.name = id;
+        this.commands = new ArrayList<Command>();
+    }
+
+    public List<Command> getCommands() {
+        return commands;
     }
 
     public String getId() {
@@ -80,6 +90,13 @@ public abstract class Template implements Comparable<Template> {
 
     public abstract void process(Bundle bundle, TemplateContext ctx, File dir)
             throws Exception;
+
+    protected void processCommands(Bundle bundle, TemplateContext ctx, File dir)
+            throws Exception {
+        for (Command cmd : commands) {
+            cmd.execute(ctx, bundle, dir);
+        }
+    }
 
     protected void expand(Bundle bundle, TemplateContext ctx, File dir)
             throws Exception {

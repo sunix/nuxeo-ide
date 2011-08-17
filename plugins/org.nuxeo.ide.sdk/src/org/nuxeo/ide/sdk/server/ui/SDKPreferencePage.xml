@@ -12,6 +12,7 @@ to be able to start a Nuxeo server from Eclipse and in order to test your plugin
 <hr hfill="true"/>
 
 <panel hfill="true" vfill="true" layout="grid" cols="2">
+<checkbox id="nosdkcp" colspan="2">Do not use SDK classpath container (for experts only)</checkbox>
 <text colspan="2">SDKs:</text>
 <sdks id="sdks" hfill="true" vfill="true"/>
 <panel vertical="true" valign="top">

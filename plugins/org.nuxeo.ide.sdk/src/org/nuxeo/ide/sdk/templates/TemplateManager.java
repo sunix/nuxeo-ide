@@ -28,6 +28,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.eclipse.core.runtime.Platform;
 import org.nuxeo.ide.sdk.NuxeoSDK;
+import org.nuxeo.ide.sdk.templates.cmd.Command;
+import org.nuxeo.ide.sdk.templates.cmd.MkdirCommand;
+import org.nuxeo.ide.sdk.templates.cmd.RenameCommand;
 import org.osgi.framework.Bundle;
 import org.w3c.dom.Document;
 
@@ -52,9 +55,31 @@ public class TemplateManager {
 
     protected TemplateEngine engine;
 
+    protected Map<String, Class<? extends Command>> commands;
+
     public TemplateManager() {
         regs = new HashMap<String, TemplateRegistry>();
         engine = new FreemarkerEngine();
+        commands = new HashMap<String, Class<? extends Command>>();
+        initCommands();
+    }
+
+    protected void initCommands() {
+        commands.put("rename", RenameCommand.class);
+        commands.put("mkdir", MkdirCommand.class);
+    }
+
+    public void addCommand(String key, Class<? extends Command> type) {
+        commands.put(key, type);
+    }
+
+    @SuppressWarnings("unchecked")
+    public Command getCommand(String key) throws Exception {
+        Class<? extends Command> type = commands.get(key);
+        if (type == null) {
+            type = (Class<? extends Command>) Class.forName(key);
+        }
+        return type.newInstance();
     }
 
     public TemplateEngine getEngine() {
@@ -119,7 +144,7 @@ public class TemplateManager {
         }
     }
 
-    public static TemplateRegistry loadRegistry(Bundle bundle, File file)
+    public TemplateRegistry loadRegistry(Bundle bundle, File file)
             throws Exception {
         InputStream in = new FileInputStream(file);
         try {
@@ -129,7 +154,7 @@ public class TemplateManager {
         }
     }
 
-    public static TemplateRegistry loadRegistry(Bundle bundle, URL url)
+    public TemplateRegistry loadRegistry(Bundle bundle, URL url)
             throws Exception {
         InputStream in = url.openStream();
         try {
@@ -139,13 +164,14 @@ public class TemplateManager {
         }
     }
 
-    public static TemplateRegistry loadRegistry(Bundle bundle, InputStream in)
+    public TemplateRegistry loadRegistry(Bundle bundle, InputStream in)
             throws Exception {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(false);
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document document = builder.parse(in);
-        TemplateRegistry reg = TemplateRegistry.load(document.getDocumentElement());
+        TemplateRegistry reg = TemplateRegistry.load(this,
+                document.getDocumentElement());
         reg.bundle = bundle;
         return reg;
     }

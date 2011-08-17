@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.nuxeo.ide.sdk.NuxeoSDK;
+import org.nuxeo.ide.sdk.SDKRegistry;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -33,18 +34,32 @@ public class SDKClassPathContainer implements IClasspathContainer {
 
     protected IPath containerPath;
 
+    protected boolean useSDKClasspath;
+
     public SDKClassPathContainer(IPath containerPath) {
         this.containerPath = containerPath;
+        useSDKClasspath = SDKRegistry.useSDKClasspath();
     }
 
     @Override
     public IClasspathEntry[] getClasspathEntries() {
+        if (!useSDKClasspath) {
+            return EMPTY_CP;
+        }
         NuxeoSDK sdk = NuxeoSDK.getDefault();
         if (sdk != null) {
             return sdk.getClasspathEntries();
         } else {
             return EMPTY_CP;
         }
+    }
+
+    public void setUseSDKClasspath(boolean useSDKClasspath) {
+        this.useSDKClasspath = useSDKClasspath;
+    }
+
+    public boolean useSDKClasspath() {
+        return useSDKClasspath;
     }
 
     @Override
