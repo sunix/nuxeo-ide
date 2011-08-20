@@ -14,7 +14,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jdt.ui,
  org.eclipse.jdt.launching,
  org.eclipse.ui.views,
- org.nuxeo.ide.common
+ org.nuxeo.ide.common,
+ org.eclipse.jface.text;bundle-version="3.6.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,

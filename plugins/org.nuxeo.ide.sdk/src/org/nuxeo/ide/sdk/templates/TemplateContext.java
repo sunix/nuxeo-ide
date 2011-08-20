@@ -34,6 +34,23 @@ public class TemplateContext extends HashMap<String, Object> {
 
     protected File projectLocation;
 
+    public TemplateContext() {
+        initDefaults();
+    }
+
+    protected void initDefaults() {
+        try {
+            String user = System.getProperty("user.name");
+            put("user", user);
+            put("copyright",
+                    TemplatePrefs.getCopyrightHeader().replace("${user}", user));
+            put("classHeader",
+                    TemplatePrefs.getClassHeader().replace("${user}", user));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public String getTemplate() {
         return template;
     }

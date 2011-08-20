@@ -1,0 +1,6 @@
+<panel cols="1" layout="grid">
+
+<combo id="type" hfill="true" readonly="true">Copyright Header, Class Header</combo>
+<textarea id="content" hfill="true" vfill="true"></textarea>
+
+</panel>

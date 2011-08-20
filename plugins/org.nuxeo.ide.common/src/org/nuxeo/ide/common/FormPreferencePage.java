@@ -119,4 +119,5 @@ public class FormPreferencePage extends PreferencePage implements ErrorHandler,
     public IWorkbench getWorkbench() {
         return workbench;
     }
+
 }

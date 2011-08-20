@@ -33,6 +33,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
+import org.nuxeo.ide.common.IOUtils;
 import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.sdk.server.ServerController;
 import org.nuxeo.ide.sdk.ui.NuxeoNature;
@@ -184,6 +185,27 @@ public class NuxeoSDK {
             }
         }
         return cache;
+    }
+
+    /**
+     * Reload projects on server
+     */
+    public void reloadProjects(IJavaProject[] projects) throws Exception {
+        File file = new File(root, "nxserver/dev.bundles");
+        StringBuilder buf = new StringBuilder();
+        if (projects != null && projects.length > 0) {
+            for (IJavaProject p : projects) {
+                if (!p.exists()) {
+                    continue;
+                }
+                File bin = new File(p.getProject().getLocation().toFile(),
+                        "bin");
+                if (bin.isDirectory()) {
+                    buf.append(bin.getAbsolutePath()).append("\n");
+                }
+            }
+        }
+        IOUtils.writeFile(file, buf.toString());
     }
 
     public static void rebuildProjects() {

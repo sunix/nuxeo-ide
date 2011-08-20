@@ -10,6 +10,12 @@
          class="org.nuxeo.ide.sdk.server.ui.SDKPreferencePage" 
          category="org.nuxeo.ide.prefs"> 
       </page> 
+      <page 
+         id="org.nuxeo.ide.prefs.templates" 
+         name="Code Templates" 
+         class="org.nuxeo.ide.sdk.server.ui.TemplatesPreferencePage" 
+         category="org.nuxeo.ide.prefs"> 
+      </page> 
    </extension>
 
    <!--extension
@@ -125,7 +131,14 @@
             name="Document Model"
             parentCategory="org.nuxeo.ide.project.newWizards">
       </category>
-      
+
+      <wizard
+            category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.core.newWizards"
+            class="org.nuxeo.ide.sdk.features.FakeWizard"
+            icon="icons/converter.gif"
+            id="org.nuxeo.ide.core.converterWizard"
+            name="Document Converter">
+      </wizard>      
       <wizard
             category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.core.newWizards"
             class="org.nuxeo.ide.sdk.features.FakeWizard"
@@ -336,13 +349,21 @@
               class="org.nuxeo.ide.sdk.server.ui.ClearConsole">  
        </action>
        <action id="org.nuxeo.ide.sdk.ui.server.deployAction" 
-              label="Auto-Deploy" 
+              label="Projects Deployment" 
           menubarPath="ctrl"
-              toolbarPath="ctrl" 
+              toolbarPath="settings" 
               icon="icons/deploy.gif" 
-              tooltip="Configure auto deployment"
+              tooltip="Select projects to deploy on server"
               class="org.nuxeo.ide.sdk.server.ui.AutoDeployConfiguration">  
        </action>             
+       <action id="org.nuxeo.ide.sdk.ui.server.deployAction" 
+              label="Reload Projects" 
+          menubarPath="ctrl"
+              toolbarPath="ctrl" 
+              icon="icons/refresh.gif" 
+              tooltip="Reload projects on server"
+              class="org.nuxeo.ide.sdk.server.ui.ReloadProjects">  
+       </action>
        <action id="org.nuxeo.ide.sdk.ui.server.stopAction" 
               label="Stop" 
           menubarPath="ctrl"
