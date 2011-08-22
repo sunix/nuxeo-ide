@@ -1,0 +1,32 @@
+<panel cols="1" layout="grid">
+
+<text hfill="true" wrap="true" trim="false">Here you can add custom libraries (not part of Nuxeo SDK) to be able to use them 
+as dependencies on your projects. 
+To be able to update your pom.xml dependencies you must specify a GAV description for each library you add. 
+</text>
+
+<hr hfill="true"/>
+
+<frame hfill="true" vfill="true" layout="grid" cols="2" label="User Libraries">
+
+<listbox id="libs" hfill="true" vfill="true"/>
+
+<panel vertical="true" valign="top">
+<button id="add">Add</button>
+<button id="remove" enabled="false">Remove</button>
+</panel>
+
+</frame>
+
+<frame id="gav" label="GAV Information" hfill="true" cols="2" layout="grid" enabled="false">
+<text>Group Id:</text>
+<textbox id="groupId" hfill="true" />
+<text>Artifact Id:</text>
+<textbox id="artifactId" hfill="true" />
+<text>Version:</text>
+<textbox id="version" hfill="true" />
+<text>Packaging:</text> 
+<textbox id="packaging" hfill="true" />
+</frame>
+
+</panel>

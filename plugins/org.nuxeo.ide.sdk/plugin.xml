@@ -16,6 +16,12 @@
          class="org.nuxeo.ide.sdk.server.ui.TemplatesPreferencePage" 
          category="org.nuxeo.ide.prefs"> 
       </page> 
+      <page 
+         id="org.nuxeo.ide.prefs.userlibs" 
+         name="User Libraries" 
+         class="org.nuxeo.ide.sdk.server.ui.UserLibrariesPreferencePage" 
+         category="org.nuxeo.ide.prefs"> 
+      </page> 
    </extension>
 
    <!--extension
