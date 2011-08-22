@@ -283,6 +283,14 @@
             id="org.nuxeo.ide.tools.deployProject">                                                                                                 
         </action>                                                                                                                                           
 
+        <action
+            label="Synchronize POM"                                                                                                                       
+            class="org.nuxeo.ide.sdk.ui.actions.SyncPom"                                                                         
+            menubarPath="org.nuxeo.ide.tools/group1"                                                                                           
+            enablesFor="1"                                                                                                                                  
+            id="org.nuxeo.ide.tools.syncPom">                                                                                                 
+        </action>                                                                                                                                           
+
       </objectContribution> 
       </extension>
       

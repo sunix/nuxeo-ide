@@ -16,23 +16,20 @@
  */
 package org.nuxeo.ide.sdk.index;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
+import java.util.TreeMap;
 
-import jdbm.RecordManager;
-import jdbm.RecordManagerFactory;
-import jdbm.RecordManagerOptions;
-import jdbm.btree.BTree;
-import jdbm.helper.StringComparator;
-import jdbm.helper.Tuple;
-import jdbm.helper.TupleBrowser;
-
-import org.nuxeo.ide.sdk.SDKInfo;
-import org.nuxeo.ide.sdk.SDKIndex;
+import org.nuxeo.ide.sdk.model.Artifact;
+import org.nuxeo.ide.sdk.model.PomModel;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -40,102 +37,110 @@ import org.nuxeo.ide.sdk.SDKIndex;
  */
 public class Index {
 
-    public static final String DB_NAME = "/Users/bstefanescu/tmp/NuxeoSDK";
+    private volatile static Map<String, String> index;
 
-    /**
-     * classname -> jarName/groupId:artifactId:version/symbolicName#version
-     */
-    public static final String CLASSES_BTREE_NAME = "classes";
+    public static Map<String, String> loadIndex(URL url) throws IOException {
+        InputStream in = url.openStream();
+        try {
+            return loadIndex(in);
+        } finally {
+            in.close();
+        }
+    }
 
-    /**
-     * symbolicName#version -> groupId:artifactId:version
-     */
-    public static final String BUNDLES_BTREE_NAME = "bundles";
+    public static Map<String, String> loadIndex(File file) throws IOException {
+        FileInputStream in = new FileInputStream(file);
+        try {
+            return loadIndex(in);
+        } finally {
+            in.close();
+        }
+    }
 
-    /**
-     * groupId:artifactId -> symbolicName#version
-     */
-    public static final String ARTIFACTS_BTREE_NAME = "artifacts";
+    public static Map<String, String> loadIndex(InputStream in)
+            throws IOException {
+        HashMap<String, String> index = new HashMap<String, String>();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+        String line = reader.readLine();
+        while (line != null) {
+            line = line.trim();
+            if (line.length() != 0 && !line.startsWith("#")) {
+                int i = line.indexOf('=');
+                if (i > -1) {
+                    index.put(line.substring(0, i).trim(),
+                            line.substring(i + 1).trim());
+                }
+            }
+            line = reader.readLine();
+        }
+        return index;
+    }
 
-    protected RecordManager recman;
+    public static Map<String, String> loadBuiltinIndex() throws IOException {
+        URL url = Index.class.getResource("index.properties");
+        if (url != null) {
+            return loadIndex(url);
+        }
+        return null;
+    }
 
-    protected BTree tree;
+    public static Map<String, String> getIndex() {
+        Map<String, String> _index = index;
+        if (_index == null) {
+            try {
+                _index = loadBuiltinIndex();
+                index = _index;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return _index;
+    }
 
-    public void open() throws IOException {
-        Properties props = new Properties();
-        props.setProperty(RecordManagerOptions.DISABLE_TRANSACTIONS, "true");
-        recman = RecordManagerFactory.createRecordManager(DB_NAME, props);
-        // try to reload an existing B+Tree
-        long recid = recman.getNamedObject(CLASSES_BTREE_NAME);
-        if (recid != 0) {
-            tree = BTree.load(recman, recid);
-            System.out.println("Reloaded existing BTree with " + tree.size()
-                    + " NuxeoSDK index.");
+    public static Artifact resolve(Dependency dep) {
+        if (dep.isBinary()) {
+            String gav = getIndex().get(dep.getJar().getName());
+            if (gav != null) {
+                return Artifact.fromGav(gav);
+            }
         } else {
-            // create a new B+Tree data structure and use a StringComparator
-            // to order the records based on package names.
-            tree = BTree.createInstance(recman, new StringComparator());
-            recman.setNamedObject(CLASSES_BTREE_NAME, tree.getRecid());
-            System.out.println("Created a new empty BTree");
-
-            // build index
-            // insert people with their respective occupation
-            System.out.println("Building the index");
-            buildIndex(tree);
-
-            // make the data persistent in the database
-            recman.commit();
-
+            try {
+                PomModel pom = PomModel.getPomModel(dep.getProject().getProject());
+                String groupId = pom.getGroupId();
+                if (groupId != null) {
+                    String artifactId = pom.getArtifactId();
+                    if (artifactId != null) {
+                        return new Artifact(groupId, artifactId,
+                                pom.getArtifactVersion());
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-
+        return null;
     }
 
-    protected void buildIndex(BTree tree) throws IOException {
-        File[] roots = new File[2];
-        roots[0] = new File(
-                "/Users/bstefanescu/work/nuxeo/nuxeo-distribution/nuxeo-distribution-tomcat/target/nuxeo-dm-5.4.3-SNAPSHOT-tomcat/nxserver/bundles");
-        roots[1] = new File(
-                "/Users/bstefanescu/work/nuxeo/nuxeo-distribution/nuxeo-distribution-tomcat/target/nuxeo-dm-5.4.3-SNAPSHOT-tomcat/nxserver/lib");
-        Map<String, String> map = SDKIndex.buildIndex(roots);
-        for (Map.Entry<String, String> entry : map.entrySet()) {
-            tree.insert(entry.getKey(), entry.getValue(), false);
+    public static DependencyEntry[] resolve(Collection<Dependency> deps) {
+        DependencyEntry unresolved = new DependencyEntry(new Artifact("*", "*"));
+        TreeMap<String, DependencyEntry> map = new TreeMap<String, DependencyEntry>();
+        for (Dependency dep : deps) {
+            Artifact artifact = resolve(dep);
+            if (artifact != null) {
+                DependencyEntry entry = map.get(artifact.getId());
+                if (entry == null) {
+                    entry = new DependencyEntry(artifact);
+                    map.put(artifact.getId(), entry);
+                }
+                entry.addDependency(dep);
+            } else {
+                unresolved.addDependency(dep);
+            }
         }
-    }
-
-    public String getClassEntry(String className) throws IOException {
-        return (String) tree.find(className);
-    }
-
-    public String getPackageEntry(String prefix) throws IOException {
-        Tuple tuple = tree.findGreaterOrEqual(prefix);
-        if (tuple == null) {
-            return null;
+        if (!unresolved.isEmpty()) {
+            map.put(unresolved.getArtifact().getId(), unresolved);
         }
-        System.out.println("found: " + tuple.getKey());
-        return (String) tuple.getValue();
+        return map.values().toArray(new DependencyEntry[map.size()]);
     }
 
-    public List<String> getPackageEntries(String prefix) throws IOException {
-        ArrayList<String> result = new ArrayList<String>();
-        TupleBrowser browser = tree.browse(prefix);
-        Tuple tuple = new Tuple();
-        while (browser.getNext(tuple)) {
-            result.add((String) tuple.getValue());
-        }
-        return result;
-    }
-
-    public static void main(String[] args) throws IOException {
-
-        Index index = new Index();
-
-        index.open();
-
-        System.out.println(index.getPackageEntry("org.nuxeo.runtime.api"));
-        System.out.println(index.getClassEntry("org.nuxeo.runtime.api.Framework"));
-        // System.out.println(">> "
-        // + index.getClassEntry("org.nuxeo.runtime.api.Framework"));
-        // System.out.println(index.getPackageEntries("org.nuxeo.runtime.api"));
-
-    }
 }

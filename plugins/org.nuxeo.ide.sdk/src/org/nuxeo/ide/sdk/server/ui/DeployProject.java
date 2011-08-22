@@ -24,6 +24,8 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
+import org.nuxeo.ide.common.UI;
+import org.nuxeo.ide.sdk.NuxeoSDK;
 import org.nuxeo.ide.sdk.server.ServerController;
 
 /**
@@ -47,9 +49,17 @@ public class DeployProject implements IObjectActionDelegate {
 
     public void run(IAction action) {
         if (selection instanceof IStructuredSelection) {
+            NuxeoSDK sdk = NuxeoSDK.getDefault();
+            if (sdk == null) {
+                UI.showError("No Nuxeo SDk is defined");
+                return;
+            }
+            File plugins = new File(sdk.getInstallDirectory(),
+                    "nxserver/plugins");
+            plugins.mkdirs();
             IProject project = (IProject) ((IStructuredSelection) selection).getFirstElement();
-            new ServerController(new File("/Users/bstefanescu/tmp/ide")).deploy(
-                    project, part.getSite().getShell());
+            new ServerController(plugins).deploy(project,
+                    part.getSite().getShell());
         }
     }
 

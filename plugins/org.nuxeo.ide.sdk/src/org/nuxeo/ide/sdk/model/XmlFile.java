@@ -32,6 +32,8 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -73,6 +75,22 @@ public class XmlFile {
         } finally {
             in.close();
         }
+    }
+
+    public Element getFirstElement(String name) {
+        return getFirstElement(doc.getDocumentElement(), name);
+    }
+
+    public Element getFirstElement(Element root, String name) {
+        Node node = root.getFirstChild();
+        while (node != null) {
+            if (node.getNodeType() == Node.ELEMENT_NODE
+                    && node.getNodeName().equals(name)) {
+                return (Element) node;
+            }
+            node = node.getNextSibling();
+        }
+        return null;
     }
 
     public void write(File file) throws Exception {
