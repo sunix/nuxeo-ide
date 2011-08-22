@@ -16,23 +16,32 @@
  */
 package org.nuxeo.ide.sdk.projects.webengine;
 
-import org.eclipse.jface.wizard.WizardPage;
-import org.nuxeo.ide.sdk.projects.AbstractProjectWizard;
-import org.nuxeo.ide.sdk.projects.NuxeoProjectPage2;
+import org.eclipse.swt.widgets.Composite;
+import org.nuxeo.ide.sdk.projects.NuxeoProjectPage1;
+import org.nuxeo.ide.sdk.projects.ProjectTemplateContext;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class WebengineProjectWizard extends AbstractProjectWizard {
+public class Page1 extends NuxeoProjectPage1 {
 
-    public WebengineProjectWizard() {
-        super("webengine");
+    public Page1() {
+        super("we1", "Create WebEngine Project", null);
     }
 
     @Override
-    protected WizardPage[] createPages() {
-        return new WizardPage[] { new Page1(), new NuxeoProjectPage2() };
+    public void createControl(Composite parent) {
+        super.createControl(parent);
+    }
+
+    @Override
+    public void update(ProjectTemplateContext ctx) {
+        super.update(ctx);
+        ctx.setProperty(form, "className", "appName");
+        ctx.setPropertyIfNotNull(form, "appName");
+        ctx.setProperty(form, "rootPath");
+        ctx.setPropertyIfNotNull(form, "base");
     }
 
 }

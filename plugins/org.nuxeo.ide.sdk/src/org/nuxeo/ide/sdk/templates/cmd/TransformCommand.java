@@ -19,16 +19,21 @@ package org.nuxeo.ide.sdk.templates.cmd;
 import java.io.File;
 
 import org.nuxeo.ide.common.IOUtils;
+import org.nuxeo.ide.sdk.SDKPlugin;
 import org.nuxeo.ide.sdk.templates.TemplateContext;
+import org.nuxeo.ide.sdk.templates.TemplateEngine;
 import org.nuxeo.ide.sdk.templates.Vars;
 import org.osgi.framework.Bundle;
 import org.w3c.dom.Element;
 
 /**
+ * Perform freeamarker processing on the given template (denoted by path). If
+ * 'to' file is specified the file will be moved to 'to' after transformation.
+ * 
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class RenameCommand implements Command {
+public class TransformCommand implements Command {
 
     protected String path;
 
@@ -38,9 +43,12 @@ public class RenameCommand implements Command {
     public void init(Element element) {
         path = element.getAttribute("path");
         to = element.getAttribute("to");
-        if (path.length() == 0 || to.length() == 0) {
+        if (path.length() == 0) {
             throw new IllegalArgumentException(
-                    "The rename command expect the 'path' and 'to' attributes!");
+                    "The transform command expect a 'path' attribute!");
+        }
+        if (to.length() == 0) {
+            to = null;
         }
     }
 
@@ -48,9 +56,13 @@ public class RenameCommand implements Command {
     public void execute(TemplateContext ctx, Bundle bundle, File projectDir)
             throws Exception {
         File srcFile = new File(projectDir, Vars.expand(path, ctx));
-        File dstFile = new File(projectDir, Vars.expand(to, ctx));
-        dstFile.getParentFile().mkdirs();
-        if (srcFile.renameTo(dstFile)) {
+        TemplateEngine engine = SDKPlugin.getDefault().getTemplateManager().getEngine();
+        if (to == null) {
+            engine.transform(ctx, srcFile, srcFile);
+        } else {
+            File dstFile = new File(projectDir, Vars.expand(to, ctx));
+            engine.transform(ctx, srcFile, dstFile);
+            // the src file should be removed - including its empty parents
             IOUtils.deleteFilePath(srcFile);
         }
     }

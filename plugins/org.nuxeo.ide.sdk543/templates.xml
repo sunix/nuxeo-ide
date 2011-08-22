@@ -3,13 +3,56 @@
   <project id="default" src="projects/default">
     <name>Empty Project</name>
     <description>An empty Nuxeo project</description>
+    <!-- 
+    <preInstall>
+    </preInstall>
+    
+    <postInstall>
+    </postInstall>
+    -->
+    
     <mkdir path="src/main/java/${packagePath}" />
+    <mkdir path="src/test/java/${packagePath}.test" />
+    <mkdir path="src/test/resources" />
+
+    <!--  process templates -->
+    <transform path="pom.xml" />
+    <transform path=".classpath" />
+    <transform path=".project" />
+    <transform path="src/main/resources/META-INF/MANIFEST.MF" />    
   </project>
 
   <project id="service" src="projects/service">
     <name>Service Example</name>
     <description>A project containing a Nuxeo service</description>
-    <rename path="src/main/java/~packagePath~/MyComponent.java" to="src/main/java/${packagePath}/MyComponent.java" />
+    
+    <mkdir path="src/main/java/${packagePath}" />
+    <mkdir path="src/test/java/${packagePath}.test" />
+    <mkdir path="src/test/resources" />
+    
+    <transform path="pom.xml" />
+    <transform path=".classpath" />
+    <transform path=".project" />
+    <transform path="src/main/resources/META-INF/MANIFEST.MF" />        
+    <transform path="src/main/java/packagePath/MyComponent.java" to="src/main/java/${packagePath}/MyComponent.java"/>
+  </project>
+
+  <project id="webengine" src="projects/webengine">
+    <name>WebEngine Project</name>
+    <description>A project defining a WebEngine application</description>
+
+    <mkdir path="src/main/java/${packagePath}" />
+    <mkdir path="src/test/java/${packagePath}.test" />
+    <mkdir path="src/test/resources" />
+
+    <transform path="pom.xml" />
+    <transform path=".classpath" />
+    <transform path=".project" />
+    <transform path="src/main/resources/META-INF/MANIFEST.MF" />                
+    <transform path="src/main/java/packagePath/MyRoot.java" to="src/main/java/${packagePath}/${className}.java"/>
+    
+    <rename path="src/main/resources/skin/views/MyRoot" to="src/main/resources/skin/views/${className}" />
+    
   </project>
 
   <feature id ="operation" src="features/automation/project">
@@ -20,7 +63,7 @@
     
     <dependency groupId="org.nuxeo.ecm.automation" artifactId="nuxeo-automation-core"/>
     
-    <rename path="src/main/java/~packagePath~/~className~.java" to="src/main/java/${packagePath}/${className}.java" />    
+    <transform path="src/main/java/packagePath/MyOperation.java" to="src/main/java/${packagePath}/${className}.java" />    
   </feature>
 
 </templates>

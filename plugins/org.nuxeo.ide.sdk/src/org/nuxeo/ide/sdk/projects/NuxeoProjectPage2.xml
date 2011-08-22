@@ -30,11 +30,7 @@
 <frame label="Additional Information" cols="2" layout="grid" hfill="true" vfill="true">
     <text>Name:</text><textbox id="artifactName" hfill="true"/>
     <text colspan="2">Description:</text>
-    <textarea id="artifactDescription" colspan="2" hfill="true" vfill="true">
-    
-    
-    
-    </textarea>
+    <textarea id="artifactDescription" colspan="2" hfill="true" vfill="true" />
 </frame>
 
 </panel>

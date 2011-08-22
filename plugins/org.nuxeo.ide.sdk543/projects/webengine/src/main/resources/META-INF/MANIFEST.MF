@@ -1,0 +1,10 @@
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: .
+Manifest-Version: 1.0
+Bundle-Name: ${projectName}
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Vendor: Nuxeo
+Bundle-Version: ${bundleVersion}
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: ${projectId}
+Nuxeo-WebModule: org.nuxeo.ecm.webengine.app.WebEngineModule;name=${appName}<#if base>;extends=${base}</#if>;package=${packagePath}

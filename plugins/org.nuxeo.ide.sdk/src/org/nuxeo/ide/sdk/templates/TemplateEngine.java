@@ -24,6 +24,17 @@ import java.io.File;
  */
 public interface TemplateEngine {
 
+    /**
+     * Process the given template file (src) and write the result to dst file
+     * 
+     * @param ctx
+     * @param root
+     * @throws Exception
+     */
+    public void transform(TemplateContext ctx, File src, File dst)
+            throws Exception;
+
+    @Deprecated
     public void expandVars(TemplateContext ctx, File root) throws Exception;
 
     public String expandVars(TemplateContext ctx, String content)

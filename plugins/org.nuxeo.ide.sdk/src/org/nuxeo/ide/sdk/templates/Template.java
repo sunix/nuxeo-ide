@@ -26,7 +26,6 @@ import java.util.List;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.nuxeo.ide.common.IOUtils;
-import org.nuxeo.ide.sdk.SDKPlugin;
 import org.nuxeo.ide.sdk.templates.cmd.Command;
 import org.osgi.framework.Bundle;
 
@@ -88,9 +87,35 @@ public abstract class Template implements Comparable<Template> {
         return src;
     }
 
-    public abstract void process(Bundle bundle, TemplateContext ctx, File dir)
-            throws Exception;
+    /**
+     * Expand and process the templates into a temporary target directory
+     * 
+     * @param bundle
+     * @param ctx
+     * @param dir
+     * @throws Exception
+     */
+    protected void process(Bundle bundle, TemplateContext ctx, File dir)
+            throws Exception {
+        File tmp = IOUtils.createTempDir(dir.getParentFile());
+        try {
+            copyTo(bundle, tmp);
+            installTemplate(tmp, dir);
+            processCommands(bundle, ctx, dir);
+        } finally {
+            IOUtils.deleteTree(tmp);
+        }
+    }
 
+    /**
+     * Process the template commands against the given directory (this is usual
+     * a temporary directory used for processing the template)
+     * 
+     * @param bundle
+     * @param ctx
+     * @param dir
+     * @throws Exception
+     */
     protected void processCommands(Bundle bundle, TemplateContext ctx, File dir)
             throws Exception {
         for (Command cmd : commands) {
@@ -98,11 +123,20 @@ public abstract class Template implements Comparable<Template> {
         }
     }
 
-    protected void expand(Bundle bundle, TemplateContext ctx, File dir)
-            throws Exception {
-        copyTo(bundle, dir);
-        TemplateEngine engine = SDKPlugin.getDefault().getTemplateManager().getEngine();
-        engine.expandVars(ctx, dir);
+    /**
+     * The template artifacts were expanded into a tmp directory. Install these
+     * artifacts in the final directory.
+     * 
+     * @param tmp - the temporary directory containing the generated artifacts
+     * @param dir - the target directory (may not exists)
+     */
+    protected void installTemplate(File tmp, File dir) throws IOException {
+        if (!dir.isDirectory()) {
+            dir.getParentFile().mkdir();
+            tmp.renameTo(dir);
+        } else {
+            IOUtils.copyTreeContent(tmp, dir);
+        }
     }
 
     protected void copyTo(Bundle bundle, File dir) throws IOException {

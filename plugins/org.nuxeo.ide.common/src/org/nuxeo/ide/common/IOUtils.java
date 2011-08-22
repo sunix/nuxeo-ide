@@ -316,4 +316,17 @@ public class IOUtils {
         writeFile(file, buf.getBytes());
     }
 
+    /**
+     * Delete the given file then delete all its empty parents.
+     * 
+     * @param file
+     */
+    public static void deleteFilePath(File file) {
+        file.delete();
+        // delete empty hierarchy
+        File dir = file.getParentFile();
+        while (dir.delete()) {
+            dir = dir.getParentFile();
+        }
+    }
 }

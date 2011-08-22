@@ -31,6 +31,7 @@ import org.nuxeo.ide.sdk.NuxeoSDK;
 import org.nuxeo.ide.sdk.templates.cmd.Command;
 import org.nuxeo.ide.sdk.templates.cmd.MkdirCommand;
 import org.nuxeo.ide.sdk.templates.cmd.RenameCommand;
+import org.nuxeo.ide.sdk.templates.cmd.TransformCommand;
 import org.osgi.framework.Bundle;
 import org.w3c.dom.Document;
 
@@ -67,6 +68,7 @@ public class TemplateManager {
     protected void initCommands() {
         commands.put("rename", RenameCommand.class);
         commands.put("mkdir", MkdirCommand.class);
+        commands.put("transform", TransformCommand.class);
     }
 
     public void addCommand(String key, Class<? extends Command> type) {

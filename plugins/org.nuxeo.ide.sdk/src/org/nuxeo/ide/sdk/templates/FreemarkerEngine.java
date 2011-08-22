@@ -27,6 +27,8 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 
+import org.nuxeo.ide.common.IOUtils;
+
 import freemarker.core.Environment;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -91,6 +93,7 @@ public class FreemarkerEngine implements TemplateEngine {
         return dst;
     }
 
+    @Deprecated
     public void expandVars(TemplateContext ctx, File root) throws Exception {
         // first rename the file is needed
         root = renameFileIfNeeded(ctx, root);
@@ -132,6 +135,17 @@ public class FreemarkerEngine implements TemplateEngine {
         StringWriter writer = new StringWriter();
         processTemplate(ctx, "inline", new StringReader(content), writer);
         return writer.toString();
+    }
+
+    @Override
+    public void transform(TemplateContext ctx, File src, File dst)
+            throws Exception {
+        String content = IOUtils.readFile(src);
+        content = expandVars(ctx, content);
+        if (src != dst) {
+            dst.getParentFile().mkdirs();
+        }
+        IOUtils.writeFile(dst, content);
     }
 
     protected void processTemplate(TemplateContext ctx, String name,

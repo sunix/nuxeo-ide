@@ -16,11 +16,7 @@
  */
 package org.nuxeo.ide.sdk.templates;
 
-import java.io.File;
-
-import org.nuxeo.ide.common.IOUtils;
 import org.nuxeo.ide.sdk.templates.cmd.Command;
-import org.osgi.framework.Bundle;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -32,25 +28,6 @@ public class ProjectTemplate extends Template {
 
     public ProjectTemplate(String id) {
         super(id);
-    }
-
-    @Override
-    public void process(Bundle bundle, TemplateContext ctx, File dir)
-            throws Exception {
-        // create a temporary directory in the same parent as the final
-        // directory
-        // (to be sure renameTo will work)
-        File tmp = IOUtils.createTempDir(dir.getParentFile());
-        try {
-            expand(bundle, ctx, tmp);
-            tmp.renameTo(dir);
-            processCommands(bundle, ctx, dir);
-        } finally {
-            if (tmp.exists()) {
-                IOUtils.deleteTree(tmp);
-            }
-        }
-
     }
 
     public static ProjectTemplate load(TemplateManager manager, Element element)

@@ -22,6 +22,7 @@ import java.net.URI;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -46,6 +47,10 @@ public class NuxeoProjectPage1 extends FormWizardPage<ProjectTemplateContext>
         implements Constants {
 
     public final static String PROJECT_LOCATION = "projectLocation";
+
+    public NuxeoProjectPage1(String id, String title, ImageDescriptor image) {
+        super(id, title, image);
+    }
 
     public NuxeoProjectPage1() {
         super("nuxeoProjectPage1", "Create a Nuxeo Project", null);

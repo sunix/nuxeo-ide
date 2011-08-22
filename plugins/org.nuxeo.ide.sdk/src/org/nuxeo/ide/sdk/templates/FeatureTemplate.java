@@ -92,19 +92,9 @@ public class FeatureTemplate extends Template {
     }
 
     @Override
-    public void process(Bundle bundle, TemplateContext ctx, File dir)
+    protected void processCommands(Bundle bundle, TemplateContext ctx, File dir)
             throws Exception {
-        // create a temporary directory in the same parent as the final
-        // directory
-        // (to be sure renameTo will work)
-        File tmp = IOUtils.createTempDir(dir.getParentFile());
-        try {
-            expand(bundle, ctx, tmp);
-            IOUtils.copyTreeContent(tmp, dir);
-            processCommands(bundle, ctx, dir);
-        } finally {
-            IOUtils.deleteTree(tmp);
-        }
+        super.processCommands(bundle, ctx, dir);
         applyExtensions(bundle, ctx, dir);
         applyManifestModifications(dir);
         applyDependencies(dir);
