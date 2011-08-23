@@ -22,20 +22,6 @@
     <transform path="src/main/resources/META-INF/MANIFEST.MF" />    
   </project>
 
-  <project id="service" src="projects/service">
-    <name>Service Example</name>
-    <description>A project containing a Nuxeo service</description>
-    
-    <mkdir path="src/main/java/${packagePath}" />
-    <mkdir path="src/test/java/${packagePath}/test" />
-    <mkdir path="src/test/resources" />
-    
-    <transform path="pom.xml" />
-    <transform path=".classpath" />
-    <transform path=".project" />
-    <transform path="src/main/resources/META-INF/MANIFEST.MF" />        
-    <transform path="src/main/java/packagePath/MyComponent.java" to="src/main/java/${packagePath}/MyComponent.java"/>
-  </project>
 
   <project id="webengine" src="projects/webengine">
     <name>WebEngine Project</name>
