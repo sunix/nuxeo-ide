@@ -199,7 +199,7 @@ public class NuxeoSDK {
                     continue;
                 }
                 File bin = new File(p.getProject().getLocation().toFile(),
-                        "bin");
+                        "bin/main");
                 if (bin.isDirectory()) {
                     buf.append(bin.getAbsolutePath()).append("\n");
                 }

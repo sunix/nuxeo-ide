@@ -12,7 +12,7 @@
     -->
     
     <mkdir path="src/main/java/${packagePath}" />
-    <mkdir path="src/test/java/${packagePath}.test" />
+    <mkdir path="src/test/java/${packagePath}/test" />
     <mkdir path="src/test/resources" />
 
     <!--  process templates -->
@@ -27,7 +27,7 @@
     <description>A project containing a Nuxeo service</description>
     
     <mkdir path="src/main/java/${packagePath}" />
-    <mkdir path="src/test/java/${packagePath}.test" />
+    <mkdir path="src/test/java/${packagePath}/test" />
     <mkdir path="src/test/resources" />
     
     <transform path="pom.xml" />
@@ -42,7 +42,7 @@
     <description>A project defining a WebEngine application</description>
 
     <mkdir path="src/main/java/${packagePath}" />
-    <mkdir path="src/test/java/${packagePath}.test" />
+    <mkdir path="src/test/java/${packagePath}/test" />
     <mkdir path="src/test/resources" />
 
     <transform path="pom.xml" />
