@@ -101,6 +101,9 @@ public class NuxeoSDK {
         NuxeoSDK sdk = instance;
         if (sdk != null) {
             try {
+                synchronized (sdk) {
+                    sdk.classpath = null;
+                }
                 reloadSDKClasspathContainer();
             } catch (CoreException e) {
                 UI.showError("Failed to rebuild Nuxeo Projects", e);

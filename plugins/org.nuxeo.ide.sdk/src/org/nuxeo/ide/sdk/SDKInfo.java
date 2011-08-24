@@ -132,22 +132,4 @@ public class SDKInfo {
         return null;
     }
 
-    // public static void main(String[] args) throws Exception {
-    // // HashMap<String, String> index = new HashMap<String, String>();
-    // // buildIndex(
-    // // new File(
-    // //
-    // "/Users/bstefanescu/work/osgi/bundles/org.apache.felix.dependencymanager-3.0.0.jar"),
-    // // index);
-    // // System.out.println(index.size());
-    //
-    // File[] roots = new File[2];
-    // roots[0] = new File(
-    // "/Users/bstefanescu/work/nuxeo/nuxeo-distribution/nuxeo-distribution-tomcat/target/nuxeo-dm-5.4.3-SNAPSHOT-tomcat/nxserver/bundles");
-    // roots[1] = new File(
-    // "/Users/bstefanescu/work/nuxeo/nuxeo-distribution/nuxeo-distribution-tomcat/target/nuxeo-dm-5.4.3-SNAPSHOT-tomcat/nxserver/lib");
-    // Map<String, String> index = buildIndex(roots);
-    // System.out.println(index.size());
-    // System.out.println("");
-    // }
 }

@@ -26,8 +26,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Text;
+import org.nuxeo.ide.sdk.userlibs.UserLib;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -41,7 +41,7 @@ public class DeploymentPanel extends Composite {
 
     protected ProjectCheckList projects;
 
-    protected List libraries;
+    protected UserLibCheckList libraries;
 
     protected DeploymentDialog dialog;
 
@@ -58,6 +58,7 @@ public class DeploymentPanel extends Composite {
         this.deployment = deployment;
         this.name.setText(deployment.getName());
         this.projects.setCheckedProjects(deployment.getProjects());
+        this.libraries.setCheckedLibs(deployment.getLibraries());
     }
 
     public Deployment getDeployment() {
@@ -82,7 +83,7 @@ public class DeploymentPanel extends Composite {
         projects = new ProjectCheckList(this);
         Label label2 = new Label(this, SWT.NONE);
         label2.setText("User Libraries");
-        libraries = new List(this, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+        libraries = new UserLibCheckList(this);
 
         GridData gd = new GridData();
         gd.horizontalSpan = 2;
@@ -136,5 +137,18 @@ public class DeploymentPanel extends Composite {
                         }
                     }
                 });
+
+        libraries.getTableViewer().addCheckStateListener(
+                new ICheckStateListener() {
+                    @Override
+                    public void checkStateChanged(CheckStateChangedEvent event) {
+                        if (event.getChecked()) {
+                            deployment.addLibrary((UserLib) event.getElement());
+                        } else {
+                            deployment.removeLibrary((UserLib) event.getElement());
+                        }
+                    }
+                });
+
     }
 }

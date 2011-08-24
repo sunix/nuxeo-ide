@@ -16,22 +16,14 @@
  */
 package org.nuxeo.ide.sdk.ui.actions;
 
-import java.util.Set;
-
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.dialogs.WizardDataTransferPage;
 import org.nuxeo.ide.common.UI;
-import org.nuxeo.ide.sdk.index.Dependency;
-import org.nuxeo.ide.sdk.index.DependencyProvider;
 
 /**
  * Fake add nature - used as an example
@@ -63,19 +55,6 @@ public class SyncPom implements IObjectActionDelegate {
                         part.getSite().getShell(), wizard);
                 dialog.create();
                 dialog.open();
-                // IProject project = ((IResource) o).getProject();
-                // IJavaProject jproject = JavaCore.create(project);
-                // try {
-                // Set<Dependency> result =
-                // DependencyProvider.getDependencies(jproject);
-                // System.out.println("############# RESULT:");
-                // for (Dependency dep : result) {
-                // System.out.println(dep);
-                // }
-                // } catch (Exception e) {
-                // e.printStackTrace();
-                // UI.showError("Failed to compute dependencies", e);
-                // }
             }
         } else {
             UI.showError("No Nuxeo project was selected");

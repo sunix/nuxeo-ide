@@ -37,6 +37,7 @@ import org.nuxeo.ide.common.forms.ActionHandler;
 import org.nuxeo.ide.common.forms.Form;
 import org.nuxeo.ide.common.forms.FormData;
 import org.nuxeo.ide.common.forms.UIObject;
+import org.nuxeo.ide.sdk.NuxeoSDK;
 import org.nuxeo.ide.sdk.model.PomModel;
 
 /**
@@ -143,7 +144,10 @@ public class UserLibPreferencePage extends FormPreferencePage implements
         if (lastEdited != null) {
             saveEditor(lastEdited);
         }
-        prefs.save();
+        if (prefs.isModified()) {
+            prefs.save();
+            NuxeoSDK.reload();
+        }
     }
 
     protected void handleAddAction(Shell shell) {

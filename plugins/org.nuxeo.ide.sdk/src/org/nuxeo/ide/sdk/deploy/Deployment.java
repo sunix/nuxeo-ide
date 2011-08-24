@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
+import org.nuxeo.ide.sdk.userlibs.UserLib;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -62,6 +63,14 @@ public class Deployment {
         return projects.toArray(new IProject[projects.size()]);
     }
 
+    public void addLibrary(UserLib lib) {
+        libs.add(lib.getPath());
+    }
+
+    public void removeLibrary(UserLib lib) {
+        libs.remove(lib.getPath());
+    }
+
     public List<String> getProjectNames() {
         ArrayList<String> result = new ArrayList<String>(projects.size());
         for (IProject project : projects) {
@@ -72,6 +81,15 @@ public class Deployment {
 
     public Set<String> getLibraryPaths() {
         return libs;
+    }
+
+    public UserLib[] getLibraries() {
+        UserLib[] result = new UserLib[libs.size()];
+        int i = 0;
+        for (String path : libs) {
+            result[i++] = new UserLib(path);
+        }
+        return result;
     }
 
     public String getContentAsString() {

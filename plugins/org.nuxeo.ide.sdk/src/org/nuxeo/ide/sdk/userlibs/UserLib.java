@@ -103,4 +103,20 @@ public class UserLib {
         return path;
     }
 
+    @Override
+    public int hashCode() {
+        return path.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (obj instanceof UserLib) {
+            return ((UserLib) obj).path.equals(path);
+        }
+        return false;
+    }
+
 }

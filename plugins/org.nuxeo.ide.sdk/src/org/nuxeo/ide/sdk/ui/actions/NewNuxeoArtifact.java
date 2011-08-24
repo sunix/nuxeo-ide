@@ -1,7 +1,6 @@
 package org.nuxeo.ide.sdk.ui.actions;
 
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;

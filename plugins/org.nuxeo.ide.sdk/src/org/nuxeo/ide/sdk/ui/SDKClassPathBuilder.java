@@ -25,6 +25,9 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.JavaCore;
 import org.nuxeo.ide.sdk.NuxeoSDK;
+import org.nuxeo.ide.sdk.userlibs.UserLib;
+import org.nuxeo.ide.sdk.userlibs.UserLibPreferences;
+import org.osgi.service.prefs.BackingStoreException;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -42,7 +45,23 @@ public class SDKClassPathBuilder {
 
         collectPaths(bundles, bundlesSrc, result);
         collectPaths(lib, libSrc, result);
+
+        collectUserLibraries(libSrc, result);
+
         return result.toArray(new IClasspathEntry[result.size()]);
+    }
+
+    protected static void collectUserLibraries(File srcRoot,
+            List<IClasspathEntry> result) {
+        try {
+            UserLibPreferences prefs = UserLibPreferences.load();
+            for (UserLib lib : prefs.getUserLibs().values()) {
+                result.add(JavaCore.newLibraryEntry(new Path(lib.getPath()),
+                        getSrcPath(srcRoot, lib.getName()), Path.ROOT));
+            }
+        } catch (BackingStoreException e) {
+            e.printStackTrace(); // TODO
+        }
     }
 
     protected static void collectPaths(File root, File srcRoot,
@@ -56,14 +75,16 @@ public class SDKClassPathBuilder {
         if (files != null) {
             for (File file : files) {
                 String name = file.getName();
-                String prefix = name.substring(0, name.length() - 4);
-                File src = new File(srcRoot, prefix + "-sources.jar");
-                Path srcPath = src.exists() ? new Path(src.getAbsolutePath())
-                        : null;
                 result.add(JavaCore.newLibraryEntry(
-                        new Path(file.getAbsolutePath()), srcPath, Path.ROOT));
+                        new Path(file.getAbsolutePath()),
+                        getSrcPath(srcRoot, name), Path.ROOT));
             }
         }
     }
 
+    private static Path getSrcPath(File srcRoot, String name) {
+        String prefix = name.substring(0, name.length() - 4);
+        File src = new File(srcRoot, prefix + "-sources.jar");
+        return src.exists() ? new Path(src.getAbsolutePath()) : null;
+    }
 }

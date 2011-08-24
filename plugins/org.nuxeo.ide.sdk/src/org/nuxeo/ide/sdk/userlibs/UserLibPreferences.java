@@ -30,6 +30,8 @@ import org.osgi.service.prefs.Preferences;
  */
 public class UserLibPreferences {
 
+    protected boolean modified = false;
+
     public static IEclipsePreferences getPreferencesNode() {
         return new ConfigurationScope().getNode("nuxeo.sdk.userlibs");
     }
@@ -41,6 +43,10 @@ public class UserLibPreferences {
 
     public UserLibPreferences() {
         userLibs = new HashMap<String, UserLib>();
+    }
+
+    public boolean isModified() {
+        return modified;
     }
 
     public Map<String, UserLib> getUserLibs() {
@@ -55,14 +61,17 @@ public class UserLibPreferences {
         int i = lib.getPath().lastIndexOf('/');
         String name = i == -1 ? lib.getPath() : lib.getPath().substring(i + 1);
         userLibs.put(name, lib);
+        modified = true;
     }
 
     public void putUserLib(String name, UserLib lib) {
         userLibs.put(name, lib);
+        modified = true;
     }
 
     public void removeUserLib(UserLib lib) {
         userLibs.remove(lib.getName());
+        modified = true;
     }
 
     public boolean isEmpty() {
@@ -87,7 +96,7 @@ public class UserLibPreferences {
             lib.setArtifactId(node.get("artifactId", null));
             lib.setVersion(node.get("version", null));
             lib.setClassifier(node.get("classifier", null));
-            prefs.putUserLib(name, lib);
+            prefs.userLibs.put(name, lib);
         }
         return prefs;
     }

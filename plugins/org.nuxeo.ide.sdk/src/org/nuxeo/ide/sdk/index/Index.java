@@ -30,6 +30,8 @@ import java.util.TreeMap;
 
 import org.nuxeo.ide.sdk.model.Artifact;
 import org.nuxeo.ide.sdk.model.PomModel;
+import org.nuxeo.ide.sdk.userlibs.UserLib;
+import org.nuxeo.ide.sdk.userlibs.UserLibPreferences;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -99,9 +101,20 @@ public class Index {
 
     public static Artifact resolve(Dependency dep) {
         if (dep.isBinary()) {
-            String gav = getIndex().get(dep.getJar().getName());
+            String name = dep.getJar().getName();
+            String gav = getIndex().get(name);
             if (gav != null) {
                 return Artifact.fromGav(gav);
+            } else { // try user libraries
+                try {
+                    UserLib lib = UserLibPreferences.load().getUserLibs().get(
+                            name);
+                    if (lib != null) {
+                        return lib.getArtifact();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         } else {
             try {
