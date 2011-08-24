@@ -46,10 +46,6 @@ public class ProjectViewProvider extends BaseLabelProvider implements
         this.natures = natures;
     }
 
-    @Override
-    public void dispose() {
-    }
-
     protected boolean accept(IProject project) {
         if (natures == null) {
             return true;

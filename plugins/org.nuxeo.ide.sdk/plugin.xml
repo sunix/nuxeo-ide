@@ -19,7 +19,7 @@
       <page 
          id="org.nuxeo.ide.prefs.userlibs" 
          name="User Libraries" 
-         class="org.nuxeo.ide.sdk.server.ui.UserLibrariesPreferencePage" 
+         class="org.nuxeo.ide.sdk.userlibs.UserLibPreferencePage" 
          category="org.nuxeo.ide.prefs"> 
       </page> 
    </extension>

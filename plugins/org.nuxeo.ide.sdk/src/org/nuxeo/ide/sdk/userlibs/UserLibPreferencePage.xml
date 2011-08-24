@@ -9,7 +9,7 @@ To be able to update your pom.xml dependencies you must specify a GAV descriptio
 
 <frame hfill="true" vfill="true" layout="grid" cols="2" label="User Libraries">
 
-<listbox id="libs" hfill="true" vfill="true"/>
+<userlibs id="libs" hfill="true" vfill="true"/>
 
 <panel vertical="true" valign="top">
 <button id="add">Add</button>
@@ -18,15 +18,17 @@ To be able to update your pom.xml dependencies you must specify a GAV descriptio
 
 </frame>
 
-<frame id="gav" label="GAV Information" hfill="true" cols="2" layout="grid" enabled="false">
+<frame id="editor" label="Library Metadata" hfill="true" cols="2" layout="grid" enabled="false">
+<text>Path:</text>
+<textbox id="path" hfill="true" readonly="true"/>
 <text>Group Id:</text>
 <textbox id="groupId" hfill="true" />
 <text>Artifact Id:</text>
 <textbox id="artifactId" hfill="true" />
 <text>Version:</text>
 <textbox id="version" hfill="true" />
-<text>Packaging:</text> 
-<textbox id="packaging" hfill="true" />
+<text>Classifier:</text> 
+<textbox id="classifier" hfill="true" />
 </frame>
 
 </panel>

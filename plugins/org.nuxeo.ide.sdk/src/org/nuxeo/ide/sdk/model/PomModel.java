@@ -16,6 +16,7 @@
  */
 package org.nuxeo.ide.sdk.model;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +54,10 @@ public class PomModel extends XmlFile {
 
     public PomModel(InputStream in) throws Exception {
         super(in);
+    }
+
+    public PomModel(File file) throws Exception {
+        super(file);
     }
 
     public Element getDependenciesElement() {
