@@ -53,7 +53,7 @@ public class ButtonWidget extends UIValueObject<Button> implements HasText {
     }
 
     protected void onAction(SelectionEvent e) {
-        form.handleAction(this, e);
+        form.handleAction(getId(), this, e);
     }
 
     @Override

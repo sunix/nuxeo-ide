@@ -16,13 +16,14 @@
  */
 package org.nuxeo.ide.sdk.server.ui;
 
-import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.sdk.NuxeoSDK;
+import org.nuxeo.ide.sdk.deploy.Deployment;
+import org.nuxeo.ide.sdk.deploy.DeploymentPreferences;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -35,8 +36,11 @@ public class ReloadProjects implements IViewActionDelegate {
     @Override
     public void run(IAction action) {
         try {
-            IJavaProject[] projects = AutoDeployConfiguration.getStoredProjects();
-            reload(projects);
+            DeploymentPreferences prefs = DeploymentPreferences.load();
+            Deployment d = prefs.getDefault();
+            if (d != null) {
+                reload(d);
+            }
         } catch (Exception e) {
             UI.showError("Failed to reload projects", e);
         }
@@ -51,10 +55,10 @@ public class ReloadProjects implements IViewActionDelegate {
         this.view = (ServerView) view;
     }
 
-    public static void reload(IJavaProject[] projects) throws Exception {
+    public static void reload(Deployment deployment) throws Exception {
         NuxeoSDK sdk = NuxeoSDK.getDefault();
         if (sdk != null) {
-            sdk.reloadProjects(projects);
+            sdk.reloadDeployment(deployment);
         }
     }
 

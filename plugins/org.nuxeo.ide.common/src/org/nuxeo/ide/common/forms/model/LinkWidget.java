@@ -50,7 +50,7 @@ public class LinkWidget extends UIObject<Link> {
                 if (e.text.startsWith("http:")) {
                     Program.launch(e.text);
                 } else {
-                    form.handleAction(LinkWidget.this, e);
+                    form.handleAction(getId(), LinkWidget.this, e);
                 }
             }
         });

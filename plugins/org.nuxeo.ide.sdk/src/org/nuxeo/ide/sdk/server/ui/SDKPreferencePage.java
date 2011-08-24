@@ -30,6 +30,7 @@ import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.common.forms.ActionHandler;
 import org.nuxeo.ide.common.forms.Form;
 import org.nuxeo.ide.common.forms.UIObject;
+import org.nuxeo.ide.sdk.NuxeoSDK;
 import org.nuxeo.ide.sdk.SDKInfo;
 import org.nuxeo.ide.sdk.SDKRegistry;
 
@@ -131,7 +132,7 @@ public class SDKPreferencePage extends FormPreferencePage implements
     }
 
     public void reload() {
-        System.out.println("Reload SDK");
+        NuxeoSDK.reload();
     }
 
     protected void updateButtonBar() {

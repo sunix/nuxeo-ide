@@ -28,6 +28,7 @@ import java.util.Properties;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.nuxeo.ide.common.forms.model.ButtonWidget;
@@ -47,10 +48,12 @@ import org.nuxeo.ide.common.forms.model.PasswordWidget;
 import org.nuxeo.ide.common.forms.model.RadioGroupWidget;
 import org.nuxeo.ide.common.forms.model.RadioWidget;
 import org.nuxeo.ide.common.forms.model.RegexValidator;
+import org.nuxeo.ide.common.forms.model.SashWidget;
 import org.nuxeo.ide.common.forms.model.TextAreaWidget;
 import org.nuxeo.ide.common.forms.model.TextBoxWidget;
 import org.nuxeo.ide.common.forms.model.TextWidget;
 import org.nuxeo.ide.common.forms.model.ToggleButtonWidget;
+import org.nuxeo.ide.common.forms.model.ToolbarWidget;
 import org.nuxeo.ide.common.forms.model.VerticalLine;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -77,6 +80,10 @@ public class Form {
 
     protected ErrorHandler errorHandler;
 
+    protected ImageProvider imageProvider;
+
+    protected Map<String, Image> images;
+
     public Form() {
         this.layouts = new HashMap<String, LayoutManager>();
         this.widgetTypes = new HashMap<String, Class<?>>();
@@ -85,6 +92,7 @@ public class Form {
         this.actions = new HashMap<String, ActionHandler>();
         this.errors = new HashMap<String, String>();
         this.validators = new HashMap<String, Class<? extends Validator>>();
+        this.images = new HashMap<String, Image>();
         initDefaults();
     }
 
@@ -92,6 +100,8 @@ public class Form {
         addLayoutManager(new FillLayoutManager());
         addLayoutManager(new GridLayoutManager());
 
+        addWidgetType(ToolbarWidget.class);
+        addWidgetType(SashWidget.class);
         addWidgetType(HorizontalLine.class);
         addWidgetType(VerticalLine.class);
         addWidgetType(Panel.class);
@@ -368,11 +378,7 @@ public class Form {
         }
     }
 
-    public void handleAction(UIObject<?> obj, Object event) {
-        String id = obj.getId();
-        if (id == null) {
-            return;
-        }
+    public void handleAction(String id, UIObject<?> obj, Object event) {
         ActionHandler handler = actions.get(id);
         if (handler != null) {
             handler.handleAction(this, obj, event);
@@ -387,4 +393,35 @@ public class Form {
         return actions;
     }
 
+    public void setImageProvider(ImageProvider imageProvider) {
+        this.imageProvider = imageProvider;
+    }
+
+    public ImageProvider getImageProvider() {
+        return imageProvider;
+    }
+
+    public Map<String, Image> getImages() {
+        return images;
+    }
+
+    public Image getImage(String key) {
+        Image img = images.get(key);
+        if (img == null && imageProvider != null) {
+            img = imageProvider.getImage(key);
+            if (img != null) {
+                images.put(key, img);
+            }
+        }
+        return img;
+    }
+
+    public void dispose() {
+        if (!images.isEmpty()) {
+            for (Image img : images.values()) {
+                img.dispose();
+            }
+        }
+        images = null;
+    }
 }

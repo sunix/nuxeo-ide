@@ -133,6 +133,7 @@ public abstract class UIObject<T extends Control> {
                     : element.getTextContent());
         }
         ctrl.setEnabled(getBooleanAttribute(element, "enabled", true));
+        ctrl.setVisible(getBooleanAttribute(element, "visible", true));
         if (ctx.getLayout() != null) {
             ctx.getLayout().applyLayout(ctrl, element);
         }

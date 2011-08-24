@@ -52,4 +52,15 @@
     <transform path="src/main/java/packagePath/MyOperation.java" to="src/main/java/${packagePath}/${className}.java" />    
   </feature>
 
+  <feature id ="listener" src="features/listener/project">
+    <name>Listener</name>
+    <description>A listener object</description>
+    
+    <extension src="features/listener/extensions.xml"/>
+    
+    <dependency groupId="org.nuxeo.ecm.core" artifactId="nuxeo-core-event"/>
+    
+    <transform path="src/main/java/packagePath/MyListener.java" to="src/main/java/${packagePath}/${className}.java" />    
+  </feature>
+
 </templates>

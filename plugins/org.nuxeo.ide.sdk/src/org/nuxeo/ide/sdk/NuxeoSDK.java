@@ -35,6 +35,7 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.nuxeo.ide.common.IOUtils;
 import org.nuxeo.ide.common.UI;
+import org.nuxeo.ide.sdk.deploy.Deployment;
 import org.nuxeo.ide.sdk.server.ServerController;
 import org.nuxeo.ide.sdk.ui.NuxeoNature;
 import org.nuxeo.ide.sdk.ui.SDKClassPathBuilder;
@@ -94,6 +95,17 @@ public class NuxeoSDK {
             }
         }
         return sdk;
+    }
+
+    public static void reload() {
+        NuxeoSDK sdk = instance;
+        if (sdk != null) {
+            try {
+                reloadSDKClasspathContainer();
+            } catch (CoreException e) {
+                UI.showError("Failed to rebuild Nuxeo Projects", e);
+            }
+        }
     }
 
     public static void dispose() {
@@ -190,22 +202,10 @@ public class NuxeoSDK {
     /**
      * Reload projects on server
      */
-    public void reloadProjects(IJavaProject[] projects) throws Exception {
+    public void reloadDeployment(Deployment deployment) throws Exception {
         File file = new File(root, "nxserver/dev.bundles");
-        StringBuilder buf = new StringBuilder();
-        if (projects != null && projects.length > 0) {
-            for (IJavaProject p : projects) {
-                if (!p.exists()) {
-                    continue;
-                }
-                File bin = new File(p.getProject().getLocation().toFile(),
-                        "bin/main");
-                if (bin.isDirectory()) {
-                    buf.append(bin.getAbsolutePath()).append("\n");
-                }
-            }
-        }
-        IOUtils.writeFile(file, buf.toString());
+        String content = deployment.getContentAsString();
+        IOUtils.writeFile(file, content);
     }
 
     public static void rebuildProjects() {

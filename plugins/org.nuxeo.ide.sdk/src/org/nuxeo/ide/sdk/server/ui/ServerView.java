@@ -17,6 +17,8 @@ import org.eclipse.ui.part.ViewPart;
 import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.sdk.NuxeoSDK;
 import org.nuxeo.ide.sdk.SDKChangedListener;
+import org.nuxeo.ide.sdk.deploy.Deployment;
+import org.nuxeo.ide.sdk.deploy.DeploymentPreferences;
 import org.nuxeo.ide.sdk.server.ServerConstants;
 import org.nuxeo.ide.sdk.server.ServerController;
 import org.nuxeo.ide.sdk.server.ServerLifeCycleAdapter;
@@ -81,6 +83,12 @@ public class ServerView extends ViewPart implements ISelectionProvider,
     }
 
     public void start() throws Exception {
+        // auto deployment
+        Deployment deploy = DeploymentPreferences.load().getDefault();
+        if (deploy != null) {
+            NuxeoSDK.getDefault().reloadDeployment(deploy);
+        }
+        // now start
         console.setText("=== Starting Nuxeo Server ===\r\n");
         ctrl.startAsJob();
     }
