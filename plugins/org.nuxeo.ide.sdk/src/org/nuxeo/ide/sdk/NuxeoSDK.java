@@ -181,11 +181,11 @@ public class NuxeoSDK {
     }
 
     public File getLibSrcDir() {
-        return new File(root, "nxserver/sdk/lib");
+        return new File(root, "nxserver/sdk/sources");
     }
 
     public File getBundlesSrcDir() {
-        return new File(root, "nxserver/sdk/bundles");
+        return new File(root, "nxserver/sdk/sources");
     }
 
     public IClasspathEntry[] getClasspathEntries() {
