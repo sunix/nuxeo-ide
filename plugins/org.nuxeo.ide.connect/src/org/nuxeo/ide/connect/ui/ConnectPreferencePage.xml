@@ -10,11 +10,12 @@ For more information on Nuxeo Connect and Nuxeo Studio click here:
 <a href="http://connect.nuxeo.com">http://connect.nuxeo.com</a>
 </link>
 
+<text>Host:</text><textbox id="host" hfill="true"/>
 <text>Username:</text><textbox id="username" hfill="true"/>
 <text>Password:</text><password id="password" hfill="true"/>
 
 <panel colspan="2" halign="right">
-<button id="reset">Reset</button><button id="connect">Connect</button>
+<button id="connect">Connect</button>
 </panel>
 
 </frame>

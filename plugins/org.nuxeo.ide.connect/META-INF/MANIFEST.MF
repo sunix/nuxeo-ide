@@ -6,6 +6,10 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.nuxeo.ide.connect.ConnectPlugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.nuxeo.ide.common
+ org.nuxeo.ide.common,
+ org.eclipse.equinox.security,
+ org.eclipse.jdt.core,
+ org.eclipse.core.resources,
+ org.eclipse.jdt.ui
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

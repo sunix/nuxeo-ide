@@ -21,6 +21,7 @@ import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.JavaCore;
@@ -56,8 +57,9 @@ public class SDKClassPathBuilder {
         try {
             UserLibPreferences prefs = UserLibPreferences.load();
             for (UserLib lib : prefs.getUserLibs().values()) {
-                result.add(JavaCore.newLibraryEntry(new Path(lib.getPath()),
-                        getSrcPath(srcRoot, lib.getName()), Path.ROOT));
+                IPath path = new Path(lib.getPath());
+                IPath srcPath = getSrcPath(path);
+                result.add(JavaCore.newLibraryEntry(path, srcPath, Path.ROOT));
             }
         } catch (BackingStoreException e) {
             e.printStackTrace(); // TODO
@@ -82,9 +84,18 @@ public class SDKClassPathBuilder {
         }
     }
 
-    private static Path getSrcPath(File srcRoot, String name) {
+    private static IPath getSrcPath(File srcRoot, String name) {
         String prefix = name.substring(0, name.length() - 4);
         File src = new File(srcRoot, prefix + "-sources.jar");
         return src.exists() ? new Path(src.getAbsolutePath()) : null;
     }
+
+    private static IPath getSrcPath(IPath jarPath) {
+        String name = jarPath.lastSegment();
+        String prefix = name.substring(0, name.length() - 4);
+        IPath path = jarPath.removeLastSegments(1).append(
+                prefix + "-sources.jar").makeAbsolute();
+        return path.toFile().exists() ? path : null;
+    }
+
 }

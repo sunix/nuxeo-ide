@@ -16,22 +16,33 @@
  */
 package org.nuxeo.ide.connect.ui;
 
+import java.io.IOException;
+import java.util.List;
+
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.nuxeo.ide.common.FormPreferencePage;
+import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.common.forms.ActionHandler;
 import org.nuxeo.ide.common.forms.Form;
+import org.nuxeo.ide.common.forms.FormData;
 import org.nuxeo.ide.common.forms.UIObject;
 import org.nuxeo.ide.connect.ConnectPlugin;
+import org.nuxeo.ide.connect.ConnectPreferences;
+import org.nuxeo.ide.connect.Connector;
+import org.nuxeo.ide.connect.StudioProject;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
 public class ConnectPreferencePage extends FormPreferencePage implements
-        IWorkbenchPreferencePage {
+        IWorkbenchPreferencePage, FormData {
+
+    protected ConnectPreferences prefs;
 
     public ConnectPreferencePage() {
         super(ConnectPlugin.getDefault().getPreferences());
+        setFormData(this);
     }
 
     @Override
@@ -40,16 +51,79 @@ public class ConnectPreferencePage extends FormPreferencePage implements
         form.addActionHandler("connect", new ActionHandler() {
             @Override
             public void handleAction(Form form, UIObject<?> obj, Object event) {
-                System.out.println("Do connect and update projects");
-            }
-        });
-        form.addActionHandler("reset", new ActionHandler() {
-            @Override
-            public void handleAction(Form form, UIObject<?> obj, Object event) {
-                System.out.println("Reset connect account and remove projects");
+                try {
+                    connect();
+                } catch (Exception e) {
+                    UI.showError("Failed to connect to Nuxeo Studio", e);
+                }
             }
         });
         return form;
     }
 
+    protected void connect() throws IOException {
+        String user = form.getWidgetValueAsString("username").trim();
+        String password = form.getWidgetValueAsString("password");
+
+        if (user.length() == 0) {
+            return;
+        }
+
+        String v = null;
+        v = form.getWidgetValueAsString("host").trim();
+        prefs.setHost(v.length() > 0 ? v : null);
+        v = form.getWidgetValueAsString("username");
+        prefs.setUsername(v.length() > 0 ? v : null);
+        v = form.getWidgetValueAsString("password");
+        prefs.setPassword(v.length() > 0 ? v : null);
+
+        List<StudioProject> projects = new Connector().getProjects(user,
+                password);
+
+        prefs.clear();
+
+        org.eclipse.swt.widgets.List list = (org.eclipse.swt.widgets.List) form.getWidgetControl("projects");
+        list.removeAll();
+        for (StudioProject project : projects) {
+            list.add(project.getId());
+            prefs.addProject(project);
+        }
+    }
+
+    protected void reset() {
+        form.setWidgetValue("host", Connector.DEFAULT_URL);
+        form.setWidgetValue("username", "");
+        form.setWidgetValue("password", "");
+        ((org.eclipse.swt.widgets.List) form.getWidgetControl("projects")).removeAll();
+        prefs = new ConnectPreferences();
+    }
+
+    @Override
+    public void load(Form form) throws Exception {
+        prefs = ConnectPreferences.load();
+        if (prefs.getHost() != null) {
+            form.setWidgetValue("host", prefs.getHost());
+        }
+        if (prefs.getUsername() != null) {
+            form.setWidgetValue("username", prefs.getUsername());
+        }
+        if (prefs.getPassword() != null) {
+            form.setWidgetValue("password", prefs.getPassword());
+        }
+        org.eclipse.swt.widgets.List list = ((org.eclipse.swt.widgets.List) form.getWidgetControl("projects"));
+        for (StudioProject project : prefs.getProjects()) {
+            list.add(project.getId());
+        }
+    }
+
+    @Override
+    public void store(Form form) throws Exception {
+        prefs.save();
+    }
+
+    @Override
+    protected void performDefaults() {
+        reset();
+        super.performDefaults();
+    }
 }

@@ -12,5 +12,39 @@
       </page> 
    </extension>
 
+   <extension                                                                                                                                               
+         point="org.eclipse.ui.popupMenus"> 
+          <objectContribution                                                                                                                                   
+            objectClass="org.eclipse.core.resources.IProject"                                                                                               
+            adaptable="true"                                                                                                                                
+            id="org.nuxeo.ide.tools.pluginProjectToolSet">                                                                                                   
+         <menu                                                                                                                                              
+               label="Nuxeo"                                                                                                            
+               id="org.nuxeo.ide.tools">                                                                                                       
+            <separator                                                                                                                                      
+               name="connect">                                                                                                                               
+            </separator>                                                                                                                                    
+         </menu>                                                                                                                                            
+         <visibility>                                                                                                                                       
+                <and>                                                                                                                                        
+            <objectState                                                                                                                                    
+                    name="projectNature"                                                                                                                    
+                    value="org.nuxeo.ide.NuxeoNature"/>    
+                <objectState                                                                                                                                
+                        name="open"                                                                                                                         
+                        value="true"/>                                                                                                                     
+            </and>                                                                                                                                           
+         </visibility>
+
+        <action
+            label="Export Operations"                                                                                                                       
+            class="org.nuxeo.ide.connect.ui.ExportOperations"                                                                         
+            menubarPath="org.nuxeo.ide.tools/connect"
+            enablesFor="1"
+            id="org.nuxeo.ide.connect.exportOperations">
+        </action>                                                                                                                                           
+
+      </objectContribution> 
+      </extension>
 
 </plugin>
