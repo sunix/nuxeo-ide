@@ -56,7 +56,7 @@ public class Deployment {
     }
 
     public void removeProject(IProject project) {
-        projects.remove(project.getFullPath().toString());
+        projects.remove(project);
     }
 
     public IProject[] getProjects() {

@@ -31,11 +31,21 @@ import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.ASTVisitor;
+import org.eclipse.jdt.core.dom.ArrayInitializer;
+import org.eclipse.jdt.core.dom.BooleanLiteral;
 import org.eclipse.jdt.core.dom.Expression;
+import org.eclipse.jdt.core.dom.FieldDeclaration;
+import org.eclipse.jdt.core.dom.IExtendedModifier;
 import org.eclipse.jdt.core.dom.MemberValuePair;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.NormalAnnotation;
+import org.eclipse.jdt.core.dom.NumberLiteral;
+import org.eclipse.jdt.core.dom.PrimitiveType;
 import org.eclipse.jdt.core.dom.QualifiedName;
+import org.eclipse.jdt.core.dom.SimpleType;
+import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.StringLiteral;
+import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 /**
@@ -121,16 +131,16 @@ public class OperationScanner {
         }
 
         @Override
-        @SuppressWarnings({ "rawtypes", "unchecked" })
+        @SuppressWarnings({ "unchecked" })
         public boolean visit(TypeDeclaration node) {
-            List list = node.modifiers();
-            for (Object m : list) {
+            List<IExtendedModifier> mods = node.modifiers();
+            for (IExtendedModifier m : mods) {
                 if (m instanceof NormalAnnotation) {
                     NormalAnnotation anno = (NormalAnnotation) m;
                     if (!"Operation".equals(anno.getTypeName().getFullyQualifiedName())) {
                         continue;
                     }
-                    List<MemberValuePair> attrs = (List<MemberValuePair>) ((NormalAnnotation) m).values();
+                    List<MemberValuePair> attrs = (List<MemberValuePair>) anno.values();
                     for (MemberValuePair attr : attrs) {
                         String key = attr.getName().getFullyQualifiedName();
                         String value = null;
@@ -145,7 +155,97 @@ public class OperationScanner {
                     break;
                 }
             }
+
+            // build signature
+            MethodDeclaration[] methods = node.getMethods();
+            ArrayList<String> sig = new ArrayList<String>();
+            for (MethodDeclaration method : methods) {
+                mods = method.modifiers();
+                for (IExtendedModifier m : mods) {
+                    if (m instanceof NormalAnnotation) {
+                        NormalAnnotation anno = (NormalAnnotation) m;
+                        if (!"OperationMethod".equals(anno.getTypeName().getFullyQualifiedName())) {
+                            continue;
+                        }
+
+                        List<SingleVariableDeclaration> params = method.parameters();
+                        if (params.size() > 1) {
+                            // invalid operation - ignore
+                            continue;
+                        }
+                        String out = getTypeSignature(method.getReturnType2());
+                        String in = params.isEmpty() ? "void"
+                                : getTypeSignature(params.get(0).getType());
+                        sig.add(in);
+                        sig.add(out);
+                    }
+                }
+            }
+            op.signature = sig.toArray(new String[sig.size()]);
+
+            // build params
+            FieldDeclaration[] fields = node.getFields();
+
+            for (FieldDeclaration field : fields) {
+                mods = field.modifiers();
+                for (IExtendedModifier m : mods) {
+                    if (m instanceof NormalAnnotation) {
+                        NormalAnnotation anno = (NormalAnnotation) m;
+                        if ("Param".equals(anno.getTypeName().getFullyQualifiedName())) {
+                            OperationModel.Param param = new OperationModel.Param();
+                            param.setType(getTypeSignature(field.getType()));
+                            List<MemberValuePair> attrs = (List<MemberValuePair>) anno.values();
+                            for (MemberValuePair attr : attrs) {
+                                String key = attr.getName().getFullyQualifiedName();
+                                Expression expr = attr.getValue();
+                                if ("name".equals(key)) {
+                                    param.setName(((StringLiteral) expr).getLiteralValue());
+                                } else if ("required".equals(key)) {
+                                    param.setRequired(((BooleanLiteral) expr).booleanValue());
+                                } else if ("widget".equals(key)) {
+                                    param.setWidget(((StringLiteral) expr).getLiteralValue());
+                                } else if ("values".equals(key)) {
+                                    List<Expression> values = ((ArrayInitializer) expr).expressions();
+                                    if (!values.isEmpty()) {
+                                        ArrayList<String> vlist = new ArrayList<String>();
+                                        for (Expression v : values) {
+                                            vlist.add(((StringLiteral) v).getLiteralValue());
+                                        }
+                                        param.setValues(vlist.toArray(new String[vlist.size()]));
+                                    }
+                                } else if ("order".equals(key)) {
+                                    param.setOrder(Integer.parseInt(((NumberLiteral) expr).getToken()));
+                                }
+                            }
+                            op.addParam(param);
+                        }
+                    }
+                }
+            }
+
             return false;
+        }
+
+        public String getTypeSignature(Type type) {
+            if (type.isSimpleType()) {
+                SimpleType stype = (SimpleType) type;
+                String name = stype.getName().getFullyQualifiedName();
+                if ("DocumentModel".equals(name) || "DocumentRef".equals(name)) {
+                    return "doc";
+                } else if ("Blob".equals(name)) {
+                    return "blob";
+                } else if ("DocumentModelList".equals(name)
+                        || "DocumentRefList".equals(name)) {
+                    return "docs";
+                } else if ("BlobList".equals(name)) {
+                    return "blobs";
+                }
+            } else if (type.isPrimitiveType()) {
+                if (((PrimitiveType) type).getPrimitiveTypeCode() == PrimitiveType.VOID) {
+                    return "void";
+                }
+            }
+            return "object";
         }
 
     }
