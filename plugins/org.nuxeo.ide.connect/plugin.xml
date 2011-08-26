@@ -46,5 +46,51 @@
 
       </objectContribution> 
       </extension>
+      
+      <!-- #### Studio Project Decorator #### -->
+      <extension
+            point="org.eclipse.ui.decorators">
+         <decorator
+               class="org.nuxeo.ide.connect.studio.StudioProjectDecorator"
+               id="org.nuxeo.ide.connect.studioProjectDecorator"
+               label="Studio Project Decorator"
+               lightweight="false"
+               state="true">
+            <enablement>
+                <objectClass name="org.eclipse.core.resources.IFile"/> 
+            </enablement>               
+         </decorator>
+      </extension>
+      
+      <!-- #### Studio Project Content Type #### -->
+      <extension
+            point="org.eclipse.core.contenttype.contentTypes">
+         <content-type
+               file-names="studio.project"
+               id="org.nuxeo.ide.connect.studioProjectContentType"
+               name="org.nxueo.ide.connect.StudioProject"
+               priority="normal">
+            <property
+                  default="true"
+                  name="nuxeo.studio.project">
+            </property>
+         </content-type>
+      </extension>
+     
+     <!-- #### Studio Project Editor #### --> 
+     <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.nuxeo.ide.connect.studio.StudioProjectEditor"
+            filenames="studio.project"
+            icon="icons/studio_project.gif"
+            id="org.nuxeo.ide.connect.studioProjectEditor"
+            name="Studio Project Editor">
+         <contentTypeBinding
+               contentTypeId="org.nuxeo.ide.connect.studioProjectContentType">
+         </contentTypeBinding>
+      </editor>
+   </extension>
+      
 
 </plugin>

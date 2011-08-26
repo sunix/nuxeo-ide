@@ -29,7 +29,7 @@ import org.nuxeo.ide.common.forms.UIObject;
 import org.nuxeo.ide.connect.ConnectPlugin;
 import org.nuxeo.ide.connect.ConnectPreferences;
 import org.nuxeo.ide.connect.Connector;
-import org.nuxeo.ide.connect.StudioProject;
+import org.nuxeo.ide.connect.studio.StudioProject;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>

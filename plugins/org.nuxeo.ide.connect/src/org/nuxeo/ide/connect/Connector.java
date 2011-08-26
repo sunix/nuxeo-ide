@@ -27,6 +27,7 @@ import java.util.List;
 import org.eclipse.core.internal.preferences.Base64;
 import org.nuxeo.ide.common.IOUtils;
 import org.nuxeo.ide.common.StringUtils;
+import org.nuxeo.ide.connect.studio.StudioProject;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
