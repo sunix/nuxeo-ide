@@ -57,7 +57,9 @@
                lightweight="false"
                state="true">
             <enablement>
-                <objectClass name="org.eclipse.core.resources.IFile"/> 
+                <objectState
+                  name="contentTypeId"
+                  value="org.nuxeo.ide.connect.studioProjectContentType"/>
             </enablement>               
          </decorator>
       </extension>

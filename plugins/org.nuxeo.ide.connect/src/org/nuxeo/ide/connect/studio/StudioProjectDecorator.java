@@ -16,9 +16,6 @@
  */
 package org.nuxeo.ide.connect.studio;
 
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.viewers.BaseLabelProvider;
 import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.swt.graphics.Image;
@@ -37,17 +34,7 @@ public class StudioProjectDecorator extends BaseLabelProvider implements
 
     @Override
     public String decorateText(String text, Object element) {
-        if (element instanceof IFile) {
-            IFile file = (IFile) element;
-            if ("studio.project".equals(file.getName())) {
-                IContainer container = file.getParent();
-                if (container instanceof IProject) {
-                    // ((IProject)container).getMarker("studio.project");
-                    return "Studio Project";
-                }
-            }
-        }
-        return text;
+        return "Studio Project";
     }
 
 }

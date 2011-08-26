@@ -19,8 +19,6 @@ package org.nuxeo.ide.sdk.index;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
