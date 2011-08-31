@@ -62,11 +62,13 @@ public class BundleImageProvider {
     }
 
     public void dispose() {
-        for (Image img : images.values()) {
-            img.dispose();
+        if (images != null) {
+            for (Image img : images.values()) {
+                img.dispose();
+            }
+            images = null;
+            bundle = null;
         }
-        images = null;
-        bundle = null;
     }
 
 }

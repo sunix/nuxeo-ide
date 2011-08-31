@@ -21,12 +21,10 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.internal.preferences.Base64;
 import org.nuxeo.ide.common.IOUtils;
-import org.nuxeo.ide.common.StringUtils;
 import org.nuxeo.ide.connect.studio.StudioProject;
 
 /**
@@ -67,13 +65,29 @@ public class Connector {
         conn.setDoOutput(false);
         conn.setRequestProperty("Authorization", "Basic " + auth);
         InputStream in = conn.getInputStream();
-        String content = IOUtils.read(in).trim();
-        List<String> lines = StringUtils.splitAsList(content, '\n', true);
-        ArrayList<StudioProject> result = new ArrayList<StudioProject>();
-        for (String line : lines) {
-            result.add(new StudioProject(line));
+        try {
+            return StudioProject.readProjects(in);
+        } finally {
+            in.close();
         }
-        return result;
+    }
+
+    public static String getProjectContent(String projectId) throws Exception {
+        ConnectPreferences prefs = ConnectPreferences.load();
+        String user = prefs.getUsername();
+        String pwd = prefs.getPassword();
+        String host = prefs.getHost();
+        if (user == null || host == null) {
+            return null;
+        }
+        String auth = basicAuth(user, pwd);
+        URL url = new URL(new URL(host), "api/projects/" + projectId);
+        URLConnection conn = url.openConnection();
+        conn.setDoInput(true);
+        conn.setDoOutput(false);
+        conn.setRequestProperty("Authorization", "Basic " + auth);
+        InputStream in = conn.getInputStream();
+        return IOUtils.read(in);
     }
 
     public static String basicAuth(String username, String pwd) {

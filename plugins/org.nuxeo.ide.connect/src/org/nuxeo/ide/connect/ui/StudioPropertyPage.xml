@@ -1,0 +1,11 @@
+<panel cols="1" layout="grid">
+
+<link id="configure">Choose a Nuxeo Studio project to use in this project. If no projects 
+are available you should first configure a <a>Nuxeo Connect</a> account.</link>
+
+<hr hfill="true"/>
+<text>Available Studio Projects:</text>
+<studioProjects id="projects" hfill="true" vfill="true" />
+
+
+</panel>

@@ -333,17 +333,6 @@ public class StudioProject {
 
     }
 
-    public static void main(String[] args) throws Exception {
-        InputStream in = StudioProject.class.getResourceAsStream("studio.project");
-        StudioProject p = StudioProject.readProject(in);
-        System.out.println(p);
-
-        in = StudioProject.class.getResourceAsStream("studio.projects");
-        List<StudioProject> pp = StudioProject.readProjects(in);
-        System.out.println(pp);
-
-    }
-
     public static class TypeDescriptor {
         public String id;
 

@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.equinox.security.storage.ISecurePreferences;
 import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
 import org.nuxeo.ide.connect.studio.StudioProject;
+import org.osgi.service.prefs.Preferences;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -133,7 +134,9 @@ public class ConnectPreferences {
         }
 
         for (StudioProject p : projects) {
-            root.node(p.getId());
+            Preferences node = root.node(p.getId());
+            node.put("name", p.getName());
+            node.put("targetVersion", p.getTargetVersion());
         }
 
         root.flush();
@@ -153,7 +156,10 @@ public class ConnectPreferences {
         }
 
         for (String key : root.childrenNames()) {
+            Preferences node = root.node(key);
             StudioProject p = new StudioProject(key);
+            p.setName(node.get("name", key));
+            p.setTargetVersion(node.get("targetVersion", null));
             prefs.addProject(p);
         }
 

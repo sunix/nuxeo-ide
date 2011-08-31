@@ -94,5 +94,23 @@
       </editor>
    </extension>
       
+   <extension point="org.eclipse.ui.propertyPages">
+     <page
+           category="org.nuxeo.ide.project.props"
+           class="org.nuxeo.ide.connect.ui.StudioPropertyPage"
+           id="org.nuxeo.ide.connect.studio.props"
+           name="Nuxeo Studio">
+         <enabledWhen>                                                                                                                                      
+            <adapt                                                                                                                                          
+                  type="org.eclipse.core.resources.IProject">                                                                                               
+               <test                                                                                                                                        
+                     property="org.eclipse.core.resources.projectNature"                                                                                    
+                     value="org.nuxeo.ide.NuxeoNature">                                                                                               
+               </test>                                                                                                                                      
+            </adapt>                                                                                                                                        
+         </enabledWhen>
+     </page>
+   </extension>      
+      
 
 </plugin>
