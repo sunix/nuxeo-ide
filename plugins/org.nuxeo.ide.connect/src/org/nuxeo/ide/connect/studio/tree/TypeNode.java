@@ -14,44 +14,45 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.connect.studio;
+package org.nuxeo.ide.connect.studio.tree;
 
-import java.io.IOException;
-
-import org.codehaus.jackson.JsonParser;
+import org.nuxeo.ide.connect.studio.StudioProject.TypeDescriptor;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class StudioFeature {
+public class TypeNode extends ParentNode<TypeDescriptor> {
 
-    protected String id;
+    protected TypeDescriptor td;
 
-    protected String type;
-
-    public StudioFeature(String type) {
-        this.type = type;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    protected void readField(JsonParser parser) throws IOException {
-        // do nothing by default
+    public TypeNode(TypeDescriptor td) {
+        this.td = td;
     }
 
     @Override
-    public String toString() {
-        return id + " [" + type + "]";
+    public String getId() {
+        return td.id;
     }
+
+    @Override
+    public String getLabel() {
+        return td.label;
+    }
+
+    @Override
+    public String getIcon() {
+        return "icons/studio/grp/" + td.id + ".gif";
+    }
+
+    @Override
+    public boolean isTerminal() {
+        return td.global ? true : false;
+    }
+
+    @Override
+    public TypeDescriptor getData() {
+        return td;
+    }
+
 }

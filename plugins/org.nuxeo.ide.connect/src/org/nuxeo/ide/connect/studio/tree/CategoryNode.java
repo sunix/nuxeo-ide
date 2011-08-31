@@ -14,44 +14,41 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.connect.studio;
-
-import java.io.IOException;
-
-import org.codehaus.jackson.JsonParser;
+package org.nuxeo.ide.connect.studio.tree;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class StudioFeature {
+public class CategoryNode extends ParentNode<Void> {
 
     protected String id;
 
-    protected String type;
+    protected String label;
 
-    public StudioFeature(String type) {
-        this.type = type;
+    public CategoryNode(String id, String label) {
+        this.id = id;
+        this.label = label;
     }
 
-    public String getType() {
-        return type;
-    }
-
+    @Override
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    protected void readField(JsonParser parser) throws IOException {
-        // do nothing by default
+    @Override
+    public String getLabel() {
+        return label;
     }
 
     @Override
-    public String toString() {
-        return id + " [" + type + "]";
+    public String getIcon() {
+        return "icons/studio/grp/" + id + ".gif";
     }
+
+    @Override
+    public Void getData() {
+        return null;
+    }
+
 }

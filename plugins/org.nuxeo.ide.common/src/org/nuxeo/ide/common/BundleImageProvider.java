@@ -53,6 +53,14 @@ public class BundleImageProvider {
         return img;
     }
 
+    public ImageDescriptor getImageDescriptor(String path) {
+        URL url = bundle.getEntry(path);
+        if (url != null) {
+            return ImageDescriptor.createFromURL(url);
+        }
+        return null;
+    }
+
     public void dispose() {
         for (Image img : images.values()) {
             img.dispose();

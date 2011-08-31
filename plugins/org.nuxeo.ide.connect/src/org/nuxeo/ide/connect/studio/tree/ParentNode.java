@@ -14,12 +14,37 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.connect.studio;
+package org.nuxeo.ide.connect.studio.tree;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
- *
+ * 
  */
-public class StudioFeatureGroup {
+public abstract class ParentNode<T> extends Node<T> {
+
+    protected List<Node<?>> children = new ArrayList<Node<?>>();
+
+    public void add(Node<?> node) {
+        children.add(node);
+        node.parent = this;
+    }
+
+    @Override
+    public boolean hasChildren() {
+        return !children.isEmpty();
+    }
+
+    @Override
+    public Node<?>[] getChildren() {
+        return children.toArray(new Node<?>[children.size()]);
+    }
+
+    @Override
+    public boolean isTerminal() {
+        return false;
+    }
 
 }

@@ -16,20 +16,57 @@
  */
 package org.nuxeo.ide.connect.studio;
 
+import java.io.InputStream;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.EditorPart;
+import org.nuxeo.ide.common.BundleImageProvider;
+import org.nuxeo.ide.common.UI;
+import org.nuxeo.ide.connect.ConnectPlugin;
+import org.nuxeo.ide.connect.studio.tree.FeatureNode;
+import org.nuxeo.ide.connect.studio.tree.Node;
+import org.nuxeo.ide.connect.studio.tree.StudioProjectProvider;
+import org.nuxeo.ide.connect.studio.tree.TypeNode;
+import org.nuxeo.ide.connect.ui.ExportOperationsWizard;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
 public class StudioProjectEditor extends EditorPart {
+
+    protected TreeViewer tv;
+
+    protected IProject rootProject;
+
+    protected StudioProject project;
+
+    protected FormToolkit toolkit;
+
+    protected BundleImageProvider imgProvider;
 
     public StudioProjectEditor() {
     }
@@ -49,6 +86,23 @@ public class StudioProjectEditor extends EditorPart {
             throws PartInitException {
         setSite(site);
         setInput(input);
+        try {
+            loadProject(input);
+            setPartName(project.getId());
+        } catch (Exception e) {
+            UI.showError("Failed to load studio project file", e);
+        }
+    }
+
+    public void loadProject(IEditorInput input) throws Exception {
+        IFile file = (IFile) input.getAdapter(IFile.class);
+        rootProject = file.getProject();
+        InputStream in = file.getContents(true);
+        try {
+            project = StudioProject.readProject(in);
+        } finally {
+            in.close();
+        }
     }
 
     @Override
@@ -63,14 +117,125 @@ public class StudioProjectEditor extends EditorPart {
 
     @Override
     public void createPartControl(Composite parent) {
-        Label label = new Label(parent, SWT.NONE);
-        label.setText("Hello!");
+
+        imgProvider = new BundleImageProvider(
+                ConnectPlugin.getDefault().getBundle());
+        toolkit = new FormToolkit(parent.getShell().getDisplay());
+
+        ScrolledForm form = toolkit.createScrolledForm(parent);
+        form.setText("Studio Project: " + project.getName());
+        form.getBody().setLayout(new GridLayout());
+        form.setImage(imgProvider.getImage("icons/studio_project.gif"));
+        createToolbar(form);
+
+        Section section = toolkit.createSection(form.getBody(),
+                Section.EXPANDED | Section.TITLE_BAR | Section.DESCRIPTION);
+        section.setText("Project Features");
+        section.setDescription("You can browse features available in the Nuxeo Studio project. Double click a feature entry to open it in the browser.");
+
+        GridData gd = new GridData();
+        gd.horizontalAlignment = SWT.FILL;
+        gd.grabExcessHorizontalSpace = true;
+        gd.verticalAlignment = SWT.FILL;
+        gd.grabExcessVerticalSpace = true;
+        section.setLayoutData(gd);
+
+        Tree tree = toolkit.createTree(section, SWT.H_SCROLL | SWT.V_SCROLL
+                | SWT.BORDER);
+
+        section.setClient(tree);
+
+        tv = new TreeViewer(tree);
+
+        tv.addDoubleClickListener(new IDoubleClickListener() {
+            @Override
+            public void doubleClick(DoubleClickEvent event) {
+                ISelection sel = event.getSelection();
+                if (sel.isEmpty()) {
+                    return;
+                }
+                Node<?> obj = (Node<?>) ((IStructuredSelection) sel).getFirstElement();
+                if (obj.isTerminal()) {
+                    if (obj instanceof FeatureNode) {
+                        openFeature(((FeatureNode) obj).getData());
+                    } else if (obj instanceof TypeNode) {
+                        openGlobalFeature(((TypeNode) obj).getId());
+                    }
+                } else {
+                    if (tv.getExpandedState(obj)) {
+                        tv.collapseToLevel(obj, 1);
+                    } else {
+                        tv.expandToLevel(obj, 1);
+                    }
+                }
+            }
+        });
+
+        StudioProjectProvider provider = new StudioProjectProvider(imgProvider);
+        tv.setContentProvider(provider);
+        tv.setLabelProvider(provider);
+        tv.setSorter(new ViewerSorter());
+        tv.setInput(project);
+        // tv.expandAll();
+
+    }
+
+    protected void openFeature(StudioFeature feature) {
+        String url = project.getUrl() + "#@feature:" + feature.getId() + '.'
+                + feature.getType();
+        Program.launch(url);
+    }
+
+    protected void openGlobalFeature(String type) {
+        String url = project.getUrl() + "#@feature:global." + type;
+        Program.launch(url);
     }
 
     @Override
     public void setFocus() {
-        // TODO Auto-generated method stub
 
+    }
+
+    protected void createToolbar(ScrolledForm form) {
+        Action action = new Action() {
+            public void run() {
+            }
+        };
+        action.setId("refresh");
+        action.setText("Refresh");
+        action.setImageDescriptor(imgProvider.getImageDescriptor("icons/refresh.gif"));
+        form.getToolBarManager().add(action);
+
+        action = new Action() {
+            public void run() {
+                ExportOperationsWizard wizard = new ExportOperationsWizard();
+                wizard.init(getSite().getWorkbenchWindow().getWorkbench(),
+                        new StructuredSelection(rootProject));
+                WizardDialog dialog = new WizardDialog(getSite().getShell(),
+                        wizard);
+                dialog.create();
+                dialog.open();
+            }
+        };
+        action.setId("export");
+        action.setText("Export Operations");
+        action.setImageDescriptor(imgProvider.getImageDescriptor("icons/export.gif"));
+        form.getToolBarManager().add(action);
+
+        form.getToolBarManager().update(true);
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        if (toolkit != null) {
+            toolkit.dispose();
+            toolkit = null;
+        }
+        if (imgProvider != null) {
+            imgProvider.dispose();
+            imgProvider = null;
+        }
     }
 
 }
