@@ -1,0 +1,23 @@
+<panel cols="2"  layout="grid">
+
+<text>Project:</text>
+<project id="project" hfill="true">
+<validator type="required">The project field is required</validator>
+</project>
+
+<text>Gadget name:</text>
+<textbox id="gadgetName" hfill="true"/>
+
+<text>Gadget title:</text>
+<textbox id="gadgetTitle" hfill="true"/>
+
+<text>Gadget category:</text>
+<textbox id="gadgetCategory" hfill="true"/>
+
+
+<text>Gadget description:</text>
+<textarea id="gadgetDescription" hfill="true" vfill="true"/>
+
+
+
+</panel>

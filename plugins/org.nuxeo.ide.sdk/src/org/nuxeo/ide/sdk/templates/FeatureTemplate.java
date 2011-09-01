@@ -96,11 +96,12 @@ public class FeatureTemplate extends Template {
             throws Exception {
         super.processCommands(bundle, ctx, dir);
         applyExtensions(bundle, ctx, dir);
-        applyManifestModifications(dir);
+        applyManifestModifications(dir, ctx);
         applyDependencies(dir);
     }
 
-    protected void applyManifestModifications(File dir) throws IOException {
+    protected void applyManifestModifications(File dir, TemplateContext ctx)
+            throws IOException {
         if (manifestModifs == null) {
             return;
         }
@@ -111,16 +112,17 @@ public class FeatureTemplate extends Template {
         try {
             Attributes attrs = mf.getMainAttributes();
             for (ManifestModification mm : manifestModifs) {
-                String v = attrs.getValue(mm.key);
-                if (v == null) {
-                    attrs.putValue(mm.key, mm.value);
+                String key = attrs.getValue(mm.key);
+                String value = Vars.expand(mm.value, ctx);
+                if (key == null) {
+                    attrs.putValue(mm.key, value);
                     modified = true;
                 } else if (mm.overwrite) {
-                    attrs.putValue(mm.key, mm.value);
+                    attrs.putValue(mm.key, value);
                     modified = true;
                 } else if (mm.append) { // append
-                    if (!v.contains(mm.value)) {
-                        attrs.putValue(mm.key, v + ", " + mm.value);
+                    if (!key.contains(value)) {
+                        attrs.putValue(mm.key, key + ", " + value);
                         modified = true;
                     }
                 } // else let it as is

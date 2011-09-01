@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<component name="org.nuxeo.gadgets.${gadgetName}" version="1.0">
+
+  <extension target="org.nuxeo.opensocial.gadgets.service" point="gadget">
+
+    <internalGadget name="${gadgetName}" disabled="false">
+      <mountPoint>/${gadgetName}</mountPoint>
+      <directory>${gadgetName}</directory>
+      <entryPoint>${gadgetName}.xml</entryPoint>
+      <category>${gadgetCategory}}</category>
+      <icon>${gadgetName}.png</icon>
+    </internalGadget>
+
+  </extension>
+</component>

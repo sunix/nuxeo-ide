@@ -3,14 +3,14 @@
   <project id="default" src="projects/default">
     <name>Empty Project</name>
     <description>An empty Nuxeo project</description>
-    <!-- 
+    <!--
     <preInstall>
     </preInstall>
-    
+
     <postInstall>
     </postInstall>
     -->
-    
+
     <mkdir path="src/main/java/${packagePath}" />
     <mkdir path="src/test/java/${packagePath}/test" />
     <mkdir path="src/test/resources" />
@@ -19,7 +19,7 @@
     <transform path="pom.xml" />
     <transform path=".classpath" />
     <transform path=".project" />
-    <transform path="src/main/resources/META-INF/MANIFEST.MF" />    
+    <transform path="src/main/resources/META-INF/MANIFEST.MF" />
   </project>
 
 
@@ -34,33 +34,48 @@
     <transform path="pom.xml" />
     <transform path=".classpath" />
     <transform path=".project" />
-    <transform path="src/main/resources/META-INF/MANIFEST.MF" />                
+    <transform path="src/main/resources/META-INF/MANIFEST.MF" />
     <transform path="src/main/java/packagePath/MyRoot.java" to="src/main/java/${packagePath}/${className}.java"/>
-    
+
     <rename path="src/main/resources/skin/views/MyRoot" to="src/main/resources/skin/views/${className}" />
-    
+
   </project>
 
   <feature id ="operation" src="features/automation/project">
     <name>Operation</name>
     <description>An operation object</description>
-    
+
     <extension src="features/automation/extensions.xml"/>
-    
+
     <dependency groupId="org.nuxeo.ecm.automation" artifactId="nuxeo-automation-core"/>
-    
-    <transform path="src/main/java/packagePath/MyOperation.java" to="src/main/java/${packagePath}/${className}.java" />    
+
+    <transform path="src/main/java/packagePath/MyOperation.java" to="src/main/java/${packagePath}/${className}.java" />
   </feature>
 
   <feature id ="listener" src="features/listener/project">
     <name>Listener</name>
     <description>A listener object</description>
-    
+
     <extension src="features/listener/extensions.xml"/>
-    
+
     <dependency groupId="org.nuxeo.ecm.core" artifactId="nuxeo-core-event"/>
-    
-    <transform path="src/main/java/packagePath/MyListener.java" to="src/main/java/${packagePath}/${className}.java" />    
+
+    <transform path="src/main/java/packagePath/MyListener.java" to="src/main/java/${packagePath}/${className}.java" />
+  </feature>
+
+  <feature id ="gadget" src="features/gadget/project">
+    <name>Gadget</name>
+    <description>An gadget object</description>
+
+    <manifest key="Nuxeo-Component" value="gadget/${gadgetName}/gadgets-contrib.xml" append="true"/>
+
+	<rename path="src/main/resources/gadget/gadgetName" to="src/main/resources/gadget/${gadgetName}"/>
+	<transform path="src/main/resources/gadget/${gadgetName}/gadgetName.xml" to="src/main/resources/gadget/${gadgetName}/${gadgetName}.xml"/>
+	<transform path="src/main/resources/gadget/${gadgetName}/gadgetName.css" to="src/main/resources/gadget/${gadgetName}/${gadgetName}.css"/>
+	<transform path="src/main/resources/gadget/${gadgetName}/gadgetName.js" to="src/main/resources/gadget/${gadgetName}/${gadgetName}.js"/>
+	<rename path="src/main/resources/gadget/${gadgetName}/gadgetName.png" to="src/main/resources/gadget/${gadgetName}/${gadgetName}.png"/>
+	<transform path="src/main/resources/gadget/${gadgetName}/gadgets-contrib.xml" to="src/main/resources/gadget/${gadgetName}/gadgets-contrib.xml"/>
+
   </feature>
 
 </templates>

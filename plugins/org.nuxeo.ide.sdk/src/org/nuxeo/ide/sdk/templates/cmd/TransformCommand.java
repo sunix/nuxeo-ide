@@ -63,7 +63,9 @@ public class TransformCommand implements Command {
             File dstFile = new File(projectDir, Vars.expand(to, ctx));
             engine.transform(ctx, srcFile, dstFile);
             // the src file should be removed - including its empty parents
-            IOUtils.deleteFilePath(srcFile);
+            if (!dstFile.equals(srcFile)) {
+                IOUtils.deleteFilePath(srcFile);
+            }
         }
     }
 
