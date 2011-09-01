@@ -2,27 +2,16 @@ ${copyright}
 
 package ${package};
 
-import org.nuxeo.ecm.automation.core.Constants;
-import org.nuxeo.ecm.automation.core.annotations.Context;
-import org.nuxeo.ecm.automation.core.annotations.Operation;
-import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
-import org.nuxeo.ecm.automation.core.annotations.Param;
-import org.nuxeo.ecm.automation.core.collectors.DocumentModelCollector;
-import org.nuxeo.ecm.automation.core.collectors.BlobCollector;
-import org.nuxeo.ecm.core.api.CoreSession;
-import org.nuxeo.ecm.core.api.DocumentModel;
-import org.nuxeo.ecm.core.api.DocumentRef;
+import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.event.Event;
+import org.nuxeo.ecm.core.event.EventListener;
 
 
 ${classHeader}
-@Operation(id=${className}.ID, category=Constants.${category}, <#if seam>requires=Constants.SEAM_CONTEXT, </#if>label="${label!operationId}", description="${description}")
-public class ${className} {
+public class ${className} implements EventListener {
 
-    public static final String ID = "${operationId}";
+    public void handleEvent(Event event) throws ClientException {
 
-    @OperationMethod<#if iterable>(collector=${outputCollector})</#if>
-    public ${output!"void"} run(<#if input>${input} input</#if>) {
-      <#if output>return null;</#if> 
     }    
 
 }

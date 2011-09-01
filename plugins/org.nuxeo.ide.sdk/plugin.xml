@@ -147,7 +147,7 @@
       </wizard>
       <wizard
             category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.core.newWizards"
-            class="org.nuxeo.ide.sdk.features.FakeWizard"
+            class="org.nuxeo.ide.sdk.features.listener.ListenerWizard"
             icon="icons/listener.gif"
             id="org.nuxeo.ide.core.listenerWizard"
             name="Document Listener">

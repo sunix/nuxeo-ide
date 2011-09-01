@@ -1,8 +1,17 @@
-<component name="${package}.${className}">
+<component name="${package}.listener.contrib.${className}">
 
-  <extension target="org.nuxeo.ecm.core.operation.OperationServiceComponent"
-    point="operations" >
-      <operation class="${package}.${className}" />
-   </extension>
-    
+  <extension target="org.nuxeo.ecm.core.event.EventServiceComponent"
+    point="listener">
+
+    <listener name="${name}" async="${async?string}" postCommit="${postCommit?string}"
+      class="${package}.${className}" order="${order}">
+      <#list selectedEvents as event>
+      <event>${event}</event>
+      </#list>
+      <#list customEvents as event>
+      <event>${event}</event>
+      </#list>
+    </listener>
+  </extension>
+
 </component>

@@ -32,6 +32,11 @@
 <a href='htttp://google.com'>Google</a> ... 
 </link-->
 
+<listbox multi="true">
+<item value="documentModified">Document Modified</item>
+<item value="documentCreated">Document Created</item>
+
+</listbox>
 </frame>
 
 </panel>

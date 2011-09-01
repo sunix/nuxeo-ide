@@ -33,9 +33,9 @@ import org.nuxeo.ide.sdk.ui.widgets.ProjectChooserWidget;
  * 'project' and 'package'. The page is correctly initializing the
  * project/package chooser widgets and updating the template context with the
  * selected values.
- * 
+ *
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
- * 
+ *
  */
 public abstract class FeatureWizardPage extends
         FormWizardPage<FeatureTemplateContext> {
