@@ -16,18 +16,15 @@
  */
 package org.nuxeo.ide.connect.ui;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.nuxeo.ide.common.FormPropertyPage;
-import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.common.forms.ActionHandler;
 import org.nuxeo.ide.common.forms.Form;
 import org.nuxeo.ide.common.forms.FormData;
@@ -88,24 +85,7 @@ public class StudioPropertyPage extends FormPropertyPage implements
         StudioProjectsWidget w = (StudioProjectsWidget) form.getWidget("projects");
         StudioProject sp = w.getSelectedProject();
         if (sp != null) {
-            bindStudioProject(getProject(), sp);
-        }
-    }
-
-    public static void bindStudioProject(IProject project, StudioProject sp)
-            throws Exception {
-        IFile file = project.getFile("studio.project");
-        String content = Connector.getProjectContent(sp.getId());
-        if (content == null) {
-            UI.showError("No such studio project: " + sp.getId());
-            return;
-        }
-        ByteArrayInputStream in = new ByteArrayInputStream(
-                content.getBytes("UTF-8"));
-        if (file.exists()) {
-            file.setContents(in, true, true, new NullProgressMonitor());
-        } else {
-            file.create(in, true, new NullProgressMonitor());
+            Connector.writeStudioProject(getProject(), sp.getId());
         }
     }
 

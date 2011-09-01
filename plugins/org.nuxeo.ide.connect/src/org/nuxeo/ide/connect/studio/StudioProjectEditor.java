@@ -42,10 +42,10 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.ui.part.EditorPart;
 import org.nuxeo.ide.common.BundleImageProvider;
 import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.connect.ConnectPlugin;
+import org.nuxeo.ide.connect.Connector;
 import org.nuxeo.ide.connect.studio.tree.FeatureNode;
 import org.nuxeo.ide.connect.studio.tree.Node;
 import org.nuxeo.ide.connect.studio.tree.StudioProjectProvider;
@@ -56,9 +56,11 @@ import org.nuxeo.ide.connect.ui.ExportOperationsWizard;
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class StudioProjectEditor extends EditorPart {
+public class StudioProjectEditor extends AbstractFileEditor {
 
     protected TreeViewer tv;
+
+    protected ScrolledForm form;
 
     protected IProject rootProject;
 
@@ -84,18 +86,15 @@ public class StudioProjectEditor extends EditorPart {
     @Override
     public void init(IEditorSite site, IEditorInput input)
             throws PartInitException {
-        setSite(site);
-        setInput(input);
+        super.init(site, input);
         try {
-            loadProject(input);
-            setPartName(project.getId());
+            handleInputChanged((IFile) input.getAdapter(IFile.class));
         } catch (Exception e) {
             UI.showError("Failed to load studio project file", e);
         }
     }
 
-    public void loadProject(IEditorInput input) throws Exception {
-        IFile file = (IFile) input.getAdapter(IFile.class);
+    public void loadProject(IFile file) throws Exception {
         rootProject = file.getProject();
         InputStream in = file.getContents(true);
         try {
@@ -116,13 +115,26 @@ public class StudioProjectEditor extends EditorPart {
     }
 
     @Override
+    protected void handleInputChanged(IFile file) throws Exception {
+        lastModification = file.getLocalTimeStamp();
+        loadProject(file);
+        setPartName(project.getId());
+        if (tv != null) {
+            tv.setInput(project);
+        }
+        if (form != null) {
+            form.setText("Studio Project: " + project.getName());
+        }
+    }
+
+    @Override
     public void createPartControl(Composite parent) {
 
         imgProvider = new BundleImageProvider(
                 ConnectPlugin.getDefault().getBundle());
         toolkit = new FormToolkit(parent.getShell().getDisplay());
 
-        ScrolledForm form = toolkit.createScrolledForm(parent);
+        form = toolkit.createScrolledForm(parent);
         form.setText("Studio Project: " + project.getName());
         form.getBody().setLayout(new GridLayout());
         form.setImage(imgProvider.getImage("icons/studio_project.gif"));
@@ -199,6 +211,13 @@ public class StudioProjectEditor extends EditorPart {
     protected void createToolbar(ScrolledForm form) {
         Action action = new Action() {
             public void run() {
+                try {
+                    Connector.writeStudioProject(rootProject, project.getId());
+                    handleInputChanged((IFile) getEditorInput().getAdapter(
+                            IFile.class));
+                } catch (Exception e) {
+                    UI.showError("Failed to refresh studio project", e);
+                }
             }
         };
         action.setId("refresh");
@@ -228,6 +247,8 @@ public class StudioProjectEditor extends EditorPart {
     @Override
     public void dispose() {
         super.dispose();
+        tv = null;
+        form = null;
         if (toolkit != null) {
             toolkit.dispose();
             toolkit = null;

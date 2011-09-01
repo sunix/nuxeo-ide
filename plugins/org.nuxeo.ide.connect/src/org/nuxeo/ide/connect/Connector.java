@@ -16,6 +16,7 @@
  */
 package org.nuxeo.ide.connect;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -24,7 +25,11 @@ import java.net.URLConnection;
 import java.util.List;
 
 import org.eclipse.core.internal.preferences.Base64;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.nuxeo.ide.common.IOUtils;
+import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.connect.studio.StudioProject;
 
 /**
@@ -88,6 +93,23 @@ public class Connector {
         conn.setRequestProperty("Authorization", "Basic " + auth);
         InputStream in = conn.getInputStream();
         return IOUtils.read(in);
+    }
+
+    public static void writeStudioProject(IProject project, String projectId)
+            throws Exception {
+        String content = getProjectContent(projectId);
+        IFile file = project.getFile("studio.project");
+        if (content == null) {
+            UI.showError("No such studio project: " + projectId);
+            return;
+        }
+        ByteArrayInputStream in = new ByteArrayInputStream(
+                content.getBytes("UTF-8"));
+        if (file.exists()) {
+            file.setContents(in, true, true, new NullProgressMonitor());
+        } else {
+            file.create(in, true, new NullProgressMonitor());
+        }
     }
 
     public static String basicAuth(String username, String pwd) {
