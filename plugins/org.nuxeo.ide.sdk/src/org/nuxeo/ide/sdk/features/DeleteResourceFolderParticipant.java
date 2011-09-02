@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2006-2010 Nuxeo SAS (http://nuxeo.com/) and contributors.
+ * (C) Copyright 2011 Nuxeo SA (http://nuxeo.com/) and contributors.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser General Public License
@@ -12,11 +12,14 @@
  * Lesser General Public License for more details.
  *
  * Contributors:
- *     bstefanescu
+ *     eugen
  */
 package org.nuxeo.ide.sdk.features;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -28,33 +31,27 @@ import org.nuxeo.ide.sdk.model.ExtensionModel;
 import org.nuxeo.ide.sdk.model.ManifestWriter;
 
 /**
- * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
+ * @author <a href="mailto:ei@nuxeo.com">Eugen Ionica</a>
  * 
  */
-public class DeleteExtensionParticipant extends DeleteParticipant {
+public class DeleteResourceFolderParticipant extends DeleteParticipant {
+    IFolder folder;
 
-    protected IFile file;
-
-    @Override
     protected boolean initialize(Object element) {
-        if (element instanceof IFile) {
-            IFile file = (IFile) element;
-            if (!"xml".equals(file.getFileExtension())) {
-                return false;
-            }
-            String path = file.getParent().getProjectRelativePath().makeRelative().removeTrailingSeparator().toString();
-            if (path.startsWith(ExtensionModel.OSGI_INF_PATH)
-                    || path.startsWith(ExtensionModel.GADGET_PATH)) {
-                this.file = file;
-                return true;
-            }
+        if (!(element instanceof IFolder)) {
+            return false;
         }
-        return false;
+        IFolder folder = (IFolder) element;
+        String path = folder.getProjectRelativePath().makeRelative().removeTrailingSeparator().toString();
+        if (!path.startsWith(ExtensionModel.RESOURCES_PATH)) {
+            return false;
+        }
+        this.folder = folder;
+        return true;
     }
 
-    @Override
     public String getName() {
-        return "Remove Extension File: " + file.getName();
+        return "Removing folder:" + folder.getName();
     }
 
     @Override
@@ -66,10 +63,22 @@ public class DeleteExtensionParticipant extends DeleteParticipant {
     @Override
     public Change createChange(IProgressMonitor pm) throws CoreException,
             OperationCanceledException {
-        ManifestChange change = new ManifestChange(file.getProject().getFile(
-                ManifestWriter.PATH));
-        change.remove("Nuxeo-Component",
-                file.getProjectRelativePath().removeFirstSegments(3).toString());
+        final ManifestChange change = new ManifestChange(
+                folder.getProject().getFile(ManifestWriter.PATH));
+
+        folder.accept(new IResourceVisitor() {
+            public boolean visit(IResource resource) throws CoreException {
+                if (resource instanceof IFile
+                        && "xml".equals(resource.getFileExtension())) {
+                    change.remove(
+                            "Nuxeo-Component",
+                            resource.getProjectRelativePath().removeFirstSegments(
+                                    3).toString());
+                }
+                return true;
+            }
+        });
+
         return change;
     }
 }

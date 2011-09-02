@@ -45,8 +45,13 @@ public class ExtensionModel {
 
     public final static String RUNTIME_BASE_PATH = "OSGI-INF/extensions";
 
-    public final static String BASE_PATH = "src/main/resources/"
-            + RUNTIME_BASE_PATH;
+    public final static String RESOURCES_PATH = "src/main/resources/";
+
+    public static final String BASE_PATH = RESOURCES_PATH + RUNTIME_BASE_PATH;
+
+    public final static String OSGI_INF_PATH = RESOURCES_PATH + "OSGI-INF";
+
+    public final static String GADGET_PATH = RESOURCES_PATH + "gadget";
 
     protected String id;
 

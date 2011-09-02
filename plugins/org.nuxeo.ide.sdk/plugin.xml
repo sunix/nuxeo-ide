@@ -452,6 +452,21 @@
       </with>
       </enablement>
    </deleteParticipant>
+    <deleteParticipant
+         class="org.nuxeo.ide.sdk.features.DeleteResourceFolderParticipant"
+         id="org.nuxeo.ide.sdk.deleteExtensionParticipant"
+         name="Synchronizing Manifest">
+      <enablement>
+      <with variable="affectedNatures">
+        <iterate operator="or">
+          <equals value="org.nuxeo.ide.NuxeoNature"/>
+        </iterate>
+      </with>
+      <with variable="element">
+        <instanceof value="org.eclipse.core.resources.IFolder"/>
+      </with>
+      </enablement>
+   </deleteParticipant>
 </extension>
 <extension
       point="org.eclipse.ltk.core.refactoring.renameParticipants">

@@ -7,7 +7,7 @@
       <mountPoint>/${gadgetName}</mountPoint>
       <directory>${gadgetName}</directory>
       <entryPoint>${gadgetName}.xml</entryPoint>
-      <category>${gadgetCategory}}</category>
+      <category>${gadgetCategory}</category>
       <icon>${gadgetName}.png</icon>
     </internalGadget>
 
