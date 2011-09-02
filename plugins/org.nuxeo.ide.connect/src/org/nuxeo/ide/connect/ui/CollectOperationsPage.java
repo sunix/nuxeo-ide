@@ -55,6 +55,15 @@ public class CollectOperationsPage extends WizardPage {
         super("collectOperations", "Select Operations", null);
     }
 
+    public OperationModel[] getSelectedOperations() {
+        Object[] ar = tv.getCheckedElements();
+        OperationModel[] ops = new OperationModel[ar.length];
+        for (int i = 0; i < ar.length; i++) {
+            ops[i] = (OperationModel) ar[i];
+        }
+        return ops;
+    }
+
     @Override
     public void createControl(Composite parent) {
         Composite panel = new Composite(parent, SWT.NONE);

@@ -12,7 +12,7 @@
       </page> 
    </extension>
 
-   <extension                                                                                                                                               
+   <!--extension                                                                                                                                               
          point="org.eclipse.ui.popupMenus"> 
           <objectContribution                                                                                                                                   
             objectClass="org.eclipse.core.resources.IProject"                                                                                               
@@ -42,10 +42,10 @@
             menubarPath="org.nuxeo.ide.tools/connect"
             enablesFor="1"
             id="org.nuxeo.ide.connect.exportOperations">
-        </action>                                                                                                                                           
+        </action>
 
       </objectContribution> 
-      </extension>
+      </extension-->
       
       <!-- #### Studio Project Decorator #### -->
       <extension

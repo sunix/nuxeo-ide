@@ -25,6 +25,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.nuxeo.ide.common.UI;
+import org.nuxeo.ide.connect.OperationModel;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -35,6 +36,12 @@ public class ExportOperationsWizard extends Wizard implements IWorkbenchWizard {
     protected IWorkbench workbench;
 
     protected IJavaProject project;
+
+    protected String projectId;
+
+    public ExportOperationsWizard(String projectId) {
+        this.projectId = projectId;
+    }
 
     @Override
     public void init(IWorkbench workbench, IStructuredSelection selection) {
@@ -66,14 +73,14 @@ public class ExportOperationsWizard extends Wizard implements IWorkbenchWizard {
     @Override
     public boolean performFinish() {
         try {
-            // ((CollectDependenciesPage)
-            // getPage("collectDependencies")).writePom(new
-            // NullProgressMonitor());
+            OperationModel[] ops = ((CollectOperationsPage) getPage("collectDependencies")).getSelectedOperations();
+            if (ops.length > 0) {
+                getContainer().run(true, false, new ExportTask(projectId, ops));
+            }
         } catch (Exception e) {
             UI.showError("Failed to export operations", e);
             return false;
         }
         return true;
     }
-
 }

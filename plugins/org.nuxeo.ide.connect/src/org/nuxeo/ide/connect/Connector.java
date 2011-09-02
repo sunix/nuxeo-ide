@@ -112,6 +112,12 @@ public class Connector {
         }
     }
 
+    public static void exportOperationRegistry(String projectId, String reg)
+            throws Exception {
+        // TODO
+        System.out.println(reg);
+    }
+
     public static String basicAuth(String username, String pwd) {
         return new String(Base64.encode((username + ":" + pwd).getBytes()));
     }

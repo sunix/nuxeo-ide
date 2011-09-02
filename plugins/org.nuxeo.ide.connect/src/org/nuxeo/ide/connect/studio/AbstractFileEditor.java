@@ -18,6 +18,7 @@ package org.nuxeo.ide.connect.studio;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.window.Window;
 import org.eclipse.ui.IEditorInput;
@@ -83,15 +84,25 @@ public abstract class AbstractFileEditor extends EditorPart {
         page.closeEditor(this, false);
     }
 
+    protected long computeModificationStamp(IResource resource) {
+        long modificationStamp = resource.getModificationStamp();
+
+        IPath path = resource.getLocation();
+        if (path == null)
+            return modificationStamp;
+
+        modificationStamp = path.toFile().lastModified();
+        return modificationStamp;
+    }
+
     protected void handleActivation() {
         try {
-            System.out.println(">>>> editor activated");
             IFile file = (IFile) getEditorInput().getAdapter(IFile.class);
             if (!file.isSynchronized(IResource.DEPTH_ZERO)) {
                 handleInputDesynchronized(file);
             } else if (!file.exists()) {
                 handleInputDeleted(file);
-            } else if (file.getModificationStamp() > lastModification) {
+            } else if (computeModificationStamp(file) > lastModification) {
                 handleInputChanged(file);
             }
         } catch (Exception e) {

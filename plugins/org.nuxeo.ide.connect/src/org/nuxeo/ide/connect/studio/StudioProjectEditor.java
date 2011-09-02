@@ -227,7 +227,8 @@ public class StudioProjectEditor extends AbstractFileEditor {
 
         action = new Action() {
             public void run() {
-                ExportOperationsWizard wizard = new ExportOperationsWizard();
+                ExportOperationsWizard wizard = new ExportOperationsWizard(
+                        project.getId());
                 wizard.init(getSite().getWorkbenchWindow().getWorkbench(),
                         new StructuredSelection(rootProject));
                 WizardDialog dialog = new WizardDialog(getSite().getShell(),
