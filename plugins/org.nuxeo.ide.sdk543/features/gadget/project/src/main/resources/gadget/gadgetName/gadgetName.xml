@@ -1,140 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Module>
   <ModulePrefs title="${gadgetTitle}" description="${gadgetDescription}"
-    author="${user}" author_email="${userEmail}" height="420">
+    author="${user}" author_email="${userEmail}" height="200">
     <Require feature="setprefs" />
     <Require feature="dynamic-height" />
     <Require feature="jquery" />
-    <#noparse>
+     <Require feature="settitle" />
+<#noparse>
     <#include "dynamic-translations.ftl"/>
     <#include "default-oauth-prefs.ftl"/>
-    </#noparse>
   </ModulePrefs>
-  <#noparse>
   <#include "context-prefs.ftl"/>
-  </#noparse>
+</#noparse>
   <Content type="html">
 <![CDATA[
 <html>
   <head>
   <link rel="stylesheet" type="text/css" href="/nuxeo/site/skin/gadgets/css/gadget-common.css"/>
-  <link rel="stylesheet" type="text/css" href="<#noparse>${clientSideBaseUrl}</#noparse>site/gadgets/${gadgetName}/${gadgetName}.css"/>
+  <link rel="stylesheet" type="text/css" href="${gadgetName}.css"/>
 
   <!-- insert JS Context -->
   ${jsContext}
-
-<#noparse>
-  <script src="${specDirectoryUrl}default-automation-request.js"></script>
-  <script src="${specDirectoryUrl}context-management.js"></script>
+  <script type="text/javascript" src="${gadgetName}.js"></script>
 
 
   <script>
     var prefs = new _IG_Prefs(__MODULE_ID__);
-
-    var opCallParameters = {
-        operationId : 'Feed.Provider',
-        operationParams : {
-         limit : 4
-        },
-        entityType : 'blob',
-        operationContext : {},
-        operationCallback : renderFeed
-    };
-
-    // main method ; called after operation is executed
-    function renderFeed(response, opCallParameters) {
-        _gel("feedEntries").innerHTML = buildFeed(response);
-        gadgets.window.adjustHeight();
-        window.parent.addFancyBoxTo(jQuery(".feedItemPopup"));
-        window.parent.addFancyBoxTo(jQuery(".feedConfigPopup"), loadFeedItems);
-    };
-
-    function buildFeed(response) {
-        feed_title = response.data["FEED_TITLE"];
-        feed_link = response.data["FEED_LINK"];
-        entries = response.data["ENTRIES"];
-        if ( typeof entries == 'undefined' ) {
-            return addActions() + '<p>No entries</p>';
-        }
-        feed = '';
-        feed += addActions();
-
-        for (var i = 0; i < entries.length; i++) {
-            entry = entries[i];
-
-            // handle the case when more feed are merged
-            entry_feed_title = entry["FEED_TITLE"];
-            entry_feed_link = entry["FEED_LINK"];
-            if ( typeof entry_feed_title == 'undefined' ) {
-                entry_feed_title = feed_title;
-            }
-            if ( typeof entry_feed_link == 'undefined' ) {
-                entry_feed_link = feed_link;
-            }
-            // end -
-
-            feed += buildEntry(entries[i], entry_feed_title, entry_feed_link);
-        }
-        return feed;
-    };
-
- 	function addActions(){
- 		s = '<div class="rssLinks">';
-        s += '<span>RSS</span>';
-        s += '<a class="feedConfigPopup" href="${clientSideBaseUrl}site/rssreader/config">';
-        s += '<span><img src="${clientSideBaseUrl}site/gadgets/rssreader/rss_icon.png"></span>';
-        s += '</a>';
-        s += '</div>';
-		return s;
- 	}
-
-
-    function buildEntry(entryData, feed_title, feed_link) {
-        entry = '';
-        entry += '<div class="entry">';
-
-        entry += '<div class="title">';
-        entry += '<a class="feedItemPopup" href="${clientSideBaseUrl}site/rssreader/item?i='+ entryData["LINK"] + '">';
-        entry += entryData["TITLE"];
-        entry += '</a>'
-        entry += '</div>';
-
-
-        entry += '<div class="entryInfo">';
-        if (entryData["PUBDATE"] == null) {
-          entry += buildDate(entryData["PUBDATE"]) + ' - ';
-        }
-        entry += '<a class="source" href="'+ feed_link + '" target="_blank">';
-        entry += feed_title;
-        entry += '</a>';
-        entry += '</div>';
-
-        entry += '<div class="description">';
-        entry += entryData["DESCRIPTION"];
-        entry += '</div>';
-
-        entry += '</div>';
-        return entry;
-    };
-
-    function buildDate(dataInfo) {
-        d = new Date(dataInfo["time"]);
-        return d.getDate() + '/' + ( d.getMonth() + 1 ) + '/' + d.getFullYear();
-    };
-
-    //gadgets.util.registerOnLoadHandler(loadFeedItems);
-
-    function loadFeedItems() {
-    	doAutomationRequest(opCallParameters);
-    };
-
-
   </script>
+  <script src="${specDirectoryUrl}default-automation-request.js"></script>
+  <script src="${specDirectoryUrl}context-management.js"></script>
+
 
   </head>
     <body>
+<#noparse>
+      <#include "default-request-controls.ftl"/>
+</#noparse>
       <div id="content">
-        <#include "default-request-controls.ftl"/>
         Hello world!
       </div>
     </body>
@@ -142,4 +44,4 @@
 ]]>
   </Content>
 </Module>
-</#noparse>
+
