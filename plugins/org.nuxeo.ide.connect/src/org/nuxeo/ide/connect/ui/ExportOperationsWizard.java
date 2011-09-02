@@ -73,9 +73,9 @@ public class ExportOperationsWizard extends Wizard implements IWorkbenchWizard {
     @Override
     public boolean performFinish() {
         try {
-            OperationModel[] ops = ((CollectOperationsPage) getPage("collectDependencies")).getSelectedOperations();
+            OperationModel[] ops = ((CollectOperationsPage) getPage("collectOperations")).getSelectedOperations();
             if (ops.length > 0) {
-                getContainer().run(true, false, new ExportTask(projectId, ops));
+                getContainer().run(false, true, new ExportTask(projectId, ops));
             }
         } catch (Exception e) {
             UI.showError("Failed to export operations", e);

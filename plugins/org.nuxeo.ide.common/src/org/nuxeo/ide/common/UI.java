@@ -35,6 +35,9 @@ public class UI {
     }
 
     public static void showError(String message, Throwable t, String title) {
+        if (t != null) {
+            t.printStackTrace();
+        }
         IStatus status = new Status(
                 IStatus.ERROR,
                 Activator.getDefault().getContext().getBundle().getSymbolicName(),

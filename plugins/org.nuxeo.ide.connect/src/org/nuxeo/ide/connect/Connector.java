@@ -19,6 +19,8 @@ package org.nuxeo.ide.connect;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -112,10 +114,32 @@ public class Connector {
         }
     }
 
-    public static void exportOperationRegistry(String projectId, String reg)
+    public static boolean exportOperationRegistry(String projectId, String reg)
             throws Exception {
-        // TODO
-        System.out.println(reg);
+        ConnectPreferences prefs = ConnectPreferences.load();
+        String user = prefs.getUsername();
+        String pwd = prefs.getPassword();
+        String host = prefs.getHost();
+        if (user == null || host == null) {
+            return false;
+        }
+        String auth = basicAuth(user, pwd);
+        URL url = new URL(new URL(host), "api/projects/" + projectId
+                + "/operations");
+        URLConnection conn = url.openConnection();
+        conn.setRequestProperty("Content-Type", "application/studio-registry");
+        conn.setDoInput(true);
+        conn.setDoOutput(true);
+        conn.setRequestProperty("Authorization", "Basic " + auth);
+        OutputStream out = conn.getOutputStream();
+        out.write(reg.getBytes("UTF-8"));
+        out.flush();
+        int status = ((HttpURLConnection) conn).getResponseCode();
+        out.close();
+        if (status > 399) {
+            throw new RuntimeException("Server Error: " + status);
+        }
+        return true;
     }
 
     public static String basicAuth(String username, String pwd) {

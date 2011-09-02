@@ -31,6 +31,7 @@ import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.ASTVisitor;
+import org.eclipse.jdt.core.dom.Annotation;
 import org.eclipse.jdt.core.dom.ArrayInitializer;
 import org.eclipse.jdt.core.dom.BooleanLiteral;
 import org.eclipse.jdt.core.dom.Expression;
@@ -53,6 +54,30 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
  * 
  */
 public class OperationScanner {
+
+    public static final String T_STRING = "string";
+
+    public static final String T_BOOLEAN = "boolean";
+
+    public static final String T_DATE = "date";
+
+    public static final String T_INTEGER = "integer";
+
+    public static final String T_FLOAT = "float";
+
+    public static final String T_RESOURCE = "resource";
+
+    public static final String T_DOCUMENT = "document";
+
+    public static final String T_DOCUMENTS = "documents";
+
+    public static final String T_BLOB = "blob";
+
+    public static final String T_BLOBS = "bloblist";
+
+    public static final String T_SCRIPT = "script";
+
+    public static final String T_PROPERTIES = "properties";
 
     public static List<OperationModel> getOperations(IJavaProject project)
             throws Exception {
@@ -162,8 +187,8 @@ public class OperationScanner {
             for (MethodDeclaration method : methods) {
                 mods = method.modifiers();
                 for (IExtendedModifier m : mods) {
-                    if (m instanceof NormalAnnotation) {
-                        NormalAnnotation anno = (NormalAnnotation) m;
+                    if (m instanceof Annotation) {
+                        Annotation anno = (Annotation) m;
                         if (!"OperationMethod".equals(anno.getTypeName().getFullyQualifiedName())) {
                             continue;
                         }
@@ -173,11 +198,25 @@ public class OperationScanner {
                             // invalid operation - ignore
                             continue;
                         }
+                        boolean isIterable = false;
+                        if (anno instanceof NormalAnnotation) {
+                            for (MemberValuePair attr : (List<MemberValuePair>) ((NormalAnnotation) anno).values()) {
+                                String key = attr.getName().getFullyQualifiedName();
+                                if ("collector".equals(key)) {
+                                    isIterable = true;
+                                    break;
+                                }
+                            }
+                        }
                         String out = getTypeSignature(method.getReturnType2());
                         String in = params.isEmpty() ? "void"
                                 : getTypeSignature(params.get(0).getType());
                         sig.add(in);
                         sig.add(out);
+                        if (isIterable) {
+                            sig.add(getListType(in));
+                            sig.add(getListType(out));
+                        }
                     }
                 }
             }
@@ -231,18 +270,27 @@ public class OperationScanner {
                 SimpleType stype = (SimpleType) type;
                 String name = stype.getName().getFullyQualifiedName();
                 if ("DocumentModel".equals(name) || "DocumentRef".equals(name)) {
-                    return "doc";
+                    return T_DOCUMENT;
                 } else if ("Blob".equals(name)) {
-                    return "blob";
+                    return T_BLOB;
                 } else if ("DocumentModelList".equals(name)
                         || "DocumentRefList".equals(name)) {
-                    return "docs";
+                    return T_DOCUMENTS;
                 } else if ("BlobList".equals(name)) {
-                    return "blobs";
+                    return T_BLOBS;
+                } else if ("URL".equals(name)) {
+                    return T_RESOURCE;
+                } else if ("Calendar".equals(name)) {
+                    return T_DATE;
+                } else {
+                    return name.toLowerCase();
                 }
             } else if (type.isPrimitiveType()) {
-                if (((PrimitiveType) type).getPrimitiveTypeCode() == PrimitiveType.VOID) {
-                    return "void";
+                PrimitiveType.Code code = ((PrimitiveType) type).getPrimitiveTypeCode();
+                if (code == PrimitiveType.INT) {
+                    return "integer";
+                } else {
+                    return code.toString().toLowerCase();
                 }
             }
             return "object";
@@ -250,4 +298,13 @@ public class OperationScanner {
 
     }
 
+    public static String getListType(String type) {
+        if (T_DOCUMENT.equals(type)) {
+            return T_DOCUMENTS;
+        } else if (T_BLOB.equals(type)) {
+            return T_BLOBS;
+        } else {
+            return "object";
+        }
+    }
 }

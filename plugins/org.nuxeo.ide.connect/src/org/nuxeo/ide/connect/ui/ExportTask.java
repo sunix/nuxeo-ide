@@ -16,8 +16,12 @@
  */
 package org.nuxeo.ide.connect.ui;
 
+import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 
+import org.codehaus.jackson.JsonFactory;
+import org.codehaus.jackson.JsonGenerator;
+import org.codehaus.jackson.util.DefaultPrettyPrinter;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.nuxeo.ide.common.UI;
@@ -60,7 +64,71 @@ public class ExportTask implements IRunnableWithProgress {
     }
 
     public static String writeRegistry(OperationModel[] ops) throws Exception {
-        return null;
+        StringWriter out = new StringWriter();
+        JsonGenerator jg = new JsonFactory().createJsonGenerator(out);
+        jg.setPrettyPrinter(new DefaultPrettyPrinter());
+        writeOperations(ops, jg);
+        jg.flush();
+        return out.getBuffer().toString();
+    }
+
+    public static void writeOperations(OperationModel[] ops, JsonGenerator jg)
+            throws Exception {
+        jg.writeStartObject();
+        jg.writeArrayFieldStart("operations");
+        for (OperationModel op : ops) {
+            writeOperation(op, jg);
+        }
+        jg.writeEndArray();
+        jg.writeEndObject();
+    }
+
+    public static void writeOperation(OperationModel op, JsonGenerator jg)
+            throws Exception {
+        jg.writeStartObject();
+        jg.writeObjectField("id", op.getId());
+        jg.writeObjectField("label", op.getLabel());
+        jg.writeObjectField("category", op.getCategory());
+        jg.writeObjectField("description", op.getDescription());
+        jg.writeObjectField("url", op.getId());
+        jg.writeObjectField("requires", op.getRequires());
+        writeSignature(op, jg);
+        writeParams(op, jg);
+        jg.writeEndObject();
+    }
+
+    private static void writeSignature(OperationModel op, JsonGenerator jg)
+            throws Exception {
+        jg.writeArrayFieldStart("signature");
+        for (String sig : op.getSignature()) {
+            jg.writeString(sig);
+        }
+        jg.writeEndArray();
+    }
+
+    private static void writeParams(OperationModel op, JsonGenerator jg)
+            throws Exception {
+        jg.writeArrayFieldStart("params");
+        for (OperationModel.Param param : op.getParams()) {
+            writeParam(param, jg);
+        }
+        jg.writeEndArray();
+    }
+
+    private static void writeParam(OperationModel.Param param, JsonGenerator jg)
+            throws Exception {
+        jg.writeStartObject();
+        jg.writeObjectField("name", param.getName());
+        jg.writeObjectField("type", param.getType());
+        jg.writeObjectField("required", param.isRequired());
+        jg.writeObjectField("order", param.getOrder());
+        jg.writeObjectField("widget", param.getWidget());
+        jg.writeArrayFieldStart("values");
+        for (String v : param.getValues()) {
+            jg.writeString(v);
+        }
+        jg.writeEndArray();
+        jg.writeEndObject();
     }
 
 }
