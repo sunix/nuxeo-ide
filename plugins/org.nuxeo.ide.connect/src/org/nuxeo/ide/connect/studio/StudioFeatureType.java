@@ -35,6 +35,11 @@ public class StudioFeatureType<T extends StudioFeature> {
 
     protected static Map<String, StudioFeatureType<?>> types = new HashMap<String, StudioFeatureType<?>>();
 
+    static {
+        addType(new DocumentFeatureType());
+        addType(new SchemaFeatureType());
+    }
+
     public static Map<String, StudioFeatureType<?>> getTypes() {
         return types;
     }
@@ -68,6 +73,27 @@ public class StudioFeatureType<T extends StudioFeature> {
         return (T) new StudioFeature(getId());
     }
 
+    public T newFeature(JsonParser jp) throws IOException {
+        T feature = newFeature();
+
+        while (jp.nextToken() != JsonToken.END_OBJECT) {
+            String key = jp.getCurrentName();
+            jp.nextValue();
+            if (key.equals("id")) {
+                feature.id = jp.getText();
+            } else if ("data".equals(key)) {
+                readDataField(feature, jp);
+            }
+        }
+
+        if (feature.id == null) {
+            throw new IOException(
+                    "Invalid feature JSON format. Expecting 'id' attribute");
+        }
+
+        return feature;
+    }
+
     public static StudioFeature readFeature(JsonParser jp) throws IOException {
         if (jp.getCurrentToken() != JsonToken.START_OBJECT) {
             throw new IOException(
@@ -85,24 +111,23 @@ public class StudioFeatureType<T extends StudioFeature> {
 
         // lookup type
         StudioFeatureType<? extends StudioFeature> ft = getType(type);
-        StudioFeature feature = ft.newFeature();
+        return ft.newFeature(jp);
+    }
 
-        while (jp.nextToken() != JsonToken.END_OBJECT) {
-            String key = jp.getCurrentName();
-            jp.nextValue();
-            if (key.equals("id")) {
-                feature.id = jp.getText();
-            } else {
-                feature.readField(jp);
+    protected void readDataField(T feature, JsonParser jp) throws IOException {
+        // by default consume the object
+        int i = 0;
+        while (true) {
+            JsonToken token = jp.nextToken();
+            if (token == JsonToken.START_OBJECT) {
+                i++;
+            } else if (token == JsonToken.END_OBJECT) {
+                if (i == 0) {
+                    return;
+                }
+                i--;
             }
         }
-
-        if (feature.id == null) {
-            throw new IOException(
-                    "Invalid feature JSON format. Expectinh 'id' attribute");
-        }
-
-        return feature;
     }
 
 }

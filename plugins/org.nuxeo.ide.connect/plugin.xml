@@ -78,5 +78,22 @@
      </page>
    </extension>      
       
+   <!-- #### Schema completor ##### -->
+
+ <extension point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
+   id="schema_proposals"
+   name="Nuxeo Schema Proposals">
+   <proposalCategory icon="icons/studio_project.gif"/>
+ </extension>
+ <extension point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
+   id="SchemaFieldCompletionProposalComputer"
+   name="Schema Field Completion Proposal Computer">
+   <javaCompletionProposalComputer
+      class="org.nuxeo.ide.connect.completion.SchemaFieldProposalComputer"
+      categoryId="org.nuxeo.ide.connect.schema_proposals">
+      <partition type="__java_javadoc"/>
+   </javaCompletionProposalComputer>
+ </extension>
+ 
 
 </plugin>

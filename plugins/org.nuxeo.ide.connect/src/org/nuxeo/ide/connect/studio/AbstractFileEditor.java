@@ -122,9 +122,7 @@ public abstract class AbstractFileEditor extends EditorPart {
     }
 
     protected void handleInputDeleted(IFile file) throws Exception {
-        if (Window.OK == UI.showPrompt("The editor input was removed. Do you want to close the editor?")) {
-            close();
-        }
+        close();
     }
 
     class ActivationListener implements IPartListener, IWindowListener {
@@ -145,7 +143,7 @@ public abstract class AbstractFileEditor extends EditorPart {
 
         @Override
         public void windowActivated(IWorkbenchWindow window) {
-            handleActivation();
+            // handleActivation(); // infinite when removing the input
         }
 
         @Override

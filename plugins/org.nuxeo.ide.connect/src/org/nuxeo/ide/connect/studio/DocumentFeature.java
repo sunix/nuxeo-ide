@@ -16,34 +16,49 @@
  */
 package org.nuxeo.ide.connect.studio;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class StudioFeature {
+public class DocumentFeature extends StudioFeature {
 
-    protected String id;
+    protected List<String> schemas;
 
-    protected String type;
+    protected List<String> facets;
 
-    public StudioFeature(String type) {
-        this.type = type;
+    protected String lifeCycle;
+
+    public DocumentFeature(String type) {
+        super(type);
+        facets = new ArrayList<String>();
+        schemas = new ArrayList<String>();
     }
 
-    public String getType() {
-        return type;
+    public List<String> getSchemas() {
+        return schemas;
     }
 
-    public String getId() {
-        return id;
+    public void addSchema(String schema) {
+        this.schemas.add(schema);
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public List<String> getFacets() {
+        return facets;
     }
 
-    @Override
-    public String toString() {
-        return id + " [" + type + "]";
+    public void addFacet(String facet) {
+        facets.add(facet);
     }
+
+    public String getLifeCycle() {
+        return lifeCycle;
+    }
+
+    public void setLifeCycle(String lifeCycle) {
+        this.lifeCycle = lifeCycle;
+    }
+
 }
