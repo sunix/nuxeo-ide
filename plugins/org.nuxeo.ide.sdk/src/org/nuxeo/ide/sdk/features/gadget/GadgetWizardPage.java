@@ -30,9 +30,9 @@ import org.nuxeo.ide.sdk.ui.widgets.ProjectChooserWidget;
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class GadgerWizardPage extends FormWizardPage<FeatureTemplateContext> {
+public class GadgetWizardPage extends FormWizardPage<FeatureTemplateContext> {
 
-    public GadgerWizardPage() {
+    public GadgetWizardPage() {
         super("createGadget1", "Create Gadget", null);
     }
 

@@ -22,10 +22,10 @@ import org.nuxeo.ide.sdk.features.FeatureCreationWizard;
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class GadgetWizard extends FeatureCreationWizard {
+public class AutomationGadgetWizard extends FeatureCreationWizard {
 
-    public GadgetWizard() {
-        super("gadget");
+    public AutomationGadgetWizard() {
+        super("automation-gadget");
     }
 
     @Override

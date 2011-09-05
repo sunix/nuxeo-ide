@@ -96,7 +96,7 @@
             parentCategory="org.nuxeo.ide.project.newWizards">
       </category>
 
-            <wizard
+      <wizard
             category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.automation.newWizards"
             class="org.nuxeo.ide.sdk.features.automation.OperationWizard"
             icon="icons/operation.gif"
@@ -186,6 +186,14 @@
             icon="icons/gadget.gif"
             id="org.nuxeo.ide.Gadget.gadgetWizard"
             name="Gadget">
+      </wizard>
+
+       <wizard
+            category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.gadget.newWizards"
+            class="org.nuxeo.ide.sdk.features.gadget.AutomationGadgetWizard"
+            icon="icons/gadget.gif"
+            id="org.nuxeo.ide.Gadget.gadgetWizard"
+            name="Automation Gadget">
       </wizard>
 
    </extension>

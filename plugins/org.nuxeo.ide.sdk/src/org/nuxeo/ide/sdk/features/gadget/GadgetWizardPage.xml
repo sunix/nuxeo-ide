@@ -6,13 +6,20 @@
 </project>
 
 <text>Gadget name:</text>
-<textbox id="gadgetName" hfill="true"/>
+<textbox id="gadgetName" hfill="true">
+<validator type="regex" value="[A-Za-z0-9_]+">Not a valid gadget name</validator>
+</textbox>
 
 <text>Gadget title:</text>
 <textbox id="gadgetTitle" hfill="true"/>
 
 <text>Gadget category:</text>
-<textbox id="gadgetCategory" hfill="true"/>
+<combo id="category" hfill="true" readonly="false">
+Nuxeo,
+Media,
+Monitoring,
+Utilities
+</combo>
 
 
 <text>Gadget description:</text>

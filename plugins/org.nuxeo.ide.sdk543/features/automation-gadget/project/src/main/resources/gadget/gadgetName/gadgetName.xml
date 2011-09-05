@@ -2,43 +2,50 @@
 <Module>
   <ModulePrefs title="${gadgetTitle}" description="${gadgetDescription}"
     author="${user}" author_email="${userEmail}" height="200">
+<#noparse>
     <Require feature="setprefs" />
     <Require feature="dynamic-height" />
     <Require feature="jquery" />
     <Require feature="settitle" />
-<#noparse>
+
     <#include "dynamic-translations.ftl"/>
     <#include "default-oauth-prefs.ftl"/>
-</#noparse>
   </ModulePrefs>
+  <#include "context-prefs.ftl"/>
   <Content type="html">
 <![CDATA[
 <html>
   <head>
-<#noparse>
+
   <link rel="stylesheet" type="text/css" href="${specDirectoryUrl}gadget-common.css"/>
+  <link rel="stylesheet" type="text/css" href="${specDirectoryUrl}documentlists.css"/>
 </#noparse>
   <link rel="stylesheet" type="text/css" href="${gadgetName}.css"/>
-
-  <!-- insert JS Context -->
 <#noparse>
+  <!-- insert JS Context -->
   ${jsContext}
-</#noparse>
 
-  <script type="text/javascript" src="${gadgetName}.js"></script>
   <script>
     var prefs = new _IG_Prefs(__MODULE_ID__);
   </script>
-
-
+  <script src="${specDirectoryUrl}default-automation-request.js"></script>
+  <script src="${specDirectoryUrl}context-management.js"></script>
+  <script src="${specDirectoryUrl}default-documentlist-display.js"></script>
+</#noparse>
+  <script type="text/javascript" src="${gadgetName}.js"></script>
+<#noparse>
   </head>
     <body>
-      <div id="content">
-        Hello world!
-      </div>
+   	<div class="tools">
+		<#include "context-chooser-ui.ftl"/>
+   	</div>
+	<div id="content">
+		<#include "default-documentlist-layout.ftl"/>
+     	<#include "default-request-controls.ftl"/>
+   	</div>
     </body>
 </html>
 ]]>
   </Content>
 </Module>
-
+</#noparse>
