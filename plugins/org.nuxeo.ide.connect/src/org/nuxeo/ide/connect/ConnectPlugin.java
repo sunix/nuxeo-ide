@@ -1,8 +1,12 @@
 package org.nuxeo.ide.connect;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.nuxeo.ide.common.forms.PreferencesFormData;
+import org.nuxeo.ide.connect.studio.StudioProject;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -15,6 +19,8 @@ public class ConnectPlugin extends AbstractUIPlugin {
 
     // The shared instance
     private static ConnectPlugin plugin;
+
+    private static StudioProjectRef studioProject;
 
     /**
      * The constructor
@@ -49,4 +55,38 @@ public class ConnectPlugin extends AbstractUIPlugin {
         return plugin;
     }
 
+    @Override
+    protected void initializeImageRegistry(ImageRegistry reg) {
+        reg.put("icons/studio_project.gif",
+                ImageDescriptor.createFromURL(getBundle().getEntry(
+                        "icons/studio_project.gif")));
+    }
+
+    public static StudioProject getStudioProject(IProject project)
+            throws Exception {
+        if (studioProject == null || !studioProject.owner.equals(project)) {
+            StudioProject sp = StudioProject.getProject(project);
+            studioProject = new StudioProjectRef(project, sp);
+        }
+        return studioProject.getProject();
+    }
+
+    public static class StudioProjectRef {
+        IProject owner;
+
+        StudioProject project;
+
+        public StudioProjectRef(IProject owner, StudioProject project) {
+            this.owner = owner;
+            this.project = project;
+        }
+
+        public StudioProject getProject() {
+            return project;
+        }
+
+        public IProject getOwner() {
+            return owner;
+        }
+    }
 }

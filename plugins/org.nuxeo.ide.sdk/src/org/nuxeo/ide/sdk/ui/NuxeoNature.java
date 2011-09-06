@@ -51,6 +51,10 @@ public class NuxeoNature implements IProjectNature {
     }
 
     public void configure() throws CoreException {
+        // IFolder folder = project.getFolder("studio.project");
+        // if (!folder.exists()) {
+        // folder.create(IResource.VIRTUAL, true, new NullProgressMonitor());
+        // }
 
         // IProjectDescription desc = project.getDescription();
         // ICommand[] commands = desc.getBuildSpec();
@@ -77,6 +81,11 @@ public class NuxeoNature implements IProjectNature {
     }
 
     public void deconfigure() throws CoreException {
+        // IFolder folder = project.getFolder("studio.project");
+        // if (folder.exists()) {
+        // folder.delete(true, new NullProgressMonitor());
+        // }
+
         // IProjectDescription desc = project.getDescription();
         // ICommand[] commands = desc.getBuildSpec();
         // ArrayList<ICommand> newCommands = new ArrayList<ICommand>();

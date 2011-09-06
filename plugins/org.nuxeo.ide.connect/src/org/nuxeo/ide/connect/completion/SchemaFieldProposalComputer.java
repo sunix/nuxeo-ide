@@ -16,12 +16,18 @@
  */
 package org.nuxeo.ide.connect.completion;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jdt.core.CompletionContext;
+import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.ui.text.java.ContentAssistInvocationContext;
 import org.eclipse.jdt.ui.text.java.IJavaCompletionProposalComputer;
+import org.eclipse.jdt.ui.text.java.JavaContentAssistInvocationContext;
+import org.eclipse.swt.graphics.Point;
+import org.nuxeo.ide.connect.studio.StudioProject;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -30,10 +36,9 @@ import org.eclipse.jdt.ui.text.java.IJavaCompletionProposalComputer;
 public class SchemaFieldProposalComputer implements
         IJavaCompletionProposalComputer {
 
-    protected SchemaProposalProcessor processor;
+    protected StudioProject project;
 
     public SchemaFieldProposalComputer() {
-        processor = new SchemaProposalProcessor();
     }
 
     @Override
@@ -43,20 +48,44 @@ public class SchemaFieldProposalComputer implements
     @Override
     public List computeCompletionProposals(
             ContentAssistInvocationContext context, IProgressMonitor monitor) {
-        return Arrays.asList(processor.computeCompletionProposals(
-                context.getViewer(), context.getInvocationOffset()));
+
+        if (context instanceof JavaContentAssistInvocationContext) {
+            JavaContentAssistInvocationContext jctx = (JavaContentAssistInvocationContext) context;
+            ICompilationUnit unit = jctx.getCompilationUnit();
+            StudioCompletionProposalCollector collector = new StudioCompletionProposalCollector(
+                    jctx);
+            CompletionContext cc = jctx.getCoreContext();
+            int start = -1;
+            if (cc.getTokenKind() == CompletionContext.TOKEN_KIND_STRING_LITERAL) {
+                start = cc.getTokenStart();
+                int end = cc.getTokenEnd();
+                collector.initialize(start, end - start + 1,
+                        new String(cc.getToken()));
+            } else {
+                start = context.getInvocationOffset();
+                Point p = jctx.getViewer().getSelectedRange();
+                collector.initialize(start, p.y, null);
+            }
+            try {
+                unit.codeComplete(start, collector, new NullProgressMonitor());
+                return collector.getProposals();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return Collections.emptyList();
     }
 
     @Override
     public List computeContextInformation(
             ContentAssistInvocationContext context, IProgressMonitor monitor) {
-        return Arrays.asList(processor.computeContextInformation(
-                context.getViewer(), context.getInvocationOffset()));
+        System.out.println("compute context info");
+        return Collections.emptyList();
     }
 
     @Override
     public String getErrorMessage() {
-        return processor.getErrorMessage();
+        return null;
     }
 
     @Override
