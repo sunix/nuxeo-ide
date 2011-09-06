@@ -27,6 +27,8 @@ import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonParser.Feature;
 import org.codehaus.jackson.JsonToken;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.nuxeo.ide.connect.ConnectPreferences;
 import org.nuxeo.ide.connect.studio.tree.ProjectTree;
 
@@ -184,6 +186,19 @@ public class StudioProject {
             return id.equals(((StudioProject) obj).id);
         }
         return false;
+    }
+
+    public static StudioProject getProject(IProject owner) throws Exception {
+        IFile file = owner.getFile("studio.project");
+        if (file.exists()) {
+            InputStream in = file.getContents(true);
+            try {
+                return readProject(in);
+            } finally {
+                in.close();
+            }
+        }
+        return null;
     }
 
     public static List<StudioProject> readProjects(InputStream in)

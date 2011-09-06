@@ -91,7 +91,10 @@
    <javaCompletionProposalComputer
       class="org.nuxeo.ide.connect.completion.SchemaFieldProposalComputer"
       categoryId="org.nuxeo.ide.connect.schema_proposals">
-      <partition type="__java_javadoc"/>
+      <partition type="__dftl_partition_content_type"/>
+      <partition
+            type="__java_string">
+      </partition>
    </javaCompletionProposalComputer>
  </extension>
  
