@@ -1,8 +1,10 @@
+var prefs = new gadgets.Prefs();
+
 operationParameters = {
 	  operationId: 'Document.PageProvider',
       operationParams: {
         pageSize: 5,
-        query: 'select * from Document'
+        query: "select * from Document where ecm:mixinType != 'HiddenInNavigation'"
       },
       operationContext: {},
       operationDocumentProperties: "common,dublincore",

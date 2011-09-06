@@ -4,7 +4,6 @@
     author="${user}" author_email="${userEmail}" height="200">
     <Require feature="setprefs" />
     <Require feature="dynamic-height" />
-    <Require feature="jquery" />
     <Require feature="settitle" />
 <#noparse>
     <#include "dynamic-translations.ftl"/>
@@ -15,21 +14,15 @@
 <![CDATA[
 <html>
   <head>
-<#noparse>
-  <link rel="stylesheet" type="text/css" href="${specDirectoryUrl}gadget-common.css"/>
-</#noparse>
-  <link rel="stylesheet" type="text/css" href="${gadgetName}.css"/>
+
+  <link rel="stylesheet" type="text/css" href="<#noparse>${specDirectoryUrl}</#noparse>gadget-common.css"/>
+  <link rel="stylesheet" type="text/css" href="<#noparse>${specDirectoryUrl}</#noparse>${gadgetName}.css"/>
+
 
   <!-- insert JS Context -->
-<#noparse>
-  ${jsContext}
-</#noparse>
-
-  <script type="text/javascript" src="${gadgetName}.js"></script>
-  <script>
-    var prefs = new _IG_Prefs(__MODULE_ID__);
-  </script>
-
+  <#noparse>${jsContext}</#noparse>
+  <script src="<#noparse>${clientSideBaseUrl}</#noparse>nxthemes-lib/jquery.js"></script>
+  <script src="<#noparse>${specDirectoryUrl}</#noparse>${gadgetName}.js"></script>
 
   </head>
     <body>

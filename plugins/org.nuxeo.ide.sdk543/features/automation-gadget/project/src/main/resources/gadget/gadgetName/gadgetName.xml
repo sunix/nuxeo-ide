@@ -2,39 +2,35 @@
 <Module>
   <ModulePrefs title="${gadgetTitle}" description="${gadgetDescription}"
     author="${user}" author_email="${userEmail}" height="200">
-<#noparse>
     <Require feature="setprefs" />
     <Require feature="dynamic-height" />
-    <Require feature="jquery" />
     <Require feature="settitle" />
-
+<#noparse>
     <#include "dynamic-translations.ftl"/>
     <#include "default-oauth-prefs.ftl"/>
   </ModulePrefs>
   <#include "context-prefs.ftl"/>
+</#noparse>
   <Content type="html">
 <![CDATA[
 <html>
   <head>
 
-  <link rel="stylesheet" type="text/css" href="${specDirectoryUrl}gadget-common.css"/>
-  <link rel="stylesheet" type="text/css" href="${specDirectoryUrl}documentlists.css"/>
-</#noparse>
-  <link rel="stylesheet" type="text/css" href="${gadgetName}.css"/>
-<#noparse>
-  <!-- insert JS Context -->
-  ${jsContext}
+  <link rel="stylesheet" type="text/css" href="<#noparse>${specDirectoryUrl}</#noparse>gadget-common.css"/>
+  <link rel="stylesheet" type="text/css" href="<#noparse>${specDirectoryUrl}</#noparse>documentlists.css"/>
+  <link rel="stylesheet" type="text/css" href="<#noparse>${specDirectoryUrl}</#noparse>${gadgetName}.css"/>
 
-  <script>
-    var prefs = new _IG_Prefs(__MODULE_ID__);
-  </script>
-  <script src="${specDirectoryUrl}default-automation-request.js"></script>
-  <script src="${specDirectoryUrl}context-management.js"></script>
-  <script src="${specDirectoryUrl}default-documentlist-display.js"></script>
-</#noparse>
-  <script type="text/javascript" src="${gadgetName}.js"></script>
-<#noparse>
+  <!-- insert JS Context -->
+  <#noparse>${jsContext}</#noparse>
+
+  <script src="<#noparse>${specDirectoryUrl}</#noparse>default-automation-request.js"></script>
+  <script src="<#noparse>${specDirectoryUrl}</#noparse>context-management.js"></script>
+  <script src="<#noparse>${specDirectoryUrl}</#noparse>default-documentlist-display.js"></script>
+  <script src="<#noparse>${clientSideBaseUrl}</#noparse>nxthemes-lib/jquery.js"></script>
+  <script src="<#noparse>${specDirectoryUrl}</#noparse>${gadgetName}.js"></script>
+
   </head>
+<#noparse>
     <body>
    	<div class="tools">
 		<#include "context-chooser-ui.ftl"/>
@@ -44,8 +40,8 @@
      	<#include "default-request-controls.ftl"/>
    	</div>
     </body>
+</#noparse>
 </html>
 ]]>
   </Content>
 </Module>
-</#noparse>

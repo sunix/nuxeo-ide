@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
@@ -149,7 +150,10 @@ public class DeploymentPreferences {
             if (projects != null) {
                 IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
                 for (String path : StringUtils.splitAsList(projects, ',')) {
-                    deployment.projects.add(root.getProject(path));
+                    IProject proj = root.getProject(path);
+                    if (proj.exists()) {
+                        deployment.projects.add(proj);
+                    }
                 }
             }
             String libs = node.get("libs", null);
