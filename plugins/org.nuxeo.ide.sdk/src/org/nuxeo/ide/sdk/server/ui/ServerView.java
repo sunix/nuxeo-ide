@@ -29,7 +29,7 @@ public class ServerView extends ViewPart implements ISelectionProvider,
     /**
      * The ID of the view as specified by the extension.
      */
-    public static final String ID = "org.nuxeo.ide.server.views.ServerView";
+    public static final String ID = "org.nuxeo.ide.sdk.server.ui.ServerView";
 
     protected Text console;
 

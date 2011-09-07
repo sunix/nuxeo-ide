@@ -45,7 +45,7 @@
             category="org.nuxeo.ide.project.newWizards"
             class="org.nuxeo.ide.sdk.projects.plugin.PluginProjectWizard"
             icon="icons/nx.gif"
-            id="org.nuxeo.ide.templates.PluginProjectWizard"
+            id="org.nuxeo.ide.sdk.projects.plugin.PluginProjectWizard"
             name="Nuxeo Plugin"
             preferredPerspectives="org.eclipse.jdt.ui.JavaPerspective,org.eclipse.jdt.ui.JavaBrowsingPerspective,org.eclipse.jdt.ui.JavaHierarchyPerspective"
             project="true">
@@ -54,7 +54,7 @@
             category="org.nuxeo.ide.project.newWizards"
             class="org.nuxeo.ide.sdk.projects.webengine.WebengineProjectWizard"
             icon="icons/web.gif"
-            id="org.nuxeo.ide.templates.WebengineProjectWizard"
+            id="org.nuxeo.ide.sdk.projects.webengine.WebengineProjectWizard"
             name="WebEngine Application"
             preferredPerspectives="org.eclipse.jdt.ui.JavaPerspective,org.eclipse.jdt.ui.JavaBrowsingPerspective,org.eclipse.jdt.ui.JavaHierarchyPerspective"
             project="true">
@@ -345,7 +345,7 @@
             category="org.nuxeo.ide.views"
             class="org.nuxeo.ide.sdk.server.ui.ServerView"
             icon="icons/server.gif"
-            id="org.nuxeo.ide.sdk.ui.server.ServerView"
+            id="org.nuxeo.ide.sdk.server.ui.ServerView"
             name="Nuxeo Server">
       </view>
    </extension>
@@ -354,7 +354,7 @@
     point = "org.eclipse.ui.viewActions">
       <viewContribution
          id="org.nuxeo.ide.sdk.ui.server.toolbar"
-         targetID="org.nuxeo.ide.sdk.ui.server.ServerView">
+         targetID="org.nuxeo.ide.sdk.server.ui.ServerView">
        <action id="org.nuxeo.ide.sdk.ui.server.openBrowser"
               label="Browse"
           menubarPath="additions"
@@ -527,6 +527,37 @@
       </with>
          </enablement>
    </moveParticipant>
+</extension>
+<extension
+      point="org.eclipse.ui.perspectives">
+   <perspective
+         class="org.nuxeo.ide.sdk.ui.NuxeoPerspective"
+         fixed="false"
+         icon="icons/nx.gif"
+         id="org.nuxeo.ide.sdk.ui.NuxeoPerspective"
+         name="Nuxeo IDE">
+   </perspective>
+</extension>
+<extension
+      point="org.eclipse.ui.perspectiveExtensions">
+   <perspectiveExtension
+         targetID="org.eclipse.jdt.ui.JavaPerspective">
+      <perspectiveShortcut
+            id="org.nuxeo.ide.sdk.ui.NuxeoPerspective">
+      </perspectiveShortcut>
+   </perspectiveExtension>
+   <perspectiveExtension
+         targetID="org.eclipse.ui.resourcePerspective">
+      <perspectiveShortcut
+            id="org.nuxeo.ide.sdk.ui.NuxeoPerspective">
+      </perspectiveShortcut>         
+   </perspectiveExtension>
+   <perspectiveExtension
+         targetID="org.eclipse.debug.ui.DebugPerspective">
+      <perspectiveShortcut
+            id="org.nuxeo.ide.sdk.ui.NuxeoPerspective">
+      </perspectiveShortcut>         
+   </perspectiveExtension>   
 </extension>
 
 </plugin>

@@ -16,6 +16,7 @@
  */
 package org.nuxeo.ide.connect.studio;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
@@ -47,12 +48,21 @@ public class StudioEditor extends EditorPart {
     @Override
     public void init(IEditorSite site, IEditorInput input)
             throws PartInitException {
-        setSite(site);
-        setInput(input);
+        if (input instanceof StudioEditorInput) {
+            setSite(site);
+            setInput(input);
+            setPartName(input.getName());
+        } else {
+            throw new PartInitException("Unsupported input: " + input);
+        }
     }
 
     public StudioProject getStudioProject() {
-        return ((StudioEditorInput) getEditorInput()).getProject();
+        return ((StudioEditorInput) getEditorInput()).getStudioProject();
+    }
+
+    public IProject getTargetProject() {
+        return ((StudioEditorInput) getEditorInput()).getTargetProject();
     }
 
     @Override
@@ -68,17 +78,22 @@ public class StudioEditor extends EditorPart {
     @Override
     public void createPartControl(Composite parent) {
         panel = new StudioPanel(parent);
+        panel.setInput(getStudioProject());
     }
 
     @Override
     public void dispose() {
         super.dispose();
-
+        if (panel != null) {
+            panel.dispose();
+        }
     }
 
     @Override
     public void setFocus() {
-
+        if (panel != null) {
+            panel.setFocus();
+        }
     }
 
 }

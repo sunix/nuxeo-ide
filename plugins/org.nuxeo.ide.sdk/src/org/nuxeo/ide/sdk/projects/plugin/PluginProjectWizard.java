@@ -28,6 +28,8 @@ import org.nuxeo.ide.sdk.projects.NuxeoProjectPage3;
  */
 public class PluginProjectWizard extends AbstractProjectWizard {
 
+    public static final String ID = PluginProjectWizard.class.getName();
+
     @Override
     protected WizardPage[] createPages() {
         return new WizardPage[] { new NuxeoProjectPage1(),

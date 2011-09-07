@@ -26,6 +26,8 @@ import org.nuxeo.ide.sdk.projects.NuxeoProjectPage2;
  */
 public class WebengineProjectWizard extends AbstractProjectWizard {
 
+    public static final String ID = WebengineProjectWizard.class.getName();
+
     public WebengineProjectWizard() {
         super("webengine");
     }

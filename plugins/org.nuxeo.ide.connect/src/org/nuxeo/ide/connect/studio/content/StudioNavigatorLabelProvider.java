@@ -5,25 +5,26 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.navigator.ICommonContentExtensionSite;
 import org.eclipse.ui.navigator.ICommonLabelProvider;
-import org.nuxeo.ide.connect.ConnectPlugin;
-import org.nuxeo.ide.connect.StudioProjectBinding;
-import org.nuxeo.ide.connect.studio.StudioProject;
 
 public class StudioNavigatorLabelProvider extends BaseLabelProvider implements
         ICommonLabelProvider {
 
     @Override
     public Image getImage(Object element) {
-        return ConnectPlugin.getDefault().getImageRegistry().get(
-                "icons/studio_project.gif");
+        if (element instanceof StudioProjectElement) {
+            return ((StudioProjectElement) element).getImage();
+        } else if (element instanceof StudioBindingElement) {
+            return ((StudioBindingElement) element).getImage();
+        }
+        return null;
     }
 
     @Override
     public String getText(Object element) {
-        if (element instanceof StudioProject) {
-            return ((StudioProject) element).getName();
-        } else if (element instanceof StudioProjectBinding) {
-            return "Studio Projects";
+        if (element instanceof StudioProjectElement) {
+            return ((StudioProjectElement) element).getName();
+        } else if (element instanceof StudioBindingElement) {
+            return ((StudioBindingElement) element).getName();
         }
         return element.toString();
     }

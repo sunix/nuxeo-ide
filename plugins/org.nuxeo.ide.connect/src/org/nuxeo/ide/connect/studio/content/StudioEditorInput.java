@@ -16,6 +16,7 @@
  */
 package org.nuxeo.ide.connect.studio.content;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
@@ -28,27 +29,34 @@ import org.nuxeo.ide.connect.studio.StudioProject;
  */
 public class StudioEditorInput implements IEditorInput {
 
-    protected StudioProject project;
+    protected StudioProjectElement element;
 
-    public StudioEditorInput(StudioProject project) {
-        this.project = project;
+    public StudioEditorInput(StudioProjectElement element) {
+        this.element = element;
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public Object getAdapter(Class adapter) {
         if (adapter == StudioProject.class) {
-            return project;
+            return element;
+        } else if (adapter == IProject.class) {
+            return element.getTargetProject();
         }
         return null;
     }
 
-    public StudioProject getProject() {
-        return project;
+    public StudioProject getStudioProject() {
+        return element.getProject();
+    }
+
+    public IProject getTargetProject() {
+        return element.getTargetProject();
     }
 
     @Override
     public boolean exists() {
-        return true;
+        return false;
     }
 
     @Override
@@ -59,7 +67,7 @@ public class StudioEditorInput implements IEditorInput {
 
     @Override
     public String getName() {
-        return project.getName();
+        return element.getName();
     }
 
     @Override
@@ -69,7 +77,7 @@ public class StudioEditorInput implements IEditorInput {
 
     @Override
     public String getToolTipText() {
-        return project.getId() + " - " + project.getName();
+        return element.getProject().getId() + " - " + element.getName();
     }
 
     @Override
@@ -78,14 +86,14 @@ public class StudioEditorInput implements IEditorInput {
             return true;
         }
         if (obj instanceof StudioEditorInput) {
-            return ((StudioEditorInput) obj).getProject().getId().equals(
-                    project.getId());
+            return ((StudioEditorInput) obj).element.getProject().getId().equals(
+                    element.getProject().getId());
         }
         return false;
     }
 
     @Override
     public int hashCode() {
-        return project.getId().hashCode();
+        return element.getProject().getId().hashCode();
     }
 }

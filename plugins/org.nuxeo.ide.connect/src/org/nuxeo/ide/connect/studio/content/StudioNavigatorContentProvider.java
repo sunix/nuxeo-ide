@@ -32,13 +32,8 @@ public class StudioNavigatorContentProvider implements
     @Override
     public Object[] getChildren(Object parentElement) {
         try {
-            if (parentElement instanceof IProject) {
-                StudioProjectBinding binding = StudioProjectBinding.get((IProject) parentElement);
-                if (binding != null) {
-                    return binding.getProjects();
-                }
-            } else if (parentElement instanceof StudioProjectBinding) {
-                return ((StudioProjectBinding) parentElement).getProjects();
+            if (parentElement instanceof StudioBindingElement) {
+                return ((StudioBindingElement) parentElement).getStudioElements();
             }
         } catch (Exception e) {
         }
@@ -47,13 +42,17 @@ public class StudioNavigatorContentProvider implements
 
     @Override
     public Object getParent(Object element) {
-        // TODO Auto-generated method stub
+        if (element instanceof StudioBindingElement) {
+            return ((StudioBindingElement) element).getProject();
+        } else if (element instanceof StudioProjectElement) {
+            return ((StudioProjectElement) element).getParent();
+        }
         return null;
     }
 
     @Override
     public boolean hasChildren(Object element) {
-        if (element instanceof StudioProjectBinding) {
+        if (element instanceof StudioBindingElement) {
             return true;
         } else if (element instanceof IProject) {
             try {
@@ -70,18 +69,22 @@ public class StudioNavigatorContentProvider implements
 
     /** pipeline API **/
 
+    @SuppressWarnings("rawtypes")
     @Override
     public void getPipelinedChildren(Object aParent, Set theCurrentChildren) {
         getPipelinedElements(aParent, theCurrentChildren);
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public void getPipelinedElements(Object anInput, Set theCurrentElements) {
         if (anInput instanceof IProject) {
             try {
-                StudioProjectBinding binding = StudioProjectBinding.get((IProject) anInput);
+                IProject project = (IProject) anInput;
+                StudioProjectBinding binding = StudioProjectBinding.get(project);
                 if (binding != null) {
-                    theCurrentElements.add(binding);
+                    theCurrentElements.add(new StudioBindingElement(project,
+                            binding));
                 }
             } catch (CoreException e) {
             }

@@ -9,12 +9,32 @@
             id="org.nuxeo.ide.views">
       </category>
       <view
-            name="Nuxeo Shell"
-            icon="icons/terminal.png"
+            allowMultiple="true"
             category="org.nuxeo.ide.views"
             class="org.nuxeo.ide.shell.views.ShellView"
-            id="org.nuxeo.ide.shell.views.ShellView">
+            fastViewWidthRatio="0.95"
+            icon="icons/terminal.png"
+            id="org.nuxeo.ide.shell.views.ShellView"
+            name="Nuxeo Shell"
+            restorable="true">
       </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.nuxeo.ide.sdk.ui.NuxeoPerspective">
+         <view
+               id="org.nuxeo.ide.shell.views.ShellView"
+               minimized="false"
+               ratio="0.95"
+               relationship="fast"
+               relative="org.nuxeo.ide.sdk.server.ui.ServerView"
+               visible="true">
+         </view>
+         <viewShortcut
+               id="org.nuxeo.ide.shell.views.ShellView">
+         </viewShortcut>
+      </perspectiveExtension>
    </extension>
 
 </plugin>

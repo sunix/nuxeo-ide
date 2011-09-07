@@ -152,15 +152,36 @@
            suppressedExtensionId="org.eclipse.ui.navigator.resourceContent"/>       
        <possibleChildren>
           <instanceof
-                value="org.nuxeo.ide.connect.studio.StudioProject">
+                value="org.nuxeo.ide.connect.studio.content.StudioProjectElement">
           </instanceof>
        </possibleChildren>
        <actionProvider
-                 class="org.nuxeo.ide.connect.studio.content.OpenActionProvider"
-                 id="org.nuxeo.ide.connect.studio.content.OpenActionProvider"> 
+                 class="org.nuxeo.ide.connect.studio.content.StudioNavigatorActionProvider"
+                 id="org.nuxeo.ide.connect.studio.content.OpenActionProvider">
+          <enablement>
+             <instanceof
+                   value="org.nuxeo.ide.connect.studio.content.StudioProjectElement">
+             </instanceof>
+          </enablement> 
        </actionProvider> 
     </navigatorContent>
  </extension>
  
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.nuxeo.ide.sdk.ui.NuxeoPerspective">
+         <view
+               id="org.nuxeo.ide.connect.studio.StudioView"
+               minimized="false"
+               relationship="stack"
+               relative="org.nuxeo.ide.sdk.server.ui.ServerView"
+               visible="true">
+         </view>
+         <viewShortcut
+               id="org.nuxeo.ide.connect.studio.StudioView">
+         </viewShortcut>
+      </perspectiveExtension>
+   </extension>
 
 </plugin>
