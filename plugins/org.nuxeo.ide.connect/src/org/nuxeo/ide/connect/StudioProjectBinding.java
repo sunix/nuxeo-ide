@@ -22,7 +22,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.QualifiedName;
 import org.nuxeo.ide.common.StringUtils;
 import org.nuxeo.ide.connect.studio.StudioProject;
@@ -31,12 +35,13 @@ import org.nuxeo.ide.connect.studio.StudioProject;
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class StudioProjectBinding {
+public class StudioProjectBinding implements IResourceChangeListener {
 
     private static QualifiedName STUDIO_BINDING_P = new QualifiedName(
             "org.nuxeo.ide", "studio.binding");
 
     public static void unbind(IProject project) throws CoreException {
+        // ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
         project.setPersistentProperty(STUDIO_BINDING_P, null);
         project.setSessionProperty(STUDIO_BINDING_P, null);
     }
@@ -50,10 +55,14 @@ public class StudioProjectBinding {
                 String[] ar = StringUtils.split(listRef, ',');
                 binding = new StudioProjectBinding(ar);
                 project.setSessionProperty(STUDIO_BINDING_P, binding);
+                binding.projectPath = project.getFullPath();
+                // ResourcesPlugin.getWorkspace().addResourceChangeListener(binding);
             }
         }
         return binding;
     }
+
+    protected IPath projectPath;
 
     protected String[] projectIds;
 
@@ -74,6 +83,18 @@ public class StudioProjectBinding {
                     StringUtils.join(projectIds, ','));
             project.setSessionProperty(STUDIO_BINDING_P, this);
         }
+    }
+
+    public IPath getProjectPath() {
+        return projectPath;
+    }
+
+    public IProject getProject() {
+        if (projectPath == null) {
+            return null;
+        }
+        return ResourcesPlugin.getWorkspace().getRoot().getProject(
+                projectPath.lastSegment());
     }
 
     public String[] getProjectIds() {
@@ -118,6 +139,26 @@ public class StudioProjectBinding {
 
     public String[] getSchemaPaths() {
         return xpaths();
+    }
+
+    @Override
+    public void resourceChanged(IResourceChangeEvent event) {
+        if (projectPath != null) {
+            if (projectPath.equals(event.getResource().getFullPath())) {
+                int type = event.getType();
+                if (type == IResourceChangeEvent.PRE_CLOSE
+                        || type == IResourceChangeEvent.PRE_DELETE) {
+                    dispose();
+                }
+            }
+        }
+    }
+
+    public void dispose() {
+        ResourcesPlugin.getWorkspace().removeResourceChangeListener(this);
+        projectIds = null;
+        projectPath = null;
+        xpaths = null;
     }
 
 }

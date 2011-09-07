@@ -22,6 +22,9 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.graphics.Image;
 import org.nuxeo.ide.common.BundleImageProvider;
+import org.nuxeo.ide.common.UI;
+import org.nuxeo.ide.connect.ConnectPlugin;
+import org.nuxeo.ide.connect.StudioProvider;
 import org.nuxeo.ide.connect.studio.StudioProject;
 
 /**
@@ -39,20 +42,24 @@ public class StudioProjectProvider extends BaseLabelProvider implements
 
     @Override
     public Object[] getElements(Object inputElement) {
-        if (inputElement instanceof StudioProject) {
+        if (inputElement instanceof StudioProvider) {
+            return ((StudioProvider) inputElement).getProjects();
+        } else if (inputElement instanceof StudioProject) {
             return ((StudioProject) inputElement).getTree().getRoots();
         } else if (inputElement instanceof ProjectTree) {
             return ((ProjectTree) inputElement).getRoots();
         }
-        return null;
+        return UI.EMPTY_OBJECTS;
     }
 
     @Override
     public Object[] getChildren(Object parentElement) {
-        if (parentElement instanceof Node) {
+        if (parentElement instanceof StudioProject) {
+            return ((StudioProject) parentElement).getTree().getRoots();
+        } else if (parentElement instanceof Node) {
             return ((Node<?>) parentElement).getChildren();
         }
-        return null;
+        return UI.EMPTY_OBJECTS;
     }
 
     @Override
@@ -65,7 +72,9 @@ public class StudioProjectProvider extends BaseLabelProvider implements
 
     @Override
     public boolean hasChildren(Object element) {
-        if (element instanceof Node) {
+        if (element instanceof StudioProject) {
+            return true;
+        } else if (element instanceof Node) {
             return ((Node<?>) element).hasChildren();
         }
         return false;
@@ -81,14 +90,24 @@ public class StudioProjectProvider extends BaseLabelProvider implements
 
     @Override
     public String getText(Object element) {
-        return ((Node<?>) element).getLabel();
+        if (element instanceof StudioProject) {
+            return ((StudioProject) element).getName();
+        } else if (element instanceof Node) {
+            return ((Node<?>) element).getLabel();
+        }
+        return element.toString();
     }
 
     @Override
     public Image getImage(Object element) {
-        String path = ((Node<?>) element).getIcon();
-        if (path != null) {
-            return provider.getImage(path);
+        if (element instanceof StudioProject) {
+            return ConnectPlugin.getDefault().getImageRegistry().get(
+                    "icons/studio_project.gif");
+        } else if (element instanceof Node) {
+            String path = ((Node<?>) element).getIcon();
+            if (path != null) {
+                return provider.getImage(path);
+            }
         }
         return null;
     }

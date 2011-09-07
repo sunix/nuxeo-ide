@@ -24,6 +24,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 import org.nuxeo.ide.connect.studio.content.StudioEditorInput;
+import org.nuxeo.ide.connect.studio.content.StudioProjectElement;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -33,7 +34,7 @@ public class StudioEditor extends EditorPart {
 
     public static final String ID = StudioEditor.class.getName();
 
-    protected StudioPanel panel;
+    protected StudioEditorPanel panel;
 
     @Override
     public void doSave(IProgressMonitor monitor) {
@@ -52,6 +53,7 @@ public class StudioEditor extends EditorPart {
             setSite(site);
             setInput(input);
             setPartName(input.getName());
+
         } else {
             throw new PartInitException("Unsupported input: " + input);
         }
@@ -63,6 +65,10 @@ public class StudioEditor extends EditorPart {
 
     public IProject getTargetProject() {
         return ((StudioEditorInput) getEditorInput()).getTargetProject();
+    }
+
+    public StudioProjectElement getStudioElement() {
+        return ((StudioEditorInput) getEditorInput()).getElement();
     }
 
     @Override
@@ -77,8 +83,8 @@ public class StudioEditor extends EditorPart {
 
     @Override
     public void createPartControl(Composite parent) {
-        panel = new StudioPanel(parent);
-        panel.setInput(getStudioProject());
+        panel = new StudioEditorPanel(parent);
+        panel.setInput(getStudioElement());
     }
 
     @Override
@@ -92,7 +98,7 @@ public class StudioEditor extends EditorPart {
     @Override
     public void setFocus() {
         if (panel != null) {
-            panel.setFocus();
+            panel.getTreeViewer().getTree().setFocus();
         }
     }
 

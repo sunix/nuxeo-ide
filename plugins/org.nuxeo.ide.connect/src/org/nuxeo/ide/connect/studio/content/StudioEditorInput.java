@@ -35,6 +35,10 @@ public class StudioEditorInput implements IEditorInput {
         this.element = element;
     }
 
+    public StudioProjectElement getElement() {
+        return element;
+    }
+
     @SuppressWarnings("rawtypes")
     @Override
     public Object getAdapter(Class adapter) {

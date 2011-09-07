@@ -17,6 +17,7 @@
 package org.nuxeo.ide.connect.studio.tree;
 
 import org.nuxeo.ide.connect.studio.StudioFeature;
+import org.nuxeo.ide.connect.studio.StudioProject;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -26,7 +27,8 @@ public class FeatureNode extends Node<StudioFeature> {
 
     protected StudioFeature feature;
 
-    public FeatureNode(StudioFeature feature) {
+    public FeatureNode(StudioProject project, StudioFeature feature) {
+        super(project);
         this.feature = feature;
     }
 

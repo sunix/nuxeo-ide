@@ -33,10 +33,7 @@ public class StudioView extends ViewPart {
     public void createPartControl(Composite parent) {
         panel = new StudioPanel(parent);
         try {
-            StudioProject[] projects = ConnectPlugin.getStudioProvider().getProjects();
-            if (projects.length > 0) {
-                panel.setInput(projects[0]);
-            }
+            panel.setInput(ConnectPlugin.getStudioProvider());
         } catch (Exception e) {
             UI.showError("Failed to get studio projects", e);
         }

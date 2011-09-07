@@ -48,7 +48,7 @@ public class ProjectTree {
     private ParentNode<?> getUnknownGroup(Map<String, ParentNode<?>> groups) {
         ParentNode<?> parent = groups.get("*");
         if (parent == null) {
-            parent = new CategoryNode("*", "Unknown");
+            parent = new CategoryNode(project, "*", "Unknown");
             roots.add(parent);
             groups.put(parent.getId(), parent);
         }
@@ -63,12 +63,12 @@ public class ProjectTree {
                 continue; // ignore resources entry for now
             }
             String catLabel = entry.getValue();
-            ParentNode<?> group = new CategoryNode(catId, catLabel);
+            ParentNode<?> group = new CategoryNode(project, catId, catLabel);
             roots.add(group);
             groups.put(group.getId(), group);
         }
         for (TypeDescriptor td : project.getTypeDescriptors().values()) {
-            ParentNode<?> group = new TypeNode(td);
+            ParentNode<?> group = new TypeNode(project, td);
             if (td.category == null) {
                 roots.add(group);
             } else {
@@ -89,7 +89,7 @@ public class ProjectTree {
             }
             TypeDescriptor td = project.getTypeDescriptor(type);
             if (td == null || !td.global) {
-                parent.add(new FeatureNode(feature));
+                parent.add(new FeatureNode(project, feature));
             }
         }
     }

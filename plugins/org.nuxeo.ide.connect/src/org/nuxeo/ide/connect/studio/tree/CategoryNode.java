@@ -16,6 +16,8 @@
  */
 package org.nuxeo.ide.connect.studio.tree;
 
+import org.nuxeo.ide.connect.studio.StudioProject;
+
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
@@ -26,7 +28,8 @@ public class CategoryNode extends ParentNode<Void> {
 
     protected String label;
 
-    public CategoryNode(String id, String label) {
+    public CategoryNode(StudioProject project, String id, String label) {
+        super(project);
         this.id = id;
         this.label = label;
     }

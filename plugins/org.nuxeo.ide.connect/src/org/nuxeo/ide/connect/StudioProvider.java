@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.eclipse.core.runtime.ListenerList;
 import org.nuxeo.ide.common.IOUtils;
 import org.nuxeo.ide.connect.studio.StudioProject;
 
@@ -37,9 +38,26 @@ public class StudioProvider {
 
     protected StudioProject[] projects;
 
+    protected ListenerList listeners;
+
     public StudioProvider(File file) throws Exception {
         this.file = file;
-        reload();
+        this.listeners = new ListenerList();
+        reload(false);
+    }
+
+    public void addStudioListener(StudioListener listener) {
+        listeners.add(listener);
+    }
+
+    public void removeStudioListener(StudioListener listener) {
+        listeners.remove(listener);
+    }
+
+    protected void fireStudioProjectsChanged() {
+        for (Object o : listeners.getListeners()) {
+            ((StudioListener) o).handleProjectsUpdate(this);
+        }
     }
 
     public void updateProjects(String json) throws Exception {
@@ -64,12 +82,19 @@ public class StudioProvider {
     }
 
     public void reload() throws IOException {
+        reload(true);
+    }
+
+    public void reload(boolean fireEvents) throws IOException {
         if (file.exists()) {
             FileInputStream in = new FileInputStream(file);
             List<StudioProject> result = StudioProject.readProjects(in);
             projects = result.toArray(new StudioProject[result.size()]);
         } else {
             projects = new StudioProject[0];
+        }
+        if (fireEvents) {
+            fireStudioProjectsChanged();
         }
     }
 
@@ -79,6 +104,15 @@ public class StudioProvider {
 
     public StudioProject[] getProjects() {
         return projects;
+    }
+
+    public StudioProject getProject(String id) {
+        for (StudioProject project : projects) {
+            if (id.equals(project.getId())) {
+                return project;
+            }
+        }
+        return null;
     }
 
     // TODO: to remove

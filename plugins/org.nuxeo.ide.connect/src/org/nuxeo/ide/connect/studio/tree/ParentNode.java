@@ -19,6 +19,8 @@ package org.nuxeo.ide.connect.studio.tree;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.nuxeo.ide.connect.studio.StudioProject;
+
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
@@ -26,6 +28,10 @@ import java.util.List;
 public abstract class ParentNode<T> extends Node<T> {
 
     protected List<Node<?>> children = new ArrayList<Node<?>>();
+
+    public ParentNode(StudioProject project) {
+        super(project);
+    }
 
     public void add(Node<?> node) {
         children.add(node);

@@ -535,7 +535,7 @@
          fixed="false"
          icon="icons/nx.gif"
          id="org.nuxeo.ide.sdk.ui.NuxeoPerspective"
-         name="Nuxeo IDE">
+         name="Nuxeo">
    </perspective>
 </extension>
 <extension

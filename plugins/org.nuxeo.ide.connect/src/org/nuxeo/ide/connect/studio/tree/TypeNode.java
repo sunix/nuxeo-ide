@@ -16,6 +16,7 @@
  */
 package org.nuxeo.ide.connect.studio.tree;
 
+import org.nuxeo.ide.connect.studio.StudioProject;
 import org.nuxeo.ide.connect.studio.StudioProject.TypeDescriptor;
 
 /**
@@ -26,7 +27,8 @@ public class TypeNode extends ParentNode<TypeDescriptor> {
 
     protected TypeDescriptor td;
 
-    public TypeNode(TypeDescriptor td) {
+    public TypeNode(StudioProject project, TypeDescriptor td) {
+        super(project);
         this.td = td;
     }
 

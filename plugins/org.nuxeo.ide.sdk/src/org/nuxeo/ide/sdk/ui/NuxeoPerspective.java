@@ -93,7 +93,7 @@ public class NuxeoPerspective implements IPerspectiveFactory {
         left.addView(IPageLayout.ID_PROJECT_EXPLORER);
         left.addPlaceholder(JavaUI.ID_PACKAGES_VIEW);
         left.addPlaceholder(JavaUI.ID_TYPE_HIERARCHY);
-        left.addView(IPageLayout.ID_OUTLINE);
+        left.addPlaceholder(IPageLayout.ID_OUTLINE);
 
         IFolderLayout bottom = layout.createFolder("bottom",
                 IPageLayout.BOTTOM, (float) 0.75, editorArea);

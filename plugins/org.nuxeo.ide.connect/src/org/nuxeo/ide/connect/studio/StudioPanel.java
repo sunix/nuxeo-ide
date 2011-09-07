@@ -17,6 +17,7 @@
 package org.nuxeo.ide.connect.studio;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
@@ -34,23 +35,27 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.nuxeo.ide.common.BundleImageProvider;
+import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.connect.ConnectPlugin;
+import org.nuxeo.ide.connect.Connector;
+import org.nuxeo.ide.connect.StudioListener;
+import org.nuxeo.ide.connect.StudioProvider;
 import org.nuxeo.ide.connect.studio.tree.FeatureNode;
 import org.nuxeo.ide.connect.studio.tree.Node;
 import org.nuxeo.ide.connect.studio.tree.StudioProjectProvider;
 import org.nuxeo.ide.connect.studio.tree.TypeNode;
 
 /**
+ * You must call create() method in order to initialize the panel.
+ * 
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class StudioPanel extends Composite {
+public class StudioPanel extends Composite implements StudioListener {
 
     protected TreeViewer tv;
 
     protected ScrolledForm form;
-
-    protected StudioProject project;
 
     protected FormToolkit toolkit;
 
@@ -60,24 +65,36 @@ public class StudioPanel extends Composite {
         super(parent, SWT.NONE);
         setLayout(new FillLayout());
         createContent();
+        try {
+            ConnectPlugin.getStudioProvider().addStudioListener(this);
+        } catch (Exception e) {
+            UI.showError("Failed to register studio update listener", e);
+        }
+    }
+
+    public TreeViewer getTreeViewer() {
+        return tv;
+    }
+
+    public void setInput(StudioProvider provider) {
+        getTreeViewer().setInput(provider);
+        form.setText(getFormTitle());
     }
 
     public void setInput(StudioProject project) {
-        this.project = project;
-        // setPartName(project.getId());
-        if (tv != null) {
-            tv.setInput(project);
-        }
-        if (form != null) {
-            form.setText("Studio Project: " + project.getName());
-        }
+        form.setText(getFormTitle());
+        getTreeViewer().setInput(project);
     }
 
     public void dispose() {
         super.dispose();
+        try {
+            ConnectPlugin.getStudioProvider().addStudioListener(this);
+        } catch (Exception e) {
+            // do nothing
+        }
         tv = null;
         form = null;
-        project = null;
         if (toolkit != null) {
             toolkit.dispose();
             toolkit = null;
@@ -88,17 +105,16 @@ public class StudioPanel extends Composite {
         }
     }
 
+    protected String getFormTitle() {
+        return "Studio Projects";
+    }
+
     protected void createContent() {
         imgProvider = new BundleImageProvider(
                 ConnectPlugin.getDefault().getBundle());
         toolkit = new FormToolkit(getShell().getDisplay());
 
         form = toolkit.createScrolledForm(this);
-        if (project != null) {
-            form.setText("Studio Project: " + project.getName());
-        } else {
-            form.setText("No Studio Project are available");
-        }
         form.getBody().setLayout(new GridLayout());
         form.setImage(imgProvider.getImage("icons/studio_project.gif"));
         createToolbar(form);
@@ -129,12 +145,21 @@ public class StudioPanel extends Composite {
                 if (sel.isEmpty()) {
                     return;
                 }
-                Node<?> obj = (Node<?>) ((IStructuredSelection) sel).getFirstElement();
-                if (obj.isTerminal()) {
-                    if (obj instanceof FeatureNode) {
-                        openFeature(((FeatureNode) obj).getData());
-                    } else if (obj instanceof TypeNode) {
-                        openGlobalFeature(((TypeNode) obj).getId());
+                Object obj = ((IStructuredSelection) sel).getFirstElement();
+                if (obj instanceof Node) {
+                    Node<?> node = (Node<?>) obj;
+                    if (node.isTerminal()) {
+                        if (node instanceof FeatureNode) {
+                            openFeature(node);
+                        } else if (node instanceof TypeNode) {
+                            openGlobalFeature(node);
+                        }
+                    } else {
+                        if (tv.getExpandedState(obj)) {
+                            tv.collapseToLevel(obj, 1);
+                        } else {
+                            tv.expandToLevel(obj, 1);
+                        }
                     }
                 } else {
                     if (tv.getExpandedState(obj)) {
@@ -150,58 +175,46 @@ public class StudioPanel extends Composite {
         tv.setContentProvider(provider);
         tv.setLabelProvider(provider);
         tv.setSorter(new ViewerSorter());
-        if (project != null) {
-            tv.setInput(project);
-        }
     }
 
-    protected void openFeature(StudioFeature feature) {
-        String url = project.getUrl() + "#@feature:" + feature.getId() + '.'
-                + feature.getType();
+    protected void openFeature(Node<?> node) {
+        StudioFeature feature = ((FeatureNode) node).getData();
+        String url = node.getProject().getUrl() + "#@feature:"
+                + feature.getId() + '.' + feature.getType();
         Program.launch(url);
     }
 
-    protected void openGlobalFeature(String type) {
-        String url = project.getUrl() + "#@feature:global." + type;
+    protected void openGlobalFeature(Node<?> node) {
+        String type = ((TypeNode) node).getId();
+        String url = node.getProject().getUrl() + "#@feature:global." + type;
         Program.launch(url);
     }
 
-    protected void createToolbar(ScrolledForm form) {
+    protected IAction createRefreshAction() {
         Action action = new Action() {
             public void run() {
-                // try {
-                // Connector.getDefault().writeStudioProject(rootProject,
-                // project.getId());
-                // handleInputChanged((IFile) getEditorInput().getAdapter(
-                // IFile.class));
-                // } catch (Exception e) {
-                // UI.showError("Failed to refresh studio project", e);
-                // }
+                try {
+                    StudioProvider provider = ConnectPlugin.getStudioProvider();
+                    provider.updateProjects(Connector.getDefault().getProjects());
+                } catch (Exception e) {
+                    UI.showError("Failed to refresh studio project", e);
+                }
             }
         };
         action.setId("refresh");
         action.setText("Refresh");
         action.setImageDescriptor(imgProvider.getImageDescriptor("icons/refresh.gif"));
-        form.getToolBarManager().add(action);
+        return action;
+    }
 
-        action = new Action() {
-            public void run() {
-                // ExportOperationsWizard wizard = new ExportOperationsWizard(
-                // project.getId());
-                // wizard.init(getSite().getWorkbenchWindow().getWorkbench(),
-                // new StructuredSelection(rootProject));
-                // WizardDialog dialog = new WizardDialog(getSite().getShell(),
-                // wizard);
-                // dialog.create();
-                // dialog.open();
-            }
-        };
-        action.setId("export");
-        action.setText("Export Operations");
-        action.setImageDescriptor(imgProvider.getImageDescriptor("icons/export.gif"));
-        form.getToolBarManager().add(action);
-
+    protected void createToolbar(ScrolledForm form) {
+        form.getToolBarManager().add(createRefreshAction());
         form.getToolBarManager().update(true);
+    }
+
+    @Override
+    public void handleProjectsUpdate(StudioProvider provider) {
+        setInput(provider);
     }
 
 }

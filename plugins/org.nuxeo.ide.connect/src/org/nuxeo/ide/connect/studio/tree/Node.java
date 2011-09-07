@@ -16,16 +16,28 @@
  */
 package org.nuxeo.ide.connect.studio.tree;
 
+import org.nuxeo.ide.connect.studio.StudioProject;
+
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
 public abstract class Node<T> {
 
+    protected StudioProject project;
+
     protected ParentNode<?> parent;
+
+    protected Node(StudioProject project) {
+        this.project = project;
+    }
 
     public ParentNode<?> getParent() {
         return parent;
+    }
+
+    public StudioProject getProject() {
+        return project;
     }
 
     public abstract String getId();
