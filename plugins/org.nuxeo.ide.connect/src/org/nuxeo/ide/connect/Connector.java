@@ -40,38 +40,69 @@ import org.nuxeo.ide.connect.studio.StudioProject;
  */
 public class Connector {
 
+    public static Connector getDefault() throws Exception {
+        ConnectPreferences prefs = ConnectPreferences.load();
+        return new Connector(prefs.getHost(), prefs.getUsername(),
+                prefs.getPassword());
+    }
+
     public final static String DEFAULT_URL = "http://localhost:8080/nuxeo/site/studio/api";
 
     // private final static String DEFAULT_URL =
     // "https://connect.nuxeo.com/nuxeo/site/studio/api";
 
-    protected URL url;
+    protected URL baseUrl;
 
-    public Connector(String url) throws MalformedURLException {
-        this(new URL(url));
+    protected String username;
+
+    protected String password;
+
+    protected String auth;
+
+    public Connector(String url, String username, String password)
+            throws MalformedURLException {
+        this(new URL(url), username, password);
     }
 
-    public Connector(URL url) {
-        this.url = url;
-    }
-
-    public Connector() throws MalformedURLException {
-        this(DEFAULT_URL);
+    public Connector(URL url, String username, String password) {
+        this.baseUrl = url;
+        this.username = username;
+        this.password = password;
+        if (username != null) {
+            this.auth = basicAuth(username, password);
+        }
     }
 
     public URL getUrl() {
-        return url;
+        return baseUrl;
     }
 
-    public List<StudioProject> getProjects(String user, String pwd)
-            throws IOException {
-        String auth = basicAuth(user, pwd);
-        URL url = new URL(this.url, "api/projects");
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public InputStream getProjects() throws IOException {
+        if (auth == null) {
+            return null;
+        }
+        URL url = new URL(this.baseUrl, "api/projects");
         URLConnection conn = url.openConnection();
         conn.setDoInput(true);
         conn.setDoOutput(false);
         conn.setRequestProperty("Authorization", "Basic " + auth);
-        InputStream in = conn.getInputStream();
+        int status = ((HttpURLConnection) conn).getResponseCode();
+        if (status > 399) {
+            throw new IOException("Server error: " + status);
+        }
+        return conn.getInputStream();
+    }
+
+    public List<StudioProject> getProjectList() throws IOException {
+        InputStream in = getProjects();
         try {
             return StudioProject.readProjects(in);
         } finally {
@@ -79,16 +110,11 @@ public class Connector {
         }
     }
 
-    public static String getProjectContent(String projectId) throws Exception {
-        ConnectPreferences prefs = ConnectPreferences.load();
-        String user = prefs.getUsername();
-        String pwd = prefs.getPassword();
-        String host = prefs.getHost();
-        if (user == null || host == null) {
+    public String getProjectContent(String projectId) throws Exception {
+        if (auth == null) {
             return null;
         }
-        String auth = basicAuth(user, pwd);
-        URL url = new URL(new URL(host), "api/projects/" + projectId);
+        URL url = new URL(baseUrl, "api/projects/" + projectId);
         URLConnection conn = url.openConnection();
         conn.setDoInput(true);
         conn.setDoOutput(false);
@@ -97,7 +123,7 @@ public class Connector {
         return IOUtils.read(in);
     }
 
-    public static void writeStudioProject(IProject project, String projectId)
+    public void writeStudioProject(IProject project, String projectId)
             throws Exception {
         String content = getProjectContent(projectId);
         IFile file = project.getFile("studio.project");
@@ -114,18 +140,12 @@ public class Connector {
         }
     }
 
-    public static boolean exportOperationRegistry(String projectId, String reg)
+    public boolean exportOperationRegistry(String projectId, String reg)
             throws Exception {
-        ConnectPreferences prefs = ConnectPreferences.load();
-        String user = prefs.getUsername();
-        String pwd = prefs.getPassword();
-        String host = prefs.getHost();
-        if (user == null || host == null) {
+        if (auth == null) {
             return false;
         }
-        String auth = basicAuth(user, pwd);
-        URL url = new URL(new URL(host), "api/projects/" + projectId
-                + "/operations");
+        URL url = new URL(baseUrl, "api/projects/" + projectId + "/operations");
         URLConnection conn = url.openConnection();
         conn.setRequestProperty("Content-Type", "application/studio-registry");
         conn.setDoInput(true);

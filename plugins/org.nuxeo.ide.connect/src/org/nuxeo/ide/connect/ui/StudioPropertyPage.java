@@ -16,21 +16,21 @@
  */
 package org.nuxeo.ide.connect.ui;
 
-import java.io.InputStream;
-
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.PreferenceDialog;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPropertyPage;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
+import org.eclipse.ui.navigator.CommonNavigator;
 import org.nuxeo.ide.common.FormPropertyPage;
 import org.nuxeo.ide.common.forms.ActionHandler;
 import org.nuxeo.ide.common.forms.Form;
 import org.nuxeo.ide.common.forms.FormData;
 import org.nuxeo.ide.common.forms.UIObject;
-import org.nuxeo.ide.connect.Connector;
-import org.nuxeo.ide.connect.studio.StudioProject;
+import org.nuxeo.ide.connect.ConnectPlugin;
+import org.nuxeo.ide.connect.StudioProjectBinding;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -68,24 +68,23 @@ public class StudioPropertyPage extends FormPropertyPage implements
     @Override
     public void load(Form form) throws Exception {
         StudioProjectsWidget w = (StudioProjectsWidget) form.getWidget("projects");
+        w.setInput(ConnectPlugin.getStudioProvider().getProjects());
         IProject project = getProject();
-        IFile file = project.getFile("studio.project");
-        if (file.exists()) {
-            InputStream in = file.getContents();
-            try {
-                w.setSelectedProject(StudioProject.readProject(in));
-            } finally {
-                in.close();
-            }
-        }
+        w.setSelectedProjects(project);
     }
 
     @Override
     public void store(Form form) throws Exception {
         StudioProjectsWidget w = (StudioProjectsWidget) form.getWidget("projects");
-        StudioProject sp = w.getSelectedProject();
-        if (sp != null) {
-            Connector.writeStudioProject(getProject(), sp.getId());
+        StudioProjectBinding binding = new StudioProjectBinding(
+                w.getSelectedProjectIds());
+        binding.bind(getProject());
+        // getProject().refreshLocal(IResource.DEPTH_INFINITE,
+        // new NullProgressMonitor());
+        IViewPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(
+                "org.eclipse.ui.navigator.ProjectExplorer");
+        if (part instanceof CommonNavigator) {
+            ((CommonNavigator) part).getCommonViewer().refresh(getProject());
         }
     }
 

@@ -28,6 +28,8 @@ import org.eclipse.swt.widgets.Display;
  */
 public class UI {
 
+    public static Object[] EMPTY_OBJECTS = new Object[0];
+
     public static final String APPLICATION_NAME = "Nuxeo IDE";
 
     public static void showError(String message, Throwable t) {

@@ -54,7 +54,7 @@ public class ExportTask implements IRunnableWithProgress {
                 return;
             }
             monitor.beginTask("Export registries to " + projectId, 1);
-            Connector.exportOperationRegistry(projectId, reg);
+            Connector.getDefault().exportOperationRegistry(projectId, reg);
             monitor.worked(1);
         } catch (Exception e) {
             UI.showError("Failed to export operations", e);

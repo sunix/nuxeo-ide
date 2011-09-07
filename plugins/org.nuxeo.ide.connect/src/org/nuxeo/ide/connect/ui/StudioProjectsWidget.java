@@ -16,6 +16,7 @@
  */
 package org.nuxeo.ide.connect.ui;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
@@ -26,7 +27,7 @@ import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.common.forms.BindingContext;
 import org.nuxeo.ide.common.forms.UIObject;
 import org.nuxeo.ide.common.forms.WidgetName;
-import org.nuxeo.ide.connect.ConnectPreferences;
+import org.nuxeo.ide.connect.StudioProjectBinding;
 import org.nuxeo.ide.connect.studio.StudioProject;
 import org.w3c.dom.Element;
 
@@ -51,30 +52,56 @@ public class StudioProjectsWidget extends UIObject<Table> {
             @Override
             public void checkStateChanged(CheckStateChangedEvent event) {
                 if (event.getChecked()) {
-                    Object element = event.getElement();
-                    Object[] ar = tv.getCheckedElements();
-                    for (Object o : ar) {
-                        if (o != element) {
-                            tv.setChecked(o, false);
-                        }
-                    }
+                    // TODO validate that all checked projects have the same
+                    // target version
+                    // Object element = event.getElement();
+                    // Object[] ar = tv.getCheckedElements();
+                    // for (Object o : ar) {
+                    // if (o != element) {
+                    // tv.setChecked(o, false);
+                    // }
+                    // }
                 }
             }
         });
-        try {
-            tv.setInput(ConnectPreferences.load());
-        } catch (Exception e) {
-            UI.showError("Failed to load configured studio projects", e);
-        }
         return tv.getTable();
     }
 
-    public StudioProject getSelectedProject() {
-        Object[] ar = tv.getCheckedElements();
-        if (ar.length > 0) {
-            return (StudioProject) ar[0];
+    public void setSelectedProjects(StudioProject[] projects) {
+        tv.setCheckedElements(projects);
+    }
+
+    public void setSelectedProjects(IProject project) {
+        try {
+            StudioProjectBinding binding = StudioProjectBinding.get(project);
+            if (binding != null) {
+                tv.setCheckedElements(binding.getProjects());
+            }
+        } catch (Exception e) {
+            UI.showError("Failed to query studio project bindings", e);
         }
-        return null;
+    }
+
+    public void setInput(Object input) {
+        tv.setInput(input);
+    }
+
+    public StudioProject[] getSelectedProjects() {
+        Object[] ar = tv.getCheckedElements();
+        StudioProject[] projects = new StudioProject[ar.length];
+        for (int i = 0; i < ar.length; i++) {
+            projects[i] = (StudioProject) ar[i];
+        }
+        return projects;
+    }
+
+    public String[] getSelectedProjectIds() {
+        Object[] ar = tv.getCheckedElements();
+        String[] projects = new String[ar.length];
+        for (int i = 0; i < ar.length; i++) {
+            projects[i] = ((StudioProject) ar[i]).getId();
+        }
+        return projects;
     }
 
     public void setSelectedProject(StudioProject project) {

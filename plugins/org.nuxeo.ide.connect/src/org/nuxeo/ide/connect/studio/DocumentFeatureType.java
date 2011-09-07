@@ -19,51 +19,26 @@ package org.nuxeo.ide.connect.studio;
 import java.io.IOException;
 
 import org.codehaus.jackson.JsonParser;
-import org.codehaus.jackson.JsonToken;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class DocumentFeatureType extends StudioFeatureType<DocumentFeature> {
+public class DocumentFeatureType extends StudioFeatureType<DocumentType> {
 
     public DocumentFeatureType() {
         super("doc");
     }
 
     @Override
-    public DocumentFeature newFeature() {
-        return new DocumentFeature(getId());
+    public DocumentType newFeature() {
+        return new DocumentType();
     }
 
     @Override
-    protected void readDataField(DocumentFeature feature, JsonParser jp)
+    protected void readDataField(DocumentType feature, JsonParser jp)
             throws IOException {
-        while (jp.nextToken() != JsonToken.END_OBJECT) {
-            String key = jp.getCurrentName();
-            jp.nextToken();
-            if (key.equals("lifecycle")) {
-                feature.setLifeCycle(jp.getText());
-            } else if (key.equals("facets")) {
-                readFacets(feature, jp);
-            } else if (key.equals("schemas")) {
-                readSchemas(feature, jp);
-            }
-        }
-    }
-
-    protected void readFacets(DocumentFeature feature, JsonParser jp)
-            throws IOException {
-        while (jp.nextToken() != JsonToken.END_ARRAY) {
-            feature.addFacet(jp.getText());
-        }
-    }
-
-    protected void readSchemas(DocumentFeature feature, JsonParser jp)
-            throws IOException {
-        while (jp.nextToken() != JsonToken.END_ARRAY) {
-            feature.addSchema(jp.getText());
-        }
+        feature.read(jp);
     }
 
 }

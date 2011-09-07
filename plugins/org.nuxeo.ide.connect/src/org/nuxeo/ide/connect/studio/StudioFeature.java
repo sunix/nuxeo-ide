@@ -20,30 +20,12 @@ package org.nuxeo.ide.connect.studio;
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class StudioFeature {
+public interface StudioFeature {
 
-    protected String id;
+    String getType();
 
-    protected String type;
+    String getId();
 
-    public StudioFeature(String type) {
-        this.type = type;
-    }
+    void setId(String id);
 
-    public String getType() {
-        return type;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    @Override
-    public String toString() {
-        return id + " [" + type + "]";
-    }
 }

@@ -16,9 +16,6 @@
  */
 package org.nuxeo.ide.connect.ui;
 
-import java.io.IOException;
-import java.util.List;
-
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.nuxeo.ide.common.FormPreferencePage;
 import org.nuxeo.ide.common.UI;
@@ -29,6 +26,7 @@ import org.nuxeo.ide.common.forms.UIObject;
 import org.nuxeo.ide.connect.ConnectPlugin;
 import org.nuxeo.ide.connect.ConnectPreferences;
 import org.nuxeo.ide.connect.Connector;
+import org.nuxeo.ide.connect.StudioProvider;
 import org.nuxeo.ide.connect.studio.StudioProject;
 
 /**
@@ -61,7 +59,8 @@ public class ConnectPreferencePage extends FormPreferencePage implements
         return form;
     }
 
-    protected void connect() throws IOException {
+    protected void connect() throws Exception {
+        String host = form.getWidgetValueAsString("host").trim();
         String user = form.getWidgetValueAsString("username").trim();
         String password = form.getWidgetValueAsString("password");
 
@@ -77,14 +76,14 @@ public class ConnectPreferencePage extends FormPreferencePage implements
         v = form.getWidgetValueAsString("password");
         prefs.setPassword(v.length() > 0 ? v : null);
 
-        List<StudioProject> projects = new Connector().getProjects(user,
-                password);
+        StudioProvider provider = ConnectPlugin.getStudioProvider();
+        provider.updateProjects(new Connector(host, user, password).getProjects());
 
         prefs.clear();
 
         org.eclipse.swt.widgets.List list = (org.eclipse.swt.widgets.List) form.getWidgetControl("projects");
         list.removeAll();
-        for (StudioProject project : projects) {
+        for (StudioProject project : provider.getProjects()) {
             list.add(project.getId());
             prefs.addProject(project);
         }

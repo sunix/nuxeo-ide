@@ -341,11 +341,12 @@
             id="org.nuxeo.ide.views">
       </category>
       <view
-            name="Nuxeo Server"
-            icon="icons/server.gif"
+            allowMultiple="false"
             category="org.nuxeo.ide.views"
             class="org.nuxeo.ide.sdk.server.ui.ServerView"
-            id="org.nuxeo.ide.sdk.ui.server.ServerView">
+            icon="icons/server.gif"
+            id="org.nuxeo.ide.sdk.ui.server.ServerView"
+            name="Nuxeo Server">
       </view>
    </extension>
 

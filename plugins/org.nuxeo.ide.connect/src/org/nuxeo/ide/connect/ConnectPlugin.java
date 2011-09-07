@@ -1,12 +1,13 @@
 package org.nuxeo.ide.connect;
 
-import org.eclipse.core.resources.IProject;
+import java.io.File;
+
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.nuxeo.ide.common.forms.PreferencesFormData;
-import org.nuxeo.ide.connect.studio.StudioProject;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -20,7 +21,7 @@ public class ConnectPlugin extends AbstractUIPlugin {
     // The shared instance
     private static ConnectPlugin plugin;
 
-    private static StudioProjectRef studioProject;
+    private static StudioProvider studioProvider;
 
     /**
      * The constructor
@@ -35,6 +36,7 @@ public class ConnectPlugin extends AbstractUIPlugin {
 
     public void stop(BundleContext context) throws Exception {
         plugin = null;
+        studioProvider = null;
         super.stop(context);
     }
 
@@ -62,31 +64,14 @@ public class ConnectPlugin extends AbstractUIPlugin {
                         "icons/studio_project.gif")));
     }
 
-    public static StudioProject getStudioProject(IProject project)
-            throws Exception {
-        if (studioProject == null || !studioProject.owner.equals(project)) {
-            StudioProject sp = StudioProject.getProject(project);
-            studioProject = new StudioProjectRef(project, sp);
+    public static StudioProvider getStudioProvider() throws Exception {
+        if (studioProvider == null) {
+            File file = getDefault().getStateLocation().toFile();
+            file.mkdirs();
+            studioProvider = new StudioProvider(new File(file,
+                    "studio.projects"));
         }
-        return studioProject.getProject();
+        return studioProvider;
     }
 
-    public static class StudioProjectRef {
-        IProject owner;
-
-        StudioProject project;
-
-        public StudioProjectRef(IProject owner, StudioProject project) {
-            this.owner = owner;
-            this.project = project;
-        }
-
-        public StudioProject getProject() {
-            return project;
-        }
-
-        public IProject getOwner() {
-            return owner;
-        }
-    }
 }

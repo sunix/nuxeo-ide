@@ -58,6 +58,15 @@
                contentTypeId="org.nuxeo.ide.connect.studioProjectContentType">
          </contentTypeBinding>
       </editor>
+     </extension>
+     <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.nuxeo.ide.connect.studio.StudioEditor"
+            icon="icons/studio_project.gif"
+            id="org.nuxeo.ide.connect.studio.StudioEditor"
+            name="Studio Project Editor">
+      </editor>
    </extension>
       
    <extension point="org.eclipse.ui.propertyPages">
@@ -96,6 +105,61 @@
             type="__java_string">
       </partition>
    </javaCompletionProposalComputer>
+ </extension>
+ <extension
+       point="org.eclipse.ui.views">
+    <view
+          allowMultiple="false"
+          category="org.nuxeo.ide.views"
+          class="org.nuxeo.ide.connect.studio.StudioView"
+          icon="icons/studio_project.gif"
+          id="org.nuxeo.ide.connect.studio.StudioView"
+          name="Studio Projects"
+          restorable="true">
+    </view>
+ </extension>
+ 
+ <!-- ### Navigator content extensions ### -->
+    <extension
+            point="org.eclipse.ui.navigator.viewer">
+        <viewerContentBinding viewerId="org.eclipse.ui.navigator.ProjectExplorer">
+            <includes>
+                <contentExtension pattern="org.nuxeo.ide.connect.studioNavigatorContent" />
+            </includes>
+        </viewerContentBinding>
+    </extension>
+ <extension
+       point="org.eclipse.ui.navigator.navigatorContent">
+    <navigatorContent
+          activeByDefault="true"
+          contentProvider="org.nuxeo.ide.connect.studio.content.StudioNavigatorContentProvider"
+          id="org.nuxeo.ide.connect.studioNavigatorContent"
+          labelProvider="org.nuxeo.ide.connect.studio.content.StudioNavigatorLabelProvider"
+          name="Nuxeo Studio Content"
+          priority="normal">
+       <triggerPoints>
+       <or>       
+          <adapt
+                type="org.eclipse.core.resources.IProject">
+                <test
+                      property="org.eclipse.core.resources.projectNature"
+                      value="org.nuxeo.ide.NuxeoNature"/>
+          </adapt>
+       </or>
+       </triggerPoints>
+       <override
+           policy="InvokeAlwaysRegardlessOfSuppressedExt"
+           suppressedExtensionId="org.eclipse.ui.navigator.resourceContent"/>       
+       <possibleChildren>
+          <instanceof
+                value="org.nuxeo.ide.connect.studio.StudioProject">
+          </instanceof>
+       </possibleChildren>
+       <actionProvider
+                 class="org.nuxeo.ide.connect.studio.content.OpenActionProvider"
+                 id="org.nuxeo.ide.connect.studio.content.OpenActionProvider"> 
+       </actionProvider> 
+    </navigatorContent>
  </extension>
  
 

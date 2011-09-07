@@ -52,6 +52,8 @@ public class StudioProject {
 
     protected Map<String, String> categories;
 
+    protected TargetPlatform platform;
+
     private StudioProject() {
         this.features = new HashMap<String, Map<String, StudioFeature>>();
         this.types = new HashMap<String, StudioProject.TypeDescriptor>();
@@ -77,6 +79,14 @@ public class StudioProject {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public TargetPlatform getPlatform() {
+        return platform;
+    }
+
+    public void setPlatform(TargetPlatform platform) {
+        this.platform = platform;
     }
 
     public void setTargetVersion(String targetVersion) {
@@ -256,6 +266,8 @@ public class StudioProject {
                 readTypes(jp, project);
             } else if (key.equals("categories")) {
                 readCategories(jp, project);
+            } else if (key.equals("platform")) {
+                readPlatform(jp, project);
             }
         }
 
@@ -346,6 +358,13 @@ public class StudioProject {
             project.putCategory(key, jp.getText());
         }
 
+    }
+
+    private static void readPlatform(JsonParser jp, StudioProject project)
+            throws IOException {
+        TargetPlatform platform = new TargetPlatform();
+        platform.read(jp);
+        project.setPlatform(platform);
     }
 
     public static class TypeDescriptor {

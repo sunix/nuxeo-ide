@@ -16,53 +16,39 @@
  */
 package org.nuxeo.ide.connect.studio;
 
-import java.io.InputStream;
-
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.nuxeo.ide.common.BundleImageProvider;
-import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.connect.ConnectPlugin;
-import org.nuxeo.ide.connect.Connector;
 import org.nuxeo.ide.connect.studio.tree.FeatureNode;
 import org.nuxeo.ide.connect.studio.tree.Node;
 import org.nuxeo.ide.connect.studio.tree.StudioProjectProvider;
 import org.nuxeo.ide.connect.studio.tree.TypeNode;
-import org.nuxeo.ide.connect.ui.ExportOperationsWizard;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class StudioProjectEditor extends AbstractFileEditor {
+public class StudioPanel extends Composite {
 
     protected TreeViewer tv;
 
     protected ScrolledForm form;
-
-    protected IProject rootProject;
 
     protected StudioProject project;
 
@@ -70,55 +56,15 @@ public class StudioProjectEditor extends AbstractFileEditor {
 
     protected BundleImageProvider imgProvider;
 
-    public StudioProjectEditor() {
+    public StudioPanel(Composite parent) {
+        super(parent, SWT.NONE);
+        setLayout(new FillLayout());
+        createContent();
     }
 
-    @Override
-    public void doSave(IProgressMonitor monitor) {
-
-    }
-
-    @Override
-    public void doSaveAs() {
-
-    }
-
-    @Override
-    public void init(IEditorSite site, IEditorInput input)
-            throws PartInitException {
-        super.init(site, input);
-        try {
-            handleInputChanged((IFile) input.getAdapter(IFile.class));
-        } catch (Exception e) {
-            UI.showError("Failed to load studio project file", e);
-        }
-    }
-
-    public void loadProject(IFile file) throws Exception {
-        rootProject = file.getProject();
-        InputStream in = file.getContents(true);
-        try {
-            project = StudioProject.readProject(in);
-        } finally {
-            in.close();
-        }
-    }
-
-    @Override
-    public boolean isDirty() {
-        return false;
-    }
-
-    @Override
-    public boolean isSaveAsAllowed() {
-        return false;
-    }
-
-    @Override
-    protected void handleInputChanged(IFile file) throws Exception {
-        lastModification = file.getLocalTimeStamp();
-        loadProject(file);
-        setPartName(project.getId());
+    public void setInput(StudioProject project) {
+        this.project = project;
+        // setPartName(project.getId());
         if (tv != null) {
             tv.setInput(project);
         }
@@ -127,15 +73,32 @@ public class StudioProjectEditor extends AbstractFileEditor {
         }
     }
 
-    @Override
-    public void createPartControl(Composite parent) {
+    public void dispose() {
+        super.dispose();
+        tv = null;
+        form = null;
+        project = null;
+        if (toolkit != null) {
+            toolkit.dispose();
+            toolkit = null;
+        }
+        if (imgProvider != null) {
+            imgProvider.dispose();
+            imgProvider = null;
+        }
+    }
 
+    protected void createContent() {
         imgProvider = new BundleImageProvider(
                 ConnectPlugin.getDefault().getBundle());
-        toolkit = new FormToolkit(parent.getShell().getDisplay());
+        toolkit = new FormToolkit(getShell().getDisplay());
 
-        form = toolkit.createScrolledForm(parent);
-        form.setText("Studio Project: " + project.getName());
+        form = toolkit.createScrolledForm(this);
+        if (project != null) {
+            form.setText("Studio Project: " + project.getName());
+        } else {
+            form.setText("No Studio Project are available");
+        }
         form.getBody().setLayout(new GridLayout());
         form.setImage(imgProvider.getImage("icons/studio_project.gif"));
         createToolbar(form);
@@ -187,9 +150,9 @@ public class StudioProjectEditor extends AbstractFileEditor {
         tv.setContentProvider(provider);
         tv.setLabelProvider(provider);
         tv.setSorter(new ViewerSorter());
-        tv.setInput(project);
-        // tv.expandAll();
-
+        if (project != null) {
+            tv.setInput(project);
+        }
     }
 
     protected void openFeature(StudioFeature feature) {
@@ -203,22 +166,17 @@ public class StudioProjectEditor extends AbstractFileEditor {
         Program.launch(url);
     }
 
-    @Override
-    public void setFocus() {
-
-    }
-
     protected void createToolbar(ScrolledForm form) {
         Action action = new Action() {
             public void run() {
-                try {
-                    Connector.getDefault().writeStudioProject(rootProject,
-                            project.getId());
-                    handleInputChanged((IFile) getEditorInput().getAdapter(
-                            IFile.class));
-                } catch (Exception e) {
-                    UI.showError("Failed to refresh studio project", e);
-                }
+                // try {
+                // Connector.getDefault().writeStudioProject(rootProject,
+                // project.getId());
+                // handleInputChanged((IFile) getEditorInput().getAdapter(
+                // IFile.class));
+                // } catch (Exception e) {
+                // UI.showError("Failed to refresh studio project", e);
+                // }
             }
         };
         action.setId("refresh");
@@ -228,14 +186,14 @@ public class StudioProjectEditor extends AbstractFileEditor {
 
         action = new Action() {
             public void run() {
-                ExportOperationsWizard wizard = new ExportOperationsWizard(
-                        project.getId());
-                wizard.init(getSite().getWorkbenchWindow().getWorkbench(),
-                        new StructuredSelection(rootProject));
-                WizardDialog dialog = new WizardDialog(getSite().getShell(),
-                        wizard);
-                dialog.create();
-                dialog.open();
+                // ExportOperationsWizard wizard = new ExportOperationsWizard(
+                // project.getId());
+                // wizard.init(getSite().getWorkbenchWindow().getWorkbench(),
+                // new StructuredSelection(rootProject));
+                // WizardDialog dialog = new WizardDialog(getSite().getShell(),
+                // wizard);
+                // dialog.create();
+                // dialog.open();
             }
         };
         action.setId("export");
@@ -244,21 +202,6 @@ public class StudioProjectEditor extends AbstractFileEditor {
         form.getToolBarManager().add(action);
 
         form.getToolBarManager().update(true);
-    }
-
-    @Override
-    public void dispose() {
-        super.dispose();
-        tv = null;
-        form = null;
-        if (toolkit != null) {
-            toolkit.dispose();
-            toolkit = null;
-        }
-        if (imgProvider != null) {
-            imgProvider.dispose();
-            imgProvider = null;
-        }
     }
 
 }

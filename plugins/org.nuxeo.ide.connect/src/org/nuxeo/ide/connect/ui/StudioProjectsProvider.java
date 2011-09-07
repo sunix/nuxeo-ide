@@ -22,8 +22,9 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.graphics.Image;
 import org.nuxeo.ide.common.BundleImageProvider;
+import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.connect.ConnectPlugin;
-import org.nuxeo.ide.connect.ConnectPreferences;
+import org.nuxeo.ide.connect.StudioProjectBinding;
 import org.nuxeo.ide.connect.studio.StudioProject;
 
 /**
@@ -63,9 +64,15 @@ public class StudioProjectsProvider extends BaseLabelProvider implements
 
     @Override
     public Object[] getElements(Object inputElement) {
-        if (inputElement instanceof ConnectPreferences) {
-            return ((ConnectPreferences) inputElement).getProjectsArray();
+        if (inputElement instanceof StudioProjectBinding) {
+            try {
+                return ((StudioProjectBinding) inputElement).getProjects();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else if (inputElement.getClass().isArray()) {
+            return (Object[]) inputElement;
         }
-        return null;
+        return UI.EMPTY_OBJECTS;
     }
 }

@@ -70,7 +70,7 @@ public class StudioFeatureType<T extends StudioFeature> {
 
     @SuppressWarnings("unchecked")
     public T newFeature() {
-        return (T) new StudioFeature(getId());
+        return (T) new DefaultStudioFeature(getId());
     }
 
     public T newFeature(JsonParser jp) throws IOException {
@@ -80,13 +80,13 @@ public class StudioFeatureType<T extends StudioFeature> {
             String key = jp.getCurrentName();
             jp.nextValue();
             if (key.equals("id")) {
-                feature.id = jp.getText();
+                feature.setId(jp.getText());
             } else if ("data".equals(key)) {
                 readDataField(feature, jp);
             }
         }
 
-        if (feature.id == null) {
+        if (feature.getId() == null) {
             throw new IOException(
                     "Invalid feature JSON format. Expecting 'id' attribute");
         }

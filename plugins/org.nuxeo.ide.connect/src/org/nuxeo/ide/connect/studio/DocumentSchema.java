@@ -16,22 +16,42 @@
  */
 package org.nuxeo.ide.connect.studio;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.codehaus.jackson.JsonParser;
+import org.codehaus.jackson.JsonToken;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class SchemaFeature extends StudioFeature {
+public class DocumentSchema implements StudioFeature {
+
+    protected String id;
 
     protected List<Field> fields;
 
     protected String prefix;
 
-    public SchemaFeature(String type) {
-        super(type);
+    public DocumentSchema() {
         fields = new ArrayList<Field>();
+    }
+
+    @Override
+    public String getType() {
+        return "ds";
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(String id) {
+        this.id = id;
     }
 
     public List<Field> getFields() {
@@ -99,4 +119,41 @@ public class SchemaFeature extends StudioFeature {
             return "blob".equals(type);
         }
     }
+
+    public void read(JsonParser jp) throws IOException {
+        while (jp.nextToken() != JsonToken.END_OBJECT) {
+            String key = jp.getCurrentName();
+            jp.nextToken();
+            if (key.equals("prefix")) {
+                setPrefix(jp.getText());
+            } else if (key.equals("fields")) {
+                readFields(jp);
+            }
+        }
+    }
+
+    protected void readFields(JsonParser jp) throws IOException {
+        while (jp.nextToken() != JsonToken.END_ARRAY) {
+            addField(readField(jp));
+        }
+    }
+
+    protected DocumentSchema.Field readField(JsonParser jp) throws IOException {
+        DocumentSchema.Field field = new DocumentSchema.Field();
+        while (jp.nextToken() != JsonToken.END_OBJECT) {
+            String key = jp.getCurrentName();
+            jp.nextToken();
+            if (key.equals("id")) {
+                field.setId(jp.getText());
+            } else if (key.equals("type")) {
+                field.setType(jp.getText());
+            } else if (key.equals("componentType")) {
+                field.setComponentType(jp.getText());
+            } else if (key.equals("multivalue")) {
+                field.setMultivalue(jp.getBooleanValue());
+            }
+        }
+        return field;
+    }
+
 }

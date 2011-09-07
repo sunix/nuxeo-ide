@@ -20,6 +20,7 @@ import java.util.Arrays;
 
 import org.eclipse.jdt.core.CompletionProposal;
 import org.eclipse.jdt.ui.text.java.JavaContentAssistInvocationContext;
+import org.nuxeo.ide.connect.ConnectPlugin;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -57,20 +58,25 @@ public abstract class MethodArgumentMatcher {
     public void fillProposals(StudioCompletionProposalCollector collector,
             CompletionProposal proposal) {
         String prefix = collector.getPrefix();
-        if (prefix != null) {
-            for (String path : SchemaProvider.getPaths()) {
-                if (path.startsWith(collector.prefix)) {
-                    collector.addProposal(proposal, path, "\"" + path + "\"");
-                } else {
-                    if (!collector.getProposals().isEmpty()) {
-                        break;
+        try {
+            if (prefix != null) {
+                for (String path : ConnectPlugin.getStudioProvider().getSchemaPaths()) {
+                    if (path.startsWith(collector.prefix)) {
+                        collector.addProposal(proposal, path, "\"" + path
+                                + "\"");
+                    } else {
+                        if (!collector.getProposals().isEmpty()) {
+                            break;
+                        }
                     }
                 }
+            } else {
+                for (String path : ConnectPlugin.getStudioProvider().getSchemaPaths()) {
+                    collector.addProposal(proposal, path, "\"" + path + "\"");
+                }
             }
-        } else {
-            for (String path : SchemaProvider.getPaths()) {
-                collector.addProposal(proposal, path, "\"" + path + "\"");
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
