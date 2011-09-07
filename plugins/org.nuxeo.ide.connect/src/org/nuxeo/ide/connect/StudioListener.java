@@ -14,27 +14,14 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.connect.studio;
-
-import org.eclipse.jface.viewers.BaseLabelProvider;
-import org.eclipse.jface.viewers.ILabelDecorator;
-import org.eclipse.swt.graphics.Image;
+package org.nuxeo.ide.connect;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class StudioProjectDecorator extends BaseLabelProvider implements
-        ILabelDecorator {
+public interface StudioListener {
 
-    @Override
-    public Image decorateImage(Image image, Object element) {
-        return image;
-    }
-
-    @Override
-    public String decorateText(String text, Object element) {
-        return "Studio Project";
-    }
+    public void handleProjectsUpdate(StudioProvider provider);
 
 }
