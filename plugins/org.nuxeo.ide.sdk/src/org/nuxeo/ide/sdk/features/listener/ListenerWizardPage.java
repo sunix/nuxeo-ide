@@ -17,6 +17,7 @@
 package org.nuxeo.ide.sdk.features.listener;
 
 import org.nuxeo.ide.common.forms.Form;
+import org.nuxeo.ide.common.forms.widgets.DynamicTable;
 import org.nuxeo.ide.sdk.features.FeatureTemplateContext;
 import org.nuxeo.ide.sdk.features.FeatureWizardPage;
 import org.nuxeo.ide.sdk.ui.widgets.PackageChooserWidget;
@@ -37,7 +38,6 @@ public class ListenerWizardPage extends FeatureWizardPage {
         Form form = super.createForm();
         form.addWidgetType(PackageChooserWidget.class);
         form.addWidgetType(ProjectChooserWidget.class);
-        form.addWidgetType(DynamicTableWidget.class);
         return form;
     }
 

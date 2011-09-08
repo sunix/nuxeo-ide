@@ -14,7 +14,7 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.sdk.features.listener;
+package org.nuxeo.ide.common.forms.model;
 
 import java.util.ArrayList;
 
@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.nuxeo.ide.common.forms.BindingContext;
 import org.nuxeo.ide.common.forms.UIObject;
 import org.nuxeo.ide.common.forms.WidgetName;
+import org.nuxeo.ide.common.forms.widgets.DynamicTable;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 

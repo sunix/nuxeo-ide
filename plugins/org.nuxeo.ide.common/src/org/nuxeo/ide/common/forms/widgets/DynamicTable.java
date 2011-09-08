@@ -14,7 +14,7 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.sdk.features.listener;
+package org.nuxeo.ide.common.forms.widgets;
 
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.IStructuredContentProvider;

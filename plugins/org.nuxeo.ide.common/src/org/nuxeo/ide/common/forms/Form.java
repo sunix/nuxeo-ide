@@ -35,6 +35,7 @@ import org.nuxeo.ide.common.forms.model.ButtonWidget;
 import org.nuxeo.ide.common.forms.model.CheckBoxWidget;
 import org.nuxeo.ide.common.forms.model.ComboWidget;
 import org.nuxeo.ide.common.forms.model.DirectoryChooserWidget;
+import org.nuxeo.ide.common.forms.model.DynamicTableWidget;
 import org.nuxeo.ide.common.forms.model.FileChooserWidget;
 import org.nuxeo.ide.common.forms.model.FillLayoutManager;
 import org.nuxeo.ide.common.forms.model.FramePanel;
@@ -120,6 +121,7 @@ public class Form {
         addWidgetType(ComboWidget.class);
         addWidgetType(FileChooserWidget.class);
         addWidgetType(DirectoryChooserWidget.class);
+        addWidgetType(DynamicTableWidget.class);
 
         addValidator("regex", RegexValidator.class);
         addValidator("required", NotNullValidator.class);
