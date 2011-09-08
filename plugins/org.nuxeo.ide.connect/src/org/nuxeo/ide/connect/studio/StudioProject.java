@@ -36,9 +36,13 @@ import org.nuxeo.ide.connect.studio.tree.ProjectTree;
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class StudioProject {
+public class StudioProject implements Comparable<StudioProject> {
 
     public static final StudioFeature[] EMPTY_FEATURES = new StudioFeature[0];
+
+    public static final DocumentSchema[] EMPTY_SCHEMAS = new DocumentSchema[0];
+
+    public static final DocumentType[] EMPTY_DOCTYPES = new DocumentType[0];
 
     protected String id;
 
@@ -126,6 +130,33 @@ public class StudioProject {
         return map.values().toArray(new StudioFeature[map.size()]);
     }
 
+    /**
+     * Get project defined document schemas. Platform schemas are not included.
+     * 
+     * @return
+     */
+    public DocumentSchema[] getDocumentSchemas() {
+        Map<String, StudioFeature> map = features.get("ds");
+        if (map == null) {
+            return EMPTY_SCHEMAS;
+        }
+        return map.values().toArray(new DocumentSchema[map.size()]);
+    }
+
+    /**
+     * Get project defined document types. Platform document types are not
+     * included
+     * 
+     * @return
+     */
+    public DocumentType[] getDocumentTypes() {
+        Map<String, StudioFeature> map = features.get("doc");
+        if (map == null) {
+            return EMPTY_DOCTYPES;
+        }
+        return map.values().toArray(new DocumentType[map.size()]);
+    }
+
     public StudioFeature getFeature(String type, String id) {
         Map<String, StudioFeature> map = features.get(type);
         if (map == null) {
@@ -196,6 +227,11 @@ public class StudioProject {
             return id.equals(((StudioProject) obj).id);
         }
         return false;
+    }
+
+    @Override
+    public int compareTo(StudioProject o) {
+        return name.compareTo(o.name);
     }
 
     public static StudioProject getProject(IProject owner) throws Exception {

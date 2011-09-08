@@ -20,7 +20,6 @@ import java.util.Arrays;
 
 import org.eclipse.jdt.core.CompletionProposal;
 import org.eclipse.jdt.ui.text.java.JavaContentAssistInvocationContext;
-import org.nuxeo.ide.connect.ConnectPlugin;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -60,7 +59,7 @@ public abstract class MethodArgumentMatcher {
         String prefix = collector.getPrefix();
         try {
             if (prefix != null) {
-                for (String path : ConnectPlugin.getStudioProvider().getSchemaPaths()) {
+                for (String path : collector.getSchemaPaths()) {
                     if (path.startsWith(collector.prefix)) {
                         collector.addProposal(proposal, path, "\"" + path
                                 + "\"");
@@ -71,7 +70,7 @@ public abstract class MethodArgumentMatcher {
                     }
                 }
             } else {
-                for (String path : ConnectPlugin.getStudioProvider().getSchemaPaths()) {
+                for (String path : collector.getSchemaPaths()) {
                     collector.addProposal(proposal, path, "\"" + path + "\"");
                 }
             }

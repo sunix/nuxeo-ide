@@ -20,6 +20,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.nuxeo.ide.connect.StudioProvider;
 import org.nuxeo.ide.connect.studio.content.StudioProjectElement;
 
 /**
@@ -74,4 +75,8 @@ public class StudioEditorPanel extends StudioPanel {
         form.getToolBarManager().update(true);
     }
 
+    @Override
+    public void handleProjectsUpdate(StudioProvider provider) {
+        setInput(element);
+    }
 }

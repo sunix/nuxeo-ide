@@ -123,23 +123,6 @@ public class Connector {
         return IOUtils.read(in);
     }
 
-    public void writeStudioProject(IProject project, String projectId)
-            throws Exception {
-        String content = getProjectContent(projectId);
-        IFile file = project.getFile("studio.project");
-        if (content == null) {
-            UI.showError("No such studio project: " + projectId);
-            return;
-        }
-        ByteArrayInputStream in = new ByteArrayInputStream(
-                content.getBytes("UTF-8"));
-        if (file.exists()) {
-            file.setContents(in, true, true, new NullProgressMonitor());
-        } else {
-            file.create(in, true, new NullProgressMonitor());
-        }
-    }
-
     public boolean exportOperationRegistry(String projectId, String reg)
             throws Exception {
         if (auth == null) {

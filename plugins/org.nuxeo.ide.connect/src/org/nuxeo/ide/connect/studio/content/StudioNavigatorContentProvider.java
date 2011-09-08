@@ -3,7 +3,6 @@ package org.nuxeo.ide.connect.studio.content;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.navigator.ICommonContentExtensionSite;
@@ -11,6 +10,7 @@ import org.eclipse.ui.navigator.IPipelinedTreeContentProvider;
 import org.eclipse.ui.navigator.PipelinedShapeModification;
 import org.eclipse.ui.navigator.PipelinedViewerUpdate;
 import org.nuxeo.ide.common.UI;
+import org.nuxeo.ide.connect.ConnectPlugin;
 import org.nuxeo.ide.connect.StudioProjectBinding;
 
 public class StudioNavigatorContentProvider implements
@@ -56,7 +56,8 @@ public class StudioNavigatorContentProvider implements
             return true;
         } else if (element instanceof IProject) {
             try {
-                StudioProjectBinding binding = StudioProjectBinding.get((IProject) element);
+                StudioProjectBinding binding = ConnectPlugin.getStudioProvider().getBinding(
+                        (IProject) element);
                 if (binding != null) {
                     return true;
                 }
@@ -79,14 +80,12 @@ public class StudioNavigatorContentProvider implements
     @Override
     public void getPipelinedElements(Object anInput, Set theCurrentElements) {
         if (anInput instanceof IProject) {
-            try {
-                IProject project = (IProject) anInput;
-                StudioProjectBinding binding = StudioProjectBinding.get(project);
-                if (binding != null) {
-                    theCurrentElements.add(new StudioBindingElement(project,
-                            binding));
-                }
-            } catch (CoreException e) {
+            IProject project = (IProject) anInput;
+            StudioProjectBinding binding = ConnectPlugin.getStudioProvider().getBinding(
+                    project);
+            if (binding != null) {
+                theCurrentElements.add(new StudioBindingElement(project,
+                        binding));
             }
         }
     }

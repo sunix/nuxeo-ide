@@ -39,6 +39,10 @@ public class DocumentSchema implements StudioFeature {
         fields = new ArrayList<Field>();
     }
 
+    public String getPrefix() {
+        return prefix;
+    }
+
     @Override
     public String getType() {
         return "ds";

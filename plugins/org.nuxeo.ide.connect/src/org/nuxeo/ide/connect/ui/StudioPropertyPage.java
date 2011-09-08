@@ -30,7 +30,6 @@ import org.nuxeo.ide.common.forms.Form;
 import org.nuxeo.ide.common.forms.FormData;
 import org.nuxeo.ide.common.forms.UIObject;
 import org.nuxeo.ide.connect.ConnectPlugin;
-import org.nuxeo.ide.connect.StudioProjectBinding;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -76,11 +75,8 @@ public class StudioPropertyPage extends FormPropertyPage implements
     @Override
     public void store(Form form) throws Exception {
         StudioProjectsWidget w = (StudioProjectsWidget) form.getWidget("projects");
-        StudioProjectBinding binding = new StudioProjectBinding(
+        ConnectPlugin.getStudioProvider().setBinding(getProject(),
                 w.getSelectedProjectIds());
-        binding.bind(getProject());
-        // getProject().refreshLocal(IResource.DEPTH_INFINITE,
-        // new NullProgressMonitor());
         IViewPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(
                 "org.eclipse.ui.navigator.ProjectExplorer");
         if (part instanceof CommonNavigator) {

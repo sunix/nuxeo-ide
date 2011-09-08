@@ -20,12 +20,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ListenerList;
 import org.nuxeo.ide.common.IOUtils;
+import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.connect.studio.StudioProject;
 
 /**
@@ -40,10 +41,29 @@ public class StudioProvider {
 
     protected ListenerList listeners;
 
-    public StudioProvider(File file) throws Exception {
+    protected BindingManager bindingManager;
+
+    public StudioProvider(File file) {
         this.file = file;
         this.listeners = new ListenerList();
-        reload(false);
+        bindingManager = new BindingManager();
+        addStudioListener(bindingManager);
+        try {
+            reload(false);
+        } catch (Exception e) {
+            UI.showError(
+                    "Failed to load studio provider service. Nuxeo Studio integration will not work! ",
+                    e);
+            projects = new StudioProject[0];
+        }
+    }
+
+    public void dispose() {
+        bindingManager.dispose();
+        bindingManager = null;
+        listeners = null;
+        projects = null;
+        file = null;
     }
 
     public void addStudioListener(StudioListener listener) {
@@ -98,6 +118,46 @@ public class StudioProvider {
         }
     }
 
+    public BindingManager getBindingManager() {
+        return bindingManager;
+    }
+
+    /**
+     * Get the studio binding if exists. Returns null if not binding exists.
+     * 
+     * @param project
+     * @return
+     */
+    public StudioProjectBinding getBinding(IProject project) {
+        return bindingManager.getBinding(project);
+    }
+
+    /**
+     * Bind the given project to a set of studio projects. Returns the binding.
+     * <p>
+     * If a binding already existed it will be removed and replaced by the new
+     * binding. If the new binding is null an {@link IllegalArgumentException}
+     * will be thrown.
+     * 
+     * @param project
+     * @param studioProjects
+     * @return
+     */
+    public StudioProjectBinding setBinding(IProject project,
+            String... projectIds) {
+        return bindingManager.setBinding(project, projectIds);
+    }
+
+    /**
+     * Unbind a project from its studio projects if any.
+     * 
+     * @param project
+     * @return
+     */
+    public void removeBinding(IProject project) throws CoreException {
+        bindingManager.removeBinding(project);
+    }
+
     public File getFile() {
         return file;
     }
@@ -113,36 +173,6 @@ public class StudioProvider {
             }
         }
         return null;
-    }
-
-    // TODO: to remove
-    protected static String[] paths = new String[] { "dc:title", "dc:subjects",
-            "dc:created", "dc:description", "dc:rights", "dc:source",
-            "dc:coverage", "dc:modified", "dc:issued", "dc:valid",
-            "dc:expired", "dc:format", "dc:language", "dc:creator",
-            "dc:contributors", "dc:lastContributor" };
-
-    static {
-        Arrays.sort(paths);
-    }
-
-    public String[] getSchemaPaths() {
-        return paths;
-    }
-
-    public static List<String> getSchemaPaths(String prefix) {
-        ArrayList<String> result = new ArrayList<String>();
-        for (int i = 0; i < paths.length; i++) {
-            if (paths[i].startsWith(prefix)) {
-                result.add(paths[i]);
-            } else {
-                if (!result.isEmpty()) {
-                    // stop iteration since entries are sorted
-                    break;
-                }
-            }
-        }
-        return result;
     }
 
 }

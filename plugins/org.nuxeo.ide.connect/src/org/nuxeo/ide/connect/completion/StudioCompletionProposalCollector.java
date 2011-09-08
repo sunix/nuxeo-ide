@@ -25,6 +25,7 @@ import org.eclipse.jdt.ui.text.java.JavaContentAssistInvocationContext;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.swt.graphics.Image;
 import org.nuxeo.ide.connect.ConnectPlugin;
+import org.nuxeo.ide.connect.StudioProjectBinding;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -37,6 +38,11 @@ public class StudioCompletionProposalCollector extends CompletionRequestor {
     protected MethodArgumentMatcher[] matchers;
 
     protected List<ICompletionProposal> proposals;
+
+    /**
+     * The studio binding used to get schema paths
+     */
+    protected StudioProjectBinding binding;
 
     /**
      * The image used for proposals. This is a shared image should not be
@@ -70,10 +76,11 @@ public class StudioCompletionProposalCollector extends CompletionRequestor {
     private MethodArgumentMatcher matcher;
 
     public StudioCompletionProposalCollector(
-            JavaContentAssistInvocationContext ctx) {
+            JavaContentAssistInvocationContext ctx, StudioProjectBinding binding) {
         super(false);
         setRequireExtendedContext(true);
         this.ctx = ctx;
+        this.binding = binding;
         proposals = new ArrayList<ICompletionProposal>();
         img = ConnectPlugin.getDefault().getImageRegistry().get(
                 "icons/studio_project.gif");
@@ -85,6 +92,14 @@ public class StudioCompletionProposalCollector extends CompletionRequestor {
         this.replacementLength = replacementLength;
         this.prefix = prefix;
         this.matcher = null;
+    }
+
+    public StudioProjectBinding getBinding() {
+        return binding;
+    }
+
+    public String[] getSchemaPaths() {
+        return binding.getSchemaPaths();
     }
 
     protected void initMatchers() {

@@ -17,6 +17,7 @@
 package org.nuxeo.ide.connect.studio.content;
 
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.navigator.CommonActionProvider;
 import org.eclipse.ui.navigator.ICommonActionConstants;
@@ -31,6 +32,8 @@ public class StudioNavigatorActionProvider extends CommonActionProvider {
 
     protected OpenAction open;
 
+    protected ExportOperations exportOps;
+
     @Override
     public void fillActionBars(IActionBars actionBars) {
         if (open.isEnabled()) {
@@ -43,11 +46,24 @@ public class StudioNavigatorActionProvider extends CommonActionProvider {
         if (open.isEnabled()) {
             menu.appendToGroup(ICommonMenuConstants.GROUP_OPEN, open);
         }
+        if (exportOps.isEnabled()) {
+            menu.appendToGroup(ICommonMenuConstants.GROUP_GENERATE, exportOps);
+        }
     }
 
     @Override
     public void init(ICommonActionExtensionSite aSite) {
         super.init(aSite);
         open = new OpenAction(this);
+        exportOps = new ExportOperations(this);
     }
+
+    public ICommonActionExtensionSite getSite() {
+        return getActionSite();
+    }
+
+    public Shell getShell() {
+        return getActionSite().getViewSite().getShell();
+    }
+
 }

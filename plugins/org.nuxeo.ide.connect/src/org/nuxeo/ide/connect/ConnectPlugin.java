@@ -2,7 +2,6 @@ package org.nuxeo.ide.connect;
 
 import java.io.File;
 
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
@@ -35,6 +34,7 @@ public class ConnectPlugin extends AbstractUIPlugin {
     }
 
     public void stop(BundleContext context) throws Exception {
+        studioProvider.dispose();
         plugin = null;
         studioProvider = null;
         super.stop(context);
@@ -64,7 +64,7 @@ public class ConnectPlugin extends AbstractUIPlugin {
                         "icons/studio_project.gif")));
     }
 
-    public static StudioProvider getStudioProvider() throws Exception {
+    public static StudioProvider getStudioProvider() {
         if (studioProvider == null) {
             File file = getDefault().getStateLocation().toFile();
             file.mkdirs();

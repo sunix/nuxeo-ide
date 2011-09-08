@@ -23,11 +23,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.CompletionContext;
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.ui.text.java.ContentAssistInvocationContext;
 import org.eclipse.jdt.ui.text.java.IJavaCompletionProposalComputer;
 import org.eclipse.jdt.ui.text.java.JavaContentAssistInvocationContext;
 import org.eclipse.swt.graphics.Point;
-import org.nuxeo.ide.connect.studio.StudioProject;
+import org.nuxeo.ide.connect.ConnectPlugin;
+import org.nuxeo.ide.connect.StudioProjectBinding;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -36,8 +38,6 @@ import org.nuxeo.ide.connect.studio.StudioProject;
 public class SchemaFieldProposalComputer implements
         IJavaCompletionProposalComputer {
 
-    protected StudioProject project;
-
     public SchemaFieldProposalComputer() {
     }
 
@@ -45,15 +45,25 @@ public class SchemaFieldProposalComputer implements
     public void sessionStarted() {
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public List computeCompletionProposals(
             ContentAssistInvocationContext context, IProgressMonitor monitor) {
 
         if (context instanceof JavaContentAssistInvocationContext) {
             JavaContentAssistInvocationContext jctx = (JavaContentAssistInvocationContext) context;
+            IJavaProject jproject = jctx.getProject();
+            if (jproject == null) {
+                return Collections.emptyList();
+            }
+            StudioProjectBinding binding = ConnectPlugin.getStudioProvider().getBinding(
+                    jproject.getProject());
+            if (binding == null) {
+                return Collections.emptyList();
+            }
             ICompilationUnit unit = jctx.getCompilationUnit();
             StudioCompletionProposalCollector collector = new StudioCompletionProposalCollector(
-                    jctx);
+                    jctx, binding);
             CompletionContext cc = jctx.getCoreContext();
             int start = -1;
             if (cc.getTokenKind() == CompletionContext.TOKEN_KIND_STRING_LITERAL) {
@@ -76,6 +86,7 @@ public class SchemaFieldProposalComputer implements
         return Collections.emptyList();
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public List computeContextInformation(
             ContentAssistInvocationContext context, IProgressMonitor monitor) {

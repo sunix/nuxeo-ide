@@ -27,6 +27,7 @@ import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.common.forms.BindingContext;
 import org.nuxeo.ide.common.forms.UIObject;
 import org.nuxeo.ide.common.forms.WidgetName;
+import org.nuxeo.ide.connect.ConnectPlugin;
 import org.nuxeo.ide.connect.StudioProjectBinding;
 import org.nuxeo.ide.connect.studio.StudioProject;
 import org.w3c.dom.Element;
@@ -73,7 +74,8 @@ public class StudioProjectsWidget extends UIObject<Table> {
 
     public void setSelectedProjects(IProject project) {
         try {
-            StudioProjectBinding binding = StudioProjectBinding.get(project);
+            StudioProjectBinding binding = ConnectPlugin.getStudioProvider().getBinding(
+                    project);
             if (binding != null) {
                 tv.setCheckedElements(binding.getProjects());
             }
