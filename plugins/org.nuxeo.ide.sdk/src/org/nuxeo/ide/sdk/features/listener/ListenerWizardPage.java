@@ -17,7 +17,6 @@
 package org.nuxeo.ide.sdk.features.listener;
 
 import org.nuxeo.ide.common.forms.Form;
-import org.nuxeo.ide.common.forms.model.TextBoxListWidget;
 import org.nuxeo.ide.sdk.features.FeatureTemplateContext;
 import org.nuxeo.ide.sdk.features.FeatureWizardPage;
 import org.nuxeo.ide.sdk.ui.widgets.PackageChooserWidget;
@@ -25,7 +24,7 @@ import org.nuxeo.ide.sdk.ui.widgets.ProjectChooserWidget;
 
 /**
  * @author <a href="mailto:ldoguin@nuxeo.com">Laurent Doguin</a>
- *
+ * 
  */
 public class ListenerWizardPage extends FeatureWizardPage {
 
@@ -38,10 +37,9 @@ public class ListenerWizardPage extends FeatureWizardPage {
         Form form = super.createForm();
         form.addWidgetType(PackageChooserWidget.class);
         form.addWidgetType(ProjectChooserWidget.class);
-        form.addWidgetType(TextBoxListWidget.class);
+        form.addWidgetType(DynamicTableWidget.class);
         return form;
     }
-
 
     @Override
     public void update(FeatureTemplateContext ctx) {
@@ -50,8 +48,8 @@ public class ListenerWizardPage extends FeatureWizardPage {
         ctx.put("name", className.toLowerCase());
         ctx.put("async", form.getWidgetValue("async"));
         ctx.put("postCommit", form.getWidgetValue("postCommit"));
-        ctx.put("selectedEvents", form.getWidgetValue("selectedEvents"));
-        ctx.put("customEvents", form.getWidgetValue("customEvents"));
+        DynamicTable table = (DynamicTable) form.getWidgetControl("selectedEvents");
+        ctx.put("selectedEvents", table.getSelectedValues());
         ctx.put("order", form.getWidgetValue("order"));
     }
 

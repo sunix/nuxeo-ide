@@ -24,7 +24,7 @@
 
 <frame layout="grid" cols="1" label="Events to listen to:" hfill="true" vfill="true" colspan="2">
 
-<listbox id="selectedEvents" multi="true" vfill="true" >
+<dynalist id="selectedEvents" vfill="true" hfill="true" height="200">
   <item value="aboutToCreate">About to create</item>
   <item value="emptyDocumentModelCreated">Empty document created</item>
   <item value="documentCreated">Document created</item>
@@ -58,9 +58,7 @@
   <item value="documentCheckedIn">Document checked in</item>
   <item value="subscriptionAssigned">Subscription assigned</item>
   <item value="emailDocumentSend">E-Mail document sent</item>
-</listbox>
-<text>Enter the names of your events separated by a comma:</text>
-<textboxList id="customEvents" hfill="true"/>
+</dynalist>
 </frame>
 
 </panel>
