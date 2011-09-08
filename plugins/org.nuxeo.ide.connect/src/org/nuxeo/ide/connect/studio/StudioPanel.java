@@ -22,8 +22,10 @@ import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -31,6 +33,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
@@ -44,6 +47,7 @@ import org.nuxeo.ide.connect.studio.tree.FeatureNode;
 import org.nuxeo.ide.connect.studio.tree.Node;
 import org.nuxeo.ide.connect.studio.tree.StudioProjectProvider;
 import org.nuxeo.ide.connect.studio.tree.TypeNode;
+import org.nuxeo.ide.connect.ui.MultiExportOperationsWizard;
 
 /**
  * You must call create() method in order to initialize the panel.
@@ -207,8 +211,26 @@ public class StudioPanel extends Composite implements StudioListener {
         return action;
     }
 
+    protected IAction createExportOperationsAction() {
+        Action action = new Action() {
+            public void run() {
+                MultiExportOperationsWizard wizard = new MultiExportOperationsWizard();
+                wizard.init(PlatformUI.getWorkbench(),
+                        StructuredSelection.EMPTY);
+                WizardDialog dialog = new WizardDialog(getShell(), wizard);
+                dialog.create();
+                dialog.open();
+            }
+        };
+        action.setId("export");
+        action.setText("Export Operations");
+        action.setImageDescriptor(imgProvider.getImageDescriptor("icons/export.gif"));
+        return action;
+    }
+
     protected void createToolbar(ScrolledForm form) {
         form.getToolBarManager().add(createRefreshAction());
+        form.getToolBarManager().add(createExportOperationsAction());
         form.getToolBarManager().update(true);
     }
 

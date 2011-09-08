@@ -79,6 +79,19 @@ public class OperationScanner {
 
     public static final String T_PROPERTIES = "properties";
 
+    public static List<OperationModel> getOperations(IJavaProject[] projects)
+            throws Exception {
+        List<OperationModel> result = new ArrayList<OperationModel>();
+        for (IJavaProject project : projects) {
+            for (IPackageFragmentRoot root : project.getPackageFragmentRoots()) {
+                if (root.getKind() == IPackageFragmentRoot.K_SOURCE) {
+                    scanPackageRoot(root, result);
+                }
+            }
+        }
+        return result;
+    }
+
     public static List<OperationModel> getOperations(IJavaProject project)
             throws Exception {
         List<OperationModel> result = new ArrayList<OperationModel>();

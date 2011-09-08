@@ -16,8 +16,6 @@
  */
 package org.nuxeo.ide.connect.studio;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.nuxeo.ide.connect.StudioProvider;
@@ -49,29 +47,9 @@ public class StudioEditorPanel extends StudioPanel {
         }
     }
 
-    protected IAction createExportOperationsAction() {
-        Action action = new Action() {
-            public void run() {
-                // ExportOperationsWizard wizard = new ExportOperationsWizard(
-                // project.getId());
-                // wizard.init(getSite().getWorkbenchWindow().getWorkbench(),
-                // new StructuredSelection(rootProject));
-                // WizardDialog dialog = new WizardDialog(getSite().getShell(),
-                // wizard);
-                // dialog.create();
-                // dialog.open();
-            }
-        };
-        action.setId("export");
-        action.setText("Export Operations");
-        action.setImageDescriptor(imgProvider.getImageDescriptor("icons/export.gif"));
-        return action;
-    }
-
     @Override
     protected void createToolbar(ScrolledForm form) {
         form.getToolBarManager().add(createRefreshAction());
-        form.getToolBarManager().add(createExportOperationsAction());
         form.getToolBarManager().update(true);
     }
 

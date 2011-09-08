@@ -14,7 +14,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.editors,
  org.eclipse.ui.forms,
  org.eclipse.jface.text,
- org.eclipse.ui.navigator
+ org.eclipse.ui.navigator,
+ org.nuxeo.ide.sdk
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: lib/jackson-core-asl-1.8.1.jar,

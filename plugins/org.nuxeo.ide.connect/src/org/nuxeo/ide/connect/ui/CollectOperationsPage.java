@@ -33,6 +33,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -40,6 +41,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.connect.OperationModel;
 import org.nuxeo.ide.connect.OperationScanner;
 
@@ -52,7 +54,7 @@ public class CollectOperationsPage extends WizardPage {
     protected CheckboxTreeViewer tv;
 
     public CollectOperationsPage() {
-        super("collectOperations", "Select Operations", null);
+        super("collectOperations", "Select Operations to Export", null);
     }
 
     public OperationModel[] getSelectedOperations() {
@@ -98,7 +100,16 @@ public class CollectOperationsPage extends WizardPage {
             }
         });
 
-        tv.setInput(((ExportOperationsWizard) getWizard()).getSelectedProject());
+        IWizard wizard = getWizard();
+        if (wizard instanceof ExportOperationsWizard) {
+            tv.setInput(((ExportOperationsWizard) getWizard()).getSelectedProject());
+        }
+    }
+
+    public void setInput(Object input) {
+        if (tv != null) {
+            tv.setInput(input);
+        }
     }
 
     public List<OperationModel> getCheckedOperations() {
@@ -151,21 +162,35 @@ public class CollectOperationsPage extends WizardPage {
 
         @Override
         public Object[] getElements(Object inputElement) {
-            IJavaProject project = null;
-            if (inputElement instanceof IProject) {
-                project = JavaCore.create((IProject) inputElement);
-            } else if (inputElement instanceof IJavaProject) {
-                project = (IJavaProject) inputElement;
-            }
-            if (project != null) {
-                try {
-                    List<OperationModel> ops = OperationScanner.getOperations(project);
+            try {
+                if (inputElement instanceof SelectExportedProjectsPage) {
+                    IProject[] projects = ((SelectExportedProjectsPage) inputElement).getSelectedProjects();
+                    if (projects == null) {
+                        return UI.EMPTY_OBJECTS;
+                    }
+                    IJavaProject[] jprojects = new IJavaProject[projects.length];
+                    for (int i = 0; i < projects.length; i++) {
+                        jprojects[i] = JavaCore.create(projects[i]);
+                    }
+                    List<OperationModel> ops = OperationScanner.getOperations(jprojects);
                     return ops.toArray(new OperationModel[ops.size()]);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } else {
+                    IJavaProject project = null;
+                    if (inputElement instanceof IProject) {
+                        project = JavaCore.create((IProject) inputElement);
+                    } else if (inputElement instanceof IJavaProject) {
+                        project = (IJavaProject) inputElement;
+                    }
+                    if (project != null) {
+
+                        List<OperationModel> ops = OperationScanner.getOperations(project);
+                        return ops.toArray(new OperationModel[ops.size()]);
+                    }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            return new Object[0];
+            return UI.EMPTY_OBJECTS;
         }
 
         @Override
