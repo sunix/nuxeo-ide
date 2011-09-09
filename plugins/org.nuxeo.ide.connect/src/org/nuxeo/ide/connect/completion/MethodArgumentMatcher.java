@@ -54,7 +54,7 @@ public abstract class MethodArgumentMatcher {
         return Arrays.equals(decl, this.decl) && Arrays.equals(name, this.name);
     }
 
-    public void fillProposals(StudioCompletionProposalCollector collector,
+    public void fillProposals(StudioArgumentProposalCollector collector,
             CompletionProposal proposal) {
         String prefix = collector.getPrefix();
         try {

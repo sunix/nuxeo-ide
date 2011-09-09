@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.CompletionContext;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.ui.text.java.ContentAssistInvocationContext;
 import org.eclipse.jdt.ui.text.java.IJavaCompletionProposalComputer;
 import org.eclipse.jdt.ui.text.java.JavaContentAssistInvocationContext;
@@ -35,10 +36,9 @@ import org.nuxeo.ide.connect.StudioProjectBinding;
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class SchemaFieldProposalComputer implements
-        IJavaCompletionProposalComputer {
+public class StudioProposalComputer implements IJavaCompletionProposalComputer {
 
-    public SchemaFieldProposalComputer() {
+    public StudioProposalComputer() {
     }
 
     @Override
@@ -61,23 +61,37 @@ public class SchemaFieldProposalComputer implements
             if (binding == null) {
                 return Collections.emptyList();
             }
-            ICompilationUnit unit = jctx.getCompilationUnit();
-            StudioCompletionProposalCollector collector = new StudioCompletionProposalCollector(
-                    jctx, binding);
+            // look if we are in a string literal and initialize locations
             CompletionContext cc = jctx.getCoreContext();
-            int start = -1;
+            int offset = context.getInvocationOffset();
+            int replacementLength = -1;
+            String prefix = null;
             if (cc.getTokenKind() == CompletionContext.TOKEN_KIND_STRING_LITERAL) {
-                start = cc.getTokenStart();
+                offset = cc.getTokenStart();
                 int end = cc.getTokenEnd();
-                collector.initialize(start, end - start + 1,
-                        new String(cc.getToken()));
+                replacementLength = end - offset + 1;
+                prefix = new String(cc.getToken());
             } else {
-                start = context.getInvocationOffset();
                 Point p = jctx.getViewer().getSelectedRange();
-                collector.initialize(start, p.y, null);
+                replacementLength = p.y;
             }
+
+            // assignment case
+            IType type = jctx.getExpectedType();
+            if (type != null
+                    && "java.lang.String".equals(type.getFullyQualifiedName())) {
+                StudioAssignmentProposalCollector collector = new StudioAssignmentProposalCollector(
+                        jctx, binding);
+                collector.initialize(offset, replacementLength, prefix);
+                return collector.getProposals();
+            }
+            // method arg case
+            ICompilationUnit unit = jctx.getCompilationUnit();
+            StudioArgumentProposalCollector collector = new StudioArgumentProposalCollector(
+                    jctx, binding);
+            collector.initialize(offset, replacementLength, prefix);
             try {
-                unit.codeComplete(start, collector, new NullProgressMonitor());
+                unit.codeComplete(offset, collector, new NullProgressMonitor());
                 return collector.getProposals();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -90,7 +104,6 @@ public class SchemaFieldProposalComputer implements
     @Override
     public List computeContextInformation(
             ContentAssistInvocationContext context, IProgressMonitor monitor) {
-        System.out.println("compute context info");
         return Collections.emptyList();
     }
 

@@ -31,7 +31,8 @@ import org.nuxeo.ide.connect.StudioProjectBinding;
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class StudioCompletionProposalCollector extends CompletionRequestor {
+public class StudioArgumentProposalCollector extends CompletionRequestor
+        implements StudioProposalCollector {
 
     protected JavaContentAssistInvocationContext ctx;
 
@@ -75,7 +76,7 @@ public class StudioCompletionProposalCollector extends CompletionRequestor {
      */
     private MethodArgumentMatcher matcher;
 
-    public StudioCompletionProposalCollector(
+    public StudioArgumentProposalCollector(
             JavaContentAssistInvocationContext ctx, StudioProjectBinding binding) {
         super(false);
         setRequireExtendedContext(true);
@@ -87,6 +88,7 @@ public class StudioCompletionProposalCollector extends CompletionRequestor {
         initMatchers();
     }
 
+    @Override
     public void initialize(int offset, int replacementLength, String prefix) {
         this.offset = offset;
         this.replacementLength = replacementLength;
@@ -94,8 +96,39 @@ public class StudioCompletionProposalCollector extends CompletionRequestor {
         this.matcher = null;
     }
 
+    @Override
+    public List<ICompletionProposal> getProposals() {
+        return proposals;
+    }
+
+    @Override
     public StudioProjectBinding getBinding() {
         return binding;
+    }
+
+    @Override
+    public String getPrefix() {
+        return prefix;
+    }
+
+    @Override
+    public int getOffset() {
+        return offset;
+    }
+
+    @Override
+    public Image getImage() {
+        return img;
+    }
+
+    @Override
+    public int getReplacementLength() {
+        return replacementLength;
+    }
+
+    @Override
+    public JavaContentAssistInvocationContext getContext() {
+        return ctx;
     }
 
     public String[] getSchemaPaths() {
@@ -107,20 +140,10 @@ public class StudioCompletionProposalCollector extends CompletionRequestor {
                 new GetPropertyMatcher() };
     }
 
-    public String getPrefix() {
-        return prefix;
-    }
-
-    protected org.eclipse.jface.text.contentassist.CompletionProposal createProposal(
+    protected StudioProposal createProposal(
             JavaContentAssistInvocationContext ctx,
             CompletionProposal proposal, String label, String text) {
-        return new org.eclipse.jface.text.contentassist.CompletionProposal(
-                text, offset, replacementLength, text.length(), img, label,
-                null, null);
-    }
-
-    public List<ICompletionProposal> getProposals() {
-        return proposals;
+        return StudioProposal.createProposal(this, label, text);
     }
 
     public void addProposal(ICompletionProposal proposal) {
@@ -157,7 +180,7 @@ public class StudioCompletionProposalCollector extends CompletionRequestor {
             }
         }
         if (matcher != null) {
-            printContext(proposal);
+            // printContext(proposal);
             matcher.fillProposals(this, proposal);
         }
     }

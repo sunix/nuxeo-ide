@@ -45,16 +45,16 @@
    <!-- #### Schema completor ##### -->
 
  <extension point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
-   id="schema_proposals"
-   name="Nuxeo Schema Proposals">
+   id="nuxeo_studio_proposals"
+   name="Nuxeo Studio Proposals">
    <proposalCategory icon="icons/studio_project.gif"/>
  </extension>
  <extension point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
-   id="SchemaFieldCompletionProposalComputer"
-   name="Schema Field Completion Proposal Computer">
+   id="NuxeoStudioProposalComputer"
+   name="Nuxeo Studio Proposal Computer">
    <javaCompletionProposalComputer
-      class="org.nuxeo.ide.connect.completion.SchemaFieldProposalComputer"
-      categoryId="org.nuxeo.ide.connect.schema_proposals">
+      class="org.nuxeo.ide.connect.completion.StudioProposalComputer"
+      categoryId="org.nuxeo.ide.connect.nuxeo_studio_proposals">
       <partition type="__dftl_partition_content_type"/>
       <partition
             type="__java_string">
@@ -137,6 +137,19 @@
                id="org.nuxeo.ide.connect.studio.StudioView">
          </viewShortcut>
       </perspectiveExtension>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="org.eclipse.jdt.ui.specific_content_assist.command"
+            contextId="org.eclipse.jdt.ui.javaEditorScope"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="ALT+CTRL+SPACE">
+         <parameter
+               id="org.eclipse.jdt.ui.specific_content_assist.category_id"
+               value="org.nuxeo.ide.connect.nuxeo_studio_proposals">
+         </parameter>
+      </key>
    </extension>
 
 </plugin>
