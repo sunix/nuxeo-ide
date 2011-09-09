@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<component name="org.skinsoft.nuxeo.ide.uml.demo.uml.jbpm.workflow">
-  <extension point="processDefinition" target="org.nuxeo.ecm.platform.jbpm.core.JbpmService"/>
-  <extension point="securityPolicy" target="org.nuxeo.ecm.platform.jbpm.core.JbpmService"/>
-  <extension point="typeFilter" target="org.nuxeo.ecm.platform.jbpm.core.JbpmService"/>
-</component>

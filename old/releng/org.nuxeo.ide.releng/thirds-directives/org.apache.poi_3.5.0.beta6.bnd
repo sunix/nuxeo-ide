@@ -1,4 +1,0 @@
--nouses: true
-Eclipse-ExtensibleAPI: true
-Export-Package: org.apache.poi.*
-Import-Package: *;resolution:=optional

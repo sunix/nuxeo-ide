@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<component name="org.skinsoft.nuxeo.ide.uml.demo.uml.search">
-  <extension point="indexableDocType" target="org.nuxeo.ecm.core.search.service.SearchServiceImpl">
-    <indexableDocType indexAllSchemas="true" name="MyFirstDocType"/>
-  </extension>
-</component>

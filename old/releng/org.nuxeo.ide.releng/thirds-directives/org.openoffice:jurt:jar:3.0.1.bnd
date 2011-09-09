@@ -1,2 +1,0 @@
-Require-Bundle: org.openoffice.ridl;visibility:=reexport
-Export-Package: com.sun.star.uno;jurt=split,*

@@ -1,1 +1,0 @@
-Additional UseCase diagrams can be added in this directory.

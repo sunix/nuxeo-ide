@@ -1,2 +1,0 @@
-Bundle-SymbolicName: org.jboss;singleton=true
-Export-Package: org.jboss.deployment;core=split

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<component name="org.skinsoft.nuxeo.ide.uml.demo.uml.lifecycle">
-  <extension point="types" target="org.nuxeo.ecm.core.lifecycle.LifeCycleService">
-    <types>
-      <type name="MyFirstDocType">MyFirstLifecycle</type>
-    </types>
-  </extension>
-</component>

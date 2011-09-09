@@ -1,1 +1,0 @@
-before building the update site copy nuxeo-distribution-tools-xxx-all.jar in lib and update sdk.properties.
