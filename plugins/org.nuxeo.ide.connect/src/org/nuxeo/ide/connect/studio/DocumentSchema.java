@@ -27,7 +27,8 @@ import org.codehaus.jackson.JsonToken;
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class DocumentSchema implements StudioFeature {
+public class DocumentSchema implements StudioFeature,
+        Comparable<DocumentSchema> {
 
     protected String id;
 
@@ -160,4 +161,24 @@ public class DocumentSchema implements StudioFeature {
         return field;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (obj instanceof DocumentSchema) {
+            return ((DocumentSchema) obj).getId().equals(id);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+
+    @Override
+    public int compareTo(DocumentSchema o) {
+        return id.compareTo(o.id);
+    }
 }

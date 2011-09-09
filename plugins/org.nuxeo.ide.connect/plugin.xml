@@ -151,5 +151,18 @@
          </parameter>
       </key>
    </extension>
+   
+   <!-- ### Document Adapter wizard ### -->
+   
+   <extension
+         point="org.eclipse.ui.newWizards">
+         <wizard
+            category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.core.newWizards"
+            class="org.nuxeo.ide.connect.features.adapter.DocumentAdapterWizard"
+            icon="icons/adapter.gif"
+            id="org.nuxeo.ide.core.adapterWizard"
+            name="Document Adapter">
+      </wizard>
+   </extension>
 
 </plugin>

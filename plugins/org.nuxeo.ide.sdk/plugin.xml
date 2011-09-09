@@ -46,7 +46,7 @@
             class="org.nuxeo.ide.sdk.projects.plugin.PluginProjectWizard"
             icon="icons/nx.gif"
             id="org.nuxeo.ide.sdk.projects.plugin.PluginProjectWizard"
-            name="Nuxeo Plugin"
+            name="Nuxeo Plugin Project"
             preferredPerspectives="org.eclipse.jdt.ui.JavaPerspective,org.eclipse.jdt.ui.JavaBrowsingPerspective,org.eclipse.jdt.ui.JavaHierarchyPerspective"
             project="true">
       </wizard>
@@ -55,7 +55,7 @@
             class="org.nuxeo.ide.sdk.projects.webengine.WebengineProjectWizard"
             icon="icons/web.gif"
             id="org.nuxeo.ide.sdk.projects.webengine.WebengineProjectWizard"
-            name="WebEngine Application"
+            name="Nuxeo WebEngine Project"
             preferredPerspectives="org.eclipse.jdt.ui.JavaPerspective,org.eclipse.jdt.ui.JavaBrowsingPerspective,org.eclipse.jdt.ui.JavaHierarchyPerspective"
             project="true">
       </wizard>
@@ -64,7 +64,7 @@
             class="org.nuxeo.ide.sdk.projects.jaxrs.JAXRSProjectWizard"
             icon="icons/jaxrs.gif"
             id="org.nuxeo.ide.templates.JAXRSProjectWizard"
-            name="JAX-RS Application"
+            name="Nuxeo JAX-RS Application"
             preferredPerspectives="org.eclipse.jdt.ui.JavaPerspective,org.eclipse.jdt.ui.JavaBrowsingPerspective,org.eclipse.jdt.ui.JavaHierarchyPerspective"
             project="true">
       </wizard>
@@ -151,13 +151,6 @@
             icon="icons/listener.gif"
             id="org.nuxeo.ide.core.listenerWizard"
             name="Document Listener">
-      </wizard>
-      <wizard
-            category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.core.newWizards"
-            class="org.nuxeo.ide.sdk.features.FakeWizard"
-            icon="icons/adapter.gif"
-            id="org.nuxeo.ide.core.adapterWizard"
-            name="Document Adapter">
       </wizard>
 
       <category

@@ -22,4 +22,7 @@ Bundle-ClassPath: .,
  lib/org.freemarker_2.3.16.201105021557.jar
 Export-Package: org.nuxeo.ide.sdk,
  org.nuxeo.ide.sdk.deploy,
- org.nuxeo.ide.sdk.ui
+ org.nuxeo.ide.sdk.features,
+ org.nuxeo.ide.sdk.ui,
+ org.nuxeo.ide.sdk.ui.actions,
+ org.nuxeo.ide.sdk.ui.widgets

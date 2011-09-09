@@ -21,8 +21,8 @@ public class ${className} {
     public static final String ID = "${operationId}";
 
     @OperationMethod<#if iterable>(collector=${outputCollector})</#if>
-    public ${output!"void"} run(<#if input>${input} input</#if>) {
-      <#if output>return null;</#if> 
+    public ${output!"void"} run(<#if input && input != "void">${input} input</#if>) {
+      <#if output && output != "void">return null;</#if> 
     }    
 
 }

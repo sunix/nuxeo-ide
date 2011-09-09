@@ -104,6 +104,26 @@ public class StudioProjectBinding {
         return _projects;
     }
 
+    /**
+     * This is not cached since not used in completion or other sensitive tasks.
+     * 
+     * @return
+     */
+    public DocumentSchema[] getSchemas() {
+        Set<DocumentSchema> result = new HashSet<DocumentSchema>();
+        for (StudioProject project : getProjects()) {
+            for (DocumentSchema ds : project.getPlatform().getSchemas().values()) {
+                result.add(ds);
+            }
+            for (DocumentSchema ds : project.getDocumentSchemas()) {
+                result.add(ds);
+            }
+        }
+        DocumentSchema[] schemas = result.toArray(new DocumentSchema[result.size()]);
+        Arrays.sort(schemas);
+        return schemas;
+    }
+
     private final void collectSchemaPaths(Set<String> result) {
         for (StudioProject project : getProjects()) {
             for (DocumentSchema ds : project.getPlatform().getSchemas().values()) {

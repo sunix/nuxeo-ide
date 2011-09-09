@@ -52,6 +52,18 @@
     <transform path="src/main/java/packagePath/MyOperation.java" to="src/main/java/${packagePath}/${className}.java" />
   </feature>
 
+  <feature id ="docadapter" src="features/docadapter/project">
+    <name>Document Adapter</name>
+    <description>A document adapter over a set of document schemas</description>
+
+    <extension src="features/docadapter/extensions.xml"/>
+
+    <dependency groupId="org.nuxeo.ecm.core" artifactId="nuxeo-core-api"/>
+
+    <transform path="src/main/java/packagePath/MyDocumentAdapterFactory.java" to="src/main/java/${packagePath}/${className}Factory.java" />
+    <transform path="src/main/java/packagePath/MyDocumentAdapter.java" to="src/main/java/${packagePath}/${className}.java" />
+  </feature>
+
   <feature id ="listener" src="features/listener/project">
     <name>Listener</name>
     <description>A listener object</description>
