@@ -5,8 +5,6 @@ import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 import org.eclipse.ui.progress.IProgressConstants;
-import org.nuxeo.ide.sdk.projects.plugin.PluginProjectWizard;
-import org.nuxeo.ide.sdk.projects.webengine.WebengineProjectWizard;
 import org.nuxeo.ide.sdk.server.ui.ServerView;
 
 public class NuxeoPerspective implements IPerspectiveFactory {
@@ -26,8 +24,8 @@ public class NuxeoPerspective implements IPerspectiveFactory {
         layout.addShowViewShortcut("org.nuxeo.ide.sdk.server.ui.ServerView");
 
         layout.addNewWizardShortcut("org.eclipse.jdt.ui.wizards.JavaProjectWizard");
-        layout.addNewWizardShortcut(PluginProjectWizard.ID);
-        layout.addNewWizardShortcut(WebengineProjectWizard.ID);
+        layout.addNewWizardShortcut("org.nuxeo.ide.sdk.projects.plugin.PluginProjectWizard");
+        layout.addNewWizardShortcut("org.nuxeo.ide.sdk.projects.webengine.WebengineProjectWizard");
     }
 
     protected void defineJavaActions(IPageLayout layout) {
