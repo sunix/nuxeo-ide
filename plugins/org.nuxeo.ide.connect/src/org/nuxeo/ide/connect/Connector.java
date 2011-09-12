@@ -16,7 +16,6 @@
  */
 package org.nuxeo.ide.connect;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -27,11 +26,7 @@ import java.net.URLConnection;
 import java.util.List;
 
 import org.eclipse.core.internal.preferences.Base64;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.nuxeo.ide.common.IOUtils;
-import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.connect.studio.StudioProject;
 
 /**

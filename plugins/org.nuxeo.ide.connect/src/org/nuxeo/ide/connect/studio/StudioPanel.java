@@ -93,7 +93,7 @@ public class StudioPanel extends Composite implements StudioListener {
     public void dispose() {
         super.dispose();
         try {
-            ConnectPlugin.getStudioProvider().addStudioListener(this);
+            ConnectPlugin.getStudioProvider().removeStudioListener(this);
         } catch (Exception e) {
             // do nothing
         }
