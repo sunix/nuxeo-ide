@@ -22,9 +22,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.List;
 import java.util.Properties;
 
+import org.nuxeo.ide.common.IOUtils;
 import org.nuxeo.ide.common.UI;
+import org.nuxeo.ide.sdk.server.VMUtils;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -90,6 +93,68 @@ public class SDKInfo {
         return false;
     }
 
+    public void applyPatch() throws IOException {
+        File root = getInstallDirectory();
+        // be sure nuxeoctl is executable
+        File file = new File(root, "bin/nuxeoctl");
+        file.setExecutable(true);
+        // create the nxserver/sdk dir if not exists
+        file = new File(root, "nxserver/sdk");
+        file.mkdirs();
+        // generate sdk conf if needed
+        File sdkConf = new File(root, "bin/nuxeo-sdk.conf");
+        if (!sdkConf.isFile()) {
+            generateSDKConf(new File(root, "bin/nuxeo.conf"), sdkConf);
+        }
+        // create the SDK template if not exists
+        File sdkTemp = new File(root, "templates/sdk");
+        if (!sdkTemp.isDirectory()) {
+            generateSDKTemplate(new File(root, "templates/default"), sdkTemp);
+        }
+    }
+
+    protected void generateSDKTemplate(File defTemp, File sdkTemp)
+            throws IOException {
+        sdkTemp.mkdirs();
+        File src = new File(defTemp, "conf/Catalina/localhost/nuxeo.xml");
+        File dst = new File(sdkTemp, "conf/Catalina/localhost/nuxeo.xml");
+        dst.getParentFile().mkdirs();
+        String content = IOUtils.readFile(src);
+        content = content.replace(
+                "org.nuxeo.runtime.tomcat.NuxeoWebappClassLoader",
+                "org.nuxeo.runtime.tomcat.dev.NuxeoDevWebappClassLoader");
+        IOUtils.writeFile(dst, content);
+    }
+
+    protected void generateSDKConf(File conf, File sdkConf) throws IOException {
+        List<String> lines = IOUtils.readLines(conf);
+        for (int i = 0, len = lines.size(); i < len; i++) {
+            String line = lines.get(i).trim();
+            if (line.contains("dt_socket") && line.startsWith("#")) {
+                lines.set(i, line.substring(1));
+            } else if (line.contains("nuxeo.templates")) {
+                lines.set(i, "nuxeo.templates=default,sdk");
+            }
+        }
+        IOUtils.writeLines(sdkConf, lines);
+    }
+
+    public static ProcessBuilder newProcessBuilder(File installRoot,
+            String command) {
+        ProcessBuilder builder = new ProcessBuilder(
+                VMUtils.getJavaExecutablePath(),
+                "-Dnuxeo.home=" + installRoot.getAbsolutePath(),
+                "-Dnuxeo.conf="
+                        + new File(installRoot, "bin/nuxeo-sdk.conf").getAbsolutePath(),
+                "-jar",
+                new File(installRoot, "bin/nuxeo-launcher.jar").getAbsolutePath());
+        if (command != null) {
+            builder.command().add(command);
+        }
+        builder.directory(new File(installRoot, "bin"));
+        return builder;
+    }
+
     public static SDKInfo loadSDK(File dir) throws IOException {
         if (!dir.isDirectory()) {
             throw new FileNotFoundException(
@@ -114,6 +179,7 @@ public class SDKInfo {
             throw new FileNotFoundException("Not a Nuxeo SDK: " + dir);
         }
         SDKInfo sdk = new SDKInfo(dir, version);
+        sdk.applyPatch();
         // TODO sdk.index();
         return sdk;
     }

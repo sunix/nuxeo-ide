@@ -16,9 +16,8 @@
  */
 package org.nuxeo.ide.sdk.server;
 
-import java.io.File;
-
 import org.nuxeo.ide.common.UI;
+import org.nuxeo.ide.sdk.SDKInfo;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -26,12 +25,28 @@ import org.nuxeo.ide.common.UI;
  */
 public class StartServer extends ProcessRunner {
 
+    public static boolean isWindows() {
+        String os = System.getProperty("os.name").toLowerCase();
+        return (os.indexOf("win") >= 0);
+    }
+
+    // public static String getNuxeoScriptPath() {
+    // return isWindows() ? "bin/nuxeoctl.bat" : "bin/nuxeoctl";
+    // }
+
     protected ServerController ctrl;
 
     public StartServer(ServerController ctrl) {
-        super(new ProcessBuilder(
-                new File(ctrl.root, "bin/nuxeoctl").getAbsolutePath(), "start"));
+        // super(new ProcessBuilder(
+        // new File(ctrl.root, getNuxeoScriptPath()).getAbsolutePath(),
+        // "start"));
+        super(SDKInfo.newProcessBuilder(ctrl.root, "start"));
         this.ctrl = ctrl;
+    }
+
+    @Override
+    protected void output(String line) {
+        System.out.println(line);
     }
 
     @Override

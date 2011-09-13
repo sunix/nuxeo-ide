@@ -16,14 +16,27 @@
  */
 package org.nuxeo.ide.sdk.model;
 
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.core.IClasspathEntry;
+import org.nuxeo.ide.sdk.index.Index;
+
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
 public class Artifact {
 
-    public static Artifact fromGav(String gav) {
+    public static Artifact fromClassPathEntry(IClasspathEntry entry) {
+        String jarName = entry.getPath().lastSegment();
+        String gav = Index.getIndex().get(jarName);
+        if (gav == null) {
+            return null;
+        }
+        return fromGav(gav);
+    }
 
+    public static Artifact fromGav(String gav) {
         String artifactId = null;
         String version = null;
         int i = gav.indexOf(':');
@@ -62,6 +75,10 @@ public class Artifact {
         this.id = groupId + ':' + artifactId;
     }
 
+    public boolean isSnapshot() {
+        return version != null && version.contains("SNAPSHOT");
+    }
+
     public void setScope(String scope) {
         this.scope = scope;
     }
@@ -88,6 +105,22 @@ public class Artifact {
 
     public String getId() {
         return id;
+    }
+
+    public IPath getSourceJarPathObject() {
+        return new Path(getSourceJarPath());
+    }
+
+    public String getSourceJarPath() {
+        // TODO classifier not yet used ...
+        return getGroupId().replace('.', '/') + '/' + getArtifactId() + '/'
+                + getVersion() + '/' + getArtifactId() + '-' + getVersion()
+                + "-sources.jar";
+    }
+
+    public String getMetadataPath() {
+        return getGroupId().replace('.', '/') + '/' + getArtifactId() + '/'
+                + getVersion() + "/maven-metadata.xml";
     }
 
     @Override

@@ -15,10 +15,10 @@
 <text>Project Location:</text><directory id="projectLocation" hfill="true"/>
 
 <frame layout="grid" cols="2" hfill="true" colspan="2" label="WebEngine Application">
-<text>Application Name:</text>
+<!--text>Application Name:</text>
 <textbox id="appName" hfill="true">
 <validator type="regex" value="[ A-Za-z0-9_-]*">Not a valid application name</validator>
-</textbox>
+</textbox-->
 <text>Root Path:</text>
 <textbox id="rootPath" hfill="true">
 <validator type="regex" value="[A-Za-z0-9_-]+(/?[A-Za-z0-9_-]+)*">Not a valid path name</validator>

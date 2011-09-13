@@ -38,9 +38,17 @@ public class Page1 extends NuxeoProjectPage1 {
     @Override
     public void update(ProjectTemplateContext ctx) {
         super.update(ctx);
+        // let the app name to inherit from root class name
+        // this way we have a simpler form
         ctx.setProperty(form, "className", "appName");
-        ctx.setPropertyIfNotNull(form, "appName");
-        ctx.setProperty(form, "rootPath");
+        // ctx.setPropertyIfNotNull(form, "appName");
+        String rootPath = form.getWidgetValueAsString("rootPath");
+        if (!rootPath.startsWith("/")) {
+            // a bug in webengine generate a broken link to the module if the
+            // rootPath is not starting with /
+            rootPath = "/" + rootPath;
+        }
+        ctx.put("rootPath", rootPath);
         ctx.setPropertyIfNotNull(form, "base");
     }
 

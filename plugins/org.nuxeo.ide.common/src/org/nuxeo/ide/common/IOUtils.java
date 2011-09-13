@@ -17,13 +17,18 @@
 package org.nuxeo.ide.common;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -263,6 +268,42 @@ public class IOUtils {
         file.delete();
         file.mkdir();
         return file;
+    }
+
+    public static List<String> readLines(File file) throws IOException {
+        List<String> lines = new ArrayList<String>();
+        BufferedReader reader = null;
+        try {
+            InputStream in = new FileInputStream(file);
+            reader = new BufferedReader(new InputStreamReader(in));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                lines.add(line);
+            }
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                }
+            }
+        }
+        return lines;
+    }
+
+    public static void writeLines(File file, List<String> lines)
+            throws IOException {
+        PrintWriter out = null;
+        try {
+            out = new PrintWriter(new FileOutputStream(file));
+            for (String line : lines) {
+                out.println(line);
+            }
+        } finally {
+            if (out != null) {
+                out.close();
+            }
+        }
     }
 
     public static String readFile(File file) throws IOException {

@@ -16,36 +16,32 @@
  */
 package org.nuxeo.ide.sdk.server;
 
-import org.nuxeo.ide.common.UI;
-import org.nuxeo.ide.sdk.SDKInfo;
+import java.io.File;
+
+import org.eclipse.jdt.internal.launching.StandardVMType;
+import org.eclipse.jdt.launching.IVMInstall;
+import org.eclipse.jdt.launching.JavaRuntime;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class StopServer extends ProcessRunner {
+public class VMUtils {
 
-    protected ServerController ctrl;
-
-    public StopServer(ServerController ctrl) {
-        // super(new ProcessBuilder(
-        // new File(ctrl.root, "bin/nuxeoctl").getAbsolutePath(), "stop"));
-        super(SDKInfo.newProcessBuilder(ctrl.root, "stop"));
-        this.ctrl = ctrl;
+    public static String getJavaExecutablePath() {
+        return getJavaExecutable().getAbsolutePath();
     }
 
-    @Override
-    protected void started() {
-        ctrl.fireServerStopping();
+    public static String getJavaExecutablePath(IVMInstall vm) {
+        return getJavaExecutable(vm).getAbsolutePath();
     }
 
-    @Override
-    protected void terminated(int status, Throwable e) {
-        if (e != null) {
-            UI.showError("Failed to stop Nuxeo Server" + e.getMessage(), e);
-        } else {
-            ctrl.fireServerStopped();
-        }
+    public static File getJavaExecutable() {
+        return getJavaExecutable(JavaRuntime.getDefaultVMInstall());
+    }
+
+    public static File getJavaExecutable(IVMInstall vm) {
+        return StandardVMType.findJavaExecutable(vm.getInstallLocation());
     }
 
 }

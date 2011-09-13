@@ -18,6 +18,7 @@ package org.nuxeo.ide.sdk;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
@@ -219,6 +220,15 @@ public class NuxeoSDK {
         List<IProject> nxProjects = getNuxeoProjects();
         if (!nxProjects.isEmpty()) {
             doBuildOperation(IncrementalProjectBuilder.FULL_BUILD, nxProjects);
+        }
+    }
+
+    public static void rebuildNuxeoProject(IProject project)
+            throws CoreException {
+        List<IProject> nxProjects = getNuxeoProjects();
+        if (!nxProjects.isEmpty()) {
+            doBuildOperation(IncrementalProjectBuilder.FULL_BUILD,
+                    Collections.singletonList(project));
         }
     }
 
