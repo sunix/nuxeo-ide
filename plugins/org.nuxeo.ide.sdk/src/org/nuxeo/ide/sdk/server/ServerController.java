@@ -207,8 +207,7 @@ public class ServerController implements ServerConstants {
             jarData.setGenerateManifest(false);
             jarData.setManifestLocation(mf.getFullPath());
         }
-        IPath path = Path.fromOSString(new File(root.getAbsolutePath(),
-                "nxserver/plugins").getAbsolutePath());
+        IPath path = Path.fromOSString(new File(root.getAbsolutePath()).getAbsolutePath());
         jarData.setJarLocation(path.append(project.getName() + ".jar"));
         try {
             jarData.setElements(collectElementsToExport(project));
