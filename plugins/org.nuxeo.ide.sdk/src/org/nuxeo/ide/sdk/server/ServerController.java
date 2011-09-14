@@ -47,7 +47,7 @@ import org.nuxeo.ide.sdk.SDKInfo;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
- * 
+ *
  */
 public class ServerController implements ServerConstants {
 
@@ -65,7 +65,7 @@ public class ServerController implements ServerConstants {
 
     public ServerController(File root) {
         this.root = root;
-        this.listeners = new ListenerList();
+        listeners = new ListenerList();
     }
 
     public void addServerLifeCycleListener(ServerLifeCycleListener listener) {
