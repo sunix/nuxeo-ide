@@ -283,7 +283,7 @@ public class NuxeoSDK {
             throws CoreException {
         ArrayList<IJavaProject> nxProjects = new ArrayList<IJavaProject>();
         for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
-            if (project.hasNature(NuxeoNature.ID)) {
+            if (project.isOpen() && project.hasNature(NuxeoNature.ID)) {
                 nxProjects.add(JavaCore.create(project));
             }
         }
