@@ -80,7 +80,7 @@ public class DocumentAdapterWizardPage extends FeatureWizardPage {
             StudioProjectBinding binding = ConnectPlugin.getStudioProvider().getBinding(
                     project);
             if (binding == null) {
-                UI.showWarning("No schemas are available since the project you selected is not nound to Nuxeo Studio!");
+                UI.showWarning("No schemas are available since the project you selected is not bound to Nuxeo Studio!");
             } else {
                 table.setInput(binding.getSchemas());
             }
