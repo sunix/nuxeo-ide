@@ -20,7 +20,6 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.nuxeo.ide.sdk.projects.AbstractProjectWizard;
 import org.nuxeo.ide.sdk.projects.NuxeoProjectPage1;
 import org.nuxeo.ide.sdk.projects.NuxeoProjectPage2;
-import org.nuxeo.ide.sdk.projects.NuxeoProjectPage3;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -33,7 +32,7 @@ public class PluginProjectWizard extends AbstractProjectWizard {
     @Override
     protected WizardPage[] createPages() {
         return new WizardPage[] { new NuxeoProjectPage1(),
-                new NuxeoProjectPage2(), new NuxeoProjectPage3() };
+                new NuxeoProjectPage2() };
     }
 
 }
