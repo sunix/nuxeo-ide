@@ -1,8 +1,0 @@
-<panel cols="1" layout="grid">
-
-<text hfill="true" wrap="true" trim="false">Select a template form the ones below: 
-</text>
-
-<listbox id="template" hfill="true" vfill="true" />
-
-</panel>
