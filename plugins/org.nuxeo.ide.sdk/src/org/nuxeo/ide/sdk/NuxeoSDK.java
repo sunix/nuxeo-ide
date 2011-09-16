@@ -177,6 +177,10 @@ public class NuxeoSDK {
         return new File(root, "nxserver/lib");
     }
 
+    public File getSysLibDir() {
+        return new File(root, "lib");
+    }
+
     public File getBundlesDir() {
         return new File(root, "nxserver/bundles");
     }

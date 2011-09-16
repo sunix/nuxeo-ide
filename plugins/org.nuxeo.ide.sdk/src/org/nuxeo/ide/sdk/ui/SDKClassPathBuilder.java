@@ -19,6 +19,8 @@ package org.nuxeo.ide.sdk.ui;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
@@ -37,6 +39,7 @@ import org.osgi.service.prefs.BackingStoreException;
 public class SDKClassPathBuilder {
 
     public static IClasspathEntry[] build(NuxeoSDK sdk) {
+        File syslib = sdk.getSysLibDir();
         File lib = sdk.getLibDir();
         File bundles = sdk.getBundlesDir();
         File bundlesSrc = sdk.getBundlesSrcDir();
@@ -46,8 +49,17 @@ public class SDKClassPathBuilder {
 
         collectPaths(bundles, bundlesSrc, result);
         collectPaths(lib, libSrc, result);
+        collectPaths(syslib, libSrc, result);
 
         collectUserLibraries(libSrc, result);
+
+        Collections.sort(result, new Comparator<IClasspathEntry>() {
+            @Override
+            public int compare(IClasspathEntry o1, IClasspathEntry o2) {
+                return o1.getPath().lastSegment().compareTo(
+                        o2.getPath().lastSegment());
+            }
+        });
 
         return result.toArray(new IClasspathEntry[result.size()]);
     }
