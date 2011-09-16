@@ -82,7 +82,7 @@ public class DocumentSchema implements StudioFeature,
 
         protected boolean multivalue;
 
-        protected String componentType;
+        protected Field[] children;
 
         public void setId(String id) {
             this.id = id;
@@ -108,20 +108,24 @@ public class DocumentSchema implements StudioFeature,
             return multivalue;
         }
 
-        public void setComponentType(String componentType) {
-            this.componentType = componentType;
-        }
-
-        public String getComponentType() {
-            return componentType;
-        }
-
         public boolean isList() {
             return "list".equals(type);
         }
 
         public boolean isBlob() {
             return "blob".equals(type);
+        }
+
+        public boolean hasChildren() {
+            return children != null && children.length > 0;
+        }
+
+        public Field[] getChildren() {
+            return children;
+        }
+
+        public void setChildren(Field[] children) {
+            this.children = children;
         }
     }
 
@@ -152,8 +156,12 @@ public class DocumentSchema implements StudioFeature,
                 field.setId(jp.getText());
             } else if (key.equals("type")) {
                 field.setType(jp.getText());
-            } else if (key.equals("componentType")) {
-                field.setComponentType(jp.getText());
+            } else if (key.equals("subFields")) {
+                ArrayList<Field> fields = new ArrayList<Field>();
+                while (jp.nextToken() != JsonToken.END_ARRAY) {
+                    fields.add(readField(jp));
+                }
+                field.setChildren(fields.toArray(new Field[fields.size()]));
             } else if (key.equals("multivalue")) {
                 field.setMultivalue(jp.getBooleanValue());
             }
