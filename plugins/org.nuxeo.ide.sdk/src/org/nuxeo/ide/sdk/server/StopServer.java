@@ -28,8 +28,6 @@ public class StopServer extends ProcessRunner {
     protected ServerController ctrl;
 
     public StopServer(ServerController ctrl) {
-        // super(new ProcessBuilder(
-        // new File(ctrl.root, "bin/nuxeoctl").getAbsolutePath(), "stop"));
         super(SDKInfo.newProcessBuilder(ctrl.root, "stop"));
         this.ctrl = ctrl;
     }

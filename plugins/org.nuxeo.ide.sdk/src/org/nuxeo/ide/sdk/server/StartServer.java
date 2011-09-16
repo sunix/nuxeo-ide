@@ -30,23 +30,11 @@ public class StartServer extends ProcessRunner {
         return (os.indexOf("win") >= 0);
     }
 
-    // public static String getNuxeoScriptPath() {
-    // return isWindows() ? "bin/nuxeoctl.bat" : "bin/nuxeoctl";
-    // }
-
     protected ServerController ctrl;
 
     public StartServer(ServerController ctrl) {
-        // super(new ProcessBuilder(
-        // new File(ctrl.root, getNuxeoScriptPath()).getAbsolutePath(),
-        // "start"));
         super(SDKInfo.newProcessBuilder(ctrl.root, "start"));
         this.ctrl = ctrl;
-    }
-
-    @Override
-    protected void output(String line) {
-        System.out.println(line);
     }
 
     @Override

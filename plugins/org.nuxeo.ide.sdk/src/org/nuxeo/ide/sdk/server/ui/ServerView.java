@@ -67,14 +67,12 @@ public class ServerView extends ViewPart implements ISelectionProvider,
         if (sdk != null) {
             ctrl = new ServerController(sdk.getInfo());
             ctrl.addServerLifeCycleListener(listener);
-            System.out.println("Server initialized");
         }
         setSelection(getSelection());
     }
 
     @Override
     public void handleSDKChanged(NuxeoSDK sdk) {
-        System.out.println("SDK changed");
         initServer();
     }
 
