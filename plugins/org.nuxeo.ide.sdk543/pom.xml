@@ -2,7 +2,6 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.nuxeo.ide</groupId>
   <artifactId>org.nuxeo.ide.sdk543</artifactId>
   <name>Nuxeo IDE SDK 5.4.3</name>
   <packaging>eclipse-plugin</packaging>
