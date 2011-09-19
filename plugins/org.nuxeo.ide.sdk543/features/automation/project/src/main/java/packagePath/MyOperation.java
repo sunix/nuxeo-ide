@@ -13,8 +13,9 @@ import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentRef;
 
-
-${classHeader}
+/**
+ * ${authorTag}
+ */
 @Operation(id=${className}.ID, category=Constants.${category}, <#if seam>requires=Constants.SEAM_CONTEXT, </#if>label="${label!operationId}", description="${description}")
 public class ${className} {
 
