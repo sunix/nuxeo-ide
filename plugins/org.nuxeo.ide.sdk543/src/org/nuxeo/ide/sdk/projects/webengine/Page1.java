@@ -40,16 +40,34 @@ public class Page1 extends NuxeoProjectPage1 {
         super.update(ctx);
         // let the app name to inherit from root class name
         // this way we have a simpler form
-        ctx.setProperty(form, "className", "appName");
+        ctx.setProperty(form, "className");
         // ctx.setPropertyIfNotNull(form, "appName");
         String rootPath = form.getWidgetValueAsString("rootPath");
+        rootPath = normalizeRootPath(rootPath);
+        ctx.put("appName", generateNameFromRootPath(rootPath));
+        ctx.put("rootPath", rootPath);
+        ctx.setPropertyIfNotNull(form, "base");
+    }
+
+    protected String normalizeRootPath(String rootPath) {
+        if (rootPath.endsWith("/")) {
+            rootPath = rootPath.substring(0, rootPath.length() - 1);
+        }
         if (!rootPath.startsWith("/")) {
             // a bug in webengine generate a broken link to the module if the
             // rootPath is not starting with /
             rootPath = "/" + rootPath;
         }
-        ctx.put("rootPath", rootPath);
-        ctx.setPropertyIfNotNull(form, "base");
+        return rootPath;
     }
 
+    protected String generateNameFromRootPath(String rootPath) {
+        if (rootPath.startsWith("/")) {
+            rootPath = rootPath.substring(1);
+        }
+        if (rootPath.endsWith("/")) {
+            rootPath = rootPath.substring(0, rootPath.length() - 1);
+        }
+        return rootPath;
+    }
 }
