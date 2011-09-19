@@ -20,10 +20,12 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -31,6 +33,7 @@ import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.nuxeo.ide.common.Activator;
+import org.nuxeo.ide.common.wizards.ImportProject;
 import org.nuxeo.ide.sdk.SDKPlugin;
 import org.nuxeo.ide.sdk.templates.TemplateRegistry;
 
@@ -48,6 +51,21 @@ public class CreateFeatureFromTemplate extends WorkspaceModifyOperation {
 
     public FeatureTemplateContext getTemplateContext() {
         return ctx;
+    }
+
+    protected void postCreate() {
+        if (ctx.getProject() != null) {
+            IProject project = ctx.getProject().getProject();
+            String path = ctx.getResourceToSelect();
+            if (path != null) {
+                IResource r = project.findMember(new Path(path));
+                if (r != null) {
+                    ImportProject.selectAndReveal(r);
+                    return;
+                }
+            }
+            ImportProject.selectAndReveal(project);
+        }
     }
 
     @Override
@@ -89,6 +107,7 @@ public class CreateFeatureFromTemplate extends WorkspaceModifyOperation {
             CreateFeatureFromTemplate op) {
         try {
             ctx.run(true, true, op);
+            op.postCreate();
         } catch (InterruptedException e) {
             return false;
         } catch (InvocationTargetException e) {

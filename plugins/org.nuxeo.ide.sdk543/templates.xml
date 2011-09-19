@@ -39,6 +39,7 @@
 
     <rename path="src/main/resources/skin/views/MyRoot" to="src/main/resources/skin/views/${className}" />
 
+    <select path = "src/main/java/${packagePath}/${className}.java" />
   </project>
 
   <feature id ="operation" src="features/automation/project">
@@ -50,6 +51,8 @@
     <dependency groupId="org.nuxeo.ecm.automation" artifactId="nuxeo-automation-core"/>
 
     <transform path="src/main/java/packagePath/MyOperation.java" to="src/main/java/${packagePath}/${className}.java" />
+    
+    <select path = "src/main/java/${packagePath}/${className}.java" />
   </feature>
 
   <feature id ="docadapter" src="features/docadapter/project">
@@ -62,6 +65,8 @@
 
     <transform path="src/main/java/packagePath/MyDocumentAdapterFactory.java" to="src/main/java/${packagePath}/${className}Factory.java" />
     <transform path="src/main/java/packagePath/MyDocumentAdapter.java" to="src/main/java/${packagePath}/${className}.java" />
+    
+    <select path = "src/main/java/${packagePath}/${className}.java" />
   </feature>
 
   <feature id ="listener" src="features/listener/project">
@@ -73,6 +78,8 @@
     <dependency groupId="org.nuxeo.ecm.core" artifactId="nuxeo-core-event"/>
 
     <transform path="src/main/java/packagePath/MyListener.java" to="src/main/java/${packagePath}/${className}.java" />
+    
+    <select path = "src/main/java/${packagePath}/${className}.java" />
   </feature>
 
   <feature id ="gadget" src="features/gadget/project">
@@ -89,6 +96,7 @@
 	<transform path="src/main/resources/gadget/${gadgetName}/gadgets-contrib.xml" to="src/main/resources/gadget/${gadgetName}/gadgets-contrib.xml"/>
 	<transform path="src/main/resources/gadget/${gadgetName}/dynamic_messages.properties" to="src/main/resources/gadget/${gadgetName}/dynamic_messages.properties"/>
 
+    <select path = "src/main/resources/gadget/${gadgetName}" />
   </feature>
 
   <feature id ="automation-gadget" src="features/automation-gadget/project">
@@ -105,6 +113,7 @@
 	<transform path="src/main/resources/gadget/${gadgetName}/gadgets-contrib.xml" to="src/main/resources/gadget/${gadgetName}/gadgets-contrib.xml"/>
 	<transform path="src/main/resources/gadget/${gadgetName}/dynamic_messages.properties" to="src/main/resources/gadget/${gadgetName}/dynamic_messages.properties"/>
 
+    <select path = "src/main/resources/gadget/${gadgetName}" />
   </feature>
 
   <feature id ="securityPolicy" src="features/securityPolicy/project">
@@ -116,6 +125,8 @@
  
     <transform path="src/main/java/packagePath/MySecurityPolicy.java" to="src/main/java/${packagePath}/${className}.java" />
 <!--     <transform path="src/main/java/packagePath/TestMySecurityPolicy.java" to="src/test/java/${packagePath}/test/Test${className}.java" /> -->
+
+    <select path = "src/main/java/${packagePath}/${className}.java" />
   </feature>
 
   <feature id="permission" src="features/permission">

@@ -18,7 +18,9 @@ package org.nuxeo.ide.sdk.projects;
 
 import java.io.IOException;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.nuxeo.ide.common.wizards.ImportProject;
 import org.nuxeo.ide.sdk.SDKPlugin;
 import org.nuxeo.ide.sdk.templates.TemplateContext;
@@ -39,6 +41,21 @@ public class CreateProjectFromTemplate extends ImportProject {
 
     public TemplateContext getTemplateContext() {
         return ctx;
+    }
+
+    @Override
+    protected void postCreate() {
+        if (project != null) {
+            String path = ctx.getResourceToSelect();
+            if (path != null) {
+                IResource r = project.findMember(new Path(path));
+                if (r != null) {
+                    selectAndReveal(r);
+                    return;
+                }
+            }
+            selectAndReveal(project);
+        }
     }
 
     @Override

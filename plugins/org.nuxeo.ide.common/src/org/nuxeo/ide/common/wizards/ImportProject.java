@@ -33,10 +33,12 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.operation.IRunnableContext;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
+import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
 import org.nuxeo.ide.common.Activator;
 
 /**
@@ -58,6 +60,8 @@ public class ImportProject extends WorkspaceModifyOperation {
     protected File projectRoot;
 
     protected IWorkingSet[] workingSets;
+
+    protected IProject project;
 
     public ImportProject(File projectRoot) {
         this(projectRoot, null);
@@ -92,6 +96,12 @@ public class ImportProject extends WorkspaceModifyOperation {
         // do nothing by default
     }
 
+    protected void postCreate() {
+        if (project != null) {
+            selectAndReveal(project);
+        }
+    }
+
     protected void execute(final IProgressMonitor monitor)
             throws InvocationTargetException, InterruptedException {
         try {
@@ -119,7 +129,7 @@ public class ImportProject extends WorkspaceModifyOperation {
                 throw new OperationCanceledException();
             }
             // step 3 - create the project
-            IProject project = createExistingProject(description,
+            project = createExistingProject(description,
                     new SubProgressMonitor(monitor, 1));
             monitor.worked(1);
             if (monitor.isCanceled()) {
@@ -133,6 +143,16 @@ public class ImportProject extends WorkspaceModifyOperation {
         }
     }
 
+    public static void selectAndReveal(final IResource newResource) {
+        Display.getDefault().asyncExec(new Runnable() {
+            @Override
+            public void run() {
+                BasicNewResourceWizard.selectAndReveal(newResource,
+                        PlatformUI.getWorkbench().getActiveWorkbenchWindow());
+            }
+        });
+    }
+
     public IProject createExistingProject(IProjectDescription description,
             IProgressMonitor monitor) throws InvocationTargetException,
             InterruptedException {
@@ -143,8 +163,9 @@ public class ImportProject extends WorkspaceModifyOperation {
         try {
             monitor.beginTask("Creating Project", 100);
             project.create(description, new SubProgressMonitor(monitor, 30));
-            project.open(IResource.BACKGROUND_REFRESH, new SubProgressMonitor(
-                    monitor, 70));
+            // do not use background refresh to be able to select the project
+            // when refresh is done
+            project.open(new SubProgressMonitor(monitor, 70));
         } catch (CoreException e) {
             throw new InvocationTargetException(e);
         } finally {
@@ -164,6 +185,10 @@ public class ImportProject extends WorkspaceModifyOperation {
         }
     }
 
+    public IProject getProject() {
+        return project;
+    }
+
     public static boolean isExistingProject(String name) {
         return ResourcesPlugin.getWorkspace().getRoot().getProject(name).exists();
     }
@@ -172,6 +197,7 @@ public class ImportProject extends WorkspaceModifyOperation {
             ImportProject op) {
         try {
             ctx.run(true, true, op);
+            op.postCreate();
         } catch (InterruptedException e) {
             return false;
         } catch (InvocationTargetException e) {
