@@ -31,7 +31,7 @@ import org.nuxeo.ide.sdk.deploy.DeploymentPreferences;
  */
 public class ReloadProjects implements IViewActionDelegate {
 
-    protected ServerView view;
+    protected IServerView view;
 
     @Override
     public void run(IAction action) {
@@ -52,7 +52,7 @@ public class ReloadProjects implements IViewActionDelegate {
 
     @Override
     public void init(IViewPart view) {
-        this.view = (ServerView) view;
+        this.view = (IServerView) view;
     }
 
     public static void reload(Deployment deployment) throws Exception {

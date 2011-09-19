@@ -24,7 +24,7 @@ import org.nuxeo.ide.sdk.server.ServerController;
 import org.nuxeo.ide.sdk.server.ServerLifeCycleAdapter;
 
 public class ServerView extends ViewPart implements ISelectionProvider,
-        SDKChangedListener {
+        SDKChangedListener, IServerView {
 
     /**
      * The ID of the view as specified by the extension.
@@ -96,6 +96,13 @@ public class ServerView extends ViewPart implements ISelectionProvider,
             return;
         }
         ctrl.stopAsJob();
+    }
+
+    @Override
+    public void clearConsole() {
+        if (console != null) {
+            console.setText("");
+        }
     }
 
     /**
@@ -199,23 +206,6 @@ public class ServerView extends ViewPart implements ISelectionProvider,
     public void init(IViewSite site) throws PartInitException {
         super.init(site);
         site.setSelectionProvider(this);
-    }
-
-    static class ServerState implements ISelection {
-        protected int state;
-
-        public ServerState(int state) {
-            this.state = state;
-        }
-
-        @Override
-        public boolean isEmpty() {
-            return false;
-        }
-
-        public int getState() {
-            return state;
-        }
     }
 
 }

@@ -42,10 +42,18 @@ public class TemplateContext extends HashMap<String, Object> {
         try {
             String user = System.getProperty("user.name");
             put("user", user);
-            put("copyright",
-                    TemplatePrefs.getCopyrightHeader().replace("${user}", user));
-            put("classHeader",
-                    TemplatePrefs.getClassHeader().replace("${user}", user));
+            String copyright = CodeTemplateUtils.getCopyrightHeader();
+            if (copyright == null) {
+                copyright = CodeTemplateUtils.getCopyrightHeader().replace(
+                        "${user}", user);
+            }
+            put("copyright", copyright.replace("${user}", user));
+            String author = CodeTemplateUtils.getAuthorTag();
+            if (author != null) {
+                put("authorTag", author.replace("${user}", user));
+            } else {
+                put("authorTag", "");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -107,5 +107,31 @@
 
   </feature>
 
+  <feature id ="securityPolicy" src="features/securityPolicy/project">
+    <name>Security Policy</name>
+    <description>A Security Policy</description>
+ 
+    <extension src="features/securityPolicy/extensions.xml"/>
+    <dependency groupId="org.nuxeo.ecm.core" artifactId="nuxeo-core"/>
+ 
+    <transform path="src/main/java/packagePath/MySecurityPolicy.java" to="src/main/java/${packagePath}/${className}.java" />
+<!--     <transform path="src/main/java/packagePath/TestMySecurityPolicy.java" to="src/test/java/${packagePath}/test/Test${className}.java" /> -->
+  </feature>
+
+  <feature id="permission" src="features/permission">
+    <name>Permission</name>
+    <description>A Permission</description>
+    <transform path="extensions.xml" />
+    
+  </feature>
+
+  <feature id ="permissionVisibility" src="features/permissionVisibility/project">
+    <name>Permission Visibility</name>
+    <description>A Permission Visibility</description>
+
+    <extension src="features/permissionVisibility/extensions.xml" to="src/main/resources/OSGI-INF" />
+
+    <dependency groupId="org.nuxeo.ecm.core" artifactId="nuxeo-core"/>
+  </feature>
 
 </templates>

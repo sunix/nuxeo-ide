@@ -11,7 +11,9 @@ import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.model.PropertyException;
 
-${classHeader}
+/**
+ * ${authorTag}
+ */
 public class ${className} {
 
     protected final DocumentModel doc;

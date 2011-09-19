@@ -24,6 +24,7 @@
     <module>features/org.nuxeo.ide.sdk.feature</module>
     <module>features/org.nuxeo.ide.shell.feature</module>
     <module>sites/org.nuxeo.ide.site</module>
+    <module>plugins/org.nuxeo.ide.qatests</module>
   </modules>
 
   <scm>

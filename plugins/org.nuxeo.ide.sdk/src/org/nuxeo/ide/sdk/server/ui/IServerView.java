@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2006-2011 Nuxeo SAS (http://nuxeo.com/) and contributors.
+ * (C) Copyright 2006-2010 Nuxeo SAS (http://nuxeo.com/) and contributors.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser General Public License
@@ -12,5 +12,22 @@
  * Lesser General Public License for more details.
  *
  * Contributors:
- *     ${user}
+ *     bstefanescu
  */
+package org.nuxeo.ide.sdk.server.ui;
+
+import org.eclipse.ui.IViewPart;
+
+/**
+ * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
+ * 
+ */
+public interface IServerView extends IViewPart {
+
+    public void start() throws Exception;
+
+    public void stop() throws Exception;
+
+    public void clearConsole();
+
+}

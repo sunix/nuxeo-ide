@@ -1,0 +1,16 @@
+<component name="${package}.permission.contrib.${className}">
+
+  <require>org.nuxeo.ecm.core.security.defaultPermissions</require>
+
+  <extension target="org.nuxeo.ecm.core.security.SecurityService"
+    point="permissions">
+
+    <permission name="${name}">
+    <#list selectedPermission as permissionName>
+      <include>${permissionName}</include>
+    </#list>
+    </permission>
+
+  </extension>
+
+</component>
