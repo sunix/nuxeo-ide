@@ -51,7 +51,7 @@ public class AutoDeployConfiguration implements IViewActionDelegate {
 
     @Override
     public void init(IViewPart view) {
-        this.view = (ServerView) view;
+        this.view = view;
     }
 
 }

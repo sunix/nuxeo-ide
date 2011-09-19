@@ -16,33 +16,18 @@
  */
 package org.nuxeo.ide.sdk.server.ui;
 
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class ClearConsole implements IViewActionDelegate {
+public interface IServerView extends IViewPart {
 
-    protected IServerView view;
+    public void start() throws Exception;
 
-    @Override
-    public void run(IAction action) {
-        if (view != null) {
-            view.clearConsole();
-        }
-    }
+    public void stop() throws Exception;
 
-    @Override
-    public void selectionChanged(IAction action, ISelection selection) {
-    }
-
-    @Override
-    public void init(IViewPart view) {
-        this.view = (IServerView) view;
-    }
+    public void clearConsole();
 
 }

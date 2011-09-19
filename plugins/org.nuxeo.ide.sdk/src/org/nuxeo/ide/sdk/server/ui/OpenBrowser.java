@@ -28,7 +28,7 @@ import org.eclipse.ui.IViewPart;
  */
 public class OpenBrowser implements IViewActionDelegate {
 
-    protected ServerView view;
+    protected IServerView view;
 
     @Override
     public void run(IAction action) {
@@ -41,7 +41,7 @@ public class OpenBrowser implements IViewActionDelegate {
 
     @Override
     public void init(IViewPart view) {
-        this.view = (ServerView) view;
+        this.view = (IServerView) view;
     }
 
 }

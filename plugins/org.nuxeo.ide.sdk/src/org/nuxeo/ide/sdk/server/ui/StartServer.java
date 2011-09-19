@@ -22,7 +22,6 @@ import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.sdk.server.ServerConstants;
-import org.nuxeo.ide.sdk.server.ui.ServerView.ServerState;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -30,7 +29,7 @@ import org.nuxeo.ide.sdk.server.ui.ServerView.ServerState;
  */
 public class StartServer implements IViewActionDelegate, ServerConstants {
 
-    protected ServerView view;
+    protected IServerView view;
 
     @Override
     public void run(IAction action) {
@@ -52,7 +51,7 @@ public class StartServer implements IViewActionDelegate, ServerConstants {
 
     @Override
     public void init(IViewPart view) {
-        this.view = (ServerView) view;
+        this.view = (IServerView) view;
     }
 
 }
