@@ -156,6 +156,36 @@
             name="Automation Gadget">
       </wizard>
 
+      <category
+            id="org.nuxeo.ide.security.newWizards"
+            name="Security"
+            parentCategory="org.nuxeo.ide.project.newWizards">
+      </category>
+
+      <wizard
+            category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.security.newWizards"
+            class="org.nuxeo.ide.sdk.features.security.securitypolicy.SecurityPolicyWizard"
+            icon="icons/nx.gif"
+            id="org.nuxeo.ide.security.securityPolicyWizard"
+            name="Security Policy">
+      </wizard>
+
+      <wizard
+            category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.security.newWizards"
+            class="org.nuxeo.ide.sdk.features.security.permission.PermissionWizard"
+            icon="icons/nx.gif"
+            id="org.nuxeo.ide.security.permissionWizard"
+            name="Permission">
+      </wizard>
+
+      <wizard
+            category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.security.newWizards"
+            class="org.nuxeo.ide.sdk.features.security.permissionvisibility.PermissionVisibilityWizard"
+            icon="icons/nx.gif"
+            id="org.nuxeo.ide.security.permissionVisibilityWizard"
+            name="Permission Visibility">
+      </wizard>
+      
    </extension>
 
 

@@ -1,0 +1,36 @@
+<panel cols="2"  layout="grid">
+
+<text>Project:</text>
+<project id="project" hfill="true">
+<validator type="required">The project field is required</validator>
+</project>
+<text>Package:</text>
+<package id="package" hfill="true">
+<validator type="regex" value="[A-Za-z_]+(.[A-Za-z0-9_]+)*">Not a valid package name</validator>
+</package>
+<text>Permission Name:</text>
+<textbox id="name" hfill="true" />
+
+<frame layout="grid" cols="1" label="Included Permission:" hfill="true" vfill="true" colspan="2">
+
+<dynalist id="selectedPermission" multi="true" vfill="true" >
+  <item value="Write">Write</item>
+  <item value="Read">Read</item>
+  <item value="Browse">Browse</item>
+  <item value="ReadWrite">Read and Write</item>
+  <item value="AddChildren">Add Children</item>
+  <item value="RemoveChildren">Remove Children</item>
+  <item value="ReadChildren">Read Children</item>
+  <item value="WriteSecurity">Write Security</item>
+  <item value="ReadSecurity">Read Security</item>
+  <item value="WriteLifeCycle">Write LifeCycle</item>
+  <item value="ReadLifeCycle">Read LifeCycle</item>
+  <item value="ReadProperties">Read Properties</item>
+  <item value="WriteProperties">Write Properties</item>
+  <item value="ManageWorkflows">Manage Workflows</item>
+  <item value="ReviewParticipant">Review Participant</item>
+  <item value="Everything">Manage Everything</item>
+</dynalist>
+</frame>
+
+</panel>

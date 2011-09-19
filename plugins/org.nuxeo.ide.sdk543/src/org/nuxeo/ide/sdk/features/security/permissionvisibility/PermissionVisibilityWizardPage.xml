@@ -1,0 +1,31 @@
+<panel cols="2"  layout="grid">
+
+<text>Project:</text>
+<project id="project" hfill="true">
+<validator type="required">The project field is required</validator>
+</project>
+<text>Package:</text>
+<package id="package" hfill="true">
+<validator type="regex" value="[A-Za-z_]+(.[A-Za-z0-9_]+)*">Not a valid package name</validator>
+</package>
+<text>Document Type:</text>
+<combo id="docType" >
+  Document,Note,File
+</combo>
+
+<frame layout="grid" cols="5" label="Add Item:" hfill="true" vfill="true" colspan="5">
+
+<combo id="selectedPermission" >
+  Read,Write,Everything
+</combo>
+<text>Order:</text>
+<textbox id="order" value=" 100" >
+<validator type="regex" value="[0-9]*">Not a valid number</validator>
+</textbox>
+<checkbox id="show" value="true">Show</checkbox>
+<button id="add">Add</button>
+<permVisibilityTable id="addedPermission" hfill="true" vfill="true"/>
+
+</frame>
+
+</panel>

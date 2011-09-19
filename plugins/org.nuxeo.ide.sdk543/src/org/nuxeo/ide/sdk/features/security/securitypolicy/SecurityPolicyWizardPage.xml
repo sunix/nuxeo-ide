@@ -1,0 +1,20 @@
+<panel cols="2"  layout="grid">
+
+<text>Project:</text>
+<project id="project" hfill="true">
+<validator type="required">The project field is required</validator>
+</project>
+<text>Package:</text>
+<package id="package" hfill="true">
+<validator type="regex" value="[A-Za-z_]+(.[A-Za-z0-9_]+)*">Not a valid package name</validator>
+</package>
+<text>Name:</text>
+<textbox id="className" hfill="true">
+<validator type="regex" value="[A-Za-z]+[A-Za-z0-9_]*">Not a valid class name</validator>
+</textbox>
+<text>Order:</text>
+<textbox id="order" value="100" hfill="true">
+<validator type="regex" value="[0-9]*">Not a valid number</validator>
+</textbox>
+
+</panel>

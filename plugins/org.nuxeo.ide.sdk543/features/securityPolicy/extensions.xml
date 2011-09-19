@@ -1,0 +1,12 @@
+<component name="${package}.securityPolicy.contrib.${className}">
+
+  <extension target="org.nuxeo.ecm.core.security.SecurityService"
+    point="policies">
+
+    <policy name="${name}"
+      class="${package}.${className}"
+      order="${order}" />
+
+  </extension>
+
+</component>
