@@ -35,7 +35,7 @@
 
   <properties>
     <tycho-version>0.12.0</tycho-version>
-    <platform-version-name>indigo</platform-version-name>
+    <platform-version-name>helios</platform-version-name>
     <eclipse-site>http://download.eclipse.org/releases/${platform-version-name}</eclipse-site>
     <wikitext-site>http://download.eclipse.org/tools/mylyn/update/weekly</wikitext-site>
     <swtbot-site>http://download.eclipse.org/technology/swtbot/${platform-version-name}/dev-build/update-site</swtbot-site>
