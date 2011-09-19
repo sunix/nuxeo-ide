@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.nuxeo.ide.shell.feature"
+      id="org.nuxeo.ide.shell"
       label="Nuxeo Shell Feature"
       version="1.0.0.qualifier">
 
