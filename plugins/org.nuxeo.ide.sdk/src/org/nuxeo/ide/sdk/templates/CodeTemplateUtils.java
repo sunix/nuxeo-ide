@@ -14,7 +14,7 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.sdk.codestyle;
+package org.nuxeo.ide.sdk.templates;
 
 import java.io.IOException;
 import java.util.regex.Matcher;

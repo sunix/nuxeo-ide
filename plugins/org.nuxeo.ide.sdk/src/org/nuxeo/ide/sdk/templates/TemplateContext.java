@@ -20,7 +20,6 @@ import java.io.File;
 import java.util.HashMap;
 
 import org.nuxeo.ide.common.forms.Form;
-import org.nuxeo.ide.sdk.codestyle.CodeTemplateUtils;
 
 /**
  * The base class for all template contexts.
@@ -45,7 +44,7 @@ public class TemplateContext extends HashMap<String, Object> {
             put("user", user);
             String copyright = CodeTemplateUtils.getCopyrightHeader();
             if (copyright == null) {
-                copyright = TemplatePrefs.getCopyrightHeader().replace(
+                copyright = CodeTemplateUtils.getCopyrightHeader().replace(
                         "${user}", user);
             }
             put("copyright", copyright.replace("${user}", user));
