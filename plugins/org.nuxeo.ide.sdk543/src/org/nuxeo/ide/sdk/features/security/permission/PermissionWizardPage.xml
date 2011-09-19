@@ -13,7 +13,7 @@
 
 <frame layout="grid" cols="1" label="Included Permission:" hfill="true" vfill="true" colspan="2">
 
-<dynalist id="selectedPermission" multi="true" vfill="true" >
+<dynalist id="selectedPermission" multi="true" vfill="true" hfill="true" height="200">
   <item value="Write">Write</item>
   <item value="Read">Read</item>
   <item value="Browse">Browse</item>

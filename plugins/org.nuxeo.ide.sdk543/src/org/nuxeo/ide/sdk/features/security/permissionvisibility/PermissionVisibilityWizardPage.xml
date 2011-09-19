@@ -24,7 +24,7 @@
 </textbox>
 <checkbox id="show" value="true">Show</checkbox>
 <button id="add">Add</button>
-<permVisibilityTable id="addedPermission" hfill="true" vfill="true"/>
+<permVisibilityTable id="addedPermission" hfill="true" vfill="true" colspan="5"/>
 
 </frame>
 

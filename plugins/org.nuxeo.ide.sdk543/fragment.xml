@@ -26,7 +26,7 @@
             preferredPerspectives="org.eclipse.jdt.ui.JavaPerspective,org.eclipse.jdt.ui.JavaBrowsingPerspective,org.eclipse.jdt.ui.JavaHierarchyPerspective"
             project="true">
       </wizard>
-      <wizard
+      <!--wizard
             category="org.nuxeo.ide.project.newWizards"
             class="org.nuxeo.ide.sdk.projects.jaxrs.JAXRSProjectWizard"
             icon="icons/jaxrs.gif"
@@ -34,7 +34,7 @@
             name="Nuxeo JAX-RS Application"
             preferredPerspectives="org.eclipse.jdt.ui.JavaPerspective,org.eclipse.jdt.ui.JavaBrowsingPerspective,org.eclipse.jdt.ui.JavaHierarchyPerspective"
             project="true">
-      </wizard>
+      </wizard-->
 
       <category
             id="org.nuxeo.ide.service.newWizards"
@@ -42,7 +42,7 @@
             parentCategory="org.nuxeo.ide.project.newWizards">
       </category>
 
-      <wizard
+      <!--wizard
             category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.service.newWizards"
             class="org.nuxeo.ide.sdk.features.FakeWizard"
             icon="icons/service.gif"
@@ -55,7 +55,7 @@
             icon="icons/xpoint.gif"
             id="org.nuxeo.ide.service.ExtensionPointWizard"
             name="Extension Point">
-      </wizard>
+      </wizard-->
 
       <category
             id="org.nuxeo.ide.automation.newWizards"
@@ -77,7 +77,7 @@
             parentCategory="org.nuxeo.ide.project.newWizards">
       </category>
 
-      <wizard
+      <!--wizard
             category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.webengine.newWizards"
             class="org.nuxeo.ide.sdk.features.FakeWizard"
             icon="icons/webroot.gif"
@@ -97,7 +97,7 @@
             icon="icons/webview.gif"
             id="org.nuxeo.ide.webengine.webViewWizard"
             name="Web View">
-      </wizard>
+      </wizard-->
 
       <category
             id="org.nuxeo.ide.core.newWizards"
@@ -105,13 +105,13 @@
             parentCategory="org.nuxeo.ide.project.newWizards">
       </category>
 
-      <wizard
+      <!--wizard
             category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.core.newWizards"
             class="org.nuxeo.ide.sdk.features.FakeWizard"
             icon="icons/converter.gif"
             id="org.nuxeo.ide.core.converterWizard"
             name="Document Converter">
-      </wizard>
+      </wizard-->
       <wizard
             category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.core.newWizards"
             class="org.nuxeo.ide.sdk.features.listener.ListenerWizard"
@@ -126,13 +126,13 @@
             parentCategory="org.nuxeo.ide.project.newWizards">
       </category>
 
-      <wizard
+      <!--wizard
             category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.seam.newWizards"
             class="org.nuxeo.ide.sdk.features.FakeWizard"
             icon="icons/seam.gif"
             id="org.nuxeo.ide.seam.seamBeanWizard"
             name="Seam Bean">
-      </wizard>
+      </wizard-->
 
       <category
             id="org.nuxeo.ide.gadget.newWizards"
