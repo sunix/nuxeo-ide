@@ -11,7 +11,6 @@
  */
 package org.nuxeo.ide.shell.views;
 
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
@@ -39,25 +38,33 @@ import org.nuxeo.shell.cmds.ConsoleReaderFactory;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
- *
+ * 
  */
-public class Console extends StyledText implements ConsoleReaderFactory, KeyListener, VerifyKeyListener, VerifyListener, LineStyleListener {
+public class Console extends StyledText implements ConsoleReaderFactory,
+        KeyListener, VerifyKeyListener, VerifyListener, LineStyleListener {
 
     protected Method complete;
+
     protected ConsoleReader reader;
+
     protected final In in;
+
     protected final Writer out;
+
     protected Font font;
+
     protected CompletionBuffer completionBuf = null;
+
     protected Character mask;
+
     protected StringBuilder pwd;
 
     public Console(Composite parent) throws Exception {
-        super (parent, SWT.H_SCROLL | SWT.V_SCROLL);
+        super(parent, SWT.H_SCROLL | SWT.V_SCROLL);
         in = new In();
         out = new Out();
         reader = new ConsoleReader(in, out, null, new SWTTerminal(this));
-        //reader.setCompletionHandler(new SwingCompletionHandler(this));
+        // reader.setCompletionHandler(new SwingCompletionHandler(this));
         complete = reader.getClass().getDeclaredMethod("complete");
         complete.setAccessible(true);
         setMargins(6, 6, 6, 6);
@@ -123,13 +130,13 @@ public class Console extends StyledText implements ConsoleReaderFactory, KeyList
         // if not writing in the last line move to last line
         int rows = getLineCount();
         int offset = getCaretOffset();
-        if (getLineAtOffset(offset) != rows-1) {
+        if (getLineAtOffset(offset) != rows - 1) {
             if (e.character >= 32 && e.character < 256) {
                 setSelection(getCharCount());
             }
         } else if (e.keyCode == SWT.ARROW_LEFT || e.keyCode == SWT.BS) {
             // avoid moving cursor in prompt area
-            String text = getLine(rows-1);
+            String text = getLine(rows - 1);
             int lineStart = getCharCount() - text.length();
             int cmdStart = lineStart + getPrompt().length();
             if (offset <= cmdStart) {
@@ -156,7 +163,7 @@ public class Console extends StyledText implements ConsoleReaderFactory, KeyList
             if (mask != null) {
                 String text = pwd == null ? "" : pwd.toString();
                 pwd = null;
-                in.put(text+"\n");
+                in.put(text + "\n");
                 return;
             }
             String text = getCommandText().trim();
@@ -168,16 +175,17 @@ public class Console extends StyledText implements ConsoleReaderFactory, KeyList
                     reader.getHistory().addToHistory(text);
                     reader.getHistory().moveToEnd();
                 }
-                in.put(text+"\n");
+                in.put(text + "\n");
             }
         }
     }
 
     protected StyleRange sr = null;
+
     @Override
     public void verifyText(VerifyEvent e) {
         sr = null;
-        //System.out.println("]]]]]] "+e.start+":"+e.end+": "+e.text);
+        // System.out.println("]]]]]] "+e.start+":"+e.end+": "+e.text);
         if (mask != null) {
             if (e.text.length() == 1) {
                 if (e.text.charAt(0) >= 32) {
@@ -185,32 +193,32 @@ public class Console extends StyledText implements ConsoleReaderFactory, KeyList
                         pwd = new StringBuilder();
                     }
                     pwd.append(e.text.charAt(0));
-                    e.text = ""+mask.charValue();
+                    e.text = "" + mask.charValue();
                 }
             }
         } else {
-            // remove format tags and store style range info to be used to apply styles
-            //            int i = e.text.indexOf("CREDITS");
-            //            sr = new StyleRange();
-            //            sr.start = e.start+i;
-            //            sr.length = "CREDITS".length();
-            //            sr.fontStyle = SWT.BOLD;
-            //            sr.foreground = getDisplay().getSystemColor(SWT.COLOR_WHITE);
-            //TODO
+            // remove format tags and store style range info to be used to apply
+            // styles
+            // int i = e.text.indexOf("CREDITS");
+            // sr = new StyleRange();
+            // sr.start = e.start+i;
+            // sr.length = "CREDITS".length();
+            // sr.fontStyle = SWT.BOLD;
+            // sr.foreground = getDisplay().getSystemColor(SWT.COLOR_WHITE);
+            // TODO
         }
     }
 
     @Override
     public void lineGetStyle(LineStyleEvent event) {
         if (sr != null) {
-            int i = event.lineOffset+event.lineText.length();
+            int i = event.lineOffset + event.lineText.length();
             if (sr.start < i && event.lineOffset <= sr.start) {
-                event.styles = new StyleRange[] {sr};
+                event.styles = new StyleRange[] { sr };
                 sr = null;
             }
         }
     }
-
 
     public void exit() {
         in.put("exit 1\n");
@@ -219,7 +227,7 @@ public class Console extends StyledText implements ConsoleReaderFactory, KeyList
     public void complete() {
         syncBuf();
         completionBuf = new CompletionBuffer(getCommandTextBeforeCaret());
-        System.out.println("#start: "+completionBuf.toString());
+        // System.out.println("#start: "+completionBuf.toString());
         try {
             if (!((Boolean) complete.invoke(reader))) {
                 beep();
@@ -234,7 +242,8 @@ public class Console extends StyledText implements ConsoleReaderFactory, KeyList
     }
 
     public void setCommandText(String text) {
-        setSelection(getCommandLineOffset()+getPrompt().length(), getCharCount());
+        setSelection(getCommandLineOffset() + getPrompt().length(),
+                getCharCount());
         insert(text);
         setSelection(getCharCount());
     }
@@ -257,7 +266,7 @@ public class Console extends StyledText implements ConsoleReaderFactory, KeyList
     }
 
     public final String getCommandLine() {
-        return getLine(getLineCount()-1);
+        return getLine(getLineCount() - 1);
     }
 
     public final String getCommandText() {
@@ -266,7 +275,8 @@ public class Console extends StyledText implements ConsoleReaderFactory, KeyList
 
     public final String getCommandTextBeforeCaret() {
         String line = getCommandLine();
-        return line.substring(getPrompt().length(), line.length() - (getCharCount() - getCaretOffset()));
+        return line.substring(getPrompt().length(), line.length()
+                - (getCharCount() - getCaretOffset()));
     }
 
     public final int getCommandLineOffset() {
@@ -304,7 +314,7 @@ public class Console extends StyledText implements ConsoleReaderFactory, KeyList
             }
             if (buf.length() == 0) {
                 throw new IllegalStateException(
-                "invalid state for console input stream");
+                        "invalid state for console input stream");
             }
             char c = buf.charAt(0);
             buf.deleteCharAt(0);
@@ -338,11 +348,11 @@ public class Console extends StyledText implements ConsoleReaderFactory, KeyList
             if (len == 0) {
                 return;
             }
-            //            System.out.print(">in ");
-            //            for (int i=0; i<len; i++) {
-            //                System.out.print(((int)cbuf[off+i])+"["+cbuf[off+i]+"]");
-            //            }
-            //            System.out.println();
+            // System.out.print(">in ");
+            // for (int i=0; i<len; i++) {
+            // System.out.print(((int)cbuf[off+i])+"["+cbuf[off+i]+"]");
+            // }
+            // System.out.println();
 
             if (completionBuf != null) {
                 completionBuf.append(cbuf, off, len);

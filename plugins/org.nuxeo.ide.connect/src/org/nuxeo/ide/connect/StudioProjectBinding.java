@@ -138,7 +138,28 @@ public class StudioProjectBinding {
     private final void collectSchemaPaths(DocumentSchema ds, Set<String> result) {
         String prefix = ds.getPrefix().concat(":");
         for (DocumentSchema.Field field : ds.getFields()) {
-            result.add(prefix.concat(field.getId()));
+            collectField(prefix, field, result);
+        }
+    }
+
+    private final void collectField(String prefix, DocumentSchema.Field field,
+            Set<String> result) {
+        prefix = prefix.concat(field.getId());
+        result.add(prefix);
+        if (field.hasChildren()) {
+            prefix = prefix.concat("/");
+            for (DocumentSchema.Field f : field.getChildren()) {
+                collectField(prefix, f, result);
+            }
+        } else if ("blob".equals(field.getType())) {
+            // TODO must be sent by studio to avoid hard coding.
+            prefix = prefix.concat("/");
+            result.add(prefix.concat("encoding"));
+            result.add(prefix.concat("mime-type"));
+            result.add(prefix.concat("data"));
+            result.add(prefix.concat("name"));
+            result.add(prefix.concat("length"));
+            result.add(prefix.concat("digest"));
         }
     }
 
