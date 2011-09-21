@@ -16,6 +16,7 @@
  */
 package org.nuxeo.ide.sdk.server.ui;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IViewActionDelegate;
@@ -24,6 +25,7 @@ import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.sdk.NuxeoSDK;
 import org.nuxeo.ide.sdk.deploy.Deployment;
 import org.nuxeo.ide.sdk.deploy.DeploymentPreferences;
+import org.nuxeo.ide.sdk.userlibs.UserLib;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -62,7 +64,18 @@ public class ReloadProjects implements IViewActionDelegate {
             boolean lock = view.getScrollLock();
             view.setScrollLock(false);
             try {
-                view.append("=== Nuxeo Server Reloaded ===\n");
+                view.append("=== Reloaded Projects on Target Server ===\n");
+                for (IProject project : deployment.getProjects()) {
+                    view.append("= Project: " + project.getName() + "\n");
+                }
+                UserLib[] libs = deployment.getLibraries();
+                if (libs.length > 0) {
+                    for (UserLib lib : libs) {
+                        view.append("=\n");
+                        view.append("= User Library: " + lib.getName() + "\n");
+                    }
+                }
+                view.append("==========================================\n");
             } finally {
                 view.setScrollLock(lock);
             }
