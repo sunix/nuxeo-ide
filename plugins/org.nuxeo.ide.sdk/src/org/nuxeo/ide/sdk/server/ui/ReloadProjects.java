@@ -55,10 +55,17 @@ public class ReloadProjects implements IViewActionDelegate {
         this.view = (IServerView) view;
     }
 
-    public static void reload(Deployment deployment) throws Exception {
+    public void reload(Deployment deployment) throws Exception {
         NuxeoSDK sdk = NuxeoSDK.getDefault();
         if (sdk != null) {
             sdk.reloadDeployment(deployment);
+            boolean lock = view.getScrollLock();
+            view.setScrollLock(false);
+            try {
+                view.append("=== Nuxeo Server Reloaded ===\n");
+            } finally {
+                view.setScrollLock(lock);
+            }
         }
     }
 

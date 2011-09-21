@@ -128,7 +128,6 @@ public class SDKPreferencePage extends FormPreferencePage implements
     }
 
     public void download() {
-        System.out.println("Download SDK");
     }
 
     public void reload() {

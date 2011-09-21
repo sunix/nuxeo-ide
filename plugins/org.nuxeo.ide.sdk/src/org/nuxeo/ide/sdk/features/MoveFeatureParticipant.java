@@ -73,7 +73,6 @@ public class MoveFeatureParticipant extends MoveParticipant {
         }
         type = FeatureType.fromElement(element);
         if (type != null && type.file.exists()) {
-            System.out.println("Move " + type.type + " -> " + pkg);
             return true;
         }
         return false;

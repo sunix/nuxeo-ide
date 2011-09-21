@@ -204,6 +204,17 @@
               tooltip="Clear the server console"
               class="org.nuxeo.ide.sdk.server.ui.ClearConsole">
        </action>
+       <action
+             class="org.nuxeo.ide.sdk.server.ui.ScrollLock"
+             icon="icons/lock_co.gif"
+             id="org.nuxeo.ide.sdk.ui.server.clearAction"
+             label="Scroll Lock"
+             menubarPath="console"
+             state="false"
+             style="toggle"
+             toolbarPath="console"
+             tooltip="Scroll Lock">
+       </action>
        <action id="org.nuxeo.ide.sdk.ui.server.deployAction"
               label="Projects Deployment"
           menubarPath="ctrl"

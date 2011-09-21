@@ -14,25 +14,28 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.sdk.server.ui;
+package org.nuxeo.ide.sdk.server.ui.strace;
 
-import org.eclipse.ui.IViewPart;
+import org.eclipse.swt.custom.StyleRange;
+import org.nuxeo.ide.sdk.server.ui.widgets.ConsoleText;
+import org.nuxeo.ide.sdk.server.ui.widgets.HyperlinkStyleFactory;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public interface IServerView extends IViewPart {
+public class ErrorHyperlinkFactory extends HyperlinkStyleFactory {
 
-    public void start() throws Exception;
+    public ErrorHyperlinkFactory() {
+        super("\\w[^\\(\\s]+Error[\\s|:]");
+    }
 
-    public void stop() throws Exception;
+    @Override
+    public void onClick(ConsoleText widget, StyleRange style, String text) {
+        if (text.endsWith(":")) {
+            text = text.substring(0, text.length() - 1);
+        }
+        new ExceptionHyperLink(text).onClick();
+    }
 
-    public void clearConsole();
-
-    public void setScrollLock(boolean lock);
-
-    public boolean getScrollLock();
-
-    public void append(String text);
 }

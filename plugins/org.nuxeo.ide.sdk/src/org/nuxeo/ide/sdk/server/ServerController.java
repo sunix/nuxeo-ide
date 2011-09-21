@@ -47,7 +47,7 @@ import org.nuxeo.ide.sdk.SDKInfo;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
- *
+ * 
  */
 public class ServerController implements ServerConstants {
 
@@ -268,8 +268,6 @@ public class ServerController implements ServerConstants {
         for (IPackageFragmentRoot root : roots) {
             if (root.getKind() == IPackageFragmentRoot.K_SOURCE) {
                 if (test == null || !test.isPrefixOf(root.getPath())) {
-                    System.out.println(root.getElementName() + " => "
-                            + root.getPath());
                     result.add(root);
                 }
             }

@@ -14,25 +14,16 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.sdk.server.ui;
+package org.nuxeo.ide.sdk.server.ui.widgets;
 
-import org.eclipse.ui.IViewPart;
+import org.eclipse.swt.custom.StyleRange;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public interface IServerView extends IViewPart {
+public interface StyleFactory {
 
-    public void start() throws Exception;
+    public StyleRange getStyle(String string);
 
-    public void stop() throws Exception;
-
-    public void clearConsole();
-
-    public void setScrollLock(boolean lock);
-
-    public boolean getScrollLock();
-
-    public void append(String text);
 }

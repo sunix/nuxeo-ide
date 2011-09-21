@@ -33,7 +33,6 @@ public class StartServer implements IViewActionDelegate, ServerConstants {
 
     @Override
     public void run(IAction action) {
-        System.out.println("run server");
         try {
             view.start();
         } catch (Exception e) {

@@ -67,7 +67,6 @@ public class RenameFeatureParticipant extends RenameParticipant {
                 newId = newId.substring(0, newId.length() - ".java".length());
             }
             id = type.type.getFullyQualifiedName();
-            System.out.println("Move " + id + " -> " + newId);
             return true;
         }
         return false;

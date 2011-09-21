@@ -33,7 +33,6 @@ public class StopServer implements IViewActionDelegate, ServerConstants {
 
     @Override
     public void run(IAction action) {
-        System.out.println("stop server");
         try {
             view.stop();
         } catch (Exception e) {

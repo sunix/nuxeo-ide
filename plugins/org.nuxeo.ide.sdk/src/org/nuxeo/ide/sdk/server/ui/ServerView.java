@@ -3,14 +3,15 @@ package org.nuxeo.ide.sdk.server.ui;
 import java.io.IOException;
 
 import org.eclipse.core.runtime.ListenerList;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
@@ -22,6 +23,8 @@ import org.nuxeo.ide.sdk.deploy.DeploymentPreferences;
 import org.nuxeo.ide.sdk.server.ServerConstants;
 import org.nuxeo.ide.sdk.server.ServerController;
 import org.nuxeo.ide.sdk.server.ServerLifeCycleAdapter;
+import org.nuxeo.ide.sdk.server.ui.widgets.ConsoleText;
+import org.nuxeo.ide.sdk.server.ui.widgets.StyleFactory;
 
 public class ServerView extends ViewPart implements ISelectionProvider,
         SDKChangedListener, IServerView {
@@ -31,13 +34,17 @@ public class ServerView extends ViewPart implements ISelectionProvider,
      */
     public static final String ID = "org.nuxeo.ide.sdk.server.ui.ServerView";
 
-    protected Text console;
+    // protected Text console;
+
+    protected ConsoleText console;
 
     protected ServerController ctrl;
 
     protected MyServerLifeCycleListener listener;
 
     protected ListenerList selectionListeners;
+
+    protected boolean scrollLock = false;
 
     /**
      * The constructor.
@@ -76,7 +83,7 @@ public class ServerView extends ViewPart implements ISelectionProvider,
         initServer();
     }
 
-    public Text getConsole() {
+    public ConsoleText getConsole() {
         return console;
     }
 
@@ -87,6 +94,7 @@ public class ServerView extends ViewPart implements ISelectionProvider,
             NuxeoSDK.getDefault().reloadDeployment(deploy);
         }
         // now start
+        clearConsole();
         console.setText("=== Starting Nuxeo Server ===\r\n");
         ctrl.startAsJob();
     }
@@ -101,7 +109,27 @@ public class ServerView extends ViewPart implements ISelectionProvider,
     @Override
     public void clearConsole() {
         if (console != null) {
+            console.resetStyles();
             console.setText("");
+        }
+    }
+
+    @Override
+    public void setScrollLock(boolean lock) {
+        scrollLock = lock;
+    }
+
+    @Override
+    public boolean getScrollLock() {
+        return scrollLock;
+    }
+
+    @Override
+    public void append(String text) {
+        if (scrollLock) {
+            console.append(text);
+        } else {
+            console.appendAndScroll(text);
         }
     }
 
@@ -111,8 +139,22 @@ public class ServerView extends ViewPart implements ISelectionProvider,
      */
     @Override
     public void createPartControl(Composite parent) {
-        console = new Text(parent, SWT.MULTI | SWT.BORDER | SWT.V_SCROLL
+        console = new ConsoleText(parent, SWT.MULTI | SWT.BORDER | SWT.V_SCROLL
                 | SWT.H_SCROLL | SWT.FLAT | SWT.READ_ONLY);
+        console.installStackTraceSupport();
+        console.getStyleManager().addStyleFactory(new StyleFactory() {
+            @Override
+            public StyleRange getStyle(String string) {
+                if (string.startsWith("=") && string.contains("Nuxeo")) {
+                    StyleRange style = new StyleRange(0, string.length(), null,
+                            null);
+                    style.fontStyle = SWT.BOLD;
+                    return style;
+                }
+                return null;
+            }
+        });
+        console.setFont(JFaceResources.getFont(JFaceResources.TEXT_FONT));
     }
 
     @Override
@@ -158,7 +200,7 @@ public class ServerView extends ViewPart implements ISelectionProvider,
                 Display.getDefault().asyncExec(new Runnable() {
                     @Override
                     public void run() {
-                        console.append(text);
+                        append(text);
                     }
                 });
             }

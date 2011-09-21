@@ -94,7 +94,6 @@ public class SDKIndex {
                 name = name.replace('/', '.');
                 name = name.replace('$', '.');
                 name = name.substring(0, name.length() - 6);
-                // System.out.println(jarName + ": " + name);
                 result.put(name, jarName);
             }
             entry = zin.getNextEntry();
