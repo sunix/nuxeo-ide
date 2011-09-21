@@ -35,12 +35,13 @@ public class SchemaField {
         JAVA_TYPES.put("integer", "Long");
         JAVA_TYPES.put("date", "Calendar");
         JAVA_TYPES.put("blob", "Blob");
-        JAVA_TYPES.put("list", "List");
     }
 
     protected String path;
 
     protected String type;
+
+    protected boolean multivalue;
 
     protected String setter;
 
@@ -48,6 +49,7 @@ public class SchemaField {
 
     public SchemaField(DocumentSchema ds, DocumentSchema.Field field) {
         String id = field.getId();
+        multivalue = field.isMultivalue();
         path = ds.getPrefix() + ":" + id;
         type = JAVA_TYPES.get(field.getType());
         if (type == null) {
@@ -69,9 +71,21 @@ public class SchemaField {
             id = buf.toString();
         }
 
+        if (multivalue) {
+            if (field.hasChildren() || "Blob".equals(type)) {
+                type = "List<" + type + ">";
+            } else {
+                type = type + "[]";
+            }
+        }
+
         String name = Character.toUpperCase(id.charAt(0)) + id.substring(1);
         setter = "set".concat(name);
         getter = "get".concat(name);
+    }
+
+    public boolean isMultivalue() {
+        return multivalue;
     }
 
     public String getPath() {
@@ -90,4 +104,10 @@ public class SchemaField {
         return getter;
     }
 
+    public String cast(String value) {
+        if ("Blob".equals(type) || type.startsWith("List<")) {
+            return "(Serializable)" + value;
+        }
+        return value;
+    }
 }

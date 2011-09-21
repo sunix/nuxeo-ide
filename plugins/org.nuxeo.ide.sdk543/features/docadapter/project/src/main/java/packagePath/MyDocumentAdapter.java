@@ -28,7 +28,7 @@ public class ${className} {
     }
     
     public void ${field.setter}(${field.type} value) throws PropertyException, ClientException {
-        doc.setPropertyValue("${field.path}", <#if field.type == "Blob">(Serializable)</#if>value);
+        doc.setPropertyValue("${field.path}", ${field.cast("value")});
     }    
     
     </#list>    
