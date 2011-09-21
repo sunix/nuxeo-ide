@@ -88,8 +88,7 @@ public class ConsoleStyleManager implements LineStyleListener {
         if (event.lineText.length() == 0) {
             return;
         }
-        // TODO styles are computed each time the user scroll the styled text
-        // System.out.println("compute styles: " + event.lineText);
+        // TODO use a cache to avoid recomputing when scrolling
         // compute styles
         ArrayList<StyleRange> result = null;
         for (StyleFactory factory : factories) {

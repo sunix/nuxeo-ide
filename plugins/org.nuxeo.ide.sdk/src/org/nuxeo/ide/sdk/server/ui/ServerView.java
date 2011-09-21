@@ -145,7 +145,7 @@ public class ServerView extends ViewPart implements ISelectionProvider,
         console.getStyleManager().addStyleFactory(new StyleFactory() {
             @Override
             public StyleRange getStyle(String string) {
-                if (string.startsWith("=") && string.contains("Nuxeo")) {
+                if (string.startsWith("=")) {
                     StyleRange style = new StyleRange(0, string.length(), null,
                             null);
                     style.fontStyle = SWT.BOLD;
