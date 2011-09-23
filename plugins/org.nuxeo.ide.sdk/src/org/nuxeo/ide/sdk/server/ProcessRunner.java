@@ -16,10 +16,10 @@
  */
 package org.nuxeo.ide.sdk.server;
 
-import java.io.File;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
-import org.apache.commons.exec.CommandLine;
-import org.apache.commons.exec.DefaultExecutor;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -33,16 +33,15 @@ import org.eclipse.core.runtime.jobs.Job;
  */
 public class ProcessRunner implements Runnable {
 
-    protected CommandLine cmdLine;
+    protected ProcessBuilder builder;
 
-    protected File workingDir;
-
-    public ProcessRunner(CommandLine cmdLine, File workingDir) {
-        this.cmdLine = cmdLine;
+    public ProcessRunner(ProcessBuilder pb) {
+        pb.redirectErrorStream(true);
+        this.builder = pb;
     }
 
-    public CommandLine getCommandLine() {
-        return cmdLine;
+    protected void output(String line) {
+        // do nothing
     }
 
     protected void terminated(int status, Throwable e) {
@@ -73,22 +72,44 @@ public class ProcessRunner implements Runnable {
 
     @Override
     public void run() {
-        DefaultExecutor executor = new DefaultExecutor();
-        if (workingDir != null) {
-            executor.setWorkingDirectory(workingDir);
-        }
-        executor.setExitValue(0);
-
         started();
-
-        int exitStatus = -1;
+        Process process = null;
         try {
-            exitStatus = executor.execute(cmdLine);
-            terminated(exitStatus, null);
+            process = builder.start();
+            InputStream in = process.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(
+                    in, "UTF-8"));
+            String line = reader.readLine();
+            while (line != null) {
+                output(line + "\n");
+                line = reader.readLine();
+            }
         } catch (Throwable t) {
-            terminated(exitStatus, t);
+            if (process != null) {
+                process.destroy();
+            }
+            terminated(-1, t);
+            return;
         }
-
+        int status = 0;
+        try {
+            status = process.waitFor();
+            closeStream(process);
+            process.destroy();
+        } catch (InterruptedException e) {
+            closeStream(process);
+            process.destroy();
+            try {
+                status = process.exitValue();
+            } catch (IllegalThreadStateException ee) {
+                // do nothing
+            }
+        } finally {
+            // clear interrupt flag see:
+            // http://bugs.sun.com/view_bug.do?bug_id=6420270
+            Thread.interrupted();
+            terminated(status, null);
+        }
     }
 
     protected void closeStream(Process process) {

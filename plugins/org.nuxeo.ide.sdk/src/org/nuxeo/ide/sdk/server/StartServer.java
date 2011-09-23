@@ -16,8 +16,6 @@
  */
 package org.nuxeo.ide.sdk.server;
 
-import java.io.File;
-
 import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.sdk.SDKInfo;
 
@@ -35,8 +33,7 @@ public class StartServer extends ProcessRunner {
     protected ServerController ctrl;
 
     public StartServer(ServerController ctrl) {
-        super(SDKInfo.newCommandLine(ctrl.root, "start"), new File(ctrl.root,
-                "bin"));
+        super(SDKInfo.newProcessBuilder(ctrl.root, "start"));
         this.ctrl = ctrl;
     }
 
@@ -50,34 +47,8 @@ public class StartServer extends ProcessRunner {
         if (e != null) {
             UI.showError("Failed to start Nuxeo Server" + e.getMessage(), e);
         } else {
-            if (status == 0) {
-                ctrl.fireServerStarted();
-            } else {
-                ctrl.fireServerStopped();
-                UI.showError("Failed to start the server: "
-                        + getErrorMessage(status));
-            }
+            ctrl.fireServerStarted();
         }
     }
 
-    private static String getErrorMessage(int status) {
-        switch (status) {
-        case 0:
-            return "OK";
-        case 2:
-            return "invalid or excess argument(s)";
-        case 3:
-            return "unimplemented feature";
-        case 4:
-            return "user has insufficient privilege";
-        case 5:
-            return "program is not installed";
-        case 6:
-            return "program is not configured";
-        case 7:
-            return "program is not running";
-        default:
-            return "Unknown Error (" + status + ")";
-        }
-    }
 }

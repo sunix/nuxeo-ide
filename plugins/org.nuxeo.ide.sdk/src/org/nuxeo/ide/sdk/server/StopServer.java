@@ -16,8 +16,6 @@
  */
 package org.nuxeo.ide.sdk.server;
 
-import java.io.File;
-
 import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.sdk.SDKInfo;
 
@@ -30,8 +28,7 @@ public class StopServer extends ProcessRunner {
     protected ServerController ctrl;
 
     public StopServer(ServerController ctrl) {
-        super(SDKInfo.newCommandLine(ctrl.root, "stop"), new File(ctrl.root,
-                "bin"));
+        super(SDKInfo.newProcessBuilder(ctrl.root, "stop"));
         this.ctrl = ctrl;
     }
 
