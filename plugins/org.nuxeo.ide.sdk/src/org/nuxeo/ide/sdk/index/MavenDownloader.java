@@ -125,7 +125,7 @@ public class MavenDownloader {
     }
 
     public static File downloadFile(URL url) throws IOException {
-        System.out.println("trying to download: " + url);
+        // System.out.println("trying to download: " + url);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setDoOutput(false);
         conn.setDoInput(true);
