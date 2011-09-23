@@ -29,6 +29,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.eclipse.core.runtime.Platform;
 import org.nuxeo.ide.sdk.NuxeoSDK;
 import org.nuxeo.ide.sdk.templates.cmd.Command;
+import org.nuxeo.ide.sdk.templates.cmd.DependenciesCommand;
 import org.nuxeo.ide.sdk.templates.cmd.MkdirCommand;
 import org.nuxeo.ide.sdk.templates.cmd.RenameCommand;
 import org.nuxeo.ide.sdk.templates.cmd.SelectCommand;
@@ -71,6 +72,7 @@ public class TemplateManager {
         commands.put("mkdir", MkdirCommand.class);
         commands.put("transform", TransformCommand.class);
         commands.put("select", SelectCommand.class);
+        commands.put("dependencies", DependenciesCommand.class);
     }
 
     public void addCommand(String key, Class<? extends Command> type) {

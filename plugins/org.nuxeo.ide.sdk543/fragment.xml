@@ -165,7 +165,7 @@
       <wizard
             category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.security.newWizards"
             class="org.nuxeo.ide.sdk.features.security.securitypolicy.SecurityPolicyWizard"
-            icon="icons/nx.gif"
+            icon="icons/security_policy.gif"
             id="org.nuxeo.ide.security.securityPolicyWizard"
             name="Security Policy">
       </wizard>
@@ -173,7 +173,7 @@
       <wizard
             category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.security.newWizards"
             class="org.nuxeo.ide.sdk.features.security.permission.PermissionWizard"
-            icon="icons/nx.gif"
+            icon="icons/permission.gif"
             id="org.nuxeo.ide.security.permissionWizard"
             name="Permission">
       </wizard>
@@ -181,7 +181,7 @@
       <wizard
             category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.security.newWizards"
             class="org.nuxeo.ide.sdk.features.security.permissionvisibility.PermissionVisibilityWizard"
-            icon="icons/nx.gif"
+            icon="icons/permission_visibility.gif"
             id="org.nuxeo.ide.security.permissionVisibilityWizard"
             name="Permission Visibility">
       </wizard>

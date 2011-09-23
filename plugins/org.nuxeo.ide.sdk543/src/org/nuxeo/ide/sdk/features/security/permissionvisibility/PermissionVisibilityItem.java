@@ -1,25 +1,25 @@
 package org.nuxeo.ide.sdk.features.security.permissionvisibility;
 
-
 public class PermissionVisibilityItem {
 
-    private Boolean show;
+    private boolean show;
 
     private String order;
 
     private String permissionName;
 
-    public PermissionVisibilityItem(String permissionName, String order, Boolean show) {
-        this.permissionName= permissionName;
-        this.order= order;
+    public PermissionVisibilityItem(String permissionName, String order,
+            boolean show) {
+        this.permissionName = permissionName;
+        this.order = order;
         this.show = show;
     }
 
-    public Boolean getShow() {
+    public boolean getShow() {
         return show;
     }
 
-    public void setShow(Boolean show) {
+    public void setShow(boolean show) {
         this.show = show;
     }
 
@@ -39,4 +39,8 @@ public class PermissionVisibilityItem {
         this.permissionName = permissionName;
     }
 
+    @Override
+    public String toString() {
+        return permissionName;
+    }
 }

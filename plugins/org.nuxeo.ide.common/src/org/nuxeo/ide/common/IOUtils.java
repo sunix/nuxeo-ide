@@ -357,6 +357,11 @@ public class IOUtils {
         writeFile(file, buf.getBytes());
     }
 
+    public static void writeFile(File file, String buf, String encoding)
+            throws IOException {
+        writeFile(file, buf.getBytes(encoding));
+    }
+
     /**
      * Delete the given file then delete all its empty parents.
      * 

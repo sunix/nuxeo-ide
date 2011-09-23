@@ -18,19 +18,20 @@ package org.nuxeo.ide.sdk.model;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URL;
 
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
+import org.apache.xml.serialize.Method;
+import org.apache.xml.serialize.OutputFormat;
+import org.apache.xml.serialize.XMLSerializer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -94,40 +95,75 @@ public class XmlFile {
     }
 
     public void write(File file) throws Exception {
-        Transformer transformer = trFactory.newTransformer();
-        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-        transformer.setOutputProperty(OutputKeys.STANDALONE, "yes");
-        DOMSource src = new DOMSource(doc);
-        StreamResult result = new StreamResult(file);
-        transformer.transform(src, result);
+        write(file, null);
+    }
+
+    public void write(File file, String encoding) throws Exception {
+        FileOutputStream out = new FileOutputStream(file);
+        try {
+            write(out, encoding);
+        } finally {
+            out.close();
+        }
     }
 
     public void write(OutputStream out) throws Exception {
-        Transformer transformer = trFactory.newTransformer();
-        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-        transformer.setOutputProperty(OutputKeys.STANDALONE, "yes");
-        DOMSource src = new DOMSource(doc);
-        StreamResult result = new StreamResult(out);
-        transformer.transform(src, result);
+        write(out, null);
     }
 
-    public void write(Writer out) throws Exception {
-        Transformer transformer = trFactory.newTransformer();
-        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-        transformer.setOutputProperty(OutputKeys.STANDALONE, "yes");
-        DOMSource src = new DOMSource(doc);
-        StreamResult result = new StreamResult(out);
-        transformer.transform(src, result);
+    public void write(OutputStream out, String encoding) throws Exception {
+        OutputStreamWriter writer = new OutputStreamWriter(out,
+                encoding == null ? "UTF-8" : encoding);
+        write(writer, encoding);
+        writer.flush();
+    }
+
+    public void write(Writer writer) throws Exception {
+        write(writer, null);
+    }
+
+    public void write(Writer writer, String encoding) throws Exception {
+        if (encoding == null) {
+            encoding = "UTF-8";
+        }
+
+        // DOMImplementationLS impl = (DOMImplementationLS)
+        // DOMImplementationRegistry.newInstance().getDOMImplementation(
+        // "LS");
+        // LSSerializer serializer = impl.createLSSerializer();
+        // if (serializer.getDomConfig().canSetParameter("format-pretty-print",
+        // Boolean.TRUE)) {
+        // serializer.getDomConfig().setParameter("format-pretty-print",
+        // Boolean.TRUE);
+        // }
+        // if (serializer.getDomConfig().canSetParameter(
+        // "element-content-whitespace", Boolean.FALSE)) {
+        // serializer.getDomConfig().setParameter(
+        // "element-content-whitespace", Boolean.FALSE);
+        // }
+        //
+        // LSOutput out = impl.createLSOutput();
+        //
+        // out.setEncoding(encoding);
+        // out.setCharacterStream(writer);
+        //
+        // serializer.write(doc, out);
+
+        // this is the single method I found it formats OK.
+        OutputFormat format = new OutputFormat(Method.XML, encoding, true);
+        format.setIndent(2);
+        XMLSerializer serializer2 = new XMLSerializer(writer, format);
+        serializer2.serialize(doc);
+        writer.flush();
     }
 
     public String toXML() throws Exception {
+        return toXML(null);
+    }
+
+    public String toXML(String encoding) throws Exception {
         StringWriter writer = new StringWriter();
-        Transformer transformer = trFactory.newTransformer();
-        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-        transformer.setOutputProperty(OutputKeys.STANDALONE, "yes");
-        DOMSource src = new DOMSource(doc);
-        StreamResult result = new StreamResult(writer);
-        transformer.transform(src, result);
+        write(writer, encoding);
         return writer.toString();
     }
 

@@ -17,7 +17,8 @@ Require-Bundle: org.eclipse.ui,
  org.nuxeo.ide.common,
  org.eclipse.jface.text,
  org.eclipse.ui.console,
- org.eclipse.jdt.debug.ui
+ org.eclipse.jdt.debug.ui,
+ org.apache.xerces
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,

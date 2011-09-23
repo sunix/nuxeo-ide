@@ -4,9 +4,9 @@
   <extension target="org.nuxeo.ecm.core.security.SecurityService"
     point="permissionsVisibility">
 
-    <visibility type="${documentType}">
-    <#list items as item>
-      <item show="${item.show}" order="${item.order}">${item.permissionName}</item>
+    <visibility type="${docType}">
+    <#list selectedPermissions as item>
+      <item show="${item.show?string}" order="${item.order}">${item.permissionName}</item>
     </#list>
     </visibility>
 

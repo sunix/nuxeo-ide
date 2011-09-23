@@ -48,7 +48,9 @@
 
     <extension src="features/automation/extensions.xml"/>
 
-    <dependency groupId="org.nuxeo.ecm.automation" artifactId="nuxeo-automation-core"/>
+    <dependencies>
+        <dependency groupId="org.nuxeo.ecm.automation" artifactId="nuxeo-automation-core"/>
+    </dependencies>
 
     <transform path="src/main/java/packagePath/MyOperation.java" to="src/main/java/${packagePath}/${className}.java" />
     
@@ -61,7 +63,9 @@
 
     <extension src="features/docadapter/extensions.xml"/>
 
-    <dependency groupId="org.nuxeo.ecm.core" artifactId="nuxeo-core-api"/>
+    <dependencies>
+        <dependency groupId="org.nuxeo.ecm.core" artifactId="nuxeo-core-api"/>
+    </dependencies>
 
     <transform path="src/main/java/packagePath/MyDocumentAdapterFactory.java" to="src/main/java/${packagePath}/${className}Factory.java" />
     <transform path="src/main/java/packagePath/MyDocumentAdapter.java" to="src/main/java/${packagePath}/${className}.java" />
@@ -75,8 +79,10 @@
 
     <extension src="features/listener/extensions.xml"/>
 
-    <dependency groupId="org.nuxeo.ecm.core" artifactId="nuxeo-core-event"/>
-
+    <dependencies>
+        <dependency groupId="org.nuxeo.ecm.core" artifactId="nuxeo-core-event"/>
+    </dependencies>
+    
     <transform path="src/main/java/packagePath/MyListener.java" to="src/main/java/${packagePath}/${className}.java" />
     
     <select path = "src/main/java/${packagePath}/${className}.java" />
@@ -121,28 +127,39 @@
     <description>A Security Policy</description>
  
     <extension src="features/securityPolicy/extensions.xml"/>
-    <dependency groupId="org.nuxeo.ecm.core" artifactId="nuxeo-core"/>
+    
+    <dependencies>
+        <dependency groupId="org.nuxeo.ecm.core" artifactId="nuxeo-core"/>
+    </dependencies>
  
     <transform path="src/main/java/packagePath/MySecurityPolicy.java" to="src/main/java/${packagePath}/${className}.java" />
-<!--     <transform path="src/main/java/packagePath/TestMySecurityPolicy.java" to="src/test/java/${packagePath}/test/Test${className}.java" /> -->
+<!-- TODO test not implemented by now     <transform path="src/main/java/packagePath/TestMySecurityPolicy.java" to="src/test/java/${packagePath}/test/Test${className}.java" /> -->
 
     <select path = "src/main/java/${packagePath}/${className}.java" />
   </feature>
 
-  <feature id="permission" src="features/permission">
+  <feature id="permission" src="features/permission/project">
     <name>Permission</name>
     <description>A Permission</description>
-    <transform path="extensions.xml" />
     
+    <transform path="src/main/resources/OSGI-INF/permissions.xml" to="src/main/resources/OSGI-INF/permission-${name}.xml" />
+    <manifest key="Nuxeo-Component" value="OSGI-INF/permission-${name}.xml" append="true" />
+    
+    <select path = "src/main/resources/OSGI-INF/permission-${name}.xml" />
   </feature>
 
   <feature id ="permissionVisibility" src="features/permissionVisibility/project">
     <name>Permission Visibility</name>
     <description>A Permission Visibility</description>
 
-    <extension src="features/permissionVisibility/extensions.xml" to="src/main/resources/OSGI-INF" />
+    <transform path="src/main/resources/OSGI-INF/permissions-visibility.xml" />
+    <manifest key="Nuxeo-Component" value="OSGI-INF/permissions-visibility.xml" append="true" />
 
-    <dependency groupId="org.nuxeo.ecm.core" artifactId="nuxeo-core"/>
+    <dependencies>
+        <dependency groupId="org.nuxeo.ecm.core" artifactId="nuxeo-core"/>
+    </dependencies>
+
+    <select path = "src/main/resources/OSGI-INF/permissions-visibility.xml" />    
   </feature>
 
 </templates>

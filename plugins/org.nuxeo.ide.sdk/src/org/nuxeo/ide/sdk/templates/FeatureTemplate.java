@@ -46,8 +46,6 @@ public class FeatureTemplate extends Template {
 
     protected String extensions;
 
-    protected Dependency[] dependencies;
-
     public FeatureTemplate(String id) {
         super(id);
     }
@@ -76,19 +74,6 @@ public class FeatureTemplate extends Template {
      */
     public String getExtensions() {
         return extensions;
-    }
-
-    public void setDependencies(Dependency[] dependencies) {
-        this.dependencies = dependencies;
-    }
-
-    /**
-     * Return null if no pom dependencies are added
-     * 
-     * @return
-     */
-    public Dependency[] getDependencies() {
-        return dependencies;
     }
 
     @Override
@@ -164,6 +149,7 @@ public class FeatureTemplate extends Template {
     }
 
     protected void applyDependencies(File dir) throws IOException {
+
         // TODO
     }
 
@@ -195,7 +181,6 @@ public class FeatureTemplate extends Template {
         Node child = element.getFirstChild();
         temp.src = Util.getAttribute(element, "src");
         List<ManifestModification> manifest = new ArrayList<FeatureTemplate.ManifestModification>();
-        List<Dependency> deps = new ArrayList<Dependency>();
         while (child != null) {
             if (child.getNodeType() == Node.ELEMENT_NODE) {
                 Element el = (Element) child;
@@ -212,14 +197,6 @@ public class FeatureTemplate extends Template {
                             false);
                     mf.append = Util.getBooleanAttribute(el, "append", false);
                     manifest.add(mf);
-                } else if ("dependency".equals(tag)) {
-                    Dependency dep = new Dependency();
-                    dep.groupId = el.getAttribute("groupId");
-                    dep.artifactId = el.getAttribute("artifactId");
-                    dep.scope = Util.getAttribute(el, "scope");
-                    dep.type = Util.getAttribute(el, "type");
-                    dep.version = Util.getAttribute(el, "version");
-                    deps.add(dep);
                 } else if ("extension".equals(tag)) {
                     temp.extensions = el.getAttribute("src").trim();
                 } else {
@@ -232,9 +209,6 @@ public class FeatureTemplate extends Template {
         }
         if (!manifest.isEmpty()) {
             temp.manifestModifs = manifest.toArray(new ManifestModification[manifest.size()]);
-        }
-        if (!deps.isEmpty()) {
-            temp.dependencies = deps.toArray(new Dependency[deps.size()]);
         }
         return temp;
     }

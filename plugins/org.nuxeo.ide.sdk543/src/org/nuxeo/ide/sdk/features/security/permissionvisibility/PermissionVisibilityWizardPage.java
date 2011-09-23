@@ -16,6 +16,10 @@
  */
 package org.nuxeo.ide.sdk.features.security.permissionvisibility;
 
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Button;
@@ -28,7 +32,7 @@ import org.nuxeo.ide.sdk.ui.widgets.ProjectChooserWidget;
 
 /**
  * @author <a href="mailto:ldoguin@nuxeo.com">Laurent Doguin</a>
- *
+ * 
  */
 public class PermissionVisibilityWizardPage extends FeatureWizardPage {
 
@@ -49,17 +53,19 @@ public class PermissionVisibilityWizardPage extends FeatureWizardPage {
     public void createControl(Composite parent) {
         super.createControl(parent);
         final Button addButton = (Button) form.getWidgetControl("add");
-        final PermissionVisibilityTableWidget itemsTable = (PermissionVisibilityTableWidget) form.getWidget("addedPermission");
+        final Button removeButton = (Button) form.getWidgetControl("remove");
+        final PermissionVisibilityTableWidget itemsTable = (PermissionVisibilityTableWidget) form.getWidget("selectedPermissions");
         addButton.addSelectionListener(new SelectionListener() {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
                 PermissionVisibilityItem item = new PermissionVisibilityItem(
-                        form.getWidgetValueAsString("selectedPermission").trim(),
+                        form.getWidgetValueAsString("permissions").trim(),
                         form.getWidgetValueAsString("order").trim(),
-                        (Boolean)form.getWidgetValue("show"));
+                        (Boolean) form.getWidgetValue("show"));
 
                 itemsTable.addTableItem(item);
+                getContainer().updateButtons();
             }
 
             @Override
@@ -68,14 +74,49 @@ public class PermissionVisibilityWizardPage extends FeatureWizardPage {
             }
         });
 
+        removeButton.addSelectionListener(new SelectionListener() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                IStructuredSelection selection = (IStructuredSelection) itemsTable.tv.getSelection();
+                if (!selection.isEmpty()) {
+                    itemsTable.tv.remove(selection.toArray());
+                    getContainer().updateButtons();
+                }
+            }
+
+            @Override
+            public void widgetDefaultSelected(SelectionEvent e) {
+                widgetSelected(e);
+            }
+        });
+
+        itemsTable.tv.addSelectionChangedListener(new ISelectionChangedListener() {
+
+            @Override
+            public void selectionChanged(SelectionChangedEvent event) {
+                removeButton.setEnabled(!event.getSelection().isEmpty());
+            }
+        });
+
+        removeButton.setEnabled(false);
+
+        setPageComplete(false);
+    }
+
+    @Override
+    public boolean isPageComplete() {
+        return super.isPageComplete()
+                && !((PermissionVisibilityTableWidget) form.getWidget("selectedPermissions")).isEmpty();
     }
 
     @Override
     public void update(FeatureTemplateContext ctx) {
-        super.update(ctx);
-        ctx.put("name", form.getWidgetValue("name"));
-        ctx.put("selectedPermission", form.getWidgetValue("selectedPermission"));
-        ctx.put("customPermission", form.getWidgetValue("customPermission"));
+        IJavaProject project = (IJavaProject) ((ProjectChooserWidget) form.getWidget("project")).getValue();
+        ctx.setProject(project);
+        ctx.setPackage(((PackageChooserWidget) form.getWidget("package")).getValueAsString());
+        ctx.put("docType", form.getWidgetValue("docType"));
+        ctx.put("selectedPermissions",
+                ((PermissionVisibilityTableWidget) form.getWidget("selectedPermissions")).getPermissionItems());
     }
 
 }

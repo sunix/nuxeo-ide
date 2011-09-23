@@ -10,21 +10,24 @@
 </package>
 <text>Document Type:</text>
 <combo id="docType" >
-  Document,Note,File
+  Document,File,Folder,Note
 </combo>
 
-<frame layout="grid" cols="5" label="Add Item:" hfill="true" vfill="true" colspan="5">
+<frame layout="grid" cols="6" label="Add Item:" hfill="true" vfill="true" colspan="5">
 
-<combo id="selectedPermission" >
-  Read,Write,Everything
+<combo id="permissions" >
+  Read,Write,Browse,Everything,RestrictedRead,ReadWrite,Remove,Version,ReadVersion,WriteVersion,WriteSecurity,ReadSecurity,
+  ReadProperties,WriteProperties,ReadChildren,AddChildren,RemoveChildren,ReadLifeCycle,WriteLifeCycle,
+  ManageWorkflows,ReviewParticipant,Unlock
 </combo>
 <text>Order:</text>
-<textbox id="order" value=" 100" >
+<textbox id="order" value="100" >
 <validator type="regex" value="[0-9]*">Not a valid number</validator>
 </textbox>
 <checkbox id="show" value="true">Show</checkbox>
 <button id="add">Add</button>
-<permVisibilityTable id="addedPermission" hfill="true" vfill="true" colspan="5"/>
+<button id="remove">Remove</button>
+<permVisibilityTable id="selectedPermissions" hfill="true" vfill="true" colspan="6"/>
 
 </frame>
 
