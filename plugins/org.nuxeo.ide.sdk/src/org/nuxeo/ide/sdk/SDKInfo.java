@@ -25,6 +25,7 @@ import java.net.URLEncoder;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.exec.CommandLine;
 import org.nuxeo.ide.common.IOUtils;
 import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.sdk.server.VMUtils;
@@ -139,20 +140,17 @@ public class SDKInfo {
         IOUtils.writeLines(sdkConf, lines);
     }
 
-    public static ProcessBuilder newProcessBuilder(File installRoot,
-            String command) {
-        ProcessBuilder builder = new ProcessBuilder(
-                VMUtils.getJavaExecutablePath(),
-                "-Dnuxeo.home=" + installRoot.getAbsolutePath(),
-                "-Dnuxeo.conf="
-                        + new File(installRoot, "bin/nuxeo-sdk.conf").getAbsolutePath(),
-                "-jar",
-                new File(installRoot, "bin/nuxeo-launcher.jar").getAbsolutePath());
+    public static CommandLine newCommandLine(File installRoot, String command) {
+        CommandLine cmd = new CommandLine(VMUtils.getJavaExecutablePath());
+        cmd.addArgument("-Dnuxeo.home=" + installRoot.getAbsolutePath());
+        cmd.addArgument("-Dnuxeo.conf="
+                + new File(installRoot, "bin/nuxeo-sdk.conf").getAbsolutePath());
+        cmd.addArgument("-jar");
+        cmd.addArgument(new File(installRoot, "bin/nuxeo-launcher.jar").getAbsolutePath());
         if (command != null) {
-            builder.command().add(command);
+            cmd.addArgument(command);
         }
-        builder.directory(new File(installRoot, "bin"));
-        return builder;
+        return cmd;
     }
 
     public static SDKInfo loadSDK(File dir) throws IOException {
