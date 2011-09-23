@@ -16,9 +16,8 @@
  */
 package org.nuxeo.ide.sdk.server;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.IOException;
+import java.io.OutputStream;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -40,7 +39,7 @@ public class ProcessRunner implements Runnable {
         this.builder = pb;
     }
 
-    protected void output(String line) {
+    protected void output(int b) {
         // do nothing
     }
 
@@ -76,14 +75,6 @@ public class ProcessRunner implements Runnable {
         Process process = null;
         try {
             process = builder.start();
-            InputStream in = process.getInputStream();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    in, "UTF-8"));
-            String line = reader.readLine();
-            while (line != null) {
-                output(line + "\n");
-                line = reader.readLine();
-            }
         } catch (Throwable t) {
             if (process != null) {
                 process.destroy();
@@ -91,6 +82,16 @@ public class ProcessRunner implements Runnable {
             terminated(-1, t);
             return;
         }
+        StreamPumper pumper = new StreamPumper(process.getInputStream(),
+                new OutputStream() {
+
+                    @Override
+                    public void write(int b) throws IOException {
+                        output(b);
+                    }
+
+                });
+        new Thread(pumper, "Stream Pumper " + pumper.hashCode()).start();
         int status = 0;
         try {
             status = process.waitFor();
@@ -108,6 +109,7 @@ public class ProcessRunner implements Runnable {
             // clear interrupt flag see:
             // http://bugs.sun.com/view_bug.do?bug_id=6420270
             Thread.interrupted();
+            pumper.stop();
             terminated(status, null);
         }
     }

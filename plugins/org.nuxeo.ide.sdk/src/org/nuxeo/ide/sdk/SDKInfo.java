@@ -134,7 +134,10 @@ public class SDKInfo {
                 lines.set(i, line.substring(1));
             } else if (line.contains("nuxeo.templates")) {
                 lines.set(i, "nuxeo.templates=default,sdk");
+            } else if (line.contains("nuxeo.wizard.done=")) {
+             lines.set(i, "nuxeo.wizard.done=true");
             }
+
         }
         IOUtils.writeLines(sdkConf, lines);
     }
@@ -146,7 +149,9 @@ public class SDKInfo {
                 "-Dnuxeo.home=" + installRoot.getAbsolutePath(),
                 "-Dnuxeo.conf="
                         + new File(installRoot, "bin/nuxeo-sdk.conf").getAbsolutePath(),
-                "-jar",
+                "-Dnuxeo.log.dir=" 
+                        + new File(installRoot, "log").getAbsolutePath(),
+                        "-jar",
                 new File(installRoot, "bin/nuxeo-launcher.jar").getAbsolutePath());
         if (command != null) {
             builder.command().add(command);
