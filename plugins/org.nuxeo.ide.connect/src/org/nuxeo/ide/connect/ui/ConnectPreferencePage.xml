@@ -24,7 +24,7 @@ For more information on Nuxeo Connect and Nuxeo Studio click here:
 <text hfill="true">
 The Studio projects associated with your account:
 </text>
-<listbox id="projects" hfill="true" vfill="true"></listbox>
+<listbox id="projects" hfill="true" vfill="true" height="200"></listbox>
 
 </frame>
 

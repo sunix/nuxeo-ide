@@ -136,23 +136,23 @@ public class ServerController implements ServerConstants {
         return logFile;
     }
 
-    public boolean start() throws IOException {
+    public boolean start() throws Exception {
         return start(false);
     }
 
-    public boolean stop() throws IOException {
+    public boolean stop() throws Exception {
         return stop(false);
     }
 
-    public synchronized boolean startAsJob() throws IOException {
+    public synchronized boolean startAsJob(boolean isDebug) throws Exception {
         if (state != STOPPED) {
             return false;
         }
-        new StartServer(this).runAsJob("Starting Nuxeo Server");
+        new StartServer(this, isDebug).runAsJob("Starting Nuxeo Server");
         return true;
     }
 
-    public synchronized boolean start(boolean block) throws IOException {
+    public synchronized boolean start(boolean block) throws Exception {
         if (state != STOPPED) {
             return false;
         }
@@ -164,7 +164,7 @@ public class ServerController implements ServerConstants {
         return true;
     }
 
-    public synchronized boolean stopAsJob() throws IOException {
+    public synchronized boolean stopAsJob() throws Exception {
         if (state == STOPPED) {
             return false;
         }
@@ -172,7 +172,7 @@ public class ServerController implements ServerConstants {
         return true;
     }
 
-    public synchronized boolean stop(boolean block) throws IOException {
+    public synchronized boolean stop(boolean block) throws Exception {
         if (state == STOPPED) {
             return false;
         }

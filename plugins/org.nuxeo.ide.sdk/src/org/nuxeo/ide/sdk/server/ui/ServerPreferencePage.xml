@@ -1,0 +1,19 @@
+<panel cols="1" layout="grid">
+
+<frame label="VM Arguments" hfill="true" vfill="true" layout="grid" cols="1">
+  <text hfill="true" wrap="true" trim="false">Configure Java VM arguments. 
+This configuration is used by both debug and run modes.</text>
+<textarea id="args" hfill="true" vfill="true" wrap="true" scroll="true" width="200"/>
+</frame>
+
+<frame label="Remote Debugging" hfill="true" layout="grid" cols="2">
+  <text hfill="true" wrap="true" trim="false" colspan="2">Configure the host and port used by the Nuxeo Server for remote debugging.
+This configuration is used only when Nuxeo Server is launched in debug mode.</text>
+<text>Debug Port:</text>
+<textbox id="port" hfill="true">
+<validator type="regex" value="[0-9]+">Not a valid port number</validator>
+</textbox>
+<checkbox id="suspend" colspan="2">Suspend Server</checkbox>
+</frame>
+
+</panel>

@@ -1,7 +1,5 @@
 package org.nuxeo.ide.sdk.server.ui;
 
-import java.io.IOException;
-
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ISelection;
@@ -63,7 +61,7 @@ public class ServerView extends ViewPart implements ISelectionProvider,
                     || state == ServerConstants.STARTING) {
                 try {
                     ctrl.stopAsJob();
-                } catch (IOException e) {
+                } catch (Exception e) {
                     UI.showError("Failed to stop running server", e);
                 }
             }
@@ -87,7 +85,7 @@ public class ServerView extends ViewPart implements ISelectionProvider,
         return console;
     }
 
-    public void start() throws Exception {
+    public void start(boolean isDebug) throws Exception {
         // auto deployment
         Deployment deploy = DeploymentPreferences.load().getDefault();
         if (deploy != null) {
@@ -95,8 +93,20 @@ public class ServerView extends ViewPart implements ISelectionProvider,
         }
         // now start
         clearConsole();
-        console.setText("=== Starting Nuxeo Server ===\r\n");
-        ctrl.startAsJob();
+        if (isDebug) {
+            console.setText("=== Starting Nuxeo Server (Debug) ===\r\n");
+        } else {
+            console.setText("=== Starting Nuxeo Server ===\r\n");
+        }
+        ctrl.startAsJob(isDebug);
+    }
+
+    public void start() throws Exception {
+        start(false);
+    }
+
+    public void debug() throws Exception {
+        start(true);
     }
 
     public void stop() throws Exception {

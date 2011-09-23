@@ -27,11 +27,12 @@ import java.util.Properties;
 
 import org.nuxeo.ide.common.IOUtils;
 import org.nuxeo.ide.common.UI;
+import org.nuxeo.ide.sdk.server.ServerConfiguration;
 import org.nuxeo.ide.sdk.server.VMUtils;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
- * 
+ *
  */
 public class SDKInfo {
 
@@ -130,12 +131,13 @@ public class SDKInfo {
         List<String> lines = IOUtils.readLines(conf);
         for (int i = 0, len = lines.size(); i < len; i++) {
             String line = lines.get(i).trim();
-            if (line.contains("dt_socket") && line.startsWith("#")) {
-                lines.set(i, line.substring(1));
-            } else if (line.contains("nuxeo.templates")) {
+            // if (line.contains("dt_socket") && line.startsWith("#")) {
+            // lines.set(i, line.substring(1));
+            // } else
+            if (line.contains("nuxeo.templates")) {
                 lines.set(i, "nuxeo.templates=default,sdk");
             } else if (line.contains("nuxeo.wizard.done=")) {
-             lines.set(i, "nuxeo.wizard.done=true");
+                lines.set(i, "nuxeo.wizard.done=true");
             }
 
         }
@@ -143,15 +145,23 @@ public class SDKInfo {
     }
 
     public static ProcessBuilder newProcessBuilder(File installRoot,
-            String command) {
+            String command, boolean isDebug) throws Exception {
         ProcessBuilder builder = new ProcessBuilder(
-                VMUtils.getJavaExecutablePath(),
-                "-Dnuxeo.home=" + installRoot.getAbsolutePath(),
+                VMUtils.getJavaExecutablePath());
+        ServerConfiguration config = ServerConfiguration.getDefault();
+        String vmargs = config.getVmArgs(isDebug);
+        if (vmargs != null) {
+            builder.command().add("-Dlauncher.java.opts=" + vmargs);
+        }
+        builder.command().add("-Dnuxeo.home=" + installRoot.getAbsolutePath());
+        builder.command().add(
                 "-Dnuxeo.conf="
-                        + new File(installRoot, "bin/nuxeo-sdk.conf").getAbsolutePath(),
-                "-Dnuxeo.log.dir=" 
-                        + new File(installRoot, "log").getAbsolutePath(),
-                        "-jar",
+                        + new File(installRoot, "bin/nuxeo-sdk.conf").getAbsolutePath());
+        builder.command().add(
+                "-Dnuxeo.log.dir="
+                        + new File(installRoot, "log").getAbsolutePath());
+        builder.command().add("-jar");
+        builder.command().add(
                 new File(installRoot, "bin/nuxeo-launcher.jar").getAbsolutePath());
         if (command != null) {
             builder.command().add(command);

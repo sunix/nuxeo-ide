@@ -26,6 +26,8 @@ public interface IServerView extends IViewPart {
 
     public void start() throws Exception;
 
+    public void debug() throws Exception;
+
     public void stop() throws Exception;
 
     public void clearConsole();

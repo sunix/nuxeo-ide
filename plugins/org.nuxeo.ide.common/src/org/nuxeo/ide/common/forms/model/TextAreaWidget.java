@@ -33,7 +33,16 @@ public class TextAreaWidget extends TextBoxWidget {
     @Override
     protected Text createControl(Composite parent, Element element,
             BindingContext ctx) {
-        Text text = new Text(parent, SWT.MULTI | SWT.BORDER);
+        boolean scroll = getBooleanAttribute(element, "scroll", false);
+        boolean wrap = getBooleanAttribute(element, "wrap", false);
+        int style = SWT.MULTI | SWT.BORDER;
+        if (scroll) {
+            style |= SWT.H_SCROLL | SWT.V_SCROLL;
+        }
+        if (wrap) {
+            style |= SWT.WRAP;
+        }
+        Text text = new Text(parent, style);
         text.setText(element.getTextContent());
         return text;
     }

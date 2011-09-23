@@ -16,34 +16,14 @@
  */
 package org.nuxeo.ide.sdk.server;
 
-import org.nuxeo.ide.common.UI;
-import org.nuxeo.ide.sdk.SDKInfo;
-
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class StopServer extends ProcessRunner {
+public class DebugServer extends StartServer {
 
-    protected ServerController ctrl;
-
-    public StopServer(ServerController ctrl) throws Exception {
-        super(SDKInfo.newProcessBuilder(ctrl.root, "stop", false));
-        this.ctrl = ctrl;
-    }
-
-    @Override
-    protected void started() {
-        ctrl.fireServerStopping();
-    }
-
-    @Override
-    protected void terminated(int status, Throwable e) {
-        if (e != null) {
-            UI.showError("Failed to stop Nuxeo Server" + e.getMessage(), e);
-        } else {
-            ctrl.fireServerStopped();
-        }
+    public DebugServer(ServerController ctrl) throws Exception {
+        super(ctrl, true);
     }
 
 }

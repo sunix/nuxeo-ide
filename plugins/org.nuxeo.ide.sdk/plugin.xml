@@ -11,6 +11,12 @@
          category="org.nuxeo.ide.prefs">
       </page>
       <page
+         id="org.nuxeo.ide.prefs.server"
+         name="Run/Debug"
+         class="org.nuxeo.ide.sdk.server.ui.ServerPreferencePage"
+         category="org.nuxeo.ide.prefs">
+      </page>
+      <page
          id="org.nuxeo.ide.prefs.userlibs"
          name="User Libraries"
          class="org.nuxeo.ide.sdk.userlibs.UserLibPreferencePage"
@@ -238,6 +244,14 @@
               icon="icons/stop.gif"
               tooltip="Stop the server"
               class="org.nuxeo.ide.sdk.server.ui.StopServer">
+       </action>
+       <action id="org.nuxeo.ide.sdk.ui.server.debugAction"
+              label="Start"
+          menubarPath="ctrl"
+              toolbarPath="ctrl"
+              icon="icons/debug.gif"
+              tooltip="Start the server in debug mode"
+              class="org.nuxeo.ide.sdk.server.ui.DebugServer">
        </action>
        <action id="org.nuxeo.ide.sdk.ui.server.startAction"
               label="Start"

@@ -32,8 +32,13 @@ public class StartServer extends ProcessRunner {
 
     protected ServerController ctrl;
 
-    public StartServer(ServerController ctrl) {
-        super(SDKInfo.newProcessBuilder(ctrl.root, "start"));
+    public StartServer(ServerController ctrl) throws Exception {
+        super(SDKInfo.newProcessBuilder(ctrl.root, "start", false));
+        this.ctrl = ctrl;
+    }
+
+    public StartServer(ServerController ctrl, boolean isDebug) throws Exception {
+        super(SDKInfo.newProcessBuilder(ctrl.root, "start", isDebug));
         this.ctrl = ctrl;
     }
 
