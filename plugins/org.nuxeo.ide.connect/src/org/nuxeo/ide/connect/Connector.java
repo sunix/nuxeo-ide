@@ -41,10 +41,7 @@ public class Connector {
                 prefs.getPassword());
     }
 
-    public final static String DEFAULT_URL = "http://localhost:8080/nuxeo/site/studio/api";
-
-    // private final static String DEFAULT_URL =
-    // "https://connect.nuxeo.com/nuxeo/site/studio/api";
+    public final static String DEFAULT_URL = "https://connect.nuxeo.com/nuxeo/site/studio/api";
 
     protected URL baseUrl;
 
