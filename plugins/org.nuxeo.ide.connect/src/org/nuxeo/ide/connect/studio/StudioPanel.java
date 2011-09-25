@@ -203,14 +203,15 @@ public class StudioPanel extends Composite implements StudioListener {
     protected IAction createRefreshAction() {
         Action action = new Action() {
             public void run() {
-                Job job = new Job("Refresh Studio Projects") {
+                final Job job = new Job("Refresh Studio Projects") {
                     @Override
                     protected IStatus run(IProgressMonitor monitor) {
-                        monitor.beginTask("Refresh Studio Projects", 1);
+                        monitor.beginTask("Refresh Studio Projects", 10);
                         try {
                             StudioProvider provider = ConnectPlugin.getStudioProvider();
-                            provider.updateProjects(Connector.getDefault().getProjects());
                             monitor.worked(1);
+                            provider.updateProjects(Connector.getDefault().getProjects());
+                            monitor.worked(9);
                             return Status.OK_STATUS;
                         } catch (Exception e) {
                             return new Status(IStatus.ERROR,
@@ -221,6 +222,7 @@ public class StudioPanel extends Composite implements StudioListener {
                         }
                     }
                 };
+                job.setUser(true);
                 job.schedule();
             }
         };

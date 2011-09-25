@@ -43,7 +43,6 @@ public class StudioEditor extends EditorPart {
 
     @Override
     public void doSaveAs() {
-
     }
 
     @Override
