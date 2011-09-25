@@ -16,6 +16,10 @@
  */
 package org.nuxeo.ide.connect.studio;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -32,6 +36,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -48,6 +53,7 @@ import org.nuxeo.ide.connect.studio.tree.Node;
 import org.nuxeo.ide.connect.studio.tree.StudioProjectProvider;
 import org.nuxeo.ide.connect.studio.tree.TypeNode;
 import org.nuxeo.ide.connect.ui.MultiExportOperationsWizard;
+import org.nuxeo.ide.sdk.SDKPlugin;
 
 /**
  * You must call create() method in order to initialize the panel.
@@ -197,12 +203,25 @@ public class StudioPanel extends Composite implements StudioListener {
     protected IAction createRefreshAction() {
         Action action = new Action() {
             public void run() {
-                try {
-                    StudioProvider provider = ConnectPlugin.getStudioProvider();
-                    provider.updateProjects(Connector.getDefault().getProjects());
-                } catch (Exception e) {
-                    UI.showError("Failed to refresh studio project", e);
-                }
+                Job job = new Job("Refresh Studio Projects") {
+                    @Override
+                    protected IStatus run(IProgressMonitor monitor) {
+                        monitor.beginTask("Refresh Studio Projects", 1);
+                        try {
+                            StudioProvider provider = ConnectPlugin.getStudioProvider();
+                            provider.updateProjects(Connector.getDefault().getProjects());
+                            monitor.worked(1);
+                            return Status.OK_STATUS;
+                        } catch (Exception e) {
+                            return new Status(IStatus.ERROR,
+                                    SDKPlugin.PLUGIN_ID,
+                                    "Failed to refresh studio project", e);
+                        } finally {
+                            monitor.done();
+                        }
+                    }
+                };
+                job.schedule();
             }
         };
         action.setId("refresh");
@@ -235,7 +254,21 @@ public class StudioPanel extends Composite implements StudioListener {
     }
 
     @Override
-    public void handleProjectsUpdate(StudioProvider provider) {
+    public void handleProjectsUpdate(final StudioProvider provider) {
+        Display d = Display.getCurrent();
+        if (d == null) {
+            Display.getDefault().asyncExec(new Runnable() {
+                @Override
+                public void run() {
+                    doRefresh(provider);
+                }
+            });
+        } else {
+            doRefresh(provider);
+        }
+    }
+
+    protected void doRefresh(StudioProvider provider) {
         setInput(provider);
     }
 

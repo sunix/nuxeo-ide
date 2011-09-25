@@ -37,6 +37,7 @@ import org.eclipse.jdt.core.JavaCore;
 import org.nuxeo.ide.common.IOUtils;
 import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.sdk.deploy.Deployment;
+import org.nuxeo.ide.sdk.index.Index;
 import org.nuxeo.ide.sdk.server.ServerController;
 import org.nuxeo.ide.sdk.ui.NuxeoNature;
 import org.nuxeo.ide.sdk.ui.SDKClassPathBuilder;
@@ -104,6 +105,8 @@ public class NuxeoSDK {
             try {
                 synchronized (sdk) {
                     sdk.classpath = null;
+                    sdk.index = null;
+                    sdk.testIndex = null;
                 }
                 reloadSDKClasspathContainer();
             } catch (CoreException e) {
@@ -135,6 +138,10 @@ public class NuxeoSDK {
 
     protected File root;
 
+    protected volatile Index index;
+
+    protected volatile Index testIndex;
+
     /**
      * SDK classpath cache
      */
@@ -159,6 +166,31 @@ public class NuxeoSDK {
 
     public SDKInfo getInfo() {
         return info;
+    }
+
+    public Index getArtifactIndex() {
+        Index _index = index;
+        if (_index == null) {
+            synchronized (this) {
+                index = Index.load(new File(root, SDKInfo.SDK_ARTIFACTS_PATH),
+                        SDKInfo.SDK_ARTIFACTS_FILE);
+                _index = index;
+            }
+        }
+        return _index;
+    }
+
+    public Index getTestArtifactIndex() {
+        Index _index = testIndex;
+        if (_index == null) {
+            synchronized (this) {
+                testIndex = Index.load(new File(root,
+                        SDKInfo.SDK_TEST_ARTIFACTS_PATH),
+                        SDKInfo.SDK_TEST_ARTIFACTS_FILE);
+                _index = testIndex;
+            }
+        }
+        return _index;
     }
 
     public String getVersion() {
@@ -186,11 +218,11 @@ public class NuxeoSDK {
     }
 
     public File getLibSrcDir() {
-        return new File(root, "nxserver/sdk/sources");
+        return new File(root, "sdk/sources");
     }
 
     public File getBundlesSrcDir() {
-        return new File(root, "nxserver/sdk/sources");
+        return new File(root, "sdk/sources");
     }
 
     public IClasspathEntry[] getClasspathEntries() {

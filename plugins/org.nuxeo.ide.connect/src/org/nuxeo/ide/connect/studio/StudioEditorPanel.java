@@ -54,7 +54,7 @@ public class StudioEditorPanel extends StudioPanel {
     }
 
     @Override
-    public void handleProjectsUpdate(StudioProvider provider) {
+    protected void doRefresh(StudioProvider provider) {
         setInput(element);
     }
 }

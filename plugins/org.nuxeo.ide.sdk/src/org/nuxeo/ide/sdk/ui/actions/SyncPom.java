@@ -21,6 +21,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.nuxeo.ide.common.UI;
@@ -51,9 +52,14 @@ public class SyncPom implements IObjectActionDelegate {
                 SyncPomWizard wizard = new SyncPomWizard();
                 wizard.init(part.getSite().getWorkbenchWindow().getWorkbench(),
                         (IStructuredSelection) selection);
-                WizardDialog dialog = new WizardDialog(
+                final WizardDialog dialog = new WizardDialog(
                         part.getSite().getShell(), wizard);
-                dialog.create();
+                BusyIndicator.showWhile(null, new Runnable() {
+                    @Override
+                    public void run() {
+                        dialog.create();
+                    }
+                });
                 dialog.open();
             }
         } else {

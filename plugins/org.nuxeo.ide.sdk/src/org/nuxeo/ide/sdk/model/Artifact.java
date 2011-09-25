@@ -19,7 +19,7 @@ package org.nuxeo.ide.sdk.model;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathEntry;
-import org.nuxeo.ide.sdk.index.Index;
+import org.nuxeo.ide.sdk.NuxeoSDK;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -29,7 +29,7 @@ public class Artifact {
 
     public static Artifact fromClassPathEntry(IClasspathEntry entry) {
         String jarName = entry.getPath().lastSegment();
-        String gav = Index.getIndex().get(jarName);
+        String gav = NuxeoSDK.getDefault().getArtifactIndex().get(jarName);
         if (gav == null) {
             return null;
         }

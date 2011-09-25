@@ -51,7 +51,7 @@ public class SDKTableViewerFactory {
         column.setLabelProvider(new ColumnLabelProvider() {
             @Override
             public String getText(Object element) {
-                return ((SDKInfo) element).getTitle();
+                return ((SDKInfo) element).getName();
             }
 
             @Override
@@ -62,7 +62,19 @@ public class SDKTableViewerFactory {
         });
         TableColumn col = column.getColumn();
         col.setText("Name");
-        col.setWidth(150);
+        col.setWidth(100);
+        col.setResizable(true);
+
+        column = new TableViewerColumn(tv, SWT.NONE);
+        column.setLabelProvider(new ColumnLabelProvider() {
+            @Override
+            public String getText(Object element) {
+                return ((SDKInfo) element).getVersion();
+            }
+        });
+        col = column.getColumn();
+        col.setText("Version");
+        col.setWidth(100);
         col.setResizable(true);
 
         column = new TableViewerColumn(tv, SWT.NONE);

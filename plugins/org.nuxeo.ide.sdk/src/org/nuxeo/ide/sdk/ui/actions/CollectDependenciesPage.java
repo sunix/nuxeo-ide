@@ -47,10 +47,10 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.nuxeo.ide.common.UI;
+import org.nuxeo.ide.sdk.NuxeoSDK;
 import org.nuxeo.ide.sdk.index.Dependency;
 import org.nuxeo.ide.sdk.index.DependencyEntry;
 import org.nuxeo.ide.sdk.index.DependencyProvider;
-import org.nuxeo.ide.sdk.index.Index;
 import org.nuxeo.ide.sdk.model.Artifact;
 import org.nuxeo.ide.sdk.model.PomModel;
 
@@ -133,10 +133,15 @@ public class CollectDependenciesPage extends WizardPage {
     }
 
     protected void computeDependencies(CheckboxTreeViewer tv) {
+        NuxeoSDK sdk = NuxeoSDK.getDefault();
+        if (sdk == null) {
+            UI.showError("Failed to collect dependencies: No Nuxeo SDK was configured");
+            return;
+        }
         try {
             IJavaProject project = ((SyncPomWizard) getWizard()).getSelectedProject();
             Set<Dependency> deps = DependencyProvider.getDependencies(project);
-            DependencyEntry[] entries = Index.resolve(deps);
+            DependencyEntry[] entries = sdk.getArtifactIndex().resolve(deps);
             entries = removeExistingEntries(project, entries);
             // then remove deps already in pom
             tv.setInput(entries);

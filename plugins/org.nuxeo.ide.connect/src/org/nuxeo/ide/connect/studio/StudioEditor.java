@@ -53,7 +53,6 @@ public class StudioEditor extends EditorPart {
             setSite(site);
             setInput(input);
             setPartName(input.getName());
-
         } else {
             throw new PartInitException("Unsupported input: " + input);
         }

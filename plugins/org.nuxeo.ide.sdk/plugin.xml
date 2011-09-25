@@ -145,6 +145,32 @@
         </action>
 
       </objectContribution>
+      <objectContribution
+            adaptable="true"
+            id="org.nuxeo.ide.tools.pluginProjectToolSet"
+            nameFilter="pom.xml"
+            objectClass="org.eclipse.core.resources.IResource">
+         <menu
+               label="Nuxeo"
+               id="org.nuxeo.ide.tools">
+            <separator
+               name="group0">
+            </separator>
+         </menu>
+         <visibility>
+            <objectState
+                    name="projectNature"
+                    value="org.nuxeo.ide.NuxeoNature"/>
+         </visibility>
+        <action
+            label="Synchronize POM"
+            class="org.nuxeo.ide.sdk.ui.actions.SyncPom"
+            menubarPath="org.nuxeo.ide.tools/group1"
+            enablesFor="1"
+            id="org.nuxeo.ide.tools.syncPom">
+        </action>
+
+      </objectContribution>
       </extension>
 
     <extension

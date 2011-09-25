@@ -32,17 +32,36 @@ import org.nuxeo.ide.sdk.server.VMUtils;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
- *
+ * 
  */
 public class SDKInfo {
 
+    public static final String SDK_PATH = "sdk";
+
+    public static final String SDK_SOURCES_PATH = "sdk/sources";
+
+    public static final String SDK_TESTS_PATH = "sdk/tests";
+
+    public static final String SDK_DISTRIB_PATH = "sdk/distribution.properties";
+
+    public static final String SDK_ARTIFACTS_FILE = "artifacts.properties";
+
+    public static final String SDK_ARTIFACTS_PATH = "sdk/artifacts.properties";
+
+    public static final String SDK_TEST_ARTIFACTS_FILE = "test-artifacts.properties";
+
+    public static final String SDK_TEST_ARTIFACTS_PATH = "sdk/test-artifacts.properties";
+
     protected String id;
+
+    protected String name;
 
     protected String version;
 
     protected String path;
 
-    public SDKInfo(String path, String version) {
+    public SDKInfo(String path, String name, String version) {
+        this.name = name;
         this.path = path;
         this.version = version;
         String rawid = new StringBuilder(256).append(version).append('#').append(
@@ -55,8 +74,16 @@ public class SDKInfo {
         }
     }
 
-    public SDKInfo(File installFile, String version) {
-        this(installFile.getAbsolutePath(), version);
+    public SDKInfo(File installFile, String name, String version) {
+        this(installFile.getAbsolutePath(), name, version);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setVersion(String version) {
@@ -76,7 +103,7 @@ public class SDKInfo {
     }
 
     public String getTitle() {
-        return "Nuxeo SDK ".concat(version);
+        return new StringBuilder(64).append(name).append(" ").append(version).toString();
     }
 
     public String getId() {
@@ -99,8 +126,8 @@ public class SDKInfo {
         // be sure nuxeoctl is executable
         File file = new File(root, "bin/nuxeoctl");
         file.setExecutable(true);
-        // create the nxserver/sdk dir if not exists
-        file = new File(root, "nxserver/sdk");
+        // create the SDK dir if not exists
+        file = new File(root, SDK_PATH);
         file.mkdirs();
         // generate sdk conf if needed
         File sdkConf = new File(root, "bin/nuxeo-sdk.conf");
@@ -175,8 +202,9 @@ public class SDKInfo {
             throw new FileNotFoundException(
                     "The given file is not a directory: " + dir);
         }
-        File file = new File(dir, "nxserver/config/nuxeo.properties");
+        File file = new File(dir, SDK_DISTRIB_PATH);
         String version = null;
+        String name = "Nuxeo SDK";
         if (file.isFile()) {
             Properties props = new Properties();
             FileInputStream in = new FileInputStream(file);
@@ -185,15 +213,16 @@ public class SDKInfo {
             } finally {
                 in.close();
             }
-            version = props.getProperty("org.nuxeo.ecm.product.version",
+            version = props.getProperty("org.nuxeo.distribution.version",
                     "0.0.0");
+            name = props.getProperty("org.nuxeo.distribution.name", name);
         } else {
             version = getVersionFromBundles(new File(dir, "nxserver/bundles"));
         }
         if (version == null) {
             throw new FileNotFoundException("Not a Nuxeo SDK: " + dir);
         }
-        SDKInfo sdk = new SDKInfo(dir, version);
+        SDKInfo sdk = new SDKInfo(dir, name, version);
         sdk.applyPatch();
         // TODO sdk.index();
         return sdk;

@@ -30,4 +30,5 @@ public class AddNuxeoNature extends AddNaturesAction {
     public AddNuxeoNature() {
         super(NuxeoNature.ID);
     }
+
 }

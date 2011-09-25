@@ -54,7 +54,8 @@ public class SDKRegistry {
             if (version == null) {
                 continue;
             }
-            sdks.add(new SDKInfo(path, version));
+            String name = sdkPrefs.get("name", "Nuxeo SDK");
+            sdks.add(new SDKInfo(path, name, version));
         }
         return sdks;
     }
@@ -64,6 +65,7 @@ public class SDKRegistry {
         Preferences prefs = getGlobalPreferences();
         Preferences sdkPrefs = prefs.node(sdk.getId());
         sdkPrefs.put("path", sdk.getPath());
+        sdkPrefs.put("name", sdk.getName());
         sdkPrefs.put("version", sdk.getVersion());
         prefs.flush();
     }
@@ -95,8 +97,8 @@ public class SDKRegistry {
         Preferences prefs = getGlobalPreferences();
         if (prefs.nodeExists(id)) {
             Preferences sdkPrefs = prefs.node(id);
-            return new SDKInfo(sdkPrefs.get("path", null), sdkPrefs.get(
-                    "version", null));
+            return new SDKInfo(sdkPrefs.get("path", null), sdkPrefs.get("name",
+                    "Nuxeo SDK"), sdkPrefs.get("version", null));
         }
         return null;
     }
@@ -111,7 +113,8 @@ public class SDKRegistry {
             if (key.endsWith(suffix)) {
                 Preferences sdkPrefs = prefs.node(key);
                 result.add(new SDKInfo(sdkPrefs.get("path", null),
-                        sdkPrefs.get("version", null)));
+                        sdkPrefs.get("name", "Nuxeo SDK"), sdkPrefs.get(
+                                "version", null)));
             }
         }
         return result;

@@ -39,7 +39,22 @@ import org.nuxeo.ide.sdk.userlibs.UserLibPreferences;
  */
 public class Index {
 
-    private volatile static Map<String, String> index;
+    public static Index load(File file, String builtinIndex) {
+        Map<String, String> map = null;
+        try {
+            if (file.isFile()) {
+                map = loadIndex(file);
+            } else if (builtinIndex != null) {
+                map = loadBuiltinIndex(builtinIndex);
+            }
+        } catch (Throwable t) {
+            t.printStackTrace(); // TODO log
+        }
+        if (map == null) {
+            map = new HashMap<String, String>();
+        }
+        return new Index(map);
+    }
 
     public static Map<String, String> loadIndex(URL url) throws IOException {
         InputStream in = url.openStream();
@@ -78,28 +93,30 @@ public class Index {
         return index;
     }
 
-    public static Map<String, String> loadBuiltinIndex() throws IOException {
-        URL url = Index.class.getResource("index.properties");
+    public static Map<String, String> loadBuiltinIndex(String indexName)
+            throws IOException {
+        URL url = Index.class.getResource(indexName);
         if (url != null) {
             return loadIndex(url);
         }
         return null;
     }
 
-    public static Map<String, String> getIndex() {
-        Map<String, String> _index = index;
-        if (_index == null) {
-            try {
-                _index = loadBuiltinIndex();
-                index = _index;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return _index;
+    protected Map<String, String> index;
+
+    public Index(Map<String, String> map) {
+        this.index = map;
     }
 
-    public static Artifact resolve(Dependency dep) {
+    public final Map<String, String> getIndex() {
+        return index;
+    }
+
+    public final String get(String key) {
+        return index.get(key);
+    }
+
+    public Artifact resolve(Dependency dep) {
         if (dep.isBinary()) {
             String name = dep.getJar().getName();
             String gav = getIndex().get(name);
@@ -134,7 +151,7 @@ public class Index {
         return null;
     }
 
-    public static DependencyEntry[] resolve(Collection<Dependency> deps) {
+    public DependencyEntry[] resolve(Collection<Dependency> deps) {
         DependencyEntry unresolved = new DependencyEntry(new Artifact("*", "*"));
         TreeMap<String, DependencyEntry> map = new TreeMap<String, DependencyEntry>();
         for (Dependency dep : deps) {

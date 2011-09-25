@@ -19,6 +19,7 @@ package org.nuxeo.ide.sdk.server.ui;
 import java.io.File;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
@@ -146,5 +147,16 @@ public class SDKPreferencePage extends FormPreferencePage implements
         SDKTableWidget sdkWidget = (SDKTableWidget) form.getWidget("sdks");
         sdkWidget.viewer.setInput(Boolean.TRUE);
         sdkWidget.setDefaultSDK(SDKRegistry.getDefaultSDKId());
+    }
+
+    @Override
+    public boolean performOk() {
+        BusyIndicator.showWhile(null, new Runnable() {
+            @Override
+            public void run() {
+                SDKPreferencePage.super.performOk();
+            }
+        });
+        return true;
     }
 }
