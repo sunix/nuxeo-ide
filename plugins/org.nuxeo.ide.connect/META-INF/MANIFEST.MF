@@ -20,3 +20,4 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: lib/jackson-core-asl-1.8.1.jar,
  .
+Bundle-Vendor: Nuxeo
