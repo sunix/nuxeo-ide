@@ -26,6 +26,8 @@ public interface Constants {
 
     public static final String CLASSPATH_CONTAINER = "classpathContainer";
 
+    public static final String TEST_CLASSPATH_CONTAINER = "testClasspathContainer";
+
     public final static String PROJECT_ID = "projectId";
 
     public final static String PROJECT_NAME = "projectName";

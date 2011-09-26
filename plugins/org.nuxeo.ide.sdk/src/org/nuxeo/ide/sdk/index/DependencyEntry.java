@@ -68,7 +68,10 @@ public class DependencyEntry {
     }
 
     public String getLabel() {
-        return isResolved() ? artifact.toString() : "Unresolved - "
-                + getLocation();
+        String label = artifact.toString();
+        if (artifact.getScope() != null) {
+            label = label + " (scope: " + artifact.getScope() + ")";
+        }
+        return isResolved() ? label : "Unresolved - " + getLocation();
     }
 }

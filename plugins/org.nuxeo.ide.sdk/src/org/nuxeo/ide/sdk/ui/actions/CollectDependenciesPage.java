@@ -132,6 +132,26 @@ public class CollectDependenciesPage extends WizardPage {
         return list.toArray(new DependencyEntry[list.size()]);
     }
 
+    protected DependencyEntry[] removeDuplicateEntries(
+            DependencyEntry[] entriesToUpdate, DependencyEntry[] entries)
+            throws Exception {
+        HashSet<Artifact> set = new HashSet<Artifact>(entries.length);
+        for (DependencyEntry entry : entries) {
+            set.add(entry.getArtifact());
+        }
+        ArrayList<DependencyEntry> list = new ArrayList<DependencyEntry>(
+                entriesToUpdate.length);
+        for (DependencyEntry entry : entriesToUpdate) {
+            if (!set.contains(entry.getArtifact())) {
+                list.add(entry);
+            }
+        }
+        if (list.size() == entriesToUpdate.length) {
+            return entriesToUpdate;
+        }
+        return list.toArray(new DependencyEntry[list.size()]);
+    }
+
     protected void computeDependencies(CheckboxTreeViewer tv) {
         NuxeoSDK sdk = NuxeoSDK.getDefault();
         if (sdk == null) {
@@ -140,10 +160,37 @@ public class CollectDependenciesPage extends WizardPage {
         }
         try {
             IJavaProject project = ((SyncPomWizard) getWizard()).getSelectedProject();
-            Set<Dependency> deps = DependencyProvider.getDependencies(project);
-            DependencyEntry[] entries = sdk.getArtifactIndex().resolve(deps);
-            entries = removeExistingEntries(project, entries);
+            Set<Dependency> mainDeps = DependencyProvider.getNonTestDependencies(project);
+            DependencyEntry[] mainEntries = sdk.getArtifactIndex().resolve(
+                    mainDeps);
             // then remove deps already in pom
+            mainEntries = removeExistingEntries(project, mainEntries);
+
+            Set<Dependency> testDeps = DependencyProvider.getTestDependencies(project);
+            DependencyEntry[] testEntries = sdk.getArtifactIndex().resolve(
+                    testDeps);
+            // remove test dependencies already in main dependencies
+            testEntries = removeDuplicateEntries(testEntries, mainEntries);
+            // then remove deps already in pom
+            testEntries = removeExistingEntries(project, testEntries);
+            // add test scope
+            for (DependencyEntry entry : testEntries) {
+                entry.getArtifact().setScope("test");
+            }
+
+            DependencyEntry[] entries = null;
+            if (mainEntries.length == 0) {
+                entries = testEntries;
+            } else if (testEntries.length == 0) {
+                entries = mainEntries;
+            } else {
+                entries = new DependencyEntry[mainEntries.length
+                        + testEntries.length];
+                System.arraycopy(mainEntries, 0, entries, 0, mainEntries.length);
+                System.arraycopy(testEntries, 0, entries, mainEntries.length,
+                        testEntries.length);
+            }
+
             tv.setInput(entries);
         } catch (Exception e) {
             UI.showError("Failed to collect dependencies", e);

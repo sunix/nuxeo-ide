@@ -19,7 +19,10 @@ package org.nuxeo.ide.sdk.index;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
@@ -34,11 +37,54 @@ import org.eclipse.jdt.internal.corext.refactoring.structure.ReferenceFinderUtil
  */
 public class DependencyProvider {
 
+    /**
+     * Get all dependencies
+     * 
+     * @param project
+     * @return
+     * @throws Exception
+     */
     public static Set<Dependency> getDependencies(IJavaProject project)
             throws Exception {
         Set<Dependency> result = new HashSet<Dependency>();
         for (IPackageFragmentRoot root : project.getPackageFragmentRoots()) {
             if (root.getKind() == IPackageFragmentRoot.K_SOURCE) {
+                introspectPackageRoot(root, result);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Get all non test dependencies
+     * 
+     * @param project
+     * @return
+     * @throws Exception
+     */
+    public static Set<Dependency> getNonTestDependencies(IJavaProject project)
+            throws Exception {
+        IPath testPrefix = new Path("src/test");
+        Set<Dependency> result = new HashSet<Dependency>();
+        for (IPackageFragmentRoot root : project.getPackageFragmentRoots()) {
+            if (root.getKind() == IPackageFragmentRoot.K_SOURCE) {
+                IResource r = root.getCorrespondingResource();
+                if (r != null
+                        && !testPrefix.isPrefixOf(r.getProjectRelativePath())) {
+                    introspectPackageRoot(root, result);
+                }
+            }
+        }
+        return result;
+    }
+
+    public static Set<Dependency> getTestDependencies(IJavaProject project)
+            throws Exception {
+        Set<Dependency> result = new HashSet<Dependency>();
+        IResource rootResource = project.getProject().getFolder("src/test/java");
+        if (rootResource.exists()) {
+            IPackageFragmentRoot root = project.getPackageFragmentRoot(rootResource);
+            if (root != null) {
                 introspectPackageRoot(root, result);
             }
         }

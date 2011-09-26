@@ -51,6 +51,21 @@
             name="Nuxeo SDK">
       </classpathContainerPage>
    </extension>
+   <extension
+         point="org.eclipse.jdt.core.classpathContainerInitializer">
+      <classpathContainerInitializer
+            class="org.nuxeo.ide.sdk.ui.SDKClassPathContainerInitializer"
+            id="org.nuxeo.ide.SDK_TEST_CONTAINER">
+      </classpathContainerInitializer>
+   </extension>
+   <extension
+         point="org.eclipse.jdt.ui.classpathContainerPage">
+      <classpathContainerPage
+            class="org.nuxeo.ide.sdk.ui.SDKTestClassPathContainerPage"
+            id="org.nuxeo.ide.SDK_TEST_CONTAINER"
+            name="Nuxeo SDK (Tests)">
+      </classpathContainerPage>
+   </extension>
 
    <extension
          id="org.nuxeo.ide.NuxeoNature"

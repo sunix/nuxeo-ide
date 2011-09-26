@@ -64,6 +64,25 @@ public class SDKClassPathBuilder {
         return result.toArray(new IClasspathEntry[result.size()]);
     }
 
+    public static IClasspathEntry[] buildTests(NuxeoSDK sdk) {
+        File tests = sdk.getTestsDir();
+        File libSrc = sdk.getLibSrcDir();
+
+        ArrayList<IClasspathEntry> result = new ArrayList<IClasspathEntry>();
+
+        collectPaths(tests, libSrc, result);
+
+        Collections.sort(result, new Comparator<IClasspathEntry>() {
+            @Override
+            public int compare(IClasspathEntry o1, IClasspathEntry o2) {
+                return o1.getPath().lastSegment().compareTo(
+                        o2.getPath().lastSegment());
+            }
+        });
+
+        return result.toArray(new IClasspathEntry[result.size()]);
+    }
+
     protected static void collectUserLibraries(File srcRoot,
             List<IClasspathEntry> result) {
         try {

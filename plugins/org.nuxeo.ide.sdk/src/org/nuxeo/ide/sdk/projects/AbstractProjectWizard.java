@@ -68,6 +68,8 @@ public abstract class AbstractProjectWizard extends
         ctx.put(Constants.PARENT_VERSION, version);
         ctx.put(Constants.BUNDLE_VERSION, osgiVersion);
         ctx.put(Constants.CLASSPATH_CONTAINER, SDKClassPathContainer.ID);
+        ctx.put(Constants.TEST_CLASSPATH_CONTAINER,
+                SDKClassPathContainer.ID_TESTS);
         return ctx;
     }
 

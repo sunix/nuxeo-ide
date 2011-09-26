@@ -68,6 +68,10 @@ public class SDKClassPathContainerPage extends WizardPage implements
         super(pageName, title, titleImage);
     }
 
+    protected IClasspathEntry[] getClasspath(NuxeoSDK sdk) {
+        return sdk.getClasspathEntries();
+    }
+
     @Override
     public void createControl(Composite parent) {
         modified = new HashSet<IClasspathEntry>();
@@ -116,7 +120,7 @@ public class SDKClassPathContainerPage extends WizardPage implements
 
         NuxeoSDK sdk = NuxeoSDK.getDefault();
         if (sdk != null) {
-            cp = sdk.getClasspathEntries();
+            cp = getClasspath(sdk);
             tv.setInput(cp);
         }
 

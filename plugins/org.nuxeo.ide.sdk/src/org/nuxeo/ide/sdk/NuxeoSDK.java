@@ -105,6 +105,7 @@ public class NuxeoSDK {
             try {
                 synchronized (sdk) {
                     sdk.classpath = null;
+                    sdk.testClasspath = null;
                     sdk.index = null;
                     sdk.testIndex = null;
                 }
@@ -146,6 +147,8 @@ public class NuxeoSDK {
      * SDK classpath cache
      */
     protected volatile IClasspathEntry[] classpath;
+
+    protected volatile IClasspathEntry[] testClasspath;
 
     // /**
     // * Class index (class -> artifact). ONly initialized at demand. Used to
@@ -225,6 +228,10 @@ public class NuxeoSDK {
         return new File(root, "sdk/sources");
     }
 
+    public File getTestsDir() {
+        return new File(root, "sdk/tests");
+    }
+
     public IClasspathEntry[] getClasspathEntries() {
         IClasspathEntry[] cache = classpath;
         if (cache == null) {
@@ -233,6 +240,20 @@ public class NuxeoSDK {
                 if (cache == null) {
                     classpath = SDKClassPathBuilder.build(this);
                     cache = classpath;
+                }
+            }
+        }
+        return cache;
+    }
+
+    public IClasspathEntry[] getTestClasspathEntries() {
+        IClasspathEntry[] cache = testClasspath;
+        if (cache == null) {
+            synchronized (this) {
+                cache = testClasspath;
+                if (cache == null) {
+                    testClasspath = SDKClassPathBuilder.buildTests(this);
+                    cache = testClasspath;
                 }
             }
         }

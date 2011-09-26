@@ -167,13 +167,16 @@ public class PomModel extends XmlFile {
         child = doc.createElement("artifactId");
         child.setTextContent(artifact.getArtifactId());
         el.appendChild(child);
-        if (artifact.getVersion() != null) {
-            child = doc.createElement("version");
-            child.setTextContent(artifact.getVersion());
-        }
+        // Do not manage versions for now
+        // if (artifact.getVersion() != null) {
+        // child = doc.createElement("version");
+        // child.setTextContent(artifact.getVersion());
+        // el.appendChild(child);
+        // }
         if (artifact.getScope() != null) {
             child = doc.createElement("scope");
             child.setTextContent(artifact.getScope());
+            el.appendChild(child);
         }
     }
 }

@@ -30,15 +30,36 @@ public class SDKClassPathContainer implements IClasspathContainer {
 
     public final static String ID = "org.nuxeo.ide.SDK_CONTAINER";
 
+    public final static String ID_TESTS = "org.nuxeo.ide.SDK_TEST_CONTAINER";
+
     public static final IClasspathEntry[] EMPTY_CP = new IClasspathEntry[0];
 
     protected IPath containerPath;
 
     protected boolean useSDKClasspath;
 
+    protected boolean testScope;
+
     public SDKClassPathContainer(IPath containerPath) {
         this.containerPath = containerPath;
         useSDKClasspath = SDKRegistry.useSDKClasspath();
+        testScope = hasTestScope(containerPath);
+    }
+
+    public boolean hasTestScope() {
+        return testScope;
+    }
+
+    public static boolean hasTestScope(IPath containerPath) {
+        return ID_TESTS.equals(containerPath.segment(0));
+    }
+
+    public static boolean isTestEntry(IClasspathEntry entry) {
+        IPath path = entry.getPath();
+        if (path.segmentCount() < 2) {
+            return false;
+        }
+        return "tests".equals(path.segment(path.segmentCount() - 2));
     }
 
     @Override
@@ -48,7 +69,8 @@ public class SDKClassPathContainer implements IClasspathContainer {
         }
         NuxeoSDK sdk = NuxeoSDK.getDefault();
         if (sdk != null) {
-            return sdk.getClasspathEntries();
+            return testScope ? sdk.getTestClasspathEntries()
+                    : sdk.getClasspathEntries();
         } else {
             return EMPTY_CP;
         }
@@ -64,7 +86,7 @@ public class SDKClassPathContainer implements IClasspathContainer {
 
     @Override
     public String getDescription() {
-        return "Nuxeo SDK";
+        return testScope ? "Nuxeo SDK (Tests)" : "Nuxeo SDK";
     }
 
     @Override
