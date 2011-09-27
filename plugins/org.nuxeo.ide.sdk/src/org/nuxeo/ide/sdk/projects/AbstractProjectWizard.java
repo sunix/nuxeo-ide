@@ -58,12 +58,7 @@ public abstract class AbstractProjectWizard extends
         // initialize defaults
         ctx.setTemplate(defaultTemplate);
         String version = NuxeoSDK.getDefault().getVersion();
-        String osgiVersion = version;
-        if (version.endsWith("-SNAPSHOT")) {
-            osgiVersion = version.substring(0,
-                    version.length() - "-SNAPSHOT".length())
-                    + ".qualifier";
-        }
+        String osgiVersion = toOsgiVersion(version);
         ctx.put(Constants.TARGET_VERSION, version);
         ctx.put(Constants.PARENT_VERSION, version);
         ctx.put(Constants.BUNDLE_VERSION, osgiVersion);
@@ -71,6 +66,15 @@ public abstract class AbstractProjectWizard extends
         ctx.put(Constants.TEST_CLASSPATH_CONTAINER,
                 SDKClassPathContainer.ID_TESTS);
         return ctx;
+    }
+
+    protected static String toOsgiVersion(String version) {
+        if (!version.endsWith("-SNAPSHOT")) {
+            return version;
+        }
+        return version.substring(0,
+                    version.length() - "-SNAPSHOT".length())
+                    + ".qualifier";
     }
 
     @Override

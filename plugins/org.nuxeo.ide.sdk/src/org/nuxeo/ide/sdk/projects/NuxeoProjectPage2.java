@@ -17,6 +17,7 @@
 package org.nuxeo.ide.sdk.projects;
 
 import org.eclipse.swt.widgets.Composite;
+import org.nuxeo.ide.common.StringUtils;
 import org.nuxeo.ide.common.wizards.FormWizardPage;
 import org.nuxeo.ide.sdk.NuxeoSDK;
 import org.nuxeo.ide.sdk.templates.Constants;
@@ -78,7 +79,16 @@ public class NuxeoProjectPage2 extends FormWizardPage<ProjectTemplateContext>
     @Override
     public void update(ProjectTemplateContext ctx) {
         ctx.setPropertyIfNotNull(form, ARTIFACT_ID);
-        ctx.setPropertyIfNotNull(form, ARTIFACT_VERSION, BUNDLE_VERSION);
+        ctx.setPropertyIfNotNull(form, ARTIFACT_VERSION);
+        
+        // compute bundle version
+        String artifactVersion = form.getWidgetValueAsString(ARTIFACT_VERSION);
+        if (artifactVersion == null || artifactVersion.trim().isEmpty()) {
+            artifactVersion = form.getWidgetValueAsString(PARENT_VERSION);
+        }
+        String bundleVersion = AbstractProjectWizard.toOsgiVersion(artifactVersion);
+        ctx.put(BUNDLE_VERSION, bundleVersion);
+        
         ctx.setPropertyIfNotNull(form, GROUP_ID);
 
         ctx.setPropertyIfNotNull(form, ARTIFACT_NAME);
