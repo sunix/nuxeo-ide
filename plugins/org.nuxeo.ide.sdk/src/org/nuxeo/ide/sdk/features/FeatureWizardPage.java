@@ -47,10 +47,10 @@ public abstract class FeatureWizardPage extends
 
     @Override
     public Form createForm() {
-        Form form = super.createForm();
-        form.addWidgetType(PackageChooserWidget.class);
-        form.addWidgetType(ProjectChooserWidget.class);
-        return form;
+        Form newForm = super.createForm();
+        newForm.addWidgetType(PackageChooserWidget.class);
+        newForm.addWidgetType(ProjectChooserWidget.class);
+        return newForm;
     }
 
     @Override

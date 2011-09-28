@@ -381,7 +381,7 @@
    <renameParticipant
          class="org.nuxeo.ide.sdk.features.RenameFeatureParticipant"
          id="org.nuxeo.ide.sdk.renameFeatureParticipant"
-         name="Synchronizing Extensions">
+         name="Rename Feature">
          <enablement>
       <with variable="affectedNatures">
         <iterate operator="or">
@@ -396,7 +396,7 @@
    <renameParticipant
          class="org.nuxeo.ide.sdk.features.RenameExtensionParticipant"
          id="org.nuxeo.ide.sdk.renameExtensionParticipant"
-         name="Synchronizing Manifest">
+         name="Rename Extension">
          <enablement>
       <with variable="affectedNatures">
         <iterate operator="or">
@@ -414,7 +414,7 @@
    <moveParticipant
          class="org.nuxeo.ide.sdk.features.MoveFeatureParticipant"
          id="org.nuxeo.ide.sdk.moveFeatureParticipant"
-         name="Synchronizing Extensions">
+         name="Move Feature">
          <enablement>
       <with variable="affectedNatures">
         <iterate operator="or">
@@ -457,6 +457,15 @@
             id="org.nuxeo.ide.sdk.ui.NuxeoPerspective">
       </perspectiveShortcut>         
    </perspectiveExtension>   
+</extension>
+<extension
+      point="org.eclipse.core.contenttype.contentTypes">
+   <content-type
+         file-extensions="png,gif,jpeg,jpg,data"
+         id="org.nuxeo.ide.sdk.binary"
+         name="Binary"
+         priority="normal">
+   </content-type>
 </extension>
 
 </plugin>

@@ -58,7 +58,7 @@ public class DeployProject implements IObjectActionDelegate {
                     "nxserver/plugins");
             plugins.mkdirs();
             IProject project = (IProject) ((IStructuredSelection) selection).getFirstElement();
-            new ServerController(plugins).deploy(project,
+            sdk.getController().deploy(project,
                     part.getSite().getShell());
         }
     }

@@ -186,6 +186,32 @@
             name="Permission Visibility">
       </wizard>
       
+      <!-- seam -->
+      
+      <wizard
+            category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.seam.newWizards"
+            class="org.nuxeo.ide.sdk.features.seam.SeamActionCreationWizard"
+            icon="icons/seam.gif"
+            id="org.nuxeo.ide.sdk.features.seam.SeamActionCreationWizard"
+            name="Action Bean">
+      </wizard>
+      
+      <wizard
+            category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.seam.newWizards"
+            class="org.nuxeo.ide.sdk.features.seam.SeamControllerCreationWizard"
+            icon="icons/seam.gif"
+            id="org.nuxeo.ide.sdk.features.seam.SeamControllerCreationWizard"
+            name="Controller Bean">
+      </wizard>
+      
+      <wizard
+            category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.seam.newWizards"
+            class="org.nuxeo.ide.sdk.features.seam.SeamServiceCreationWizard"
+            icon="icons/seam.gif"
+            id="org.nuxeo.ide.sdk.features.seam.SeamServiceCreationWizard"
+            name="Service Bean">
+      </wizard>
+      
    </extension>
 
 

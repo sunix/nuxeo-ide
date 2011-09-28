@@ -13,6 +13,8 @@ target
 *.iws
 *-orig
 *-bak
+#*#
+*.patch
 eclipse
 nuxeo-sdk
 target-platform
@@ -20,5 +22,6 @@ org.nuxeo.ide.releng/externals
 sites/*/plugins
 sites/*/features
 plugins/org.nuxeo.ide.archetype/features/
+plugins/org.nuxeo.ide.qatests/screenshots/
 *.bak
 *.zip

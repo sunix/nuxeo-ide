@@ -54,7 +54,7 @@ public class ServerConfiguration {
     protected boolean suspend;
 
     protected String debugPort;
-
+    
     public ServerConfiguration() {
         debugPort = "8000";
         suspend = false;
@@ -62,7 +62,7 @@ public class ServerConfiguration {
     }
 
     public void setVmArgs(String vmArgs) {
-        this.vmArgs = vmArgs;
+        this.vmArgs = vmArgs.trim();
     }
 
     public String getVmArgs() {
@@ -84,22 +84,17 @@ public class ServerConfiguration {
     public String getDebugPort() {
         return debugPort;
     }
-
-    public String getVmArgs(boolean isDebug) {
-        String args = vmArgs.trim();
-        if (isDebug) {
-            String debugArgs = getDebugVmArgs();
-            if (args.length() == 0) {
-                args = debugArgs;
-            } else {
-                args = args + " " + debugArgs;
-            }
-            return args;
-        } else if (args.length() == 0) {
-            return null;
-        } else {
-            return args;
+   
+    public String getVmArgs(int jmxPort, boolean isDebug) {
+        String args = getRemoteManagementVmArgs(jmxPort);
+        String vmArgs = getVmArgs();
+        if (!vmArgs.isEmpty()) {
+            args += " " + vmArgs;
         }
+        if (isDebug) {
+            args += " " + getDebugVmArgs();
+        }
+        return args;
     }
 
     public String getDebugVmArgs() {
@@ -107,4 +102,10 @@ public class ServerConfiguration {
                 + ",server=y,suspend=" + (suspend ? "y" : "n");
     }
 
+    public String getRemoteManagementVmArgs(int jmxPort) {
+        return "-Dcom.sun.management.jmxremote=true " + 
+               "-Dcom.sun.management.jmxremote.ssl=false " +
+               "-Dcom.sun.management.jmxremote.port="+jmxPort + " "+
+               "-Dcom.sun.management.jmxremote.authenticate=false";
+    }
 }

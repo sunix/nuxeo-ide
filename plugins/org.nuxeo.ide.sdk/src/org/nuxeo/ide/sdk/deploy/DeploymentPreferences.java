@@ -55,7 +55,7 @@ public class DeploymentPreferences {
         if (defaultId != null) {
             return getDeployment(defaultId);
         }
-        return null;
+        return new Deployment("null"); // returns an empty deployment
     }
 
     public Deployment[] getDeployments() {

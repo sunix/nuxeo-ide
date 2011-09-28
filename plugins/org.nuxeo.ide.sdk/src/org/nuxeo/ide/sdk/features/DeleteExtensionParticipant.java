@@ -17,6 +17,7 @@
 package org.nuxeo.ide.sdk.features;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -38,14 +39,14 @@ public class DeleteExtensionParticipant extends DeleteParticipant {
     @Override
     protected boolean initialize(Object element) {
         if (element instanceof IFile) {
-            IFile file = (IFile) element;
-            if (!"xml".equals(file.getFileExtension())) {
+            IResource resource = (IFile) element;
+            if (!"xml".equals(resource.getFileExtension())) {
                 return false;
             }
-            String path = file.getParent().getProjectRelativePath().makeRelative().removeTrailingSeparator().toString();
+            String path = resource.getParent().getProjectRelativePath().makeRelative().removeTrailingSeparator().toString();
             if (path.startsWith(ExtensionModel.OSGI_INF_PATH)
                     || path.startsWith(ExtensionModel.GADGET_PATH)) {
-                this.file = file;
+                this.file = (IFile)resource;
                 return true;
             }
         }

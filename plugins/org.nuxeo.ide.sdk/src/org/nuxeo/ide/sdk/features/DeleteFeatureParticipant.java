@@ -17,6 +17,8 @@
 package org.nuxeo.ide.sdk.features;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.mapping.IResourceChangeDescriptionFactory;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -55,7 +57,7 @@ public class DeleteFeatureParticipant extends DeleteParticipant {
 
     @Override
     public String getName() {
-        return "Extension Synchronizer";
+        return "Delete Feature Synchronizer";
     }
 
     @Override
@@ -64,14 +66,52 @@ public class DeleteFeatureParticipant extends DeleteParticipant {
         if (type == null) {
             return new RefactoringStatus();
         }
+        RefactoringStatus status = new RefactoringStatus();
         ResourceChangeChecker checker = (ResourceChangeChecker) context.getChecker(ResourceChangeChecker.class);
         IResourceChangeDescriptionFactory deltaFactory = checker.getDeltaFactory();
         deltaFactory.delete(type.file);
         IFile mf = type.getProject().getFile(ManifestWriter.PATH);
         deltaFactory.change(mf);
-        RefactoringStatus status = new RefactoringStatus();
         status.addInfo("Deleting extension file: " + type.file.getName());
+        // check for resource bundles impact
+        checkI18NConditions(status, deltaFactory);
+        checkResourcesConditions(status, deltaFactory);
         return status;
+    }
+
+    protected void checkI18NConditions(RefactoringStatus status,
+            IResourceChangeDescriptionFactory deltaFactory) {
+        IFolder i18nFolder = type.getProject().getFolder(
+                "src/main/i18n/web/nuxeo.war/WEB-INF/classes");
+        if (!i18nFolder.exists()) {
+            return;
+        }
+        try {
+            for (IResource m : i18nFolder.members()) {
+                deltaFactory.change((IFile) m);
+            }
+        } catch (Exception e) {
+            status.addError("Cannot list i18n resource bundles");
+        }
+    }
+
+    protected void checkResourcesConditions(final RefactoringStatus status,
+            final IResourceChangeDescriptionFactory deltaFactory) {
+        final String fqn = type.type.getFullyQualifiedName();
+        final IFolder resources = type.getProject().getFolder(
+                "src/main/resources");
+        try {
+            resources.accept(new ResourceVisitor(fqn) {
+
+                @Override
+                public void visitResource(IFile file, String suffix, @SuppressWarnings("hiding") ContentType type) {
+                    deltaFactory.delete(file);
+                }
+
+            });
+        } catch (CoreException e) {
+            status.addError("Cannot visit binary resources");
+        }
     }
 
     @Override
@@ -85,7 +125,36 @@ public class DeleteFeatureParticipant extends DeleteParticipant {
             change.remove("Nuxeo-Component", type.getRuntimeExtensionPath());
             result.add(change);
         }
+        create18NChange(result);
+        createResourcesChange(result);
         return result;
     }
 
+    protected void create18NChange(CompositeChange result)
+            throws CoreException {
+        final String fqn = type.type.getFullyQualifiedName();
+        IFolder i18nFolder = type.getProject().getFolder(
+                "src/main/i18n/web/nuxeo.war/WEB-INF/classes");
+        for (IResource m : i18nFolder.members()) {
+            final IFile file = (IFile) m;
+            result.add(new RemoveMatchingLinesChange(file, fqn));
+        }
+    }
+
+    protected void createResourcesChange(final CompositeChange result)
+            throws CoreException {
+        final String fqn = type.type.getFullyQualifiedName();
+        final IFolder resources = type.getProject().getFolder(
+                "src/main/resources");
+
+        resources.accept(new ResourceVisitor(fqn) {
+
+            @Override
+            public void visitResource(IFile file, String suffix,
+                    @SuppressWarnings("hiding") ContentType type) {
+                result.add(new DeleteResourceChange(file.getFullPath(), false));
+            }
+
+        });
+    }
 }

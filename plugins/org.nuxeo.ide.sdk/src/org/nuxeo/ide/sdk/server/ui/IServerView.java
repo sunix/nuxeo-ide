@@ -17,6 +17,7 @@
 package org.nuxeo.ide.sdk.server.ui;
 
 import org.eclipse.ui.IViewPart;
+import org.nuxeo.ide.sdk.server.ServerController;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -37,4 +38,6 @@ public interface IServerView extends IViewPart {
     public boolean getScrollLock();
 
     public void append(String text);
+    
+    public ServerController getController();
 }

@@ -28,11 +28,17 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.eclipse.core.runtime.Platform;
 import org.nuxeo.ide.sdk.NuxeoSDK;
+import org.nuxeo.ide.sdk.templates.cmd.AppendCommand;
+import org.nuxeo.ide.sdk.templates.cmd.BinaryResourceCommand;
 import org.nuxeo.ide.sdk.templates.cmd.Command;
 import org.nuxeo.ide.sdk.templates.cmd.DependenciesCommand;
+import org.nuxeo.ide.sdk.templates.cmd.JavaClassCommand;
 import org.nuxeo.ide.sdk.templates.cmd.MkdirCommand;
 import org.nuxeo.ide.sdk.templates.cmd.RenameCommand;
+import org.nuxeo.ide.sdk.templates.cmd.ResourceBundleCommand;
+import org.nuxeo.ide.sdk.templates.cmd.ResourceCommand;
 import org.nuxeo.ide.sdk.templates.cmd.SelectCommand;
+import org.nuxeo.ide.sdk.templates.cmd.SourceCommand;
 import org.nuxeo.ide.sdk.templates.cmd.TransformCommand;
 import org.osgi.framework.Bundle;
 import org.w3c.dom.Document;
@@ -71,8 +77,14 @@ public class TemplateManager {
         commands.put("rename", RenameCommand.class);
         commands.put("mkdir", MkdirCommand.class);
         commands.put("transform", TransformCommand.class);
+        commands.put("append", AppendCommand.class);
         commands.put("select", SelectCommand.class);
         commands.put("dependencies", DependenciesCommand.class);
+        commands.put("source", SourceCommand.class);
+        commands.put("resource", ResourceCommand.class);
+        commands.put("binaryResource", BinaryResourceCommand.class);
+        commands.put("javaClass", JavaClassCommand.class);
+        commands.put("resourceBundle", ResourceBundleCommand.class);
     }
 
     public void addCommand(String key, Class<? extends Command> type) {

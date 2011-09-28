@@ -43,7 +43,10 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Shell;
 import org.nuxeo.ide.common.UI;
+import org.nuxeo.ide.sdk.NuxeoSDK;
 import org.nuxeo.ide.sdk.SDKInfo;
+import org.nuxeo.ide.sdk.deploy.Deployment;
+import org.nuxeo.ide.sdk.deploy.DeploymentPreferences;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -59,11 +62,13 @@ public class ServerController implements ServerConstants {
 
     protected ServerLogTail logFile;
 
+    protected ServerMonitor monitor = new ServerMonitor();
+
     public ServerController(SDKInfo info) {
         this(info.getInstallDirectory());
     }
 
-    public ServerController(File root) {
+    protected ServerController(File root) {
         this.root = root;
         listeners = new ListenerList();
     }
@@ -101,6 +106,7 @@ public class ServerController implements ServerConstants {
     protected void fireServerStopped() {
         closeLogFile();
         state = STOPPED;
+        monitor.disconnect();
         for (Object listener : listeners.getListeners()) {
             ((ServerLifeCycleListener) listener).serverStateChanged(this, state);
         }
@@ -273,6 +279,35 @@ public class ServerController implements ServerConstants {
             }
         }
         return result.toArray(new Object[result.size()]);
+    }
+
+    public ProcessBuilder newProcessBuilder(String command, boolean isDebug)
+            throws Exception {
+        ProcessBuilder builder = new ProcessBuilder(
+                VMUtils.getJavaExecutablePath());
+        ServerConfiguration config = ServerConfiguration.getDefault();
+        String vmargs = config.getVmArgs(monitor.selectJMXPort(), isDebug);
+        if (vmargs != null) {
+            builder.command().add("-Dlauncher.java.opts=" + vmargs);
+        }
+        builder.command().add("-Dnuxeo.home=" + root.getAbsolutePath());
+        builder.command().add(
+                "-Dnuxeo.conf="
+                        + new File(root, "bin/nuxeo-sdk.conf").getAbsolutePath());
+        builder.command().add(
+                "-Dnuxeo.log.dir=" + new File(root, "log").getAbsolutePath());
+        builder.command().add("-jar");
+        builder.command().add(
+                new File(root, "bin/nuxeo-launcher.jar").getAbsolutePath());
+        if (command != null) {
+            builder.command().add(command);
+        }
+        builder.directory(new File(root, "bin"));
+        return builder;
+    }
+
+    public void writeDevBundles(Deployment deployment) throws IOException {
+        monitor.writeDevBundles(deployment.getContentAsString());
     }
 
 }

@@ -26,6 +26,7 @@ import org.eclipse.core.resources.IProject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -179,4 +180,71 @@ public class PomModel extends XmlFile {
             el.appendChild(child);
         }
     }
+    
+    public Element getSourcesElement() {
+        Element build = getFirstElement("build");
+        if (build == null) {
+            build = (Element) doc.getDocumentElement().appendChild(
+                    doc.createElement("build"));
+        }
+        Element plugins = getFirstElement(build, "plugins");
+        if (plugins == null) {
+            plugins = (Element) build.appendChild(
+                    doc.createElement("plugins"));
+        }
+        Element plugin = getFirstElement(plugins, "plugin");
+        if (plugin == null) {
+            return createHelperPlugin(plugins);
+        }
+        Node node = plugin;
+        while (node != null) {
+            Element groupId = getFirstElement(plugin, "groupId");
+            Element artifactId = getFirstElement(plugin, "artifactId");
+            if ("org.codehaus.mojo".equals(groupId.getTextContent().trim()) &&
+                    "build-helper-maven-plugin".equals(artifactId.getTextContent().trim())) {
+                Element executions = getFirstElement(plugin, "executions");
+                Element execution = getFirstElement(executions, "execution");
+                Element configuration = getFirstElement(execution, "configuration");
+                Element sources = getFirstElement(configuration, "sources");
+                return sources;
+            }
+            node = (Element)plugin.getNextSibling();
+        }
+        return createHelperPlugin(plugins);
+    }
+
+    protected Element createHelperPlugin(Element plugins) {
+        Element plugin;
+        plugin = (Element)plugins.appendChild(doc.createElement("plugin"));
+        Element groupId = (Element)plugin.appendChild(doc.createElement("groupId"));
+        groupId.setTextContent("org.codehaus.mojo");
+        Element artifactId = (Element)plugin.appendChild(doc.createElement("artifactId"));
+        artifactId.setTextContent("build-helper-maven-plugin");
+        Element executions = (Element)plugin.appendChild(doc.createElement("executions"));
+        Element execution = (Element)executions.appendChild(doc.createElement("execution"));
+        Element id = (Element)execution.appendChild(doc.createElement("id"));
+        id.setTextContent("add-source");
+        Element phase = (Element)execution.appendChild(doc.createElement("phase"));
+        phase.setTextContent("generate-sources");
+        Element goals = (Element)execution.appendChild(doc.createElement("goals"));
+        Element goal = (Element)goals.appendChild(doc.createElement("goal"));
+        goal.setTextContent("add-source");
+        Element configuration = (Element)execution.appendChild(doc.createElement("configuration"));
+        Element sources = (Element)configuration.appendChild(doc.createElement("sources"));
+        return sources;
+    }
+    
+    public void addSource(String path) {
+        Element sources = getSourcesElement();
+        Node source = getFirstElement(sources, "source");
+        while (source != null) {
+            if (path.equals(source.getTextContent().trim()) == true) {
+                return;
+            }
+            source = source.getNextSibling();
+        }
+        source = sources.appendChild(doc.createElement("source"));
+        source.setTextContent(path);
+    }
+    
 }

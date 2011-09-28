@@ -40,9 +40,7 @@ public class ReloadProjects implements IViewActionDelegate {
         try {
             DeploymentPreferences prefs = DeploymentPreferences.load();
             Deployment d = prefs.getDefault();
-            if (d != null) {
-                reload(d);
-            }
+            reload(d);
         } catch (Exception e) {
             UI.showError("Failed to reload projects", e);
         }

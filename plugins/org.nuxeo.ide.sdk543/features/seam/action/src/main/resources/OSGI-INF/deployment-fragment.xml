@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+
+<fragment version="1">
+
+
+  <install>
+
+    <seamHotDeploy>
+      <include>**/*Bean.class</include>
+    </seamHotDeploy>
+
+    <!--  Unzip the war template -->
+    <unzip from="${bundle.fileName}" to="/" prefix="web">
+      <include>web/nuxeo.war/**</include>
+    </unzip>
+  </install>
+
+<!--
+  <extension target="faces-config#NAVIGATION">
+    <navigation-case>
+      <from-outcome>preview_popup</from-outcome>
+      <to-view-id>/preview_popup.xhtml</to-view-id>
+    </navigation-case>
+  </extension>
+ -->
+
+</fragment>

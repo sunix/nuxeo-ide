@@ -41,12 +41,12 @@ public class DeleteResourceFolderParticipant extends DeleteParticipant {
         if (!(element instanceof IFolder)) {
             return false;
         }
-        IFolder folder = (IFolder) element;
-        String path = folder.getProjectRelativePath().makeRelative().removeTrailingSeparator().toString();
+        IResource resource = (IResource) element;
+        String path = resource.getProjectRelativePath().makeRelative().removeTrailingSeparator().toString();
         if (!path.startsWith(ExtensionModel.RESOURCES_PATH)) {
             return false;
         }
-        this.folder = folder;
+        this.folder = (IFolder)resource;
         return true;
     }
 

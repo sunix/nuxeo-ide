@@ -40,7 +40,7 @@ public class ProcessRunner implements Runnable {
     }
 
     protected void output(int b) {
-        // do nothing
+        System.out.write(b);
     }
 
     protected void terminated(int status, Throwable e) {

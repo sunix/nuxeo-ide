@@ -32,8 +32,7 @@ public abstract class RenameContribution implements ExtensionOperation {
 
     protected IType type;
 
-    public RenameContribution(String target, String point, IType type) {
-        this.target = target;
+    public RenameContribution(String target, String point, IType type) { this.target = target;
         this.point = point;
         this.type = type;
     }

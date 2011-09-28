@@ -21,6 +21,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.List;
 import java.util.Properties;
@@ -106,6 +108,14 @@ public class SDKInfo {
         return new StringBuilder(64).append(name).append(" ").append(version).toString();
     }
 
+    public URL getRemoteLocation(String path) {
+        try {
+            return new URL("http://localhost:8080/nuxeo/"+path);
+        } catch (MalformedURLException e) {
+           throw new Error("Cannot build server home location", e);
+        }
+    }
+    
     public String getId() {
         return id;
     }
@@ -171,33 +181,7 @@ public class SDKInfo {
         IOUtils.writeLines(sdkConf, lines);
     }
 
-    public static ProcessBuilder newProcessBuilder(File installRoot,
-            String command, boolean isDebug) throws Exception {
-        ProcessBuilder builder = new ProcessBuilder(
-                VMUtils.getJavaExecutablePath());
-        ServerConfiguration config = ServerConfiguration.getDefault();
-        String vmargs = config.getVmArgs(isDebug);
-        if (vmargs != null) {
-            builder.command().add("-Dlauncher.java.opts=" + vmargs);
-        }
-        builder.command().add("-Dnuxeo.home=" + installRoot.getAbsolutePath());
-        builder.command().add(
-                "-Dnuxeo.conf="
-                        + new File(installRoot, "bin/nuxeo-sdk.conf").getAbsolutePath());
-        builder.command().add(
-                "-Dnuxeo.log.dir="
-                        + new File(installRoot, "log").getAbsolutePath());
-        builder.command().add("-jar");
-        builder.command().add(
-                new File(installRoot, "bin/nuxeo-launcher.jar").getAbsolutePath());
-        if (command != null) {
-            builder.command().add(command);
-        }
-        builder.directory(new File(installRoot, "bin"));
-        return builder;
-    }
-
-    public static SDKInfo loadSDK(File dir) throws IOException {
+     public static SDKInfo loadSDK(File dir) throws IOException {
         if (!dir.isDirectory()) {
             throw new FileNotFoundException(
                     "The given file is not a directory: " + dir);
@@ -240,6 +224,10 @@ public class SDKInfo {
             }
         }
         return null;
+    }
+
+    public String getPid() throws IOException {
+        return IOUtils.readFile(new File(path, "log/nuxeo.pid"));
     }
 
 }

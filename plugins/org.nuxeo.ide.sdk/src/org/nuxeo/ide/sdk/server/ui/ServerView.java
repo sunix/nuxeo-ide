@@ -70,7 +70,7 @@ public class ServerView extends ViewPart implements ISelectionProvider,
         }
         NuxeoSDK sdk = NuxeoSDK.getDefault();
         if (sdk != null) {
-            ctrl = new ServerController(sdk.getInfo());
+            ctrl = sdk.getController();
             ctrl.addServerLifeCycleListener(listener);
         }
         setSelection(getSelection());
@@ -86,11 +86,6 @@ public class ServerView extends ViewPart implements ISelectionProvider,
     }
 
     public void start(boolean isDebug) throws Exception {
-        // auto deployment
-        Deployment deploy = DeploymentPreferences.load().getDefault();
-        if (deploy != null) {
-            NuxeoSDK.getDefault().reloadDeployment(deploy);
-        }
         // now start
         clearConsole();
         if (isDebug) {
@@ -217,13 +212,18 @@ public class ServerView extends ViewPart implements ISelectionProvider,
         }
 
         @Override
-        public void serverStateChanged(ServerController ctrl, int state) {
+        public void serverStateChanged(ServerController ctrl, final int state) {
             if (state == ServerConstants.STARTED) {
                 handleConsoleText(ctrl, "=== Nuxeo Server Started ===\r\n");
             } else if (state == ServerConstants.STOPPED) {
                 handleConsoleText(ctrl, "=== Nuxeo Server Stopped ===\r\n");
             }
-            setSelection(new ServerState(state));
+            Display.getDefault().asyncExec(new Runnable() {
+                @Override
+                public void run() {
+                    setSelection(new ServerState(state));
+                }
+            });
         }
     }
 
@@ -260,4 +260,8 @@ public class ServerView extends ViewPart implements ISelectionProvider,
         site.setSelectionProvider(this);
     }
 
+    @Override
+    public ServerController getController() {
+        return ctrl;
+    }
 }

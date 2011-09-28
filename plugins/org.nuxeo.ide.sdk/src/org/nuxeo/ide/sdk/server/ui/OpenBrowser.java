@@ -16,11 +16,14 @@
  */
 package org.nuxeo.ide.sdk.server.ui;
 
+import java.net.URL;
+
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.program.Program;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
+import org.nuxeo.ide.sdk.NuxeoSDK;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -32,7 +35,12 @@ public class OpenBrowser implements IViewActionDelegate {
 
     @Override
     public void run(IAction action) {
-        Program.launch("http://localhost:8080/nuxeo");
+        NuxeoSDK sdk = NuxeoSDK.getDefault();
+        if (sdk == null) {
+            throw new Error("SDK not installed");
+        }
+        URL remoteLocation = sdk.getRemoteLocation("");
+        Program.launch(remoteLocation.toExternalForm());
     }
 
     @Override

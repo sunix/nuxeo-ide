@@ -28,7 +28,7 @@ public class StopServer extends ProcessRunner {
     protected ServerController ctrl;
 
     public StopServer(ServerController ctrl) throws Exception {
-        super(SDKInfo.newProcessBuilder(ctrl.root, "stop", false));
+        super(ctrl.newProcessBuilder("stop", false));
         this.ctrl = ctrl;
     }
 

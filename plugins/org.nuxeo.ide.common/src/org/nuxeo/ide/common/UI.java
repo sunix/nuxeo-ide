@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.statushandlers.StatusManager;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -40,15 +41,12 @@ public class UI {
         if (t != null) {
             t.printStackTrace();
         }
+        StatusManager mgr = StatusManager.getManager();
         IStatus status = new Status(
                 IStatus.ERROR,
                 Activator.getDefault().getContext().getBundle().getSymbolicName(),
                 IStatus.OK, message, t);
-        ErrorDialog dlg = new ErrorDialog(
-                Display.getDefault().getActiveShell(), title, message, status,
-                IStatus.ERROR | IStatus.WARNING | IStatus.INFO | IStatus.OK
-                        | IStatus.CANCEL);
-        dlg.open();
+        mgr.handle(status, StatusManager.SHOW);
     }
 
     public static void showError(String message) {
@@ -67,10 +65,12 @@ public class UI {
     }
 
     public static void showWarning(String message, String title) {
-        MessageDialog dlg = new MessageDialog(
-                Display.getDefault().getActiveShell(), title, null, message,
-                MessageDialog.WARNING, new String[] { "Ok" }, 0);
-        dlg.open();
+        StatusManager mgr = StatusManager.getManager();
+        IStatus status = new Status(
+                IStatus.WARNING,
+                Activator.getDefault().getContext().getBundle().getSymbolicName(),
+                message);
+        mgr.handle(status, StatusManager.SHOW);
     }
 
     public static void showInfo(String message) {
@@ -78,10 +78,12 @@ public class UI {
     }
 
     public static void showInfo(String message, String title) {
-        MessageDialog dlg = new MessageDialog(
-                Display.getDefault().getActiveShell(), title, null, message,
-                MessageDialog.INFORMATION, new String[] { "Ok" }, 0);
-        dlg.open();
+        StatusManager mgr = StatusManager.getManager();
+        IStatus status = new Status(
+                IStatus.INFO,
+                Activator.getDefault().getContext().getBundle().getSymbolicName(),
+                message);
+        mgr.handle(status, StatusManager.SHOW);
     }
 
     public static int showPrompt(String message) {

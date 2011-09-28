@@ -1,0 +1,29 @@
+<div xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:c="http://java.sun.com/jstl/core"
+  xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+  xmlns:nxd="http://nuxeo.org/nxweb/document"
+  xmlns:nxdir="http://nuxeo.org/nxdirectory"
+  xmlns:nxu="http://nuxeo.org/nxweb/util"
+  xmlns:nxh="http://nuxeo.org/nxweb/html">
+
+
+  <h:form>
+    <dl>
+        <dt>Updatable title property</dt>
+        <dd><h:inputText value="${r"#{"}${bean}.title${r"}"}"/>
+            <nxh:commandButton value="Save" action="${r"#{"}${bean}.save()${r"}"}" styleClass="button"/></dd>
+            
+        <dt><h:outputText value="List contributors value from Bean" /></dt>
+        <dd><ul><nxu:repeat var="property" value="${r"#{"}${bean?uncap_first}Contributors${r"}"}">
+            <li><h:outputText value="${r"#{"}property${r"}"}" /></li>
+            </nxu:repeat></ul></dd>
+
+        <dt><h:outputText value="Update Count" /></dt>
+        <dd><h:outputText value="${r"#{"}${bean?uncap_first}UpdateCount${r"}"}" /></dd>
+    </dl>
+
+  </h:form>
+
+</div>

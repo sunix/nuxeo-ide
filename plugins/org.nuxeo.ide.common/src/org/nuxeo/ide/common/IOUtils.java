@@ -271,10 +271,14 @@ public class IOUtils {
     }
 
     public static List<String> readLines(File file) throws IOException {
+        InputStream in = new FileInputStream(file);
+        return readLines(in);
+    }
+ 
+    public static List<String> readLines(InputStream in) throws IOException {
         List<String> lines = new ArrayList<String>();
         BufferedReader reader = null;
         try {
-            InputStream in = new FileInputStream(file);
             reader = new BufferedReader(new InputStreamReader(in));
             String line;
             while ((line = reader.readLine()) != null) {
@@ -373,6 +377,33 @@ public class IOUtils {
         File dir = file.getParentFile();
         while (dir.delete()) {
             dir = dir.getParentFile();
+        }
+    }
+
+    public static void appendFile(File file, File other) throws IOException {
+        String content = readFile(other);
+        appendFile(file, content);
+    }
+   
+    public static void appendFile(File file, List<String> lines) throws IOException {
+        for (String line:lines) {
+            appendFile(file, line + "/n");
+        }
+    }
+
+    public static void appendFile(File file, String buf) throws IOException {
+        appendFile(file, buf.getBytes());
+    }
+    
+    public static void appendFile(File file, byte[] buf) throws IOException {
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(file, true);
+            fos.write(buf);
+        } finally {
+            if (fos != null) {
+                fos.close();
+            }
         }
     }
 }

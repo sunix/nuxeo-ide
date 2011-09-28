@@ -50,7 +50,7 @@ public class RenameCommand implements Command {
         File srcFile = new File(projectDir, Vars.expand(path, ctx));
         File dstFile = new File(projectDir, Vars.expand(to, ctx));
         dstFile.getParentFile().mkdirs();
-        if (srcFile.renameTo(dstFile)) {
+        if (!srcFile.renameTo(dstFile)) {
             IOUtils.deleteFilePath(srcFile);
         }
     }

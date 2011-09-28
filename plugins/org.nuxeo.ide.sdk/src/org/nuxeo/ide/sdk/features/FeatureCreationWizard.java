@@ -58,8 +58,8 @@ public abstract class FeatureCreationWizard extends
     }
 
     @Override
-    public void init(IWorkbench workbench, IStructuredSelection currentSelection) {
-        super.init(workbench, currentSelection);
+    public void init(IWorkbench wb, IStructuredSelection currentSelection) {
+        super.init(wb, currentSelection);
         selectedElement = getInitialJavaElement(currentSelection);
         if (selectedElement == null && !currentSelection.isEmpty()) {
             Object obj = currentSelection.getFirstElement();
@@ -106,10 +106,14 @@ public abstract class FeatureCreationWizard extends
         return new FeatureTemplateContext();
     }
 
+    protected CreateFeatureFromTemplate newCreateFeatureFromTemplate(FeatureTemplateContext ctx) {
+            return new CreateFeatureFromTemplate(ctx);
+    }
+    
     @Override
     protected boolean execute(FeatureTemplateContext ctx) {
         ctx.setTemplate(templateName);
-        CreateFeatureFromTemplate op = new CreateFeatureFromTemplate(ctx);
+        CreateFeatureFromTemplate op = newCreateFeatureFromTemplate(ctx);
         return CreateFeatureFromTemplate.run(getShell(), getContainer(), op);
     }
 
@@ -121,12 +125,12 @@ public abstract class FeatureCreationWizard extends
      *         <code>null</code>, if no Java element exists in the given
      *         selection
      */
-    protected IJavaElement getInitialJavaElement(IStructuredSelection selection) {
+    protected IJavaElement getInitialJavaElement(IStructuredSelection sslct) {
         IJavaElement jelem = null;
-        if (selection != null && !selection.isEmpty()) {
-            Object selectedElement = selection.getFirstElement();
-            if (selectedElement instanceof IAdaptable) {
-                IAdaptable adaptable = (IAdaptable) selectedElement;
+        if (sslct != null && !sslct.isEmpty()) {
+            Object selem = sslct.getFirstElement();
+            if (selem instanceof IAdaptable) {
+                IAdaptable adaptable = (IAdaptable) selem;
 
                 jelem = (IJavaElement) adaptable.getAdapter(IJavaElement.class);
                 if (jelem == null || !jelem.exists()) {

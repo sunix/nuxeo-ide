@@ -17,6 +17,8 @@
 package org.nuxeo.ide.sdk;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -37,6 +39,7 @@ import org.eclipse.jdt.core.JavaCore;
 import org.nuxeo.ide.common.IOUtils;
 import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.sdk.deploy.Deployment;
+import org.nuxeo.ide.sdk.server.SeamHotReloader;
 import org.nuxeo.ide.sdk.index.Index;
 import org.nuxeo.ide.sdk.server.ServerController;
 import org.nuxeo.ide.sdk.ui.NuxeoNature;
@@ -55,8 +58,10 @@ public class NuxeoSDK {
      */
     private static volatile NuxeoSDK instance = null;
 
-    private static ListenerList listeners = new ListenerList();
+    private static ListenerList sdkChangedListeners = new ListenerList();
 
+    private static ListenerList deploymentChangedListeners = new ListenerList();
+    
     static void initialize() throws BackingStoreException {
         SDKInfo info = SDKRegistry.getDefaultSDK();
         if (info != null) {
@@ -117,27 +122,43 @@ public class NuxeoSDK {
     }
 
     public static void dispose() {
-        listeners = null;
+        sdkChangedListeners = null;
         instance = null;
     }
 
     public static void addSDKChangedListener(SDKChangedListener listener) {
-        listeners.add(listener);
+	sdkChangedListeners.add(listener);
     }
 
     public static void removeSDKChangedListener(SDKChangedListener listener) {
-        listeners.remove(listener);
+        sdkChangedListeners.remove(listener);
     }
 
     private static void fireSDKChanged(NuxeoSDK sdk) {
-        for (Object listener : listeners.getListeners()) {
+        for (Object listener : sdkChangedListeners.getListeners()) {
             ((SDKChangedListener) listener).handleSDKChanged(sdk);
+        }
+    }
+
+    public static void addDeploymentChangedListener(DeploymentChangedListener listener) {
+        deploymentChangedListeners.add(listener);
+    }
+    
+    public static void removeDeploymentChangedListener(DeploymentChangedListener listener) {
+        deploymentChangedListeners.remove(listener);
+    }
+    
+    public static void fireDeployementChanged(NuxeoSDK sdk, Deployment deployment) {
+        for (Object listener : deploymentChangedListeners.getListeners()) {
+            ((DeploymentChangedListener) listener).deploymentChanged(sdk, deployment);
         }
     }
 
     protected SDKInfo info;
 
     protected File root;
+
+    protected ServerController controller;
 
     protected volatile Index index;
 
@@ -156,11 +177,11 @@ public class NuxeoSDK {
     // */
     // protected volatile Index index;
 
-    protected ServerController server;
 
     public NuxeoSDK(SDKInfo info) {
         this.info = info;
         this.root = info.getInstallDirectory();
+        this.controller = new ServerController(info);
     }
 
     public File getInstallDirectory() {
@@ -204,8 +225,8 @@ public class NuxeoSDK {
         return info.getPath();
     }
 
-    public ServerController getServer() {
-        return new ServerController(info);
+    public ServerController getController() {
+        return controller;
     }
 
     public File getLibDir() {
@@ -264,9 +285,8 @@ public class NuxeoSDK {
      * Reload projects on server
      */
     public void reloadDeployment(Deployment deployment) throws Exception {
-        File file = new File(root, "nxserver/dev.bundles");
-        String content = deployment.getContentAsString();
-        IOUtils.writeFile(file, content);
+        controller.writeDevBundles(deployment);
+        fireDeployementChanged(this, deployment);
     }
 
     public static void rebuildProjects() {
@@ -353,6 +373,14 @@ public class NuxeoSDK {
             SDKClassPathContainerInitializer initializer = new SDKClassPathContainerInitializer();
             initializer.initialize(nxProjects.toArray(new IJavaProject[nxProjects.size()]));
         }
+    }
+
+    public URL getRemoteLocation(String path) {
+        return info.getRemoteLocation(path);
+    }
+
+    public String getPid() throws IOException {
+        return info.getPid();
     }
 
 }

@@ -17,7 +17,10 @@
 package org.nuxeo.ide.sdk.server;
 
 import org.nuxeo.ide.common.UI;
-import org.nuxeo.ide.sdk.SDKInfo;
+import org.nuxeo.ide.sdk.NuxeoSDK;
+import org.nuxeo.ide.sdk.SDKPlugin;
+import org.nuxeo.ide.sdk.deploy.Deployment;
+import org.nuxeo.ide.sdk.deploy.DeploymentPreferences;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -33,12 +36,12 @@ public class StartServer extends ProcessRunner {
     protected ServerController ctrl;
 
     public StartServer(ServerController ctrl) throws Exception {
-        super(SDKInfo.newProcessBuilder(ctrl.root, "start", false));
+        super(ctrl.newProcessBuilder("start", false));
         this.ctrl = ctrl;
     }
 
     public StartServer(ServerController ctrl, boolean isDebug) throws Exception {
-        super(SDKInfo.newProcessBuilder(ctrl.root, "start", isDebug));
+        super(ctrl.newProcessBuilder("start", isDebug));
         this.ctrl = ctrl;
     }
 
@@ -51,9 +54,19 @@ public class StartServer extends ProcessRunner {
     protected void terminated(int status, Throwable e) {
         if (e != null) {
             UI.showError("Failed to start Nuxeo Server" + e.getMessage(), e);
-        } else {
-            ctrl.fireServerStarted();
+            return;
         }
+        if (status == 0) {
+            // hot deploy projects
+            try {
+                Deployment deployment = DeploymentPreferences.load().getDefault();
+                NuxeoSDK.getDefault().reloadDeployment(deployment);
+            } catch (Exception de) {
+                UI.showError("Cannot hot deploy bundles, please restart", de);
+            }
+        }
+        // notify listeners
+        ctrl.fireServerStarted();
     }
 
 }
