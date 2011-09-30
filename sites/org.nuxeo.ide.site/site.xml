@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/org.nuxeo.ide.shell_1.0.0.201109261111.jar" id="org.nuxeo.ide.shell" version="1.0.0.201109261111">
+   <feature url="features/org.nuxeo.ide.shell_1.0.0.qualifier.jar" id="org.nuxeo.ide.shell" version="1.0.0.qualifier">
       <category name="shell"/>
    </feature>
-   <feature url="features/org.nuxeo.ide.sdk_1.0.0.201109261111.jar" id="org.nuxeo.ide.sdk" version="1.0.0.201109261111">
+   <feature url="features/org.nuxeo.ide.sdk_1.0.0.qualifier.jar" id="org.nuxeo.ide.sdk" version="1.0.0.qualifier">
       <category name="ide"/>
    </feature>
    <category-def name="ide" label="Nuxeo IDE">
