@@ -234,6 +234,19 @@
 	<artifactId>tycho-p2-director-plugin</artifactId>
 	<version>${tycho-version}</version>
       </plugin>
+      <plugin>
+        <groupId>org.sonatype.tycho</groupId>
+        <artifactId>maven-osgi-packaging-plugin</artifactId>
+	<version>${tycho-version}</version>
+        <configuration>
+          <strictVersions>false</strictVersions>
+        </configuration>
+      </plugin>
+      <plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-release-plugin</artifactId>
+        <version>2.2.1</version>
+      </plugin>
     </plugins>
   </build>
 
