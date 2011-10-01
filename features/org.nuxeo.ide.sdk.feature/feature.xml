@@ -2,7 +2,7 @@
 <feature
       id="org.nuxeo.ide.sdk"
       label="%featureName"
-      version="1.0.0.qualifier"
+      version="1.0.0.R10x_v20111001"
       provider-name="%providerName"
       plugin="org.nuxeo.ide.sdk">
 
