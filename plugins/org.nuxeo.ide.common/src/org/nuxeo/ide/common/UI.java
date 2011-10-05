@@ -46,7 +46,7 @@ public class UI {
                 IStatus.ERROR,
                 Activator.getDefault().getContext().getBundle().getSymbolicName(),
                 IStatus.OK, message, t);
-        mgr.handle(status, StatusManager.SHOW);
+        mgr.handle(status, StatusManager.SHOW|StatusManager.LOG);
     }
 
     public static void showError(String message) {
