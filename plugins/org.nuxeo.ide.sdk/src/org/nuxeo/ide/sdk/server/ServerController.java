@@ -306,7 +306,7 @@ public class ServerController implements ServerConstants {
         return builder;
     }
 
-    public void writeDevBundles(Deployment deployment) throws IOException {
+    public void writeDevBundles(Deployment deployment) throws IOException, JavaModelException {
         monitor.writeDevBundles(deployment.getContentAsString());
     }
 

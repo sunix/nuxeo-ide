@@ -22,7 +22,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IPackageFragmentRoot;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
 import org.nuxeo.ide.sdk.userlibs.UserLib;
 
 /**
@@ -92,16 +100,22 @@ public class Deployment {
         return result;
     }
 
-    public String getContentAsString() {
+    public String getContentAsString() throws JavaModelException {
         String crlf = "\n";
         StringBuilder builder = new StringBuilder();
         builder.append("# Projects").append(crlf);
         for (IProject project : projects) {
-            File file = new File(project.getLocation().toFile(), "bin/main");
-            if (file.isDirectory()) {
-                String path = file.getAbsolutePath();
-                builder.append(path).append(crlf);
+            IJavaProject java = JavaCore.create(project);
+            IFolder folder = project.getFolder("src/main/java");
+            IPackageFragmentRoot root = java.getPackageFragmentRoot(folder);
+            IClasspathEntry entry = root.getRawClasspathEntry();
+            IPath outputLocation = entry.getOutputLocation();
+            if (outputLocation == null) {
+                outputLocation = java.getOutputLocation();
             }
+            IFolder output = project.getWorkspace().getRoot().getFolder(outputLocation);
+            String path = output.getRawLocation().toOSString();
+                builder.append(path).append(crlf);
         }
         builder.append(crlf);
         builder.append("# User Libraries").append(crlf);
