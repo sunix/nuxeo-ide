@@ -16,6 +16,8 @@
  */
 package org.nuxeo.ide.connect.ui;
 
+import org.eclipse.swt.custom.BusyIndicator;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.nuxeo.ide.common.FormPreferencePage;
 import org.nuxeo.ide.common.UI;
@@ -49,11 +51,16 @@ public class ConnectPreferencePage extends FormPreferencePage implements
         form.addActionHandler("connect", new ActionHandler() {
             @Override
             public void handleAction(Form form, UIObject<?> obj, Object event) {
-                try {
-                    connect();
-                } catch (Exception e) {
-                    UI.showError("Failed to connect to Nuxeo Studio", e);
-                }
+                BusyIndicator.showWhile(Display.getCurrent(), new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            connect();
+                        } catch (Exception e) {
+                            UI.showError("Failed to connect to Nuxeo Studio", e);
+                        }
+                    }
+                });
             }
         });
         return form;
