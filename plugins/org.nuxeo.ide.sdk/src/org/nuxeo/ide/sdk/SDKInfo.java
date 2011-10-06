@@ -163,7 +163,9 @@ public class SDKInfo {
     }
 
     protected void enableSeamHotReload(File sdkTemp) throws IOException {
-        File seamDebugMarker = new File(sdkTemp, "seam-debug.properties");
+        File config = new File(sdkTemp, "nxserver/config");
+        config.mkdirs();
+        File seamDebugMarker = new File(config, "seam-debug.properties");
         seamDebugMarker.createNewFile();
     }
 
