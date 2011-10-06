@@ -179,31 +179,28 @@ public class PomModel extends XmlFile {
             child.setTextContent(artifact.getScope());
             el.appendChild(child);
         }
-    }
+    }  
 
-    public Element getBuildHelperElement(String name) {
-        Element build = getFirstElement("build");
-        if (build == null) {
-            build = (Element) doc.getDocumentElement().appendChild(
-                    doc.createElement("build"));
-        }
-        Element plugins = getFirstElement(build, "plugins");
-        if (plugins == null) {
-            plugins = (Element) build.appendChild(doc.createElement("plugins"));
-        }
+    private Element getBuildPlugin(String groupIdContent, String artifactIdContent) {
+        Element plugins = getBuildPlugins();
         Element plugin = getFirstElement(plugins, "plugin");
         while (plugin != null) {
             Element groupId = getFirstElement((Element) plugin, "groupId");
             Element artifactId = getFirstElement((Element) plugin, "artifactId");
-            if ("org.codehaus.mojo".equals(groupId.getTextContent().trim())
-                    && "build-helper-maven-plugin".equals(artifactId.getTextContent().trim())) {
-                break;
+            if (groupIdContent.equals(groupId.getTextContent().trim())
+                    && artifactIdContent.equals(artifactId.getTextContent().trim())) {
+                return plugin;
             }
             plugin = (Element) plugin.getNextSibling();
         }
+        return null;
+    }
+
+    public Element getBuildHelperElement(String name) {        
+        Element plugin = getBuildPlugin("org.codehaus.mojo", "build-helper-maven-plugin");
 
         if (plugin == null) {
-            plugin = createHelperPlugin(plugins);
+            plugin = createHelperPlugin();
         }
 
         Element executions = getFirstElement((Element) plugin, "executions");
@@ -229,9 +226,22 @@ public class PomModel extends XmlFile {
         return sources;
     }
 
-    protected Element createHelperPlugin(Element plugins) {
-        Element plugin;
-        plugin = (Element) plugins.appendChild(doc.createElement("plugin"));
+    private Element getBuildPlugins() {
+        Element build = getFirstElement("build");
+        if (build == null) {
+            build = (Element) doc.getDocumentElement().appendChild(
+                    doc.createElement("build"));
+        }
+        Element plugins = getFirstElement(build, "plugins");
+        if (plugins == null) {
+            plugins = (Element) build.appendChild(doc.createElement("plugins"));
+        }
+        return plugins;
+    }
+        
+    protected Element createHelperPlugin() {
+        Element plugins = getBuildPlugins();
+        Element plugin = (Element) plugins.appendChild(doc.createElement("plugin"));
         Element groupId = (Element) plugin.appendChild(doc.createElement("groupId"));
         groupId.setTextContent("org.codehaus.mojo");
         Element artifactId = (Element) plugin.appendChild(doc.createElement("artifactId"));
