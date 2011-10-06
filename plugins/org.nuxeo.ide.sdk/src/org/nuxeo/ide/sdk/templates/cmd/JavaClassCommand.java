@@ -9,7 +9,7 @@ import org.w3c.dom.Element;
 
 public class JavaClassCommand implements Command {
 
-    protected SourceCommand sourceCommand = new SourceCommand();
+    protected SourcePathCommand sourcePathCommand = new SourcePathCommand();
     protected final TransformCommand transformCommand = new TransformCommand();
     
     @Override
@@ -23,10 +23,10 @@ public class JavaClassCommand implements Command {
             src = "src/main/java";
         }
         
-        Element source = doc.createElement("source");
-        sourceCommand = new SourceCommand();
-        source.setAttribute("path", src);
-        sourceCommand.init(source);
+        Element sourcePath = doc.createElement("sourcePath");
+        sourcePathCommand = new SourcePathCommand();
+        sourcePath.setAttribute("path", src);
+        sourcePathCommand.init(sourcePath);
     
         Element tranform = doc.createElement("rename");
         tranform.setAttribute("path", src + "/" + path);
@@ -37,7 +37,7 @@ public class JavaClassCommand implements Command {
     @Override
     public void execute(TemplateContext ctx, Bundle bundle, File projectDir)
             throws Exception {
-        sourceCommand.execute(ctx, bundle, projectDir);
+        sourcePathCommand.execute(ctx, bundle, projectDir);
         transformCommand.execute(ctx, bundle, projectDir);
     }
 

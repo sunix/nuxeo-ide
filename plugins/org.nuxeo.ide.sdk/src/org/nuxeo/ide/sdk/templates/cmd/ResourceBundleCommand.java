@@ -9,8 +9,8 @@ import org.w3c.dom.Element;
 
 public class ResourceBundleCommand implements Command {
 
-    protected SourceCommand source =
-            new SourceCommand();
+    protected ResourcePathCommand resourcePath =
+            new ResourcePathCommand();
     
     protected AppendCommand append =
             new AppendCommand();
@@ -35,9 +35,9 @@ public class ResourceBundleCommand implements Command {
             locale = "_" + locale;
         }
         
-        Element sourceElement = doc.createElement("source");
+        Element sourceElement = doc.createElement("resourcePath");
         sourceElement.setAttribute("path", src);
-        source.init(sourceElement);
+        resourcePath.init(sourceElement);
         
         Element appendElement = doc.createElement("append");
         appendElement.setAttribute("path", src + "/" + path);
@@ -48,7 +48,7 @@ public class ResourceBundleCommand implements Command {
     @Override
     public void execute(TemplateContext ctx, Bundle bundle, File projectDir)
             throws Exception {
-        source.execute(ctx, bundle, projectDir);
+        resourcePath.execute(ctx, bundle, projectDir);
         append.execute(ctx, bundle, projectDir);
     }
 

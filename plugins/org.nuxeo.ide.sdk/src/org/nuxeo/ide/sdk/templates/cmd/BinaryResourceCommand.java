@@ -9,7 +9,7 @@ import org.w3c.dom.Element;
 
 public class BinaryResourceCommand implements Command {
 
-    protected SourceCommand sourceCommand = new SourceCommand();
+    protected ResourcePathCommand resourcePathCommand = new ResourcePathCommand();
     protected final RenameCommand renameCommand = new RenameCommand();
     
     @Override
@@ -23,10 +23,9 @@ public class BinaryResourceCommand implements Command {
             src = "src/main/resources";
         }
         
-        Element source = doc.createElement("source");
-        sourceCommand = new SourceCommand();
-        source.setAttribute("path", src);
-        sourceCommand.init(source);
+        Element resourcePath = doc.createElement("resourcePath");
+        resourcePath.setAttribute("path", src);
+        resourcePathCommand.init(resourcePath);
     
         Element rename = doc.createElement("rename");
         rename.setAttribute("path", src + "/" + path);
@@ -37,7 +36,7 @@ public class BinaryResourceCommand implements Command {
     @Override
     public void execute(TemplateContext ctx, Bundle bundle, File projectDir)
             throws Exception {
-        sourceCommand.execute(ctx, bundle, projectDir);
+        resourcePathCommand.execute(ctx, bundle, projectDir);
         renameCommand.execute(ctx, bundle, projectDir);
     }
 

@@ -180,8 +180,8 @@ public class PomModel extends XmlFile {
             el.appendChild(child);
         }
     }
-    
-    public Element getSourcesElement() {
+
+    public Element getBuildHelperElement(String name) {
         Element build = getFirstElement("build");
         if (build == null) {
             build = (Element) doc.getDocumentElement().appendChild(
@@ -189,53 +189,73 @@ public class PomModel extends XmlFile {
         }
         Element plugins = getFirstElement(build, "plugins");
         if (plugins == null) {
-            plugins = (Element) build.appendChild(
-                    doc.createElement("plugins"));
+            plugins = (Element) build.appendChild(doc.createElement("plugins"));
         }
         Element plugin = getFirstElement(plugins, "plugin");
-        if (plugin == null) {
-            return createHelperPlugin(plugins);
-        }
-        Node node = plugin;
-        while (node != null) {
-            Element groupId = getFirstElement(plugin, "groupId");
-            Element artifactId = getFirstElement(plugin, "artifactId");
-            if ("org.codehaus.mojo".equals(groupId.getTextContent().trim()) &&
-                    "build-helper-maven-plugin".equals(artifactId.getTextContent().trim())) {
-                Element executions = getFirstElement(plugin, "executions");
-                Element execution = getFirstElement(executions, "execution");
-                Element configuration = getFirstElement(execution, "configuration");
-                Element sources = getFirstElement(configuration, "sources");
-                return sources;
+        while (plugin != null) {
+            Element groupId = getFirstElement((Element) plugin, "groupId");
+            Element artifactId = getFirstElement((Element) plugin, "artifactId");
+            if ("org.codehaus.mojo".equals(groupId.getTextContent().trim())
+                    && "build-helper-maven-plugin".equals(artifactId.getTextContent().trim())) {
+                break;
             }
-            node = (Element)plugin.getNextSibling();
+            plugin = (Element) plugin.getNextSibling();
         }
-        return createHelperPlugin(plugins);
+
+        if (plugin == null) {
+            plugin = createHelperPlugin(plugins);
+        }
+
+        Element executions = getFirstElement((Element) plugin, "executions");
+
+        Element execution = getFirstElement(executions, "execution");
+        String idTextContent = "add-"+name;
+        while (execution != null) {
+            Element id = getFirstElement(execution, "id");
+            if (idTextContent.equals(id.getTextContent())) {
+                break;
+            }
+            Node node = execution.getNextSibling();
+            while(node != null && !(node instanceof Element)) {
+                node = node.getNextSibling();
+            }
+            execution = (Element)node;
+        }
+        if (execution == null) {
+            return createBuildHelperExecution(executions, name);
+        }
+        Element configuration = getFirstElement(execution, "configuration");
+        Element sources = getFirstElement(configuration, name+"s");
+        return sources;
     }
 
     protected Element createHelperPlugin(Element plugins) {
         Element plugin;
-        plugin = (Element)plugins.appendChild(doc.createElement("plugin"));
-        Element groupId = (Element)plugin.appendChild(doc.createElement("groupId"));
+        plugin = (Element) plugins.appendChild(doc.createElement("plugin"));
+        Element groupId = (Element) plugin.appendChild(doc.createElement("groupId"));
         groupId.setTextContent("org.codehaus.mojo");
-        Element artifactId = (Element)plugin.appendChild(doc.createElement("artifactId"));
+        Element artifactId = (Element) plugin.appendChild(doc.createElement("artifactId"));
         artifactId.setTextContent("build-helper-maven-plugin");
-        Element executions = (Element)plugin.appendChild(doc.createElement("executions"));
-        Element execution = (Element)executions.appendChild(doc.createElement("execution"));
-        Element id = (Element)execution.appendChild(doc.createElement("id"));
-        id.setTextContent("add-source");
-        Element phase = (Element)execution.appendChild(doc.createElement("phase"));
-        phase.setTextContent("generate-sources");
-        Element goals = (Element)execution.appendChild(doc.createElement("goals"));
-        Element goal = (Element)goals.appendChild(doc.createElement("goal"));
-        goal.setTextContent("add-source");
-        Element configuration = (Element)execution.appendChild(doc.createElement("configuration"));
-        Element sources = (Element)configuration.appendChild(doc.createElement("sources"));
+        plugin.appendChild(doc.createElement("executions"));
+        return plugin;
+    }
+
+    protected Element createBuildHelperExecution(Element executions, String kind) {
+        Element execution = (Element) executions.appendChild(doc.createElement("execution"));
+        Element id = (Element) execution.appendChild(doc.createElement("id"));
+        id.setTextContent("add-"+kind);
+        Element phase = (Element) execution.appendChild(doc.createElement("phase"));
+        phase.setTextContent("generate-"+kind+"s");
+        Element goals = (Element) execution.appendChild(doc.createElement("goals"));
+        Element goal = (Element) goals.appendChild(doc.createElement("goal"));
+        goal.setTextContent("add-"+kind);
+        Element configuration = (Element) execution.appendChild(doc.createElement("configuration"));
+        Element sources = (Element) configuration.appendChild(doc.createElement(kind+"s"));
         return sources;
     }
-    
-    public void addSource(String path) {
-        Element sources = getSourcesElement();
+
+    public void addBuildHelperSource(String path) {
+        Element sources = getBuildHelperElement("source");
         Node source = getFirstElement(sources, "source");
         while (source != null) {
             if (path.equals(source.getTextContent().trim()) == true) {
@@ -246,5 +266,19 @@ public class PomModel extends XmlFile {
         source = sources.appendChild(doc.createElement("source"));
         source.setTextContent(path);
     }
-    
+
+    public void addBuildHelperResource(String path) {
+        Element resources = getBuildHelperElement("resource");
+        Node resource = getFirstElement(resources, "resource");
+        while (resource != null) {
+            if (path.equals(resource.getTextContent().trim()) == true) {
+                return;
+            }
+            resource = resource.getNextSibling();
+        }
+        resource = resources.appendChild(doc.createElement("resource"));
+        Node directory = resource.appendChild(doc.createElement("directory"));
+        directory.setTextContent(path);
+    }
+
 }
