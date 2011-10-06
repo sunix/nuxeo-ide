@@ -19,6 +19,7 @@ package org.nuxeo.ide.sdk;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -61,6 +62,8 @@ public class SDKInfo {
     protected String version;
 
     protected String path;
+
+    protected static String INSTALL_RELOAD_TIMER = "org.nuxeo.app.installReloadTimer";;
 
     public SDKInfo(String path, String name, String version) {
         this.name = name;
@@ -147,13 +150,25 @@ public class SDKInfo {
         // create the SDK template if not exists
         File sdkTemp = new File(root, "templates/sdk");
         if (!sdkTemp.isDirectory()) {
-            generateSDKTemplate(new File(root, "templates/default"), sdkTemp);
+            generateSDKTemplate(new File(root, "templates"), sdkTemp);
         }
     }
 
-    protected void generateSDKTemplate(File defTemp, File sdkTemp)
+    protected void generateSDKTemplate(File templates, File sdkTemp)
             throws IOException {
         sdkTemp.mkdirs();
+        enabledDevClassloader(new File(templates, "default"), sdkTemp);
+        disableLoaderTimer(new File(templates,"common"), sdkTemp);
+        enableSeamHotReload(sdkTemp);
+    }
+
+    protected void enableSeamHotReload(File sdkTemp) throws IOException {
+        File seamDebugMarker = new File(sdkTemp, "seam-debug.properties");
+        seamDebugMarker.createNewFile();
+    }
+
+    protected void enabledDevClassloader(File defTemp, File sdkTemp)
+            throws IOException {
         File src = new File(defTemp, "conf/Catalina/localhost/nuxeo.xml");
         File dst = new File(sdkTemp, "conf/Catalina/localhost/nuxeo.xml");
         dst.getParentFile().mkdirs();
@@ -162,6 +177,23 @@ public class SDKInfo {
                 "org.nuxeo.runtime.tomcat.NuxeoWebappClassLoader",
                 "org.nuxeo.runtime.tomcat.dev.NuxeoDevWebappClassLoader");
         IOUtils.writeFile(dst, content);
+    }
+
+    protected void disableLoaderTimer(File templates, File sdkTemp) throws IOException, FileNotFoundException {
+        String pathLoaderConf = "launcher.properties";
+        File srcLoaderFile = new File(templates, pathLoaderConf);
+        File dstNxserver = new File(sdkTemp, "nxserver");
+        dstNxserver.mkdirs();
+        File dstLoaderFilef = new File(dstNxserver, pathLoaderConf);
+        Properties loaderProps = new Properties();
+        loaderProps.load(new FileInputStream(srcLoaderFile));
+        String key = "org.nuxeo.app.installReloadTimer";
+        String prop = loaderProps.getProperty(key);
+        if (prop != null && "true".equals(prop)) {
+            loaderProps.setProperty(key, "false");
+            loaderProps.store(new FileOutputStream(dstLoaderFilef),
+                    "enabled timer");
+        }
     }
 
     protected void generateSDKConf(File conf, File sdkConf) throws IOException {
