@@ -16,22 +16,19 @@
  */
 package org.nuxeo.ide.sdk.features.seam;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.IPackageFragmentRoot;
-import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.sdk.features.CreateFeatureFromTemplate;
 import org.nuxeo.ide.sdk.features.FeatureTemplateContext;
+import org.nuxeo.ide.sdk.java.ClasspathEditor;
 
+/**
+ * 
+ * @author matic
+ * @since 1.1
+ */
 public class CreateSeamFeatureFromTemplate extends CreateFeatureFromTemplate {
 
     public CreateSeamFeatureFromTemplate(FeatureTemplateContext ctx) {
@@ -41,32 +38,14 @@ public class CreateSeamFeatureFromTemplate extends CreateFeatureFromTemplate {
     protected void postCreate() {
         super.postCreate();
         IJavaProject java = ctx.getProject();
-        extendClasspath(java, "seam");
-        extendClasspath(java, "i18n");
-    }
-
-    protected void extendClasspath(IJavaProject java, String name) {
         IProject project = java.getProject();
-        IFolder sourceFolder = project.getFolder("src/main/"+name);
-        IPackageFragmentRoot seamRoot = java.getPackageFragmentRoot(sourceFolder);
-        if (!seamRoot.isOpen()) {
-            // extend project class path
-            try {
-                List<IClasspathEntry> ocp = Arrays.asList(java.getRawClasspath());
-                List<IClasspathEntry> ncp = new ArrayList<IClasspathEntry>(
-                        ocp.size() + 1);
-                ncp.addAll(ocp);
-                IFolder binFolder = project.getFolder("bin/"+name);
-                IClasspathEntry nce = JavaCore.newSourceEntry(
-                        sourceFolder.getFullPath(), new IPath[0], new IPath[0],
-                        binFolder.getFullPath());
-                ncp.add(nce);
-                java.setRawClasspath(
-                        ncp.toArray(new IClasspathEntry[ncp.size()]), null);
-            } catch (JavaModelException e) {
-                UI.showError("Cannot extend classpath of " + project.getName(),
-                        e);
-            }
+        try {
+            ClasspathEditor editor = new ClasspathEditor(project);
+            editor.extendClasspath("seam");
+            editor.extendClasspath("i18n");
+            editor.flush();
+        } catch (JavaModelException e) {
+            UI.showError("Cannot extend classpath of " + project.getName(), e);
         }
     }
 

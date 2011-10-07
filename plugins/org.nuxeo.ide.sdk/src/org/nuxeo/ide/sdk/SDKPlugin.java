@@ -1,8 +1,8 @@
 package org.nuxeo.ide.sdk;
 
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.ui.statushandlers.StatusManager;
 import org.nuxeo.ide.common.forms.PreferencesFormData;
 import org.nuxeo.ide.sdk.server.SeamHotReloader;
 import org.nuxeo.ide.sdk.templates.TemplateManager;
@@ -22,6 +22,7 @@ public class SDKPlugin extends AbstractUIPlugin {
     protected TemplateManager tempMgr;
 
     protected SeamHotReloader seamReloader;
+
     /**
      * The constructor
      */
@@ -38,11 +39,13 @@ public class SDKPlugin extends AbstractUIPlugin {
         tempMgr.loadRegistry(context.getBundle());
         plugin = this;
         seamReloader = new SeamHotReloader();
+        ResourcesPlugin.getWorkspace().addResourceChangeListener(seamReloader);
         NuxeoSDK.initialize();
         NuxeoSDK.addDeploymentChangedListener(seamReloader);
     }
 
     public void stop(BundleContext context) throws Exception {
+        ResourcesPlugin.getWorkspace().removeResourceChangeListener(seamReloader);
         NuxeoSDK.dispose();
         plugin = null;
         tempMgr = null;
