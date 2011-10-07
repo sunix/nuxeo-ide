@@ -17,7 +17,7 @@ to be able to start a Nuxeo server from Eclipse and in order to test your plugin
 <sdks id="sdks" hfill="true" vfill="true"/>
 <panel vertical="true" valign="top">
 <button id="add">Add</button>
-<button id="download" enabled="false">Download</button>
+<button id="download">Download</button>
 <button id="remove" enabled="false">Remove</button>
 <button id="reload" enabled= "false">Reload</button>
 </panel>

@@ -18,12 +18,16 @@ package org.nuxeo.ide.sdk.server.ui;
 
 import java.io.File;
 
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DirectoryDialog;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.nuxeo.ide.common.FormPreferencePage;
@@ -62,30 +66,31 @@ public class SDKPreferencePage extends FormPreferencePage implements
 
     @Override
     protected Form createForm() {
+        @SuppressWarnings("hiding")
         Form form = new Form();
         form.addWidgetType(SDKTableWidget.class);
         form.addActionHandler("add", new ActionHandler() {
             @Override
-            public void handleAction(Form form, UIObject<?> obj, Object event) {
+            public void handleAction(@SuppressWarnings("hiding") Form form, UIObject<?> obj, Object event) {
                 addSDK();
             }
         });
         form.addActionHandler("remove", new ActionHandler() {
             @Override
-            public void handleAction(Form form, UIObject<?> obj, Object event) {
+            public void handleAction(@SuppressWarnings("hiding") Form form, UIObject<?> obj, Object event) {
                 removeSDK();
             }
         });
         form.addActionHandler("download", new ActionHandler() {
             @Override
-            public void handleAction(Form form, UIObject<?> obj, Object event) {
-                download();
+            public void handleAction(@SuppressWarnings("hiding") Form form, UIObject<?> obj, Object event) {
+                downloadSDK();
             }
         });
         form.addActionHandler("reload", new ActionHandler() {
             @Override
-            public void handleAction(Form form, UIObject<?> obj, Object event) {
-                reload();
+            public void handleAction(@SuppressWarnings("hiding") Form form, UIObject<?> obj, Object event) {
+                reloadSDK();
             }
         });
         return form;
@@ -128,10 +133,21 @@ public class SDKPreferencePage extends FormPreferencePage implements
         updateButtonBar();
     }
 
-    public void download() {
+    public void downloadSDK() {
+        SDKTableWidget sdkWidget = (SDKTableWidget) form.getWidget("sdks");
+        Shell shell = sdkWidget.getControl().getParent().getShell();
+        String text = "Would you like to open the Nuxeo SDK download page in you web browser ?\n\nFrom there, you can download the latest SDK and extract it to the location of your choice. Register it to eclipse with the \"Add\" button.\n";
+        Dialog dialog = new MessageDialog(shell, "Download SDK", null, text,
+                MessageDialog.QUESTION,
+                new String[] { "open browser", "cancel" }, 0);
+        dialog.open();
+        if (dialog.getReturnCode() != Dialog.OK) {
+            return;
+        }
+        Program.launch("http://doc.nuxeo.com/x/b4KE");
     }
 
-    public void reload() {
+    public void reloadSDK() {
         NuxeoSDK.reload();
     }
 
