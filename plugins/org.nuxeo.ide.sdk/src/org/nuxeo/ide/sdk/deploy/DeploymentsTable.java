@@ -121,6 +121,7 @@ public class DeploymentsTable extends Composite {
         invalidateNamesCache();
         prefs.addDeployment(deployment);
         tv.add(deployment);
+        tv.setCheckedElements(new Object[] { deployment });
         tv.setSelection(new StructuredSelection(deployment));
         // tv.setInput(prefs);
     }
