@@ -34,6 +34,7 @@ import org.nuxeo.ide.sdk.templates.cmd.Command;
 import org.nuxeo.ide.sdk.templates.cmd.DependenciesCommand;
 import org.nuxeo.ide.sdk.templates.cmd.JavaClassCommand;
 import org.nuxeo.ide.sdk.templates.cmd.MkdirCommand;
+import org.nuxeo.ide.sdk.templates.cmd.OrganizeImportsCommand;
 import org.nuxeo.ide.sdk.templates.cmd.RenameCommand;
 import org.nuxeo.ide.sdk.templates.cmd.ResourceBundleCommand;
 import org.nuxeo.ide.sdk.templates.cmd.ResourceCommand;
@@ -87,6 +88,7 @@ public class TemplateManager {
         commands.put("binaryResource", BinaryResourceCommand.class);
         commands.put("javaClass", JavaClassCommand.class);
         commands.put("resourceBundle", ResourceBundleCommand.class);
+        commands.put("organizeImports", OrganizeImportsCommand.class);
     }
 
     public void addCommand(String key, Class<? extends Command> type) {

@@ -1,6 +1,7 @@
 package org.nuxeo.ide.sdk;
 
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.nuxeo.ide.common.forms.PreferencesFormData;
@@ -45,7 +46,8 @@ public class SDKPlugin extends AbstractUIPlugin {
     }
 
     public void stop(BundleContext context) throws Exception {
-        ResourcesPlugin.getWorkspace().removeResourceChangeListener(seamReloader);
+        ResourcesPlugin.getWorkspace().removeResourceChangeListener(
+                seamReloader);
         NuxeoSDK.dispose();
         plugin = null;
         tempMgr = null;
@@ -68,6 +70,14 @@ public class SDKPlugin extends AbstractUIPlugin {
      */
     public static SDKPlugin getDefault() {
         return plugin;
+    }
+
+    public static void log(int status, String message) {
+        getDefault().getLog().log(new Status(status, PLUGIN_ID, message));
+    }
+
+    public static void log(int status, String message, Throwable cause) {
+        getDefault().getLog().log(new Status(status, PLUGIN_ID, message, cause));
     }
 
 }

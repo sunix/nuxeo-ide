@@ -42,6 +42,10 @@
     <rename path="src/main/resources/skin/views/MyRoot" to="src/main/resources/skin/views/${className}" />
 
     <select path = "src/main/java/${packagePath}/${className}.java" />
+    
+    <organizeImports>
+       <class path="src/main/java/${packagePath}/${className}.java"/>
+    </organizeImports>
   </template>
 
   <template id ="component" src="features/component/project">
