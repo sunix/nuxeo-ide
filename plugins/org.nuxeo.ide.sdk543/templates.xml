@@ -42,6 +42,17 @@
     <select path = "src/main/java/${packagePath}/${className}.java" />
   </project>
 
+  <feature id ="component" src="features/component/project">
+    <name>Nuxeo Component</name>
+    <description>A Nuxeo component object</description>
+
+    <extension src="features/component/extensions.xml"/>
+
+    <transform path="src/main/java/packagePath/MyComponent.java" to="src/main/java/${packagePath}/${className}.java" />
+    
+    <select path = "src/main/java/${packagePath}/${className}.java" />
+  </feature>
+
   <feature id ="operation" src="features/automation/project">
     <name>Operation</name>
     <description>An operation object</description>

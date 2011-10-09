@@ -37,19 +37,19 @@
       </wizard-->
 
       <category
-            id="org.nuxeo.ide.service.newWizards"
-            name="Service"
+            id="org.nuxeo.ide.component.newWizards"
+            name="Component"
             parentCategory="org.nuxeo.ide.project.newWizards">
       </category>
 
-      <!--wizard
-            category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.service.newWizards"
-            class="org.nuxeo.ide.sdk.features.FakeWizard"
-            icon="icons/service.gif"
-            id="org.nuxeo.ide.service.ServiceWizard"
-            name="Service">
-      </wizard>
       <wizard
+            category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.component.newWizards"
+            class="org.nuxeo.ide.sdk.features.component.ComponentWizard"
+            icon="icons/service.gif"
+            id="org.nuxeo.ide.sdk.features.component.ComponentWizard"
+            name="Nuxeo Component">
+      </wizard>
+      <!--wizard
             category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.service.newWizards"
             class="org.nuxeo.ide.sdk.features.FakeWizard"
             icon="icons/xpoint.gif"
