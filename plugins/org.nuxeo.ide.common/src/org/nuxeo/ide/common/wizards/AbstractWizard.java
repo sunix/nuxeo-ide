@@ -38,6 +38,8 @@ import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
 public abstract class AbstractWizard<T> extends Wizard implements INewWizard,
         IPageChangedListener {
 
+    protected boolean isWorking = false;
+
     protected IWorkbench workbench;
 
     protected IStructuredSelection selection;
@@ -95,7 +97,11 @@ public abstract class AbstractWizard<T> extends Wizard implements INewWizard,
     @SuppressWarnings("unchecked")
     @Override
     public boolean performFinish() {
-        T ctx = createExecutionContext();
+        if (isWorking) {
+            return false;
+        }
+        isWorking = true;
+        final T ctx = createExecutionContext();
 
         IWizardPage[] pages = getPages();
         for (IWizardPage page : pages) {
@@ -103,7 +109,11 @@ public abstract class AbstractWizard<T> extends Wizard implements INewWizard,
                 ((AbstractWizardPage<T>) page).update(ctx);
             }
         }
-        return execute(ctx);
+        try {
+            return execute(ctx);
+        } finally {
+            isWorking = false;
+        }
     }
 
     protected abstract T createExecutionContext();

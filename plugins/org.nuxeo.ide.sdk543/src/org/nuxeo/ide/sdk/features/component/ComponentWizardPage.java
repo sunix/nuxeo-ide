@@ -50,6 +50,7 @@ public class ComponentWizardPage extends FeatureWizardPage {
     public void update(FeatureTemplateContext ctx) {
         super.update(ctx);
         String className = ctx.getClassName();
+        // TODO expose as service
     }
 
 }
