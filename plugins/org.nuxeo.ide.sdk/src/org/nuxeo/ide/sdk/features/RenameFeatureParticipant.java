@@ -43,7 +43,6 @@ import org.nuxeo.ide.sdk.SDKPlugin;
 import org.nuxeo.ide.sdk.model.ExtensionModel;
 import org.nuxeo.ide.sdk.model.ManifestWriter;
 
-
 /**
  * 
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -54,13 +53,13 @@ public class RenameFeatureParticipant extends RenameParticipant {
     protected FeatureType type;
 
     protected String name;
-    
+
     protected String id;
 
     protected String newName;
 
     protected String newId;
-    
+
     public RenameFeatureParticipant() {
     }
 
@@ -71,7 +70,8 @@ public class RenameFeatureParticipant extends RenameParticipant {
             String pkgName = type.type.getPackageFragment().getElementName();
             newName = getArguments().getNewName();
             if (newName.endsWith(".java")) {
-                newName = newName.substring(0, newName.length() - ".java".length());
+                newName = newName.substring(0,
+                        newName.length() - ".java".length());
             }
             newId = pkgName + "." + newName;
             id = type.type.getFullyQualifiedName();
@@ -122,7 +122,8 @@ public class RenameFeatureParticipant extends RenameParticipant {
             resources.accept(new ResourceVisitor(fqn) {
 
                 @Override
-                public void visitResource(IFile file, String suffix, @SuppressWarnings("hiding") ContentType type) {
+                public void visitResource(IFile file, String suffix,
+                        @SuppressWarnings("hiding") ContentType type) {
                     deltaFactory.move(
                             file,
                             file.getParent().getLocation().append(
@@ -189,8 +190,10 @@ public class RenameFeatureParticipant extends RenameParticipant {
         resources.accept(new ResourceVisitor(fqn) {
 
             @Override
-            public void visitResource(IFile file, String suffix, @SuppressWarnings("hiding") ContentType type) {
-                result.add(new RenameResourceChange(file.getFullPath(), newId+suffix));
+            public void visitResource(IFile file, String suffix,
+                    @SuppressWarnings("hiding") ContentType type) {
+                result.add(new RenameResourceChange(file.getFullPath(), newId
+                        + suffix));
             }
 
         });
@@ -202,6 +205,9 @@ public class RenameFeatureParticipant extends RenameParticipant {
         try {
             IFolder i18n = type.getProject().getFolder(
                     "src/main/i18n/web/nuxeo.war/WEB-INF/classes");
+            if (!i18n.exists()) {
+                return;
+            }
             for (IResource m : i18n.members()) {
                 result.add(new ReplaceIdChange((IFile) m, id, newId));
             }

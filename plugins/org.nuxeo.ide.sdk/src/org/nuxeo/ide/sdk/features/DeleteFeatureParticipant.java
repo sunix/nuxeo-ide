@@ -104,7 +104,8 @@ public class DeleteFeatureParticipant extends DeleteParticipant {
             resources.accept(new ResourceVisitor(fqn) {
 
                 @Override
-                public void visitResource(IFile file, String suffix, @SuppressWarnings("hiding") ContentType type) {
+                public void visitResource(IFile file, String suffix,
+                        @SuppressWarnings("hiding") ContentType type) {
                     deltaFactory.delete(file);
                 }
 
@@ -130,11 +131,13 @@ public class DeleteFeatureParticipant extends DeleteParticipant {
         return result;
     }
 
-    protected void create18NChange(CompositeChange result)
-            throws CoreException {
+    protected void create18NChange(CompositeChange result) throws CoreException {
         final String fqn = type.type.getFullyQualifiedName();
         IFolder i18nFolder = type.getProject().getFolder(
                 "src/main/i18n/web/nuxeo.war/WEB-INF/classes");
+        if (!i18nFolder.exists()) {
+            return;
+        }
         for (IResource m : i18nFolder.members()) {
             final IFile file = (IFile) m;
             result.add(new RemoveMatchingLinesChange(file, fqn));
