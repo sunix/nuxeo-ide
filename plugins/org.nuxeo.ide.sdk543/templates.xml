@@ -1,6 +1,6 @@
 <templates version="0.0.0">
 
-  <project id="default" src="projects/default">
+  <template id="default" src="projects/default">
     <name>Empty Project</name>
     <description>An empty Nuxeo project</description>
     <!--
@@ -20,10 +20,12 @@
     <transform path=".classpath" />
     <transform path=".project" />
     <transform path="src/main/resources/META-INF/MANIFEST.MF" />
-  </project>
+    
+    <select path = "" />
+  </template>
 
 
-  <project id="webengine" src="projects/webengine">
+  <template id="webengine" src="projects/webengine">
     <name>WebEngine Project</name>
     <description>A project defining a WebEngine application</description>
 
@@ -40,9 +42,9 @@
     <rename path="src/main/resources/skin/views/MyRoot" to="src/main/resources/skin/views/${className}" />
 
     <select path = "src/main/java/${packagePath}/${className}.java" />
-  </project>
+  </template>
 
-  <feature id ="component" src="features/component/project">
+  <template id ="component" src="features/component/project">
     <name>Nuxeo Component</name>
     <description>A Nuxeo component object</description>
 
@@ -51,9 +53,9 @@
     <transform path="src/main/java/packagePath/MyComponent.java" to="src/main/java/${packagePath}/${className}.java" />
     
     <select path = "src/main/java/${packagePath}/${className}.java" />
-  </feature>
+  </template>
 
-  <feature id ="operation" src="features/automation/project">
+  <template id ="operation" src="features/automation/project">
     <name>Operation</name>
     <description>An operation object</description>
 
@@ -66,9 +68,9 @@
     <transform path="src/main/java/packagePath/MyOperation.java" to="src/main/java/${packagePath}/${className}.java" />
     
     <select path = "src/main/java/${packagePath}/${className}.java" />
-  </feature>
+  </template>
 
-  <feature id ="docadapter" src="features/docadapter/project">
+  <template id ="docadapter" src="features/docadapter/project">
     <name>Document Adapter</name>
     <description>A document adapter over a set of document schemas</description>
 
@@ -82,9 +84,9 @@
     <transform path="src/main/java/packagePath/MyDocumentAdapter.java" to="src/main/java/${packagePath}/${className}.java" />
     
     <select path = "src/main/java/${packagePath}/${className}.java" />
-  </feature>
+  </template>
 
-  <feature id ="listener" src="features/listener/project">
+  <template id ="listener" src="features/listener/project">
     <name>Listener</name>
     <description>A listener object</description>
 
@@ -97,9 +99,9 @@
     <transform path="src/main/java/packagePath/MyListener.java" to="src/main/java/${packagePath}/${className}.java" />
     
     <select path = "src/main/java/${packagePath}/${className}.java" />
-  </feature>
+  </template>
 
-  <feature id ="gadget" src="features/gadget/project">
+  <template id ="gadget" src="features/gadget/project">
     <name>Gadget</name>
     <description>A gadget object</description>
 
@@ -114,9 +116,9 @@
 	<transform path="src/main/resources/gadget/${gadgetName}/dynamic_messages.properties" to="src/main/resources/gadget/${gadgetName}/dynamic_messages.properties"/>
 
     <select path = "src/main/resources/gadget/${gadgetName}" />
-  </feature>
+  </template>
 
-  <feature id ="automation-gadget" src="features/automation-gadget/project">
+  <template id ="automation-gadget" src="features/automation-gadget/project">
     <name>Automation Gadget</name>
     <description>A gadget that invoke a Nuxeo operation</description>
 
@@ -131,9 +133,9 @@
 	<transform path="src/main/resources/gadget/${gadgetName}/dynamic_messages.properties" to="src/main/resources/gadget/${gadgetName}/dynamic_messages.properties"/>
 
     <select path = "src/main/resources/gadget/${gadgetName}" />
-  </feature>
+  </template>
 
-  <feature id ="securityPolicy" src="features/securityPolicy/project">
+  <template id ="securityPolicy" src="features/securityPolicy/project">
     <name>Security Policy</name>
     <description>A Security Policy</description>
  
@@ -147,9 +149,9 @@
 <!-- TODO test not implemented by now     <transform path="src/main/java/packagePath/TestMySecurityPolicy.java" to="src/test/java/${packagePath}/test/Test${className}.java" /> -->
 
     <select path = "src/main/java/${packagePath}/${className}.java" />
-  </feature>
+  </template>
 
-  <feature id="permission" src="features/permission/project">
+  <template id="permission" src="features/permission/project">
     <name>Permission</name>
     <description>A Permission</description>
     
@@ -157,9 +159,9 @@
     <manifest key="Nuxeo-Component" value="OSGI-INF/permission-${name}.xml" append="true" />
     
     <select path = "src/main/resources/OSGI-INF/permission-${name}.xml" />ean
-  </feature>
+  </template>
 
-  <feature id ="permissionVisibility" src="features/permissionVisibility/project">
+  <template id ="permissionVisibility" src="features/permissionVisibility/project">
     <name>Permission Visibility</name>
     <description>A Permission Visibility</description>
 
@@ -171,9 +173,9 @@
     </dependencies>
 
     <select path = "src/main/resources/OSGI-INF/permissions-visibility.xml" />    
-  </feature>
+  </template>
 
-  <feature id="seam:Action" src="features/seam/action">
+  <template id="seam:Action" src="features/seam/action">
      <name>Seam Action Bean Component</name>
      <description>A seam action bean</description>
      
@@ -182,9 +184,9 @@
      <binaryResource path="web/nuxeo.war/icons/MyAction-action.png" to="web/nuxeo.war/icons/${package}.${class}-action.png" />
      <javaClass src="src/main/seam" path="packagePath/MyActionBean.java" to="${packagePath}/${class}.java" />
      <select path="src/main/seam/${packagePath}/${class}.java"/>
-  </feature>
+  </template>
 
-  <feature id="seam:Controller" src="features/seam/controller">
+  <template id="seam:Controller" src="features/seam/controller">
      <name>Seam Controller Bean Component</name>
      <description>A seam controller bean</description>
      
@@ -194,14 +196,14 @@
      <resource path="web/nuxeo.war/incl/tabs/MyController-tab.xhtml" to="web/nuxeo.war/incl/tabs/${package}.${class}-tab.xhtml" />
      <javaClass src="src/main/seam" path="packagePath/MyControllerBean.java" to="${packagePath}/${class}.java" />
      <select path="src/main/seam/${packagePath}/${class}.java"/>
-  </feature>
+  </template>
   
-  <feature id="seam:Service" src="features/seam/service">
+  <template id="seam:Service" src="features/seam/service">
      <name>Seam Service Wrapper Component</name>
      <description>A seam service wrapper bean</description>
      
      <javaClass src="src/main/seam" path="packagePath/MyServiceWrapperBean.java" to="${packagePath}/${class}.java" />
      <select path="src/main/seam/${packagePath}/${class}.java"/>
-  </feature>
+  </template>
 
 </templates>

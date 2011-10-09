@@ -26,7 +26,6 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.sdk.NuxeoSDK;
-import org.nuxeo.ide.sdk.server.ServerController;
 
 /**
  * Fake add nature - used as an example

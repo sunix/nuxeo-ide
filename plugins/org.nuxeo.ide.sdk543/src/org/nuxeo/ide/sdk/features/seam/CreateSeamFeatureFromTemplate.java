@@ -17,9 +17,8 @@
 package org.nuxeo.ide.sdk.features.seam;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.JavaModelException;
-import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.sdk.features.CreateFeatureFromTemplate;
 import org.nuxeo.ide.sdk.features.FeatureTemplateContext;
 import org.nuxeo.ide.sdk.java.ClasspathEditor;
@@ -35,18 +34,14 @@ public class CreateSeamFeatureFromTemplate extends CreateFeatureFromTemplate {
         super(ctx);
     }
 
-    protected void postCreate() {
-        super.postCreate();
+    protected void postCreate(IProgressMonitor monitor) throws Exception {
+        super.postCreate(monitor);
         IJavaProject java = ctx.getProject();
         IProject project = java.getProject();
-        try {
-            ClasspathEditor editor = new ClasspathEditor(project);
-            editor.extendClasspath("seam");
-            editor.extendClasspath("i18n");
-            editor.flush();
-        } catch (JavaModelException e) {
-            UI.showError("Cannot extend classpath of " + project.getName(), e);
-        }
+        ClasspathEditor editor = new ClasspathEditor(project);
+        editor.extendClasspath("seam");
+        editor.extendClasspath("i18n");
+        editor.flush();
     }
 
 }

@@ -43,10 +43,8 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Shell;
 import org.nuxeo.ide.common.UI;
-import org.nuxeo.ide.sdk.NuxeoSDK;
 import org.nuxeo.ide.sdk.SDKInfo;
 import org.nuxeo.ide.sdk.deploy.Deployment;
-import org.nuxeo.ide.sdk.deploy.DeploymentPreferences;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>

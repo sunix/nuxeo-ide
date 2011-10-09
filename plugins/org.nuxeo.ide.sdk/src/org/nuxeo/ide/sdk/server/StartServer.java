@@ -18,7 +18,6 @@ package org.nuxeo.ide.sdk.server;
 
 import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.sdk.NuxeoSDK;
-import org.nuxeo.ide.sdk.SDKPlugin;
 import org.nuxeo.ide.sdk.deploy.Deployment;
 import org.nuxeo.ide.sdk.deploy.DeploymentPreferences;
 

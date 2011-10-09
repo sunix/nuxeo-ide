@@ -65,12 +65,12 @@ public class TemplateManager {
 
     protected TemplateEngine engine;
 
-    protected Map<String, Class<? extends Command>> commands;
+    protected Map<String, Class<? extends ElementHandler>> commands;
 
     public TemplateManager() {
         regs = new HashMap<String, TemplateRegistry>();
         engine = new FreemarkerEngine();
-        commands = new HashMap<String, Class<? extends Command>>();
+        commands = new HashMap<String, Class<? extends ElementHandler>>();
         initCommands();
     }
 
@@ -94,10 +94,10 @@ public class TemplateManager {
     }
 
     @SuppressWarnings("unchecked")
-    public Command getCommand(String key) throws Exception {
-        Class<? extends Command> type = commands.get(key);
+    public ElementHandler getCommand(String key) throws Exception {
+        Class<? extends ElementHandler> type = commands.get(key);
         if (type == null) {
-            type = (Class<? extends Command>) Class.forName(key);
+            type = (Class<? extends ElementHandler>) Class.forName(key);
         }
         return type.newInstance();
     }
@@ -131,14 +131,6 @@ public class TemplateManager {
             v = v.substring(0, v.length() - "-SNAPSHOT".length());
         }
         return getRegistry(v);
-    }
-
-    public ProjectTemplate getDefaultTemplate(String id) {
-        TemplateRegistry reg = getDefaultRegistry();
-        if (reg != null) {
-            reg.getProjectTemplate(id);
-        }
-        return null;
     }
 
     public void loadRegistry(Bundle bundle) {

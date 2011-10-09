@@ -18,9 +18,7 @@ package org.nuxeo.ide.sdk.projects;
 
 import java.io.IOException;
 
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.nuxeo.ide.common.wizards.ImportProject;
 import org.nuxeo.ide.sdk.SDKPlugin;
 import org.nuxeo.ide.sdk.templates.TemplateContext;
@@ -43,18 +41,19 @@ public class CreateProjectFromTemplate extends ImportProject {
         return ctx;
     }
 
+    public TemplateRegistry getTemplateRegistry() {
+        return SDKPlugin.getDefault().getTemplateManager().getDefaultRegistry();
+    }
+
     @Override
-    protected void postCreate() {
+    protected void postCreate(IProgressMonitor monitor) throws Exception {
         if (project != null) {
-            String path = ctx.getResourceToSelect();
-            if (path != null) {
-                IResource r = project.findMember(new Path(path));
-                if (r != null) {
-                    selectAndReveal(r);
-                    return;
-                }
+            TemplateRegistry tempReg = getTemplateRegistry();
+            if (tempReg != null) {
+                tempReg.postProcessTemplate(ctx.getTemplate(), ctx, project);
+            } else {
+                throw new IllegalStateException("NuxeoSDK is not configured!");
             }
-            selectAndReveal(project);
         }
     }
 
@@ -66,9 +65,9 @@ public class CreateProjectFromTemplate extends ImportProject {
             throw new IOException("The target project file already exists: "
                     + projectRoot);
         }
-        TemplateRegistry tempReg = SDKPlugin.getDefault().getTemplateManager().getDefaultRegistry();
+        TemplateRegistry tempReg = getTemplateRegistry();
         if (tempReg != null) {
-            tempReg.processProjectTemplate(ctx.getTemplate(), ctx, projectRoot);
+            tempReg.processTemplate(ctx.getTemplate(), ctx, projectRoot);
         } else {
             throw new IllegalStateException("NuxeoSDK is not configured!");
         }

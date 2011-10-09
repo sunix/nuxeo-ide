@@ -34,8 +34,6 @@ public class TemplateContext extends HashMap<String, Object> {
 
     protected File projectLocation;
 
-    protected String resourceToSelect;
-
     public TemplateContext() {
         initDefaults();
     }
@@ -59,14 +57,6 @@ public class TemplateContext extends HashMap<String, Object> {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public String getResourceToSelect() {
-        return resourceToSelect;
-    }
-
-    public void setResourceToSelect(String resourceToSelect) {
-        this.resourceToSelect = resourceToSelect;
     }
 
     public String getTemplate() {

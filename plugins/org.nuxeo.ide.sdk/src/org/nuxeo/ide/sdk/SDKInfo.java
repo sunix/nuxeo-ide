@@ -30,8 +30,6 @@ import java.util.Properties;
 
 import org.nuxeo.ide.common.IOUtils;
 import org.nuxeo.ide.common.UI;
-import org.nuxeo.ide.sdk.server.ServerConfiguration;
-import org.nuxeo.ide.sdk.server.VMUtils;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>

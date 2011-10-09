@@ -16,12 +16,8 @@
  */
 package org.nuxeo.ide.sdk.features.component;
 
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.nuxeo.ide.common.forms.Form;
-import org.nuxeo.ide.common.forms.model.RadioGroupWidget;
 import org.nuxeo.ide.sdk.features.FeatureTemplateContext;
 import org.nuxeo.ide.sdk.features.FeatureWizardPage;
 import org.nuxeo.ide.sdk.ui.widgets.PackageChooserWidget;

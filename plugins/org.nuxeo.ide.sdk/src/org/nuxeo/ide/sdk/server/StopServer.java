@@ -17,7 +17,6 @@
 package org.nuxeo.ide.sdk.server;
 
 import org.nuxeo.ide.common.UI;
-import org.nuxeo.ide.sdk.SDKInfo;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
