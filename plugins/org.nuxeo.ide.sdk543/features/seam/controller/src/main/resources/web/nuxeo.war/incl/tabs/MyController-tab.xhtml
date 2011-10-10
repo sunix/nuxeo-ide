@@ -12,8 +12,8 @@
   <h:form>
     <dl>
         <dt>Updatable title property</dt>
-        <dd><h:inputText value="${r"#{"}${bean}.title${r"}"}"/>
-            <nxh:commandButton value="Save" action="${r"#{"}${bean}.save()${r"}"}" styleClass="button"/></dd>
+        <dd><h:inputText value="${r"#{"}${bean?uncap_first}.title${r"}"}"/>
+            <nxh:commandButton value="Save" action="${r"#{"}${bean?uncap_first}.save()${r"}"}" styleClass="button"/></dd>
             
         <dt><h:outputText value="List contributors value from Bean" /></dt>
         <dd><ul><nxu:repeat var="property" value="${r"#{"}${bean?uncap_first}Contributors${r"}"}">
