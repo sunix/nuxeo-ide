@@ -18,7 +18,6 @@ package org.nuxeo.ide.sdk.server;
 
 import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.sdk.NuxeoSDK;
-import org.nuxeo.ide.sdk.SDKPlugin;
 import org.nuxeo.ide.sdk.deploy.Deployment;
 import org.nuxeo.ide.sdk.deploy.DeploymentPreferences;
 
@@ -36,12 +35,12 @@ public class StartServer extends ProcessRunner {
     protected ServerController ctrl;
 
     public StartServer(ServerController ctrl) throws Exception {
-        super(ctrl.newProcessBuilder("start", false));
+        super(ctrl.newProcessBuilder("restart", false));
         this.ctrl = ctrl;
     }
 
     public StartServer(ServerController ctrl, boolean isDebug) throws Exception {
-        super(ctrl.newProcessBuilder("start", isDebug));
+        super(ctrl.newProcessBuilder("restart", isDebug));
         this.ctrl = ctrl;
     }
 
