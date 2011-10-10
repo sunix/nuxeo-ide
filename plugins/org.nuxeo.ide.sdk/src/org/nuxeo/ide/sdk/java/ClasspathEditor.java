@@ -1,5 +1,6 @@
 package org.nuxeo.ide.sdk.java;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,30 +23,40 @@ public class ClasspathEditor {
     
     public ClasspathEditor(IProject project) throws JavaModelException {
         java = JavaCore.create(project);
-        entries = Arrays.asList(java.getRawClasspath());
+        entries.addAll(Arrays.asList(java.getRawClasspath()));
     }
     
     protected final IJavaProject java;
 
-    protected final List<IClasspathEntry> entries;
+    protected final List<IClasspathEntry> entries = 
+            new ArrayList<IClasspathEntry>();
     
-    public boolean extendClasspath(String name)
+    boolean dirty = false;
+    
+    public void extendClasspath(String name)
             throws JavaModelException {
         IProject project = java.getProject();
         IFolder folder = project.getFolder("src/main/" + name);
         IPackageFragmentRoot root = java.getPackageFragmentRoot(folder);
         if (root.exists()) {
-            return false;
+            IClasspathEntry entry = root.getRawClasspathEntry();
+            if (entry.getOutputLocation() != null) {
+                return;
+            }
+            entries.remove(entry);
         }
         // extend project class path
         IFolder binFolder = project.getFolder("bin/" + name);
         IClasspathEntry newEntry = JavaCore.newSourceEntry(folder.getFullPath(),
                 new IPath[0], new IPath[0], binFolder.getFullPath());
         entries.add(newEntry);
-        return true;
+        dirty = true;
     }
 
     public void flush() throws JavaModelException {
-        java.setRawClasspath(entries.toArray(new IClasspathEntry[entries.size()]), null);
+        if (dirty) {
+            java.setRawClasspath(entries.toArray(new IClasspathEntry[entries.size()]), null);
+        }
+        dirty = false;
     }
 }
