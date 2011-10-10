@@ -5,14 +5,17 @@
 
   <install>
 
-    <seamHotDeploy>
-      <include>**/*Bean.class</include>
-    </seamHotDeploy>
-
     <!--  Unzip the war template -->
     <unzip from="${bundle.fileName}" to="/" prefix="web">
       <include>web/nuxeo.war/**</include>
     </unzip>
+    
+    <delete path="${bundle.fileName}.tmp"/>
+    <unzip from="${bundle.fileName}" to="${bundle.fileName}.tmp" prefix="OSGI-INF/l10n">
+      <include>OSGI-INF/l10n/*.properties</include>
+    </unzip>
+    <append from="${bundle.fileName}.tmp/messages.properties" to="nuxeo.war/WEB-INF/classes/messages.properties" addNewLine="true"/>
+
   </install>
 
 <!--

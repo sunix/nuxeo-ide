@@ -42,7 +42,6 @@ public class CreateSeamFeatureFromTemplate extends CreateFeatureFromTemplate {
         try {
             ClasspathEditor editor = new ClasspathEditor(project);
             editor.extendClasspath("seam");
-            editor.extendClasspath("i18n");
             editor.flush();
         } catch (JavaModelException e) {
             UI.showError("Cannot extend classpath of " + project.getName(), e);

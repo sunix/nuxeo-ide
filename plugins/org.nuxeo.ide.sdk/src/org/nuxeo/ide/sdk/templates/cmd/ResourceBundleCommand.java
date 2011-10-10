@@ -24,7 +24,7 @@ public class ResourceBundleCommand implements Command {
         String path = element.getAttribute("path").trim();
         
         if (src.isEmpty()) {
-            src = "src/main/i18n";
+            src = "src/main/resources";
         }
         
         if (name.isEmpty()) {
@@ -41,7 +41,7 @@ public class ResourceBundleCommand implements Command {
         
         Element appendElement = doc.createElement("append");
         appendElement.setAttribute("path", src + "/" + path);
-        appendElement.setAttribute("to", src + "/web/nuxeo.war/WEB-INF/classes/"+name+locale+".properties");
+        appendElement.setAttribute("to", src + "/OSGI-INF/l10n/"+name+locale+".properties");
         append.init(appendElement);
     }
 
