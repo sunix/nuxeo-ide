@@ -53,9 +53,9 @@ public class IOUtils {
      * @param dst the destination directory
      * @throws IOException
      */
-    public static void copyTree(File src, File dst) throws IOException {
+    public static void copyTree(File src, File dst, boolean overwrite) throws IOException {
         if (src.isFile()) {
-            copyFile(src, dst);
+            copyFile(src, dst, overwrite);
         } else if (src.isDirectory()) {
             if (dst.exists()) {
                 dst = new File(dst, src.getName());
@@ -65,7 +65,7 @@ public class IOUtils {
             }
             File[] files = src.listFiles();
             for (File file : files) {
-                copyTree(file, dst);
+                copyTree(file, dst, overwrite);
             }
         }
     }
@@ -79,21 +79,24 @@ public class IOUtils {
      * 
      * @throws IOException
      */
-    public static void copyTreeContent(File src, File dst) throws IOException {
+    public static void copyTreeContent(File src, File dst, boolean overwrite) throws IOException {
         if (src.isFile()) {
-            copyFile(src, dst);
+            copyFile(src, dst, overwrite);
         } else if (src.isDirectory()) {
             dst.mkdirs();
             File[] files = src.listFiles();
             for (File file : files) {
-                copyTree(file, dst);
+                copyTree(file, dst, overwrite);
             }
         }
     }
 
-    public static void copyFile(File src, File dst) throws IOException {
+    public static void copyFile(File src, File dst, boolean overwrite) throws IOException {
         if (dst.isDirectory()) {
             dst = new File(dst, src.getName());
+        }
+        if (!overwrite && dst.exists()) {
+            return;
         }
         FileInputStream in = null;
         FileOutputStream out = new FileOutputStream(dst);
@@ -117,7 +120,10 @@ public class IOUtils {
         }
     }
 
-    public static void copyToFile(InputStream in, File file) throws IOException {
+    public static void copyToFile(InputStream in, File file, boolean overwrite) throws IOException {
+        if (!overwrite && file.exists()) {
+            return;
+        }
         OutputStream out = null;
         try {
             out = new FileOutputStream(file);
@@ -171,7 +177,7 @@ public class IOUtils {
         }
     }
 
-    public static void unzip(ZipInputStream in, File dir) throws IOException {
+    public static void unzip(ZipInputStream in, File dir, boolean overwrite) throws IOException {
         dir.mkdirs();
         ZipEntry entry = in.getNextEntry();
         while (entry != null) {
@@ -181,18 +187,18 @@ public class IOUtils {
                 file.mkdirs();
             } else {
                 file.getParentFile().mkdirs();
-                copyToFile(in, file);
+                copyToFile(in, file, overwrite);
             }
             entry = in.getNextEntry();
         }
     }
 
-    public static void unzip(InputStream zipStream, String prefix, File dir)
+    public static void unzip(InputStream zipStream, String prefix, File dir, boolean overwrite)
             throws IOException {
         ZipInputStream in = null;
         try {
             in = new ZipInputStream(new BufferedInputStream(zipStream));
-            unzip(in, prefix, dir);
+            unzip(in, prefix, dir, overwrite);
         } finally {
             if (in != null) {
                 in.close();
@@ -200,13 +206,13 @@ public class IOUtils {
         }
     }
 
-    public static void unzip(File zip, String prefix, File dir)
+    public static void unzip(File zip, String prefix, File dir, boolean overwrite)
             throws IOException {
         ZipInputStream in = null;
         try {
             in = new ZipInputStream(new BufferedInputStream(
                     new FileInputStream(zip)));
-            unzip(in, prefix, dir);
+            unzip(in, prefix, dir, overwrite);
         } finally {
             if (in != null) {
                 in.close();
@@ -223,7 +229,7 @@ public class IOUtils {
      * @param dir
      * @throws IOException
      */
-    public static void unzip(ZipInputStream in, String prefix, File dir)
+    public static void unzip(ZipInputStream in, String prefix, File dir, boolean overwrite)
             throws IOException {
         if (!prefix.endsWith("/")) {
             prefix = prefix.concat("/");
@@ -243,7 +249,7 @@ public class IOUtils {
                     file.mkdirs();
                 } else {
                     file.getParentFile().mkdirs();
-                    copyToFile(in, file);
+                    copyToFile(in, file, overwrite);
                 }
             } else {
                 System.out.println("Unzip not OK");

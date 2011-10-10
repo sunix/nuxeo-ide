@@ -76,10 +76,13 @@ public class SeamHotReloader implements DeploymentChangedListener,
                         return true;
                     }
                     int flags = delta.getFlags();
-                    if ((flags & IResourceDelta.OPEN) == 0) {
+                    if ((flags & (IResourceDelta.OPEN|IResourceDelta.SYNC)) == 0) {
                         return false;
                     }
                     final IProject project = (IProject) resource;
+                    if (project.isOpen() == false) {
+                        return false;
+                    }
                     if (project.getNature(NuxeoNature.ID) == null) {
                         return false;
                     }
@@ -96,7 +99,6 @@ public class SeamHotReloader implements DeploymentChangedListener,
                         public IStatus runInWorkspace(IProgressMonitor monitor)
                                 throws CoreException {
                             editor.extendClasspath("seam");
-                            editor.extendClasspath("i18n");
                             editor.flush();
                             return new Status(IStatus.OK, SDKPlugin.PLUGIN_ID, "seam classpath set on " + project.getName());
                         }
@@ -114,7 +116,7 @@ public class SeamHotReloader implements DeploymentChangedListener,
 
     @Override
     public void deploymentChanged(NuxeoSDK sdk, Deployment deployment) {
-        Map<String, List<File>> i18nFiles = new HashMap<String, List<File>>();
+        Map<String, List<File>> l10nFiles = new HashMap<String, List<File>>();
         // set target
         File targetWeb = new File(sdk.getInstallDirectory(), "nxserver");
         File targetBinaries = new File(targetWeb, "nuxeo.war/WEB-INF/dev");
@@ -128,7 +130,7 @@ public class SeamHotReloader implements DeploymentChangedListener,
                 IJavaProject java = JavaCore.create(project);
                 copyBinaries(java, targetBinaries);
                 copyWebFiles(java, targetWeb);
-                collectI18N(java, targetWeb, i18nFiles);
+                collectResourceBundleFragments(java, targetWeb, l10nFiles);
             } catch (Exception e) {
                 UI.showError(
                         "Cannot synch seam components of " + project.getName()
@@ -138,17 +140,17 @@ public class SeamHotReloader implements DeploymentChangedListener,
 
         // append i18n resource bundles
         try {
-            appendI18N(i18nFiles, targetWeb);
+            appendResourceBundleFragments(l10nFiles, targetWeb);
         } catch (Exception e) {
             UI.showError("Cannot append i18n resource bundles", e);
         }
 
         // ask server for reloading
-        try {
-            postSeamReload(sdk);
-        } catch (IOException e) {
-            UI.showError("Cannot request seam reload", e);
-        }
+//        try {
+//            postSeamReload(sdk);
+//        } catch (IOException e) {
+//            UI.showError("Cannot request seam reload", e);
+//        }
     }
 
     protected void copyBinaries(IJavaProject java, File target)
@@ -163,7 +165,7 @@ public class SeamHotReloader implements DeploymentChangedListener,
         IPath binPath = cpe.getOutputLocation();
         IFolder binFolder = project.getParent().getFolder(binPath);
         for (IResource m : binFolder.members()) {
-            IOUtils.copyTree(m.getRawLocation().toFile(), target);
+            IOUtils.copyTree(m.getRawLocation().toFile(), target, true);
         }
     }
 
@@ -174,38 +176,38 @@ public class SeamHotReloader implements DeploymentChangedListener,
             return; // no web files
         }
         for (IResource m : web.members()) {
-            IOUtils.copyTree(m.getRawLocation().toFile(), target);
+            IOUtils.copyTree(m.getRawLocation().toFile(), target, true);
         }
     }
 
-    protected void collectI18N(IJavaProject java, File target,
-            Map<String, List<File>> i18nFiles) throws CoreException,
+    protected void collectResourceBundleFragments(IJavaProject java, File target,
+            Map<String, List<File>> l10nFiles) throws CoreException,
             IOException {
-        IFolder i18n = java.getProject().getFolder(
-                "src/main/i18n/web/nuxeo.war/WEB-INF/classes");
-        if (!i18n.exists()) {
+        IFolder l10n = java.getProject().getFolder(
+                "src/main/resources/OSGI-INF/l10n");
+        if (!l10n.exists()) {
             return; // no i18n resources bundles
         }
-        for (IResource m : i18n.members()) {
+        for (IResource m : l10n.members()) {
             File contribution = m.getRawLocation().toFile();
             String name = contribution.getName();
-            if (!i18nFiles.containsKey(name)) {
-                i18nFiles.put(name, new ArrayList<File>());
+            if (!l10nFiles.containsKey(name)) {
+                l10nFiles.put(name, new ArrayList<File>());
             }
-            i18nFiles.get(name).add(contribution);
+            l10nFiles.get(name).add(contribution);
         }
     }
 
-    protected void appendI18N(Map<String, List<File>> i18nfiles, File target)
+    protected void appendResourceBundleFragments(Map<String, List<File>> i18nfiles, File target)
             throws IOException {
         File i18n = new File(target, "nuxeo.war/WEB-INF/classes");
         for (String name : i18nfiles.keySet()) {
             File original = new File(i18n, name);
             File backup = new File(i18n, name + "~bak");
             if (!backup.exists()) {
-                IOUtils.copyFile(original, backup);
+                IOUtils.copyFile(original, backup, true);
             }
-            IOUtils.copyFile(backup, original);
+            IOUtils.copyFile(backup, original, true);
             for (File file : i18nfiles.get(name)) {
                 IOUtils.appendFile(original, file);
             }

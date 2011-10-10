@@ -135,7 +135,7 @@ public abstract class Template implements Comparable<Template> {
             dir.getParentFile().mkdir();
             tmp.renameTo(dir);
         } else {
-            IOUtils.copyTreeContent(tmp, dir);
+            IOUtils.copyTreeContent(tmp, dir, false);
         }
     }
 
@@ -156,9 +156,9 @@ public abstract class Template implements Comparable<Template> {
         } else {
             File bundleFile = FileLocator.getBundleFile(bundle);
             if (bundleFile.isDirectory()) {
-                IOUtils.copyTreeContent(new File(bundleFile, src), dir);
+                IOUtils.copyTreeContent(new File(bundleFile, src), dir, false);
             } else {
-                IOUtils.unzip(bundleFile, src, dir);
+                IOUtils.unzip(bundleFile, src, dir, false);
             }
         }
     }
