@@ -196,7 +196,7 @@ public class StudioProject implements Comparable<StudioProject> {
             int i = host.lastIndexOf("/studio");
             if (i > -1) {
                 return host.substring(0, i + "/studio".length())
-                        + "/ide?projectId=" + getId();
+                        + "/ide?project=" + getId();
             }
         } catch (Exception e) {
             e.printStackTrace(); // TODO

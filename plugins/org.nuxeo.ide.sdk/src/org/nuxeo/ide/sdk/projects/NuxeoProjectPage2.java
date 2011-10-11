@@ -17,7 +17,6 @@
 package org.nuxeo.ide.sdk.projects;
 
 import org.eclipse.swt.widgets.Composite;
-import org.nuxeo.ide.common.StringUtils;
 import org.nuxeo.ide.common.wizards.FormWizardPage;
 import org.nuxeo.ide.sdk.NuxeoSDK;
 import org.nuxeo.ide.sdk.templates.Constants;

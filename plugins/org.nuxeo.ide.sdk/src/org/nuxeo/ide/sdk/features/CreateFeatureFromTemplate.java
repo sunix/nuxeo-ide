@@ -25,7 +25,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -33,7 +32,6 @@ import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.nuxeo.ide.common.Activator;
-import org.nuxeo.ide.common.wizards.ImportProject;
 import org.nuxeo.ide.sdk.SDKPlugin;
 import org.nuxeo.ide.sdk.templates.TemplateRegistry;
 
@@ -53,18 +51,22 @@ public class CreateFeatureFromTemplate extends WorkspaceModifyOperation {
         return ctx;
     }
 
-    protected void postCreate() {
+    public TemplateRegistry getTemplateRegistry() {
+        return SDKPlugin.getDefault().getTemplateManager().getDefaultRegistry();
+    }
+
+    protected void postCreate(IProgressMonitor monitor) throws Exception {
         if (ctx.getProject() != null) {
             IProject project = ctx.getProject().getProject();
-            String path = ctx.getResourceToSelect();
-            if (path != null) {
-                IResource r = project.findMember(new Path(path));
-                if (r != null) {
-                    ImportProject.selectAndReveal(r);
-                    return;
-                }
+            if (!project.exists()) {
+                return;
             }
-            ImportProject.selectAndReveal(project);
+            TemplateRegistry tempReg = getTemplateRegistry();
+            if (tempReg != null) {
+                tempReg.postProcessTemplate(ctx.getTemplate(), ctx, project);
+            } else {
+                throw new IllegalStateException("NuxeoSDK is not configured!");
+            }
         }
     }
 
@@ -73,16 +75,15 @@ public class CreateFeatureFromTemplate extends WorkspaceModifyOperation {
             InvocationTargetException, InterruptedException {
         File projectRoot = ctx.getProjectLocation();
         try {
-            monitor.beginTask("Creating feature files", 2);
+            monitor.beginTask("Creating feature files", 3);
             if (!projectRoot.exists()) {
                 throw new IOException(
                         "The target project file doesn't exists: "
                                 + projectRoot);
             }
-            TemplateRegistry tempReg = SDKPlugin.getDefault().getTemplateManager().getDefaultRegistry();
+            TemplateRegistry tempReg = getTemplateRegistry();
             if (tempReg != null) {
-                tempReg.processFeatureTemplate(ctx.getTemplate(), ctx,
-                        projectRoot);
+                tempReg.processTemplate(ctx.getTemplate(), ctx, projectRoot);
             } else {
                 throw new IllegalStateException("NuxeoSDK is not configured!");
             }
@@ -91,6 +92,7 @@ public class CreateFeatureFromTemplate extends WorkspaceModifyOperation {
                     IResource.DEPTH_INFINITE,
                     new SubProgressMonitor(monitor, 1));
             monitor.worked(1);
+            postCreate(monitor);
             monitor.done();
         } catch (CoreException e) {
             throw e;
@@ -106,8 +108,7 @@ public class CreateFeatureFromTemplate extends WorkspaceModifyOperation {
     public static boolean run(Shell shell, IRunnableContext ctx,
             CreateFeatureFromTemplate op) {
         try {
-            ctx.run(true, true, op);
-            op.postCreate();
+            ctx.run(false, true, op);
         } catch (InterruptedException e) {
             return false;
         } catch (InvocationTargetException e) {

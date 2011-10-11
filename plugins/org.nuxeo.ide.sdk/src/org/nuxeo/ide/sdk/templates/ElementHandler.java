@@ -14,21 +14,16 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.sdk.templates.cmd;
+package org.nuxeo.ide.sdk.templates;
 
-import java.io.File;
-
-import org.nuxeo.ide.sdk.templates.ElementHandler;
-import org.nuxeo.ide.sdk.templates.TemplateContext;
-import org.osgi.framework.Bundle;
+import org.w3c.dom.Element;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public interface Command extends ElementHandler {
+public interface ElementHandler {
 
-    public void execute(TemplateContext ctx, Bundle bundle, File projectDir)
-            throws Exception;
+    public void init(Element element);
 
 }

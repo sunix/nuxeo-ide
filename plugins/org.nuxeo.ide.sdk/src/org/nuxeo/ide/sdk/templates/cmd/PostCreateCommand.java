@@ -16,19 +16,19 @@
  */
 package org.nuxeo.ide.sdk.templates.cmd;
 
-import java.io.File;
-
+import org.eclipse.core.resources.IProject;
 import org.nuxeo.ide.sdk.templates.ElementHandler;
 import org.nuxeo.ide.sdk.templates.TemplateContext;
-import org.osgi.framework.Bundle;
 
 /**
+ * Command to be invoked after the project is created. (the command needs a JDT
+ * context)
+ * 
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public interface Command extends ElementHandler {
+public interface PostCreateCommand extends ElementHandler {
 
-    public void execute(TemplateContext ctx, Bundle bundle, File projectDir)
-            throws Exception;
+    public void execute(IProject project, TemplateContext ctx) throws Exception;
 
 }

@@ -16,11 +16,16 @@
  */
 package org.nuxeo.ide.sdk.templates.cmd;
 
-import java.io.File;
-
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.IDE;
+import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
 import org.nuxeo.ide.sdk.templates.TemplateContext;
 import org.nuxeo.ide.sdk.templates.Vars;
-import org.osgi.framework.Bundle;
 import org.w3c.dom.Element;
 
 /**
@@ -29,23 +34,51 @@ import org.w3c.dom.Element;
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class SelectCommand implements Command {
+public class SelectCommand implements PostCreateCommand {
 
     protected String path;
 
     @Override
     public void init(Element element) {
         path = element.getAttribute("path");
-        if (path.length() == 0) {
-            throw new IllegalArgumentException(
-                    "The select command expect the 'path' attribute!");
-        }
     }
 
     @Override
-    public void execute(TemplateContext ctx, Bundle bundle, File projectDir)
-            throws Exception {
-        ctx.setResourceToSelect(Vars.expand(path, ctx));
+    public void execute(IProject project, TemplateContext ctx) throws Exception {
+        String path = Vars.expand(this.path, ctx);
+        if (path != null) {
+            IResource r = project.findMember(new Path(path));
+            if (r != null) {
+                selectAndReveal(r);
+                return;
+            }
+        }
+        selectAndReveal(project);
     }
 
+    public static void selectAndReveal(final IResource newResource) {
+        selectAndReveal(newResource, true);
+    }
+
+    public static void selectAndReveal(final IResource newResource,
+            final boolean open) {
+        Display.getDefault().asyncExec(new Runnable() {
+            @Override
+            public void run() {
+                BasicNewResourceWizard.selectAndReveal(newResource,
+                        PlatformUI.getWorkbench().getActiveWorkbenchWindow());
+                if (open && (newResource instanceof IFile)) {
+                    try {
+                        IDE.openEditor(
+                                PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(),
+                                (IFile) newResource);
+                        // } else if (r instanceof IContainer) {
+                        // // DO nothing.. expand the container in the tree?
+                    } catch (Exception e) {
+                        // do nothing
+                    }
+                }
+            }
+        });
+    }
 }

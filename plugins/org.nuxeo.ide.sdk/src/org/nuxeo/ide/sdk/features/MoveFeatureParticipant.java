@@ -240,6 +240,9 @@ public class MoveFeatureParticipant extends MoveParticipant {
         try {
             IFolder i18n = type.getProject().getFolder(
                     "src/main/i18n/web/nuxeo.war/WEB-INF/classes");
+            if (!i18n.exists()) {
+                return;
+            }
             for (IResource m : i18n.members()) {
                 result.add(new ReplaceIdChange((IFile) m, id, newId));
             }

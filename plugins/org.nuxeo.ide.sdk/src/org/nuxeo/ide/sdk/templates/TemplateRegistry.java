@@ -21,6 +21,7 @@ import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.resources.IProject;
 import org.osgi.framework.Bundle;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -37,13 +38,10 @@ public class TemplateRegistry {
 
     protected String version;
 
-    protected Map<String, ProjectTemplate> projects;
-
-    protected Map<String, FeatureTemplate> features;
+    protected Map<String, Template> templates;
 
     TemplateRegistry() {
-        this.projects = new HashMap<String, ProjectTemplate>();
-        this.features = new HashMap<String, FeatureTemplate>();
+        this.templates = new HashMap<String, Template>();
     }
 
     public TemplateRegistry(Bundle bundle) {
@@ -63,51 +61,39 @@ public class TemplateRegistry {
         return version;
     }
 
-    public ProjectTemplate[] getProjectTemplates() {
-        return projects.values().toArray(new ProjectTemplate[projects.size()]);
+    public void processTemplate(String id, TemplateContext ctx, File projectRoot)
+            throws Exception {
+        Template temp = getTemplate(id);
+        if (temp == null) {
+            throw new FileNotFoundException("Wizard Template " + id
+                    + " was not found");
+        }
+        temp.process(bundle, ctx, projectRoot);
     }
 
-    public ProjectTemplate getProjectTemplate(String key) {
+    public void postProcessTemplate(String id, TemplateContext ctx,
+            IProject project) throws Exception {
+        Template temp = getTemplate(id);
+        if (temp == null) {
+            throw new FileNotFoundException("Wizard Template " + id
+                    + " was not found");
+        }
+        temp.postProcess(project, ctx);
+    }
+
+    public void addTemplate(Template temp) {
+        templates.put(temp.getId(), temp);
+    }
+
+    public Template[] getTemplates() {
+        return templates.values().toArray(new Template[templates.size()]);
+    }
+
+    public Template getTemplate(String key) {
         if (key == null) {
             key = DEFAULT_TEMPLATE;
         }
-        return projects.get(key);
-    }
-
-    public void addProjectTemplate(ProjectTemplate temp) {
-        projects.put(temp.getId(), temp);
-    }
-
-    public void processProjectTemplate(String id, TemplateContext ctx,
-            File projectRoot) throws Exception {
-        ProjectTemplate temp = getProjectTemplate(id);
-        if (temp == null) {
-            throw new FileNotFoundException("Project Template " + id
-                    + " was not found");
-        }
-        temp.process(bundle, ctx, projectRoot);
-    }
-
-    public void processFeatureTemplate(String id, TemplateContext ctx,
-            File projectRoot) throws Exception {
-        FeatureTemplate temp = getFeatureTemplate(id);
-        if (temp == null) {
-            throw new FileNotFoundException("Feature Template " + id
-                    + " was not found");
-        }
-        temp.process(bundle, ctx, projectRoot);
-    }
-
-    public void addFeatureTemplate(FeatureTemplate temp) {
-        features.put(temp.getId(), temp);
-    }
-
-    public FeatureTemplate[] getFeatureTemplates() {
-        return features.values().toArray(new FeatureTemplate[features.size()]);
-    }
-
-    public FeatureTemplate getFeatureTemplate(String id) {
-        return features.get(id);
+        return templates.get(key);
     }
 
     protected static TemplateRegistry load(TemplateManager manager,
@@ -120,12 +106,8 @@ public class TemplateRegistry {
             if (child.getNodeType() == Node.ELEMENT_NODE) {
                 Element el = (Element) child;
                 String tag = child.getNodeName();
-                if ("project".equals(tag)) {
-                    registry.addProjectTemplate(ProjectTemplate.load(manager,
-                            el));
-                } else if ("feature".equals(tag)) {
-                    registry.addFeatureTemplate(FeatureTemplate.load(manager,
-                            el));
+                if ("template".equals(tag)) {
+                    registry.addTemplate(Template.load(manager, el));
                 }
             }
             child = child.getNextSibling();

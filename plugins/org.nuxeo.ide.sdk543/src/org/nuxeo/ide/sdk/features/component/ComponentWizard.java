@@ -14,21 +14,23 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.sdk.templates.cmd;
+package org.nuxeo.ide.sdk.features.component;
 
-import java.io.File;
-
-import org.nuxeo.ide.sdk.templates.ElementHandler;
-import org.nuxeo.ide.sdk.templates.TemplateContext;
-import org.osgi.framework.Bundle;
+import org.nuxeo.ide.sdk.features.FeatureCreationWizard;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public interface Command extends ElementHandler {
+public class ComponentWizard extends FeatureCreationWizard {
 
-    public void execute(TemplateContext ctx, Bundle bundle, File projectDir)
-            throws Exception;
+    public ComponentWizard() {
+        super("component");
+    }
+
+    @Override
+    public void addPages() {
+        addPage(new ComponentWizardPage());
+    }
 
 }

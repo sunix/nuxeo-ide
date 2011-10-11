@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<component name="${package}.${className}" version="1.0">
+
+  <implementation class="${package}.${className}" />
+
+  <!--service>
+      <provide interface="${package}.${serviceName}" />
+  </service-->
+    
+</component>

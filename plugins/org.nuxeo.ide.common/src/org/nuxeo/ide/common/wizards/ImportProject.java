@@ -21,7 +21,6 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -33,12 +32,10 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.operation.IRunnableContext;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
-import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
 import org.nuxeo.ide.common.Activator;
 
 /**
@@ -96,10 +93,8 @@ public class ImportProject extends WorkspaceModifyOperation {
         // do nothing by default
     }
 
-    protected void postCreate() {
-        if (project != null) {
-            selectAndReveal(project);
-        }
+    protected void postCreate(IProgressMonitor monitor) throws Exception {
+        // do nothing by default
     }
 
     protected void execute(final IProgressMonitor monitor)
@@ -110,7 +105,7 @@ public class ImportProject extends WorkspaceModifyOperation {
             }
             IProjectDescription description = null;
             // there 4 steps
-            monitor.beginTask("Creating Project", 4);
+            monitor.beginTask("Creating Project", 5);
             // step 1 - do pre-processing if any
             try {
                 preCreate(new SubProgressMonitor(monitor, 1));
@@ -138,19 +133,17 @@ public class ImportProject extends WorkspaceModifyOperation {
             // step 4 - add the project to the working sets
             addToWorkingSets(project, workingSets);
             monitor.worked(1);
+            // step 5 - execute any post creation command
+            try {
+                postCreate(monitor);
+                monitor.worked(1);
+            } catch (Exception e) {
+                throw new InvocationTargetException(e,
+                        "Failed to run post creation commands");
+            }
         } finally {
             monitor.done();
         }
-    }
-
-    public static void selectAndReveal(final IResource newResource) {
-        Display.getDefault().asyncExec(new Runnable() {
-            @Override
-            public void run() {
-                BasicNewResourceWizard.selectAndReveal(newResource,
-                        PlatformUI.getWorkbench().getActiveWorkbenchWindow());
-            }
-        });
     }
 
     public IProject createExistingProject(IProjectDescription description,
@@ -196,8 +189,7 @@ public class ImportProject extends WorkspaceModifyOperation {
     public static boolean run(Shell shell, IRunnableContext ctx,
             ImportProject op) {
         try {
-            ctx.run(true, true, op);
-            op.postCreate();
+            ctx.run(false, true, op);
         } catch (InterruptedException e) {
             return false;
         } catch (InvocationTargetException e) {
