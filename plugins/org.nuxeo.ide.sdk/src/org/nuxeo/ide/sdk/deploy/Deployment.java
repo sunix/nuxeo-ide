@@ -22,10 +22,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
@@ -105,27 +106,40 @@ public class Deployment {
         StringBuilder builder = new StringBuilder();
         builder.append("# Projects").append(crlf);
         for (IProject project : projects) {
-            IJavaProject java = JavaCore.create(project);
-            IFolder folder = project.getFolder("src/main/java");
-            IPackageFragmentRoot root = java.getPackageFragmentRoot(folder);
-            IClasspathEntry entry = root.getRawClasspathEntry();
-            IPath outputLocation = entry.getOutputLocation();
-            if (outputLocation == null) {
-                outputLocation = java.getOutputLocation();
+            String javaOutputPath = outputPath(project, new Path("src/main/java"));
+            builder.append("bundle:").append(javaOutputPath).append(crlf);
+            String seamOutputPath = outputPath(project, new Path("src/main/seam"));
+            if (seamOutputPath != null) {
+                builder.append("seam:").append(seamOutputPath).append(crlf);
             }
-            IFolder output = project.getWorkspace().getRoot().getFolder(outputLocation);
-            String path = output.getRawLocation().toOSString();
-                builder.append(path).append(crlf);
         }
         builder.append(crlf);
         builder.append("# User Libraries").append(crlf);
         for (String lib : libs) {
             File file = new File(lib);
             if (file.exists()) {
-                builder.append('!').append(lib).append(crlf);
+                builder.append("library:").append(lib).append(crlf);
             }
         }
         return builder.toString();
+    }
+
+    protected String outputPath(IProject project, IPath sourcePath) throws JavaModelException {
+        IJavaProject java = JavaCore.create(project);
+        IFolder folder = project.getFolder(sourcePath);
+        if (!folder.exists()) {
+            return null;
+        }
+        IPackageFragmentRoot root = java.getPackageFragmentRoot(folder);
+        IClasspathEntry entry = root.getRawClasspathEntry();
+        IPath outputLocation = entry.getOutputLocation();
+        if (outputLocation == null) {
+            outputLocation = java.getOutputLocation();
+        }
+        IFolder output = project.getWorkspace().getRoot().getFolder(outputLocation);
+        
+        String path = output.getRawLocation().toOSString();
+        return path;
     }
 
 }

@@ -93,6 +93,14 @@ public class ServerView extends ViewPart implements ISelectionProvider,
         } else {
             console.setText("=== Starting Nuxeo Server ===\r\n");
         }
+        // hot deploy projects
+        try {
+            Deployment deployment = DeploymentPreferences.load().getDefault();
+            NuxeoSDK.getDefault().reloadDeployment(deployment);
+        } catch (Exception de) {
+            UI.showError("Cannot hot deploy bundles, please restart", de);
+        }
+
         ctrl.startAsJob(isDebug);
     }
 
