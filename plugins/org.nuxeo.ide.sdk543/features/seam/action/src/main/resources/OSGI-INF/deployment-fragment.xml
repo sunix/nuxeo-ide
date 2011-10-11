@@ -5,26 +5,16 @@
 
   <install>
 
-    <!--  Unzip the war template -->
     <unzip from="${bundle.fileName}" to="/" prefix="web">
       <include>web/nuxeo.war/**</include>
     </unzip>
+    
     <delete path="${bundle.fileName}.tmp"/>
     <unzip from="${bundle.fileName}" to="${bundle.fileName}.tmp" prefix="OSGI-INF/l10n">
-      <include>OSGI-INF/l10n/*.properties</include>
+      <include>OSGI-INF/l10n/*-messages.properties</include>
     </unzip>
-    <append from="${bundle.fileName}.tmp/messages.properties" to="nuxeo.war/WEB-INF/classes/messages.properties" addNewLine="true"/>
+    <append from="${bundle.fileName}.tmp" pattern="*-messages.properties" to="nuxeo.war/WEB-INF/classes/messages.properties" addNewLine="true"/>
     <delete path="${bundle.fileName}.tmp"/>
-
   </install>
-
-<!--
-  <extension target="faces-config#NAVIGATION">
-    <navigation-case>
-      <from-outcome>preview_popup</from-outcome>
-      <to-view-id>/preview_popup.xhtml</to-view-id>
-    </navigation-case>
-  </extension>
- -->
 
 </fragment>
