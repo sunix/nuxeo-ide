@@ -18,8 +18,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jface.text,
  org.eclipse.ui.console,
  org.eclipse.jdt.debug.ui,
- org.apache.xerces,
- org.eclipse.equinox.security;bundle-version="1.1.0"
+ org.apache.xerces
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
@@ -30,3 +29,4 @@ Export-Package: org.nuxeo.ide.sdk,
  org.nuxeo.ide.sdk.ui,
  org.nuxeo.ide.sdk.ui.actions,
  org.nuxeo.ide.sdk.ui.widgets
+Import-Package: org.eclipse.equinox.security.storage
