@@ -283,8 +283,8 @@ public class NuxeoSDK {
      * Reload projects on server
      */
     public void reloadDeployment(Deployment deployment) throws Exception {
-        controller.writeDevBundles(deployment);
         fireDeployementChanged(this, deployment);
+        controller.writeDevBundles(deployment);
     }
 
     public static void rebuildProjects() {

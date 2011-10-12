@@ -156,7 +156,7 @@ public class SDKInfo {
             throws IOException {
         sdkTemp.mkdirs();
         enabledDevClassloader(new File(templates, "default"), sdkTemp);
-        disableLoaderTimer(new File(templates,"common"), sdkTemp);
+        enableLoaderTimer(new File(templates,"common"), sdkTemp);
         enableSeamHotReload(sdkTemp);
     }
 
@@ -179,7 +179,7 @@ public class SDKInfo {
         IOUtils.writeFile(dst, content);
     }
 
-    protected void disableLoaderTimer(File templates, File sdkTemp) throws IOException, FileNotFoundException {
+    protected void enableLoaderTimer(File templates, File sdkTemp) throws IOException, FileNotFoundException {
         String pathLoaderConf = "launcher.properties";
         File srcLoaderFile = new File(templates, pathLoaderConf);
         File dstNxserver = new File(sdkTemp, "nxserver");
@@ -189,8 +189,8 @@ public class SDKInfo {
         loaderProps.load(new FileInputStream(srcLoaderFile));
         String key = "org.nuxeo.app.installReloadTimer";
         String prop = loaderProps.getProperty(key);
-        if (prop != null && "true".equals(prop)) {
-            loaderProps.setProperty(key, "false");
+        if (prop == null || !"true".equals(prop)) {
+            loaderProps.setProperty(key, "true");
             loaderProps.store(new FileOutputStream(dstLoaderFilef),
                     "enabled timer");
         }

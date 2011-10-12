@@ -27,10 +27,12 @@ import java.util.ArrayList;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.equinox.security.storage.StorageException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
@@ -42,9 +44,11 @@ import org.eclipse.jdt.ui.jarpackager.JarPackageData;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Shell;
+import org.nuxeo.ide.common.IOUtils;
 import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.sdk.SDKInfo;
 import org.nuxeo.ide.sdk.deploy.Deployment;
+import org.osgi.service.prefs.BackingStoreException;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -59,8 +63,6 @@ public class ServerController implements ServerConstants {
     protected ListenerList listeners;
 
     protected ServerLogTail logFile;
-
-    protected ServerMonitor monitor = new ServerMonitor();
 
     public ServerController(SDKInfo info) {
         this(info.getInstallDirectory());
@@ -104,7 +106,6 @@ public class ServerController implements ServerConstants {
     protected void fireServerStopped() {
         closeLogFile();
         state = STOPPED;
-        monitor.disconnect();
         for (Object listener : listeners.getListeners()) {
             ((ServerLifeCycleListener) listener).serverStateChanged(this, state);
         }
@@ -284,7 +285,7 @@ public class ServerController implements ServerConstants {
         ProcessBuilder builder = new ProcessBuilder(
                 VMUtils.getJavaExecutablePath());
         ServerConfiguration config = ServerConfiguration.getDefault();
-        String vmargs = config.getVmArgs(monitor.selectJMXPort(), isDebug);
+        String vmargs = config.getVmArgs(isDebug);
         if (vmargs != null) {
             builder.command().add("-Dlauncher.java.opts=" + vmargs);
         }
@@ -304,8 +305,9 @@ public class ServerController implements ServerConstants {
         return builder;
     }
 
-    public void writeDevBundles(Deployment deployment) throws IOException, JavaModelException {
-        monitor.writeDevBundles(deployment.getContentAsString());
+    public void writeDevBundles(Deployment deployment) throws IOException, StorageException, BackingStoreException, CoreException {
+        File file = new File(root, "nxserver/dev.bundles");
+        IOUtils.writeFile(file, deployment.getContentAsString());
     }
 
 }

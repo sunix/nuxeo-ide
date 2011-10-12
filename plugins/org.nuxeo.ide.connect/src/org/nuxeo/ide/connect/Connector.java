@@ -26,8 +26,10 @@ import java.net.URLConnection;
 import java.util.List;
 
 import org.eclipse.core.internal.preferences.Base64;
+import org.eclipse.equinox.security.storage.StorageException;
 import org.nuxeo.ide.common.IOUtils;
 import org.nuxeo.ide.connect.studio.StudioProject;
+import org.osgi.service.prefs.BackingStoreException;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -35,7 +37,7 @@ import org.nuxeo.ide.connect.studio.StudioProject;
  */
 public class Connector {
 
-    public static Connector getDefault() throws Exception {
+    public static Connector getDefault() throws StorageException, BackingStoreException, MalformedURLException  {
         ConnectPreferences prefs = ConnectPreferences.load();
         return new Connector(prefs.getHost(), prefs.getUsername(),
                 prefs.getPassword());
@@ -78,19 +80,8 @@ public class Connector {
     }
 
     public InputStream getProjects() throws IOException {
-        if (auth == null) {
-            return null;
-        }
         URL url = new URL(this.baseUrl, "api/projects");
-        URLConnection conn = url.openConnection();
-        conn.setDoInput(true);
-        conn.setDoOutput(false);
-        conn.setRequestProperty("Authorization", "Basic " + auth);
-        int status = ((HttpURLConnection) conn).getResponseCode();
-        if (status > 399) {
-            throw new IOException("Server error: " + status);
-        }
-        return conn.getInputStream();
+        return doGet(url);
     }
 
     public List<StudioProject> getProjectList() throws IOException {
@@ -106,13 +97,14 @@ public class Connector {
         if (auth == null) {
             return null;
         }
-        URL url = new URL(baseUrl, "api/projects/" + projectId);
-        URLConnection conn = url.openConnection();
-        conn.setDoInput(true);
-        conn.setDoOutput(false);
-        conn.setRequestProperty("Authorization", "Basic " + auth);
-        InputStream in = conn.getInputStream();
-        return IOUtils.read(in);
+        URL location = new URL(baseUrl, "api/projects/" + projectId);
+        InputStream is = doGet(location);
+        return IOUtils.read(is);
+    }
+
+    public InputStream downloadJarArtifact(String projectId) throws IOException  {
+        URL location = new URL(baseUrl, "maven/nuxeo-studio/" + projectId + "/0.0.0-SNAPSHOT/" + projectId + "-0.0.0-SNAPSHOT.jar");
+        return doGet(location);
     }
 
     public boolean exportOperationRegistry(String projectId, String reg)
@@ -121,24 +113,40 @@ public class Connector {
             return false;
         }
         URL url = new URL(baseUrl, "api/projects/" + projectId + "/operations");
-        URLConnection conn = url.openConnection();
+        HttpURLConnection conn = (HttpURLConnection)url.openConnection();
         conn.setRequestProperty("Content-Type", "application/studio-registry");
-        conn.setDoInput(true);
-        conn.setDoOutput(true);
+        conn.setRequestMethod("POST");
         conn.setRequestProperty("Authorization", "Basic " + auth);
         OutputStream out = conn.getOutputStream();
+        try {
         out.write(reg.getBytes("UTF-8"));
         out.flush();
-        int status = ((HttpURLConnection) conn).getResponseCode();
-        out.close();
-        if (status > 399) {
-            throw new RuntimeException("Server Error: " + status);
+        } finally {
+            out.close();
+        }
+        int status = conn.getResponseCode();
+        if (status != HttpURLConnection.HTTP_OK) {
+            throw new IOException("Server Error: " + status);
         }
         return true;
     }
 
     public static String basicAuth(String username, String pwd) {
         return new String(Base64.encode((username + ":" + pwd).getBytes()));
+    }
+
+    protected InputStream doGet(URL location) throws IOException {
+        if (auth == null) {
+            return null;
+        }
+        HttpURLConnection uc = (HttpURLConnection) location.openConnection();
+        uc.setRequestMethod("GET");
+        uc.setRequestProperty("Authorization", "Basic " + auth);
+        int status = ((HttpURLConnection) uc).getResponseCode();
+        if (status != HttpURLConnection.HTTP_OK) {
+            throw new IOException("Server error: " + status);
+        }
+        return uc.getInputStream();
     }
 
 }

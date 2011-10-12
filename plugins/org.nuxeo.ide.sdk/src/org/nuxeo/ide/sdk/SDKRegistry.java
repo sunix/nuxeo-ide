@@ -20,6 +20,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtension;
+import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.ConfigurationScope;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.osgi.service.prefs.BackingStoreException;
@@ -160,4 +167,19 @@ public class SDKRegistry {
         return prefs.get("defaultSDK", null);
     }
 
+    public static IConnectProvider getConnectProvider() throws CoreException {
+        IConfigurationElement configs[] = Platform.getExtensionRegistry().getConfigurationElementsFor(
+                IConnectProvider.ID);
+        ;
+        if (configs.length == 0) {
+            throw new CoreException(new Status(IStatus.ERROR,
+                    SDKPlugin.PLUGIN_ID, "No connect provider configured"));
+
+        }
+        if (configs.length > 1) {
+            throw new CoreException(new Status(IStatus.ERROR,
+                    SDKPlugin.PLUGIN_ID, "Only one connect provider allowed"));
+        }
+        return (IConnectProvider)configs[0].createExecutableExtension("class");
+    }
 }

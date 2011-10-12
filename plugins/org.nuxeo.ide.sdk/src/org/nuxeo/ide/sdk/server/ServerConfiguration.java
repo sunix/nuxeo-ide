@@ -85,12 +85,8 @@ public class ServerConfiguration {
         return debugPort;
     }
    
-    public String getVmArgs(int jmxPort, boolean isDebug) {
-        String args = getRemoteManagementVmArgs(jmxPort);
-        String vmArgs = getVmArgs();
-        if (!vmArgs.isEmpty()) {
-            args += " " + vmArgs;
-        }
+    public String getVmArgs(boolean isDebug) {
+        String args=vmArgs;
         if (isDebug) {
             args += " " + getDebugVmArgs();
         }

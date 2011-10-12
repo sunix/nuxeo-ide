@@ -29,3 +29,4 @@ Export-Package: org.nuxeo.ide.sdk,
  org.nuxeo.ide.sdk.ui,
  org.nuxeo.ide.sdk.ui.actions,
  org.nuxeo.ide.sdk.ui.widgets
+Import-Package: org.eclipse.equinox.security.storage

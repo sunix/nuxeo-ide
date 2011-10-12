@@ -16,6 +16,8 @@ import org.eclipse.ui.part.ViewPart;
 import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.sdk.NuxeoSDK;
 import org.nuxeo.ide.sdk.SDKChangedListener;
+import org.nuxeo.ide.sdk.deploy.Deployment;
+import org.nuxeo.ide.sdk.deploy.DeploymentPreferences;
 import org.nuxeo.ide.sdk.server.ServerConstants;
 import org.nuxeo.ide.sdk.server.ServerController;
 import org.nuxeo.ide.sdk.server.ServerLifeCycleAdapter;
@@ -91,6 +93,14 @@ public class ServerView extends ViewPart implements ISelectionProvider,
         } else {
             console.setText("=== Starting Nuxeo Server ===\r\n");
         }
+        // hot deploy projects
+        try {
+            Deployment deployment = DeploymentPreferences.load().getDefault();
+            NuxeoSDK.getDefault().reloadDeployment(deployment);
+        } catch (Exception de) {
+            UI.showError("Cannot hot deploy bundles, please restart", de);
+        }
+
         ctrl.startAsJob(isDebug);
     }
 

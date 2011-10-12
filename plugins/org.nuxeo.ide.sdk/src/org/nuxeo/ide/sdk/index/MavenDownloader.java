@@ -137,7 +137,7 @@ public class MavenDownloader {
                     return null;
                 }
                 File file = File.createTempFile("maven-jar-source-", ".tmp");
-                IOUtils.copyToFile(in, file);
+                IOUtils.copyToFile(in, file, true);
                 return file;
             } finally {
                 in.close();
@@ -212,7 +212,7 @@ public class MavenDownloader {
                     name = file.getName();
                 }
                 File to = new File(dir, name);
-                IOUtils.copyFile(file, to);
+                IOUtils.copyFile(file, to, true);
                 return to;
             } finally {
                 dispose();

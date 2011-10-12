@@ -184,7 +184,7 @@
      <description>A seam action bean</description>
      
      <extension src="features/seam/MyAction-extensions.xml" />
-     <resourceBundle path="web/nuxeo.war/WEB-INF/classes/MyAction-messages.properties" />
+     <resourceBundle path="OSGI-INF/l10n/MyAction-messages.properties" to="OSGI-INF/l10n/${package}.${class}-messages.properties"/>
      <binaryResource path="web/nuxeo.war/icons/MyAction-action.png" to="web/nuxeo.war/icons/${package}.${class}-action.png" />
      <javaClass src="src/main/seam" path="packagePath/MyActionBean.java" to="${packagePath}/${class}.java" />
      <select path="src/main/seam/${packagePath}/${class}.java"/>
@@ -195,7 +195,7 @@
      <description>A seam controller bean</description>
      
      <extension src="features/seam/MyController-extensions.xml" />
-     <resourceBundle path="web/nuxeo.war/WEB-INF/classes/MyController-messages.properties" />
+     <resourceBundle path="OSGI-INF/l10n/MyController-messages.properties" to="OSGI-INF/l10n/${package}.${class}-messages.properties"/>
      <binaryResource path="web/nuxeo.war/icons/MyController-tab.png" to="web/nuxeo.war/icons/${package}.${class}-tab.png" />
      <resource path="web/nuxeo.war/incl/tabs/MyController-tab.xhtml" to="web/nuxeo.war/incl/tabs/${package}.${class}-tab.xhtml" />
      <javaClass src="src/main/seam" path="packagePath/MyControllerBean.java" to="${packagePath}/${class}.java" />

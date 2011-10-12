@@ -94,7 +94,7 @@ public class StudioProvider {
      */
     public void updateProjects(InputStream in) throws Exception {
         try {
-            IOUtils.copyToFile(in, file);
+            IOUtils.copyToFile(in, file, true);
         } finally {
             in.close();
         }

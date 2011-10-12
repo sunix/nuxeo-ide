@@ -35,12 +35,12 @@ public class StartServer extends ProcessRunner {
     protected ServerController ctrl;
 
     public StartServer(ServerController ctrl) throws Exception {
-        super(ctrl.newProcessBuilder("start", false));
+        super(ctrl.newProcessBuilder("restart", false));
         this.ctrl = ctrl;
     }
 
     public StartServer(ServerController ctrl, boolean isDebug) throws Exception {
-        super(ctrl.newProcessBuilder("start", isDebug));
+        super(ctrl.newProcessBuilder("restart", isDebug));
         this.ctrl = ctrl;
     }
 
@@ -54,15 +54,6 @@ public class StartServer extends ProcessRunner {
         if (e != null) {
             UI.showError("Failed to start Nuxeo Server" + e.getMessage(), e);
             return;
-        }
-        if (status == 0) {
-            // hot deploy projects
-            try {
-                Deployment deployment = DeploymentPreferences.load().getDefault();
-                NuxeoSDK.getDefault().reloadDeployment(deployment);
-            } catch (Exception de) {
-                UI.showError("Cannot hot deploy bundles, please restart", de);
-            }
         }
         // notify listeners
         ctrl.fireServerStarted();

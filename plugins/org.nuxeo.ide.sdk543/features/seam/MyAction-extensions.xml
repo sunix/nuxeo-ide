@@ -17,7 +17,7 @@
 
     <filter id="${package}.${class}">
       <rule grant="true">
-        <condition>${r"#{"}${bean}.accept()${r"}"}</condition>
+        <condition>${r"#{"}${bean?uncap_first}.accept()${r"}"}</condition>
       </rule>
     </filter>
 

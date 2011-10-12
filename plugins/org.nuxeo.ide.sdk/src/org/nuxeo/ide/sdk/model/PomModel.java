@@ -180,7 +180,7 @@ public class PomModel extends XmlFile {
         }
     }  
 
-    private Element getBuildPlugin(String groupIdContent, String artifactIdContent) {
+    protected Element getBuildPlugin(String groupIdContent, String artifactIdContent) {
         Element plugins = getBuildPlugins();
         Element plugin = getFirstElement(plugins, "plugin");
         while (plugin != null) {
@@ -190,9 +190,17 @@ public class PomModel extends XmlFile {
                     && artifactIdContent.equals(artifactId.getTextContent().trim())) {
                 return plugin;
             }
-            plugin = (Element) plugin.getNextSibling();
+            plugin = getNextElementSibling(plugin);
         }
         return null;
+    }
+
+    protected Element getNextElementSibling(Element elt) {
+            Node node = elt.getNextSibling();
+            while(node != null && !(node instanceof Element)) {
+                node = node.getNextSibling();
+            }
+            return (Element)node;
     }
 
     public Element getBuildHelperElement(String name) {        
@@ -211,11 +219,7 @@ public class PomModel extends XmlFile {
             if (idTextContent.equals(id.getTextContent())) {
                 break;
             }
-            Node node = execution.getNextSibling();
-            while(node != null && !(node instanceof Element)) {
-                node = node.getNextSibling();
-            }
-            execution = (Element)node;
+            execution = (Element)getNextElementSibling(execution);
         }
         if (execution == null) {
             return createBuildHelperExecution(executions, name);

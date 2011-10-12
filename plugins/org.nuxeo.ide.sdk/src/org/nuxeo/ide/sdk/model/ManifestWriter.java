@@ -190,7 +190,7 @@ public abstract class ManifestWriter {
         public void write(IProgressMonitor monitor) throws Exception {
             InputStream in = getContent();
             try {
-                IOUtils.copyToFile(in, file);
+                IOUtils.copyToFile(in, file, true);
             } finally {
                 in.close();
             }
