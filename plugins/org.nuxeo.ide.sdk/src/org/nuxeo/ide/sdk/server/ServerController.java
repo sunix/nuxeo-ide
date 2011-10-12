@@ -21,31 +21,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.ListenerList;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.equinox.security.storage.StorageException;
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.IPackageFragmentRoot;
-import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.internal.ui.util.BusyIndicatorRunnableContext;
-import org.eclipse.jdt.internal.ui.util.ExceptionHandler;
-import org.eclipse.jdt.ui.jarpackager.IJarExportRunnable;
-import org.eclipse.jdt.ui.jarpackager.JarPackageData;
-import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.swt.widgets.Shell;
 import org.nuxeo.ide.common.IOUtils;
-import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.sdk.SDKInfo;
 import org.nuxeo.ide.sdk.deploy.Deployment;
 import org.osgi.service.prefs.BackingStoreException;
@@ -200,84 +180,12 @@ public class ServerController implements ServerConstants {
         return new FileInputStream(new File(root, "log/server.log"));
     }
 
-    public boolean deploy(IProject project, Shell shell) {
-        JarPackageData jarData = new JarPackageData();
-        jarData.setBuildIfNeeded(true);
-        jarData.setExportWarnings(true);
-        jarData.setCompress(true);
-        jarData.setOverwrite(true);
-        jarData.setIncludeDirectoryEntries(true);
-        IFile mf = project.getFile("src/main/resources/META-INF/MANIFEST.MF");
-        if (mf.exists()) {
-            jarData.setGenerateManifest(false);
-            jarData.setManifestLocation(mf.getFullPath());
-        }
-        IPath path = Path.fromOSString(new File(root.getAbsolutePath()).getAbsolutePath());
-        jarData.setJarLocation(path.append(project.getName() + ".jar"));
-        try {
-            jarData.setElements(collectElementsToExport(project));
-        } catch (Exception e) {
-            UI.showError("Failed to export project", e);
-        }
-        IJarExportRunnable op = jarData.createJarExportRunnable(shell);
-        if (!executeOperation(shell, op)) {
-            return false;
-        }
-        IStatus status = op.getStatus();
-        if (!status.isOK()) {
-            ErrorDialog.openError(shell, "Jar Export", null, status);
-            return !(status.matches(IStatus.ERROR));
-        }
-        return true;
-    }
-
     public PrintStream getStdout() {
         return null;
     }
 
     public PrintStream getStderr() {
         return null;
-    }
-
-    protected boolean executeOperation(Shell shell, IRunnableWithProgress op) {
-        try {
-            new BusyIndicatorRunnableContext().run(false, true, op);
-        } catch (InterruptedException e) {
-            return false;
-        } catch (InvocationTargetException ex) {
-            if (ex.getTargetException() != null) {
-                ExceptionHandler.handle(ex, shell, "JAR Export Error",
-                        "Creation of JAR failed");
-                return false;
-            }
-        }
-        return true;
-    }
-
-    protected Object[] collectElementsToExport(IProject project)
-            throws JavaModelException {
-        IJavaProject jp = JavaCore.create(project);
-        ArrayList<Object> result = new ArrayList<Object>();
-        // IFolder folder = project.getFolder("src/main/java");
-        // if (folder.exists()) {
-        // result.add(jp.getPackageFragmentRoot(folder));
-        // }
-        // folder = project.getFolder("src/main/resources");
-        // if (folder.exists()) {
-        // result.add(jp.getPackageFragmentRoot(folder));
-        // }
-        // return result;
-        IFolder testSrc = project.getFolder("src/test");
-        IPath test = testSrc.exists() ? testSrc.getFullPath() : null;
-        IPackageFragmentRoot[] roots = jp.getPackageFragmentRoots();
-        for (IPackageFragmentRoot root : roots) {
-            if (root.getKind() == IPackageFragmentRoot.K_SOURCE) {
-                if (test == null || !test.isPrefixOf(root.getPath())) {
-                    result.add(root);
-                }
-            }
-        }
-        return result.toArray(new Object[result.size()]);
     }
 
     public ProcessBuilder newProcessBuilder(String command, boolean isDebug)
@@ -305,7 +213,8 @@ public class ServerController implements ServerConstants {
         return builder;
     }
 
-    public void writeDevBundles(Deployment deployment) throws IOException, StorageException, BackingStoreException, CoreException {
+    public void writeDevBundles(Deployment deployment) throws IOException,
+            StorageException, BackingStoreException, CoreException {
         File file = new File(root, "nxserver/dev.bundles");
         IOUtils.writeFile(file, deployment.getContentAsString());
     }

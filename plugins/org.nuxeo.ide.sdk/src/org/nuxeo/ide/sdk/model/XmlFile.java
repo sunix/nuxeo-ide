@@ -27,7 +27,6 @@ import java.io.Writer;
 import java.net.URL;
 
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.TransformerFactory;
 
 import org.apache.xml.serialize.Method;
 import org.apache.xml.serialize.OutputFormat;
@@ -43,8 +42,6 @@ import org.w3c.dom.Node;
 public class XmlFile {
 
     public static final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-
-    public static final TransformerFactory trFactory = TransformerFactory.newInstance();
 
     protected Document doc;
 
@@ -126,34 +123,11 @@ public class XmlFile {
         if (encoding == null) {
             encoding = "UTF-8";
         }
-
-        // DOMImplementationLS impl = (DOMImplementationLS)
-        // DOMImplementationRegistry.newInstance().getDOMImplementation(
-        // "LS");
-        // LSSerializer serializer = impl.createLSSerializer();
-        // if (serializer.getDomConfig().canSetParameter("format-pretty-print",
-        // Boolean.TRUE)) {
-        // serializer.getDomConfig().setParameter("format-pretty-print",
-        // Boolean.TRUE);
-        // }
-        // if (serializer.getDomConfig().canSetParameter(
-        // "element-content-whitespace", Boolean.FALSE)) {
-        // serializer.getDomConfig().setParameter(
-        // "element-content-whitespace", Boolean.FALSE);
-        // }
-        //
-        // LSOutput out = impl.createLSOutput();
-        //
-        // out.setEncoding(encoding);
-        // out.setCharacterStream(writer);
-        //
-        // serializer.write(doc, out);
-
         // this is the single method I found it formats OK.
         OutputFormat format = new OutputFormat(Method.XML, encoding, true);
         format.setIndent(2);
-        XMLSerializer serializer2 = new XMLSerializer(writer, format);
-        serializer2.serialize(doc);
+        XMLSerializer serializer = new XMLSerializer(writer, format);
+        serializer.serialize(doc);
         writer.flush();
     }
 

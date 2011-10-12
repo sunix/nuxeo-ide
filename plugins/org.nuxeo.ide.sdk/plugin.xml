@@ -145,11 +145,11 @@
         </action>
 
         <action
-            label="Deploy"
-            class="org.nuxeo.ide.sdk.server.ui.DeployProject"
+            label="Export JAR"
+            class="org.nuxeo.ide.sdk.server.ui.ExportProjectJar"
             menubarPath="org.nuxeo.ide.tools/group1"
             enablesFor="+"
-            id="org.nuxeo.ide.tools.deployProject">
+            id="org.nuxeo.ide.tools.exportJar">
         </action>
 
         <action

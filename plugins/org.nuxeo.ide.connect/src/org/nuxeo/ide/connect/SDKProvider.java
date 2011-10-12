@@ -16,23 +16,32 @@ import org.osgi.service.prefs.BackingStoreException;
 
 public class SDKProvider implements IConnectProvider {
 
+    public final static IFile[] EMPTY_FILES = new IFile[0];
+
     @Override
-    public IFile[] getLibraries(IProject project, IProgressMonitor monitor) throws IOException, StorageException, BackingStoreException, CoreException {
-       StudioProjectBinding binding = ConnectPlugin.getStudioProvider().getBinding(project);
-       List<IFile> libs = new ArrayList<IFile>();
-       for (String projectId:binding.getProjectIds()) {
-          InputStream is = Connector.getDefault().downloadJarArtifact(projectId);
-          IFolder libFile = project.getFolder("lib");
-          if (!libFile.exists()) {
-              libFile.create(IFolder.FORCE, true, monitor);
-          }
-          IFile jarFile = libFile.getFile(projectId + "-0.0.0-SNAPSHOT.jar");
-          if (jarFile.exists()) {
-              jarFile.delete(IFile.FORCE, monitor);
-          }
-          jarFile.create(is, IFile.FORCE, monitor);
-       }
-       return libs.toArray(new IFile[libs.size()]);
+    public IFile[] getLibraries(IProject project, IProgressMonitor monitor)
+            throws IOException, StorageException, BackingStoreException,
+            CoreException {
+        StudioProjectBinding binding = ConnectPlugin.getStudioProvider().getBinding(
+                project);
+        if (binding == null) {
+            return EMPTY_FILES;
+        }
+        List<IFile> libs = new ArrayList<IFile>();
+        for (String projectId : binding.getProjectIds()) {
+            InputStream is = Connector.getDefault().downloadJarArtifact(
+                    projectId);
+            IFolder libFile = project.getFolder("lib");
+            if (!libFile.exists()) {
+                libFile.create(IFolder.FORCE, true, monitor);
+            }
+            IFile jarFile = libFile.getFile(projectId + "-0.0.0-SNAPSHOT.jar");
+            if (jarFile.exists()) {
+                jarFile.delete(IFile.FORCE, monitor);
+            }
+            jarFile.create(is, IFile.FORCE, monitor);
+        }
+        return libs.toArray(new IFile[libs.size()]);
     }
 
 }
