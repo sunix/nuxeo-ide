@@ -23,6 +23,8 @@ public class SDKPlugin extends AbstractUIPlugin {
     protected TemplateManager tempMgr;
 
     protected ProjectOutputChecker projectOutputChecker;
+    
+    protected IConnectProvider connectProvider;
 
     /**
      * The constructor
@@ -40,6 +42,7 @@ public class SDKPlugin extends AbstractUIPlugin {
         tempMgr.loadRegistry(context.getBundle());
         plugin = this;
         projectOutputChecker = new ProjectOutputChecker();
+        connectProvider = SDKRegistry.getConnectProvider();
         ResourcesPlugin.getWorkspace().addResourceChangeListener(projectOutputChecker);
         NuxeoSDK.initialize();
     }
@@ -47,6 +50,7 @@ public class SDKPlugin extends AbstractUIPlugin {
     public void stop(BundleContext context) throws Exception {
         ResourcesPlugin.getWorkspace().removeResourceChangeListener(projectOutputChecker);
         NuxeoSDK.dispose();
+        connectProvider = null;
         plugin = null;
         tempMgr = null;
         projectOutputChecker = null;
@@ -61,6 +65,9 @@ public class SDKPlugin extends AbstractUIPlugin {
         return new PreferencesFormData(new InstanceScope().getNode(PLUGIN_ID));
     }
 
+    public IConnectProvider getConnectProvider() {
+        return connectProvider;
+    }
     /**
      * Returns the shared instance
      * 

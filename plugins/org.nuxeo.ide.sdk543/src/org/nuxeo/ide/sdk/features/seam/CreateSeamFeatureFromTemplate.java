@@ -19,6 +19,8 @@ package org.nuxeo.ide.sdk.features.seam;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaModelException;
+import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.sdk.features.CreateFeatureFromTemplate;
 import org.nuxeo.ide.sdk.features.FeatureTemplateContext;
 import org.nuxeo.ide.sdk.java.ClasspathEditor;

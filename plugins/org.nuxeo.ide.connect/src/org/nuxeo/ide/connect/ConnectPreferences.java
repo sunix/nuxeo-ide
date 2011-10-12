@@ -23,7 +23,9 @@ import org.eclipse.core.runtime.preferences.ConfigurationScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.equinox.security.storage.ISecurePreferences;
 import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
+import org.eclipse.equinox.security.storage.StorageException;
 import org.nuxeo.ide.connect.studio.StudioProject;
+import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
 
 /**
@@ -143,7 +145,7 @@ public class ConnectPreferences {
         root.sync();
     }
 
-    public static ConnectPreferences load() throws Exception {
+    public static ConnectPreferences load() throws StorageException, BackingStoreException  {
         IEclipsePreferences root = getPreferencesNode();
         ISecurePreferences sroot = getSecurePreferencesNode();
 

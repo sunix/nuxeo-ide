@@ -27,10 +27,12 @@ import java.util.ArrayList;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.equinox.security.storage.StorageException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
@@ -46,6 +48,7 @@ import org.nuxeo.ide.common.IOUtils;
 import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.sdk.SDKInfo;
 import org.nuxeo.ide.sdk.deploy.Deployment;
+import org.osgi.service.prefs.BackingStoreException;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -302,7 +305,7 @@ public class ServerController implements ServerConstants {
         return builder;
     }
 
-    public void writeDevBundles(Deployment deployment) throws IOException, JavaModelException {
+    public void writeDevBundles(Deployment deployment) throws IOException, StorageException, BackingStoreException, CoreException {
         File file = new File(root, "nxserver/dev.bundles");
         IOUtils.writeFile(file, deployment.getContentAsString());
     }

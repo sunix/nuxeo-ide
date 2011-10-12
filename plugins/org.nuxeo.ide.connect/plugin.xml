@@ -164,5 +164,13 @@
             name="Document Adapter">
       </wizard>
    </extension>
+   <extension
+         id="org.nuxeo.ide.connect.sdk_provider"
+         name="Connect SDK Provider"
+         point="org.nuxeo.ide.sdk.connect_provider">
+      <provider
+            class="org.nuxeo.ide.connect.SDKProvider">
+      </provider>
+   </extension>
 
 </plugin>

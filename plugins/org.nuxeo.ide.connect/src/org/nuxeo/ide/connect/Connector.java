@@ -26,8 +26,10 @@ import java.net.URLConnection;
 import java.util.List;
 
 import org.eclipse.core.internal.preferences.Base64;
+import org.eclipse.equinox.security.storage.StorageException;
 import org.nuxeo.ide.common.IOUtils;
 import org.nuxeo.ide.connect.studio.StudioProject;
+import org.osgi.service.prefs.BackingStoreException;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -35,7 +37,7 @@ import org.nuxeo.ide.connect.studio.StudioProject;
  */
 public class Connector {
 
-    public static Connector getDefault() throws Exception {
+    public static Connector getDefault() throws StorageException, BackingStoreException, MalformedURLException  {
         ConnectPreferences prefs = ConnectPreferences.load();
         return new Connector(prefs.getHost(), prefs.getUsername(),
                 prefs.getPassword());
@@ -79,7 +81,7 @@ public class Connector {
 
     public InputStream getProjects() throws IOException {
         URL url = new URL(this.baseUrl, "api/projects");
-        return doPost(url);
+        return doGet(url);
     }
 
     public List<StudioProject> getProjectList() throws IOException {
@@ -96,13 +98,13 @@ public class Connector {
             return null;
         }
         URL location = new URL(baseUrl, "api/projects/" + projectId);
-        InputStream is = doPost(location);
+        InputStream is = doGet(location);
         return IOUtils.read(is);
     }
 
-    public void fetchProjectBinaries(String projectId) throws Exception {
-        URL location = new URL(baseUrl, "download/" + projectId);
-        InputStream is = doPost(location);
+    public InputStream downloadJarArtifact(String projectId) throws IOException  {
+        URL location = new URL(baseUrl, "maven/nuxeo-studio/" + projectId + "/0.0.0-SNAPSHOT/" + projectId + "-0.0.0-SNAPSHOT.jar");
+        return doGet(location);
     }
 
     public boolean exportOperationRegistry(String projectId, String reg)
@@ -133,12 +135,12 @@ public class Connector {
         return new String(Base64.encode((username + ":" + pwd).getBytes()));
     }
 
-    protected InputStream doPost(URL location) throws IOException {
+    protected InputStream doGet(URL location) throws IOException {
         if (auth == null) {
             return null;
         }
         HttpURLConnection uc = (HttpURLConnection) location.openConnection();
-        uc.setRequestMethod("POST");
+        uc.setRequestMethod("GET");
         uc.setRequestProperty("Authorization", "Basic " + auth);
         int status = ((HttpURLConnection) uc).getResponseCode();
         if (status != HttpURLConnection.HTTP_OK) {
