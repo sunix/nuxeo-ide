@@ -25,6 +25,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -157,14 +158,24 @@ public class SDKInfo {
         sdkTemp.mkdirs();
         enabledDevClassloader(new File(templates, "default"), sdkTemp);
         enableLoaderTimer(new File(templates,"common"), sdkTemp);
-        enableSeamHotReload(sdkTemp);
+        enableSeamHotReload(new File(templates, "common"), sdkTemp);
     }
 
-    protected void enableSeamHotReload(File sdkTemp) throws IOException {
+    protected void enableSeamHotReload(File templates, File sdkTemp) throws IOException {
         File config = new File(sdkTemp, "nxserver/config");
         config.mkdirs();
         File seamDebugMarker = new File(config, "seam-debug.properties");
         seamDebugMarker.createNewFile();
+        createSeamDev(templates, sdkTemp);
+    }
+
+    protected void createSeamDev(File defTemp, File sdkTemp) throws IOException {
+        File src = new File(defTemp, "META-INF/nuxeo-preprocessor.xml");
+        File dst = new File(sdkTemp, "META-INF/nuxeo-preprocessor.xml");
+        dst.getParentFile().mkdirs();
+        String content = IOUtils.readFile(src);
+        content = content.replace("</install>", "\n<!-- patch seam -->\n<mkdir path=\"${war}/WEB-INF\" />\n<mkdir path=\"${war}/WEB-INF/dev\" />\n<!-- end patch seam-->\n</install>");
+        IOUtils.writeFile(dst, content);
     }
 
     protected void enabledDevClassloader(File defTemp, File sdkTemp)
