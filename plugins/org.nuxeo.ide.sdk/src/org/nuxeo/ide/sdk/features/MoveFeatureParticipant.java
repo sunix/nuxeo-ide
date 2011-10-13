@@ -21,7 +21,6 @@ import java.io.InputStream;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.mapping.IResourceChangeDescriptionFactory;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -36,7 +35,6 @@ import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext;
 import org.eclipse.ltk.core.refactoring.participants.MoveParticipant;
 import org.eclipse.ltk.core.refactoring.participants.ResourceChangeChecker;
-import org.eclipse.ltk.core.refactoring.resource.DeleteResourceChange;
 import org.eclipse.ltk.core.refactoring.resource.RenameResourceChange;
 import org.nuxeo.ide.common.IOUtils;
 import org.nuxeo.ide.sdk.SDKPlugin;
@@ -124,23 +122,17 @@ public class MoveFeatureParticipant extends MoveParticipant {
         if (type == null) {
             return new RefactoringStatus();
         }
+        if (pkg == null || pkg.isDefaultPackage()) {
+            throw new OperationCanceledException("cannot locate feature in default package not supported");
+        }
         IFile mf = type.getProject().getFile(ManifestWriter.PATH);
+        IFile mvExt = getExtensionDst();
         ResourceChangeChecker checker = (ResourceChangeChecker) context.getChecker(ResourceChangeChecker.class);
         IResourceChangeDescriptionFactory deltaFactory = checker.getDeltaFactory();
-        // remove
-        deltaFactory.delete(getExtensionSrc());
-        deltaFactory.change(mf);
-        if (pkg != null) {
-            // then add
-            IFile mvExt = getExtensionDst();
-            deltaFactory.create(mvExt);
-            mf = pkg.getJavaProject().getProject().getFile(ManifestWriter.PATH);
-            deltaFactory.change(mf);
-        }
         RefactoringStatus status = new RefactoringStatus();
-        status.addInfo("Moving extension file: " + type.file.getName());
-        checkI18NConditions(deltaFactory, status);
         checkResourceContentConditions(deltaFactory, status);
+        deltaFactory.change(mvExt);
+        deltaFactory.change(mf);
         return status;
     }
 
@@ -167,24 +159,6 @@ public class MoveFeatureParticipant extends MoveParticipant {
         }
     }
 
-    protected void checkI18NConditions(
-            IResourceChangeDescriptionFactory deltaFactory,
-            RefactoringStatus status) {
-        IFolder i18n = type.getProject().getFolder(
-                "src/main/i18n/web/nuxeo.war/WEB-INF/classes");
-        if (!i18n.exists()) {
-            return;
-        }
-        try {
-            for (IResource m : i18n.members()) {
-                deltaFactory.change((IFile) m);
-            }
-        } catch (CoreException e) {
-            status.addError("Cannot list i18n resource bundles");
-            return;
-        }
-    }
-
     @Override
     public Change createChange(IProgressMonitor pm) throws CoreException,
             OperationCanceledException {
@@ -193,26 +167,21 @@ public class MoveFeatureParticipant extends MoveParticipant {
             return new NullChange("No extension found for renamed class");
         }
         content = content.replace(id, newId);
-        CompositeChange result = new CompositeChange("Synchronizing extensions");
-        result.add(new DeleteResourceChange(getExtensionSrc().getFullPath(),
-                true));
+        CompositeChange result = new CompositeChange("Moving feature " + id
+                + " to " + pkg);
         IFile mf = type.getProject().getFile(ManifestWriter.PATH);
         if (mf.exists()) {
             ManifestChange change = new ManifestChange(mf);
             change.remove("Nuxeo-Component", ExtensionModel.getRuntimePath(id));
             result.add(change);
         }
-        if (pkg != null) {
-            result.add(new ExtensionChange(getExtensionDst(), content, false));
-            mf = pkg.getJavaProject().getProject().getFile(ManifestWriter.PATH);
-            ManifestChange change = new ManifestChange(mf);
-            change.append(
-                    "Nuxeo-Component",
-                    getExtensionRuntimeDst().getProjectRelativePath().toString());
-            result.add(change);
-        }
-        createI18nChange(result);
         createResourcesChange(result);
+        result.add(new ExtensionChange(getExtensionDst(), content, false));
+        mf = pkg.getJavaProject().getProject().getFile(ManifestWriter.PATH);
+        ManifestChange change = new ManifestChange(mf);
+        change.append("Nuxeo-Component",
+                getExtensionRuntimeDst().getProjectRelativePath().toString());
+        result.add(change);
         return result;
     }
 
@@ -233,24 +202,6 @@ public class MoveFeatureParticipant extends MoveParticipant {
 
         });
 
-    }
-
-    protected void createI18nChange(CompositeChange result)
-            throws CoreException {
-        try {
-            IFolder i18n = type.getProject().getFolder(
-                    "src/main/i18n/web/nuxeo.war/WEB-INF/classes");
-            if (!i18n.exists()) {
-                return;
-            }
-            for (IResource m : i18n.members()) {
-                result.add(new ReplaceIdChange((IFile) m, id, newId));
-            }
-        } catch (CoreException e) {
-            throw new CoreException(new Status(IStatus.ERROR,
-                    SDKPlugin.PLUGIN_ID,
-                    "Cannot access to i18n resource bundles", e));
-        }
     }
 
     public static String getContent(IFile file) throws CoreException {

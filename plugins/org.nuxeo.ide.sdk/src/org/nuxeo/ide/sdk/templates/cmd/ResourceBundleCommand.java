@@ -18,11 +18,13 @@ public class ResourceBundleCommand implements Command {
     @Override
     public void init(Element element) {
         Document doc = element.getOwnerDocument();
+        String from = element.getAttribute("from").trim();
+        String to = element.getAttribute("to").trim();
         String src = element.getAttribute("src").trim();
         String name = element.getAttribute("name").trim();
         String locale = element.getAttribute("locale").trim();
-        String path = element.getAttribute("path").trim();
         
+
         if (src.isEmpty()) {
             src = "src/main/resources";
         }
@@ -39,10 +41,10 @@ public class ResourceBundleCommand implements Command {
         sourceElement.setAttribute("path", src);
         resourcePath.init(sourceElement);
         
-        Element appendElement = doc.createElement("append");
-        appendElement.setAttribute("path", src + "/" + path);
-        appendElement.setAttribute("to", src + "/OSGI-INF/l10n/"+name+locale+".properties");
-        append.init(appendElement);
+        Element transformElememt = doc.createElement("transform");
+        transformElememt.setAttribute("path", src + "/OSGI-INF/l10n/" + from + "-"  + name + locale + ".properties");
+        transformElememt.setAttribute("to", src + "/OSGI-INF/l10n/"+ to + "-" + name + locale + ".properties");
+        append.init(transformElememt);
     }
 
     @Override

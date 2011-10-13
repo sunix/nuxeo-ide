@@ -74,9 +74,6 @@ public abstract class ResourceVisitor implements IResourceVisitor {
             IFile file = (IFile)resource;
             String suffix = name.substring(fqn.length());
             ContentType type = getContentType(file);
-            if (ContentType.UnknownContent == type) {
-                return false;
-            }
             visitResource(file, suffix, type);
             return false;
         }
