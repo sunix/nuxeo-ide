@@ -25,6 +25,7 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -110,12 +111,24 @@ public class Deployment {
         StringBuilder builder = new StringBuilder();
         builder.append("# Projects").append(crlf);
         for (IProject project : projects) {
+            // default classes
             String javaOutputPath = outputPath(project, new Path("src/main/java"));
             builder.append("bundle:").append(javaOutputPath).append(crlf);
             String seamOutputPath = outputPath(project, new Path("src/main/seam"));
+            // seam classes
             if (seamOutputPath != null) {
                 builder.append("seam:").append(seamOutputPath).append(crlf);
             }
+            // l10n resource bundle fragments
+            IFolder l10n = project.getFolder("src/main/resources/OSGI-INF/l10n");
+            if (l10n.exists()) {
+                for (IResource m:l10n.members()) {
+                    if (IResource.FILE == m.getType()) {
+                        builder.append("resourceBundleFragment:").append(m.getLocation().toOSString()).append(crlf) ;                       
+                    }
+                }
+            }
+            // studio project dependencies
             for (File lib:SDKPlugin.getDefault().getConnectProvider().getLibraries(project, null)) {
                 builder.append("bundle:").append(lib.getPath()).append(crlf);
             }

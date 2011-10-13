@@ -39,7 +39,7 @@ import org.nuxeo.ecm.webapp.helpers.ResourcesAccessor;
  *  the currentDocument changes.
  *
  */
-@Name("${bean}")
+@Name("${bean?uncap_first}")
 @Scope(ScopeType.CONVERSATION)
 @AutomaticDocumentBasedInvalidation
 public class ${class} extends DocumentContextBoundActionBean implements Serializable {
