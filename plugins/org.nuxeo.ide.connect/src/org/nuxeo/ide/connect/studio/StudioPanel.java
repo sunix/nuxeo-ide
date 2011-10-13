@@ -46,7 +46,7 @@ import org.nuxeo.ide.common.BundleImageProvider;
 import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.connect.ConnectPlugin;
 import org.nuxeo.ide.connect.Connector;
-import org.nuxeo.ide.connect.StudioListener;
+import org.nuxeo.ide.connect.IStudioListener;
 import org.nuxeo.ide.connect.StudioProvider;
 import org.nuxeo.ide.connect.studio.tree.FeatureNode;
 import org.nuxeo.ide.connect.studio.tree.Node;
@@ -61,7 +61,7 @@ import org.nuxeo.ide.sdk.SDKPlugin;
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class StudioPanel extends Composite implements StudioListener {
+public class StudioPanel extends Composite implements IStudioListener {
 
     protected TreeViewer tv;
 

@@ -155,7 +155,7 @@ public class SDKPreferencePage extends FormPreferencePage implements
         SDKTableWidget sdkWidget = (SDKTableWidget) form.getWidget("sdks");
         boolean selected = sdkWidget.viewer.getTable().getSelectionCount() > 0;
         form.getWidgetControl("remove").setEnabled(selected);
-        form.getWidgetControl("reload").setEnabled(selected);
+//        form.getWidgetControl("reload").setEnabled(selected);
     }
 
     @Override

@@ -33,7 +33,7 @@ public class StudioProjectBinding {
 
     public static QualifiedName STUDIO_BINDING_P = new QualifiedName(
             "org.nuxeo.ide", "studio.binding");
-
+    
     protected String[] projectIds;
 
     /**
@@ -50,7 +50,7 @@ public class StudioProjectBinding {
         this.projectIds = projectIds;
     }
 
-    public synchronized void flush() {
+    protected synchronized void flush() {
         projects = null;
         xpaths = null;
     }
@@ -59,7 +59,7 @@ public class StudioProjectBinding {
         return projectIds;
     }
 
-    public StudioProject[] fetchProjects() {
+    protected static StudioProject[] fetchProjects(String[] projectIds) {
         ArrayList<StudioProject> projects = new ArrayList<StudioProject>(
                 projectIds.length);
         HashSet<String> set = new HashSet<String>();
@@ -96,7 +96,7 @@ public class StudioProjectBinding {
         if (_projects == null) {
             synchronized (this) {
                 if (projects == null) {
-                    projects = fetchProjects();
+                    projects = fetchProjects(projectIds);
                 }
                 _projects = projects;
             }

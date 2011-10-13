@@ -1,0 +1,145 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<hotspot_log version='160 1' process='21836' time_ms='1317634937158'>
+<vm_version>
+<name>
+Java HotSpot(TM) Server VM
+</name>
+<release>
+21.0-b17-fastdebug
+</release>
+<info>
+Java HotSpot(TM) Server VM (21.0-b17-fastdebug) for linux-x86 JRE (1.7.0-fastdebug-b147), built on Jun 27 2011 01:20:36 by &quot;java_re&quot; with gcc 4.3.0 20080428 (Red Hat 4.3.0-8)
+</info>
+</vm_version>
+<vm_arguments>
+<args>
+-Dfile.encoding=UTF-8 
+</args>
+<command>
+org.eclipse.jdt.internal.junit.runner.RemoteTestRunner -version 3 -port 63538 -testLoaderClass org.eclipse.jdt.internal.junit4.runner.JUnit4TestLoader -loaderpluginname org.eclipse.jdt.junit4.runtime -classNames org.nuxeo.ide.sdk.download.TestSDKDownload
+</command>
+<launcher>
+SUN_STANDARD
+</launcher>
+<properties>
+java.vm.specification.name=Java Virtual Machine Specification
+java.vm.version=21.0-b17-fastdebug
+java.vm.name=Java HotSpot(TM) Server VM
+java.vm.info=mixed mode, sharing
+java.ext.dirs=/home/matic/Applications/jdk1.7.0/fastdebug/jre/lib/ext:/usr/java/packages/lib/ext
+java.endorsed.dirs=/home/matic/Applications/jdk1.7.0/fastdebug/jre/lib/endorsed
+sun.boot.library.path=/home/matic/Applications/jdk1.7.0/fastdebug/jre/lib/i386
+java.library.path=/home/matic/Applications/jdk1.7.0/fastdebug/jre/lib/i386/server:/home/matic/Applications/jdk1.7.0/fastdebug/jre/lib/i386:/home/matic/Applications/jdk1.7.0/fastdebug/jre/../lib/i386:/usr/lib/jvm/java-6-openjdk/jre/lib/i386/client:/usr/lib/jvm/java-6-openjdk/jre/lib/i386::/usr/java/packages/lib/i386:/lib:/usr/lib
+java.home=/home/matic/Applications/jdk1.7.0/fastdebug/jre
+java.class.path=/home/matic/Workspaces/support/nuxeo-tools/nuxeo-ide/plugins/org.nuxeo.ide.sdk/lib/org.freemarker_2.3.16.201105021557.jar:/home/matic/UpdateSites/eclipse-indigo/plugins/org.eclipse.ui_3.7.0.I20110602-0100.jar:/home/matic/UpdateSites/eclipse-indigo/plugins/org.eclipse.swt_3.7.0.v3735b.jar:/home/matic/UpdateSites/eclipse-indigo/plugins/org.eclipse.swt.gtk.linux.x86_3.7.0.v3735b.jar:/home/matic/UpdateSites/eclipse-indigo/plugins/org.eclipse.jface_3.7.0.I20110522-1430.jar:/home/matic/UpdateSites/eclipse-indigo/plugins/org.eclipse.core.commands_3.6.0.I20110111-0800.jar:/home/matic/UpdateSites/eclipse-indigo/plugins/org.eclipse.ui.workbench_3.7.0.I20110519-0100.jar:/home/matic/UpdateSites/eclipse-indigo/plugins/org.eclipse.core.runtime_3.7.0.v20110110.jar:/home/matic/UpdateSites/eclipse-indigo/plugins/org.eclipse.osgi_3.7.0.v20110613.jar:/home/matic/UpdateSites/eclipse-indigo/plugins/org.eclipse.equinox.common_3.6.0.v20110523.jar:/home/matic/UpdateSites/eclipse-indigo/plugins/org.eclipse.core.jobs_3.5.100.v20110404.jar:/home/matic/UpdateSites/eclipse-indigo/plugins/org.eclipse.core.runtime.compatibility.registry_3.5.0.v20110505/runtime_registry_compatibility.jar:/home/matic/UpdateSites/eclipse-indigo/plugins/org.eclipse.equinox.registry_3.5.100.v20110502.jar:/home/matic/UpdateSites/eclipse-indigo/plugins/org.eclipse.equinox.preferences_3.4.0.v20110502.jar:/home/matic/UpdateSites/eclipse-indigo/plugins/org.eclipse.core.contenttype_3.4.100.v20110423-0524.jar:/home/matic/UpdateSites/eclipse-indigo/plugins/org.eclipse.equinox.app_1.3.100.v20110321.jar:/home/matic/UpdateSites/eclipse-indigo/plugins/org.eclipse.core.resources_3.7.100.v20110510-0712.jar:/home/matic/UpdateSites/eclipse-indigo/plugins/org.eclipse.ui.ide_3.7.0.I20110519-0100.jar:/home/matic/UpdateSites/eclipse-indigo/plugins/org.eclipse.ltk.core.refactoring_3.5.200.v20110505-0800.jar:/home/matic/UpdateSites/eclipse-indigo/plugins/org.eclipse.jdt.core_3.7.0.v_B61.jar:/home/matic/UpdateSites/eclipse
+sun.boot.class.path=/home/matic/Applications/jdk1.7.0/fastdebug/jre/lib/resources.jar:/home/matic/Applications/jdk1.7.0/fastdebug/jre/lib/rt.jar:/home/matic/Applications/jdk1.7.0/fastdebug/jre/lib/sunrsasign.jar:/home/matic/Applications/jdk1.7.0/fastdebug/jre/lib/jsse.jar:/home/matic/Applications/jdk1.7.0/fastdebug/jre/lib/jce.jar:/home/matic/Applications/jdk1.7.0/fastdebug/jre/lib/charsets.jar:/home/matic/Applications/jdk1.7.0/fastdebug/jre/classes
+java.vm.specification.vendor=Oracle Corporation
+java.vm.specification.version=1.7
+java.vm.vendor=Oracle Corporation
+file.encoding=UTF-8
+sun.java.command=org.eclipse.jdt.internal.junit.runner.RemoteTestRunner -version 3 -port 63538 -testLoaderClass org.eclipse.jdt.internal.junit4.runner.JUnit4TestLoader -loaderpluginname org.eclipse.jdt.junit4.runtime -classNames org.nuxeo.ide.sdk.download.TestSDKDownload
+sun.java.launcher=SUN_STANDARD
+</properties>
+</vm_arguments>
+<tty>
+<writer thread='-1235707024'/>
+<dependency_failed type='abstract_with_unique_concrete_subtype' ctxk='java/nio/charset/CharsetDecoder' x='sun/nio/cs/UTF_8$Decoder' witness='sun/nio/cs/US_ASCII$Decoder' stamp='0.635'/>
+C1 Runtime statistics:
+ _resolve_invoke_virtual_cnt:     0
+ _resolve_invoke_opt_virtual_cnt: 11
+ _resolve_invoke_static_cnt:      3
+ _handle_wrong_method_cnt:        0
+ _ic_miss_cnt:                    0
+ _generic_arraycopy_cnt:          0
+ _generic_arraycopystub_cnt:      0
+ _byte_arraycopy_cnt:             0
+ _short_arraycopy_cnt:            0
+ _int_arraycopy_cnt:              0
+ _long_arraycopy_cnt:             0
+ _primitive_arraycopy_cnt:        0
+ _oop_arraycopy_cnt (C):          0
+ _oop_arraycopy_cnt (stub):       0
+ _arraycopy_slowcase_cnt:         0
+ _arraycopy_checkcast_cnt:        0
+ _arraycopy_checkcast_attempt_cnt:0
+ _new_type_array_slowcase_cnt:    0
+ _new_object_array_slowcase_cnt:  0
+ _new_instance_slowcase_cnt:      0
+ _new_multi_array_slowcase_cnt:   0
+ _monitorenter_slowcase_cnt:      0
+ _monitorexit_slowcase_cnt:       0
+ _patch_code_slowcase_cnt:        0
+ _throw_range_check_exception_count:            0:
+ _throw_index_exception_count:                  0:
+ _throw_div0_exception_count:                   0:
+ _throw_null_pointer_exception_count:           0:
+ _throw_class_cast_exception_count:             0:
+ _throw_incompatible_class_change_error_count:  0:
+ _throw_array_store_exception_count:            0:
+ _throw_count:                                  0:
+
+<statistics type='nmethod'>
+Statistics for 1 native nmethods:
+ N. total size  = 656
+ N. relocation  = 68
+ N. main code   = 376
+Statistics for 30 bytecoded nmethods:
+ total in heap  = 90692
+ relocation     = 2656
+ main code      = 28352
+ stub code      = 1364
+ oops           = 320
+ scopes data    = 14788
+ scopes pcs     = 33184
+ dependencies   = 164
+ handler table  = 2592
+ nul chk table  = 664
+Debug Data Chunks: 2765, shared 416+718, non-SP&apos;s elided 9
+PcDesc Statistics:  55 queries, 10.76 comparisons per query
+  caches=30 queries=55/0, hits=0+3, tests=197+395, adds=52
+</statistics>
+<statistics type='opto'>
+--- Compiler Statistics ---
+Methods seen: 83  Methods parsed: 83  Nodes created: 50049
+Blocks parsed: 581  Blocks seen: 590
+449 original NULL checks - 324 elided (72%); optimizer leaves 121,
+72 made implicit (59%)
+CCP: 30  constants found: 2
+Total frameslots = 336, Max frameslots = 20
+Inserted 0 spill loads, 0 spill stores, 0 mem-mem moves and 0 copies.
+Total load cost=      0, store cost =      0, mem-mem cost =  0.00, copy cost =     0.
+Adjusted spill cost =       0.
+Conservatively coalesced 352 copies, 0 pairs, 998 post alloc.
+Used cisc instruction  271,  remained in register 451
+Average allocation trips 1.590909
+High Pressure Blocks = 0, Low Pressure Blocks = 0
+Nops added 0 bytes to total of 29530 bytes, for 0.00%
+Peephole: peephole rules applied: 0
+PhaseIdealLoop=182, sum _unique=149347
+</statistics>
+<statistics type='intrinsic'>
+Compiler intrinsic usage:
+     3 (30.0%) _min (worked)
+     2 (20.0%) _max (worked)
+     5 (50.0%) _arraycopy (worked)
+    10 (100.0%) total (worked)
+</statistics>
+<statistics type='SharedRuntime'>
+    1 new array requires GC
+    0 inline cache miss in compiled
+    0 wrong method
+    3 unresolved static call site
+    0 unresolved virtual call site
+   11 unresolved opt virtual call site
+  202 slow partial subtype
+  180 byte array copies
+   12 short array copies
+   12 int array copies
+   12 long array copies
+AdapterHandlerTable: empty 226 longest 3 total 76 average 1.134328
+AdapterHandlerTable: lookups 9665 buckets 9655 equals 9589 hits 9589 compact 9589
+</statistics>
+<tty_done stamp='1.029'/>
+</tty>
+<hotspot_log_done stamp='1.029'/>
+</hotspot_log>

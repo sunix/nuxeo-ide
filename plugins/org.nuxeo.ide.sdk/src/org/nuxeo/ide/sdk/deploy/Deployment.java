@@ -23,7 +23,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -117,8 +116,8 @@ public class Deployment {
             if (seamOutputPath != null) {
                 builder.append("seam:").append(seamOutputPath).append(crlf);
             }
-            for (IFile binaries:SDKPlugin.getDefault().getConnectProvider().getLibraries(project, null)) {
-                builder.append("bundle:").append(binaries.getLocation().toOSString()).append(crlf);
+            for (File lib:SDKPlugin.getDefault().getConnectProvider().getLibraries(project, null)) {
+                builder.append("bundle:").append(lib.getPath()).append(crlf);
             }
         }
         builder.append(crlf);

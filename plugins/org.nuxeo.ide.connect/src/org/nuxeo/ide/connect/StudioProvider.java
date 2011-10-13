@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
@@ -34,7 +35,7 @@ import org.nuxeo.ide.connect.studio.StudioProject;
  * 
  */
 public class StudioProvider {
-
+    
     protected File file;
 
     protected StudioProject[] projects;
@@ -42,12 +43,16 @@ public class StudioProvider {
     protected ListenerList listeners;
 
     protected BindingManager bindingManager;
+    
+    protected RepositoryManager repositoryManager;
 
-    public StudioProvider(File file) {
-        this.file = file;
+    public StudioProvider(File root) {
+        this.file = new File(root, "studio.projects");
         this.listeners = new ListenerList();
-        bindingManager = new BindingManager();
+        repositoryManager = new RepositoryManager(root);
+        bindingManager = new BindingManager(repositoryManager);
         addStudioListener(bindingManager);
+        addStudioListener(repositoryManager);
         try {
             reload(false);
         } catch (Exception e) {
@@ -59,6 +64,7 @@ public class StudioProvider {
     }
 
     public void dispose() {
+        repositoryManager.dispose();
         bindingManager.dispose();
         bindingManager = null;
         listeners = null;
@@ -66,17 +72,17 @@ public class StudioProvider {
         file = null;
     }
 
-    public void addStudioListener(StudioListener listener) {
+    public void addStudioListener(IStudioListener listener) {
         listeners.add(listener);
     }
 
-    public void removeStudioListener(StudioListener listener) {
+    public void removeStudioListener(IStudioListener listener) {
         listeners.remove(listener);
     }
 
     protected void fireStudioProjectsChanged() {
         for (Object o : listeners.getListeners()) {
-            ((StudioListener) o).handleProjectsUpdate(this);
+            ((IStudioListener) o).handleProjectsUpdate(this);
         }
     }
 
@@ -110,8 +116,10 @@ public class StudioProvider {
             FileInputStream in = new FileInputStream(file);
             List<StudioProject> result = StudioProject.readProjects(in);
             projects = result.toArray(new StudioProject[result.size()]);
+            repositoryManager.reload();
         } else {
             projects = new StudioProject[0];
+            repositoryManager.erase();
         }
         if (fireEvents) {
             fireStudioProjectsChanged();
@@ -173,6 +181,19 @@ public class StudioProvider {
             }
         }
         return null;
+    }
+
+    public File[] getLibraries(IProject project) {
+        StudioProjectBinding binding = getBinding(project);
+        if (binding == null) {
+            return new File[0];
+        }
+        String[] ids = binding.getProjectIds();
+        List<File> files = new ArrayList<File>(ids.length);
+        for (String id:ids) {
+            files.add(repositoryManager.getFile(id));
+        }
+        return files.toArray(new File[files.size()]);
     }
 
 }

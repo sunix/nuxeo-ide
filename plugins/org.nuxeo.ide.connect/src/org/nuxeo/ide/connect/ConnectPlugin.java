@@ -66,10 +66,8 @@ public class ConnectPlugin extends AbstractUIPlugin {
 
     public static StudioProvider getStudioProvider() {
         if (studioProvider == null) {
-            File file = getDefault().getStateLocation().toFile();
-            file.mkdirs();
-            studioProvider = new StudioProvider(new File(file,
-                    "studio.projects"));
+            File root = getDefault().getStateLocation().toFile();
+            studioProvider = new StudioProvider(root);
         }
         return studioProvider;
     }

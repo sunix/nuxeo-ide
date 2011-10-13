@@ -30,12 +30,15 @@ import org.nuxeo.ide.common.StringUtils;
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class BindingManager implements IResourceChangeListener, StudioListener {
+public class BindingManager implements IResourceChangeListener, IStudioListener {
 
-    protected Map<String, StudioProjectBinding> bindings;
+    protected final Map<String, StudioProjectBinding> bindings;
 
-    BindingManager() {
-        bindings = new HashMap<String, StudioProjectBinding>();
+    protected final IBindingListener listener;
+
+    BindingManager(IBindingListener listener) {
+        this.bindings = new HashMap<String, StudioProjectBinding>();
+        this.listener = listener;
         ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
     }
 
@@ -57,6 +60,7 @@ public class BindingManager implements IResourceChangeListener, StudioListener {
                     StringUtils.join(projectIds, ','));
             StudioProjectBinding binding = new StudioProjectBinding(projectIds);
             bindings.put(project.getName(), binding);
+            listener.handleNewBinding(binding);
             return binding;
         } catch (Exception e) {
             e.printStackTrace(); // TODO
@@ -64,8 +68,12 @@ public class BindingManager implements IResourceChangeListener, StudioListener {
         return null;
     }
 
-    public synchronized void removeBinding(IProject project) {
+    public synchronized void clearBinding(IProject project) {
         bindings.remove(project.getName());
+    }
+
+    public void removeBinding(IProject project) {
+        clearBinding(project);
         try {
             project.setPersistentProperty(
                     StudioProjectBinding.STUDIO_BINDING_P, null);
@@ -80,8 +88,8 @@ public class BindingManager implements IResourceChangeListener, StudioListener {
             try {
                 String v = project.getPersistentProperty(StudioProjectBinding.STUDIO_BINDING_P);
                 if (v != null) {
-                    binding = new StudioProjectBinding(
-                            StringUtils.split(v, ','));
+                    String[] projectIds = StringUtils.split(v, '.');
+                    binding = new StudioProjectBinding(projectIds);
                     bindings.put(project.getName(), binding);
                 }
             } catch (Exception e) {
@@ -98,28 +106,33 @@ public class BindingManager implements IResourceChangeListener, StudioListener {
 
     @Override
     public void resourceChanged(IResourceChangeEvent event) {
+        IResource resource = event.getResource();
         int type = event.getType();
-        if (type == IResourceChangeEvent.PRE_CLOSE
-                || type == IResourceChangeEvent.PRE_DELETE) {
-            IResource resource = event.getResource();
-
+        switch (type) {
+        case IResourceChangeEvent.PRE_CLOSE:
+            if (resource instanceof IProject) {
+                clearBinding((IProject) resource);
+            }
+            break;
+        case IResourceChangeEvent.PRE_DELETE:
             if (resource instanceof IProject) {
                 removeBinding((IProject) resource);
+                return;
             }
+            break;
         }
     }
 
     @Override
     public void handleProjectsUpdate(StudioProvider provider) {
-        StudioProjectBinding[] bindings = getLiveBindings();
-        for (StudioProjectBinding binding : bindings) {
+        for (StudioProjectBinding binding : getLiveBindings()) {
             binding.flush();
         }
     }
 
     public void dispose() {
         ResourcesPlugin.getWorkspace().removeResourceChangeListener(this);
-        bindings = null;
+        bindings.clear();
     }
 
 }

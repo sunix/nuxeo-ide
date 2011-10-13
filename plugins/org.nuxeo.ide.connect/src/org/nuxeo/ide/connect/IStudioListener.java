@@ -20,7 +20,7 @@ package org.nuxeo.ide.connect;
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public interface StudioListener {
+public interface IStudioListener {
 
     public void handleProjectsUpdate(StudioProvider provider);
 

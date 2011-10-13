@@ -20,7 +20,9 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPropertyPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.navigator.CommonNavigator;
@@ -30,6 +32,7 @@ import org.nuxeo.ide.common.forms.Form;
 import org.nuxeo.ide.common.forms.FormData;
 import org.nuxeo.ide.common.forms.UIObject;
 import org.nuxeo.ide.connect.ConnectPlugin;
+import org.nuxeo.ide.connect.StudioProjectBinding;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -75,7 +78,7 @@ public class StudioPropertyPage extends FormPropertyPage implements
     @Override
     public void store(Form form) throws Exception {
         StudioProjectsWidget w = (StudioProjectsWidget) form.getWidget("projects");
-        ConnectPlugin.getStudioProvider().setBinding(getProject(),
+        StudioProjectBinding b = ConnectPlugin.getStudioProvider().setBinding(getProject(),
                 w.getSelectedProjectIds());
         IViewPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(
                 "org.eclipse.ui.navigator.ProjectExplorer");
