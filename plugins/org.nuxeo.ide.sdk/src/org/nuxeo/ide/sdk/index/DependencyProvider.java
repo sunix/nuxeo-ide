@@ -16,7 +16,10 @@
  */
 package org.nuxeo.ide.sdk.index;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IResource;
@@ -24,11 +27,13 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IImportDeclaration;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.corext.refactoring.structure.ReferenceFinderUtil;
 
 /**
@@ -112,8 +117,22 @@ public class DependencyProvider {
     protected static void introspectUnit(ICompilationUnit unit,
             Set<Dependency> result) throws Exception {
         IJavaProject project = unit.getJavaProject();
-        IType[] types = ReferenceFinderUtil.getTypesReferencedIn(
-                new IJavaElement[] { unit }, new NullProgressMonitor());
+        ArrayList<IType> types = new ArrayList<IType>();
+        
+        // collect unit types deps
+        IType[] refTypes = ReferenceFinderUtil.getTypesReferencedIn(new IJavaElement[] { unit }, new NullProgressMonitor());
+        types.addAll(Arrays.asList(refTypes));
+        
+        // add imported types
+        for (IImportDeclaration imp:unit.getImports()) {
+            String fqn = imp.getElementName();
+            IType type = project.findType(fqn);
+            if (type != null) {
+                types.add(type);
+            }
+        }
+        
+        // generate deps
         for (IType type : types) {
             String path = type.getFullyQualifiedName();
             if (acceptType(path)) {

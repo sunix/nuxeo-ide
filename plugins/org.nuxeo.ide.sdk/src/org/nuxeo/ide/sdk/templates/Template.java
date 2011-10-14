@@ -251,11 +251,16 @@ public class Template implements Comparable<Template> {
             throw new IllegalArgumentException("Unknown command: " + tag);
         }
         cmd.init(el);
+        boolean knownType = false;
         if (cmd instanceof Command) {
             temp.commands.add((Command) cmd);
-        } else if (cmd instanceof PostCreateCommand) {
+            knownType = true;
+        }
+        if (cmd instanceof PostCreateCommand) {
             temp.postCreateCommands.add((PostCreateCommand) cmd);
-        } else {
+            knownType = true;
+        } 
+        if (!knownType) {
             throw new IllegalArgumentException("Unknown command type: " + tag
                     + " -> " + cmd);
         }

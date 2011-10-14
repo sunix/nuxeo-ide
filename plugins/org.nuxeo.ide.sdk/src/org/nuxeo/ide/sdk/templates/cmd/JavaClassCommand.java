@@ -2,15 +2,17 @@ package org.nuxeo.ide.sdk.templates.cmd;
 
 import java.io.File;
 
+import org.eclipse.core.resources.IProject;
 import org.nuxeo.ide.sdk.templates.TemplateContext;
 import org.osgi.framework.Bundle;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public class JavaClassCommand implements Command {
+public class JavaClassCommand implements Command, PostCreateCommand {
 
     protected SourcePathCommand sourcePathCommand = new SourcePathCommand();
     protected final TransformCommand transformCommand = new TransformCommand();
+    protected final OrganizeImportsCommand organizeImportsCommand = new OrganizeImportsCommand();
     
     @Override
     public void init(Element element) {
@@ -32,6 +34,12 @@ public class JavaClassCommand implements Command {
         tranform.setAttribute("path", src + "/" + path);
         tranform.setAttribute("to", src + "/" + to);
         transformCommand.init(tranform);
+        
+        Element organize = doc.createElement("organizeImports");
+        Element organizeClass = doc.createElement("class");
+        organizeClass.setAttribute("path", src + "/" + path);
+        organize.appendChild(organizeClass);
+        organizeImportsCommand.init(organize);
     }
 
     @Override
@@ -39,6 +47,11 @@ public class JavaClassCommand implements Command {
             throws Exception {
         sourcePathCommand.execute(ctx, bundle, projectDir);
         transformCommand.execute(ctx, bundle, projectDir);
+    }
+
+    @Override
+    public void execute(IProject project, TemplateContext ctx) throws Exception {
+        organizeImportsCommand.execute(project, ctx);
     }
 
 }
