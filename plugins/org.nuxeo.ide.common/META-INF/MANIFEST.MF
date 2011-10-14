@@ -21,5 +21,6 @@ Export-Package: org.nuxeo.ide.common,
  org.nuxeo.ide.common.forms,
  org.nuxeo.ide.common.forms.model,
  org.nuxeo.ide.common.forms.widgets,
+ org.nuxeo.ide.common.widgets,
  org.nuxeo.ide.common.wizards
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

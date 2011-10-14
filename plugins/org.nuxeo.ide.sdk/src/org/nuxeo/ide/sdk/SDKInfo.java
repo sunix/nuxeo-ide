@@ -34,11 +34,13 @@ import org.nuxeo.ide.common.UI;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
- * 
+ *
  */
 public class SDKInfo {
 
     public static final String SDK_PATH = "sdk";
+
+    public static final String SDK_COMPONENTS_PATH = "sdk/components.xml";
 
     public static final String SDK_SOURCES_PATH = "sdk/sources";
 
@@ -112,12 +114,12 @@ public class SDKInfo {
 
     public URL getRemoteLocation(String path) {
         try {
-            return new URL("http://localhost:8080/nuxeo/"+path);
+            return new URL("http://localhost:8080/nuxeo/" + path);
         } catch (MalformedURLException e) {
-           throw new Error("Cannot build server home location", e);
+            throw new Error("Cannot build server home location", e);
         }
     }
-    
+
     public String getId() {
         return id;
     }
@@ -184,13 +186,21 @@ public class SDKInfo {
         File dst = new File(sdkTemp, "conf/Catalina/localhost/nuxeo.xml");
         dst.getParentFile().mkdirs();
         String content = IOUtils.readFile(src);
+        int i = content.indexOf("<Loader");
+        if (i > -1) {
+            content = content.substring(0, i)
+                    + "\n  <Valve className=\"org.nuxeo.runtime.tomcat.dev.DevValve\" />\n"
+                    + content.substring(i);
+        }
         content = content.replace(
                 "org.nuxeo.runtime.tomcat.NuxeoWebappClassLoader",
                 "org.nuxeo.runtime.tomcat.dev.NuxeoDevWebappClassLoader");
+
         IOUtils.writeFile(dst, content);
     }
 
-    protected void enableLoaderTimer(File templates, File sdkTemp) throws IOException, FileNotFoundException {
+    protected void enableLoaderTimer(File templates, File sdkTemp)
+            throws IOException, FileNotFoundException {
         String pathLoaderConf = "launcher.properties";
         File srcLoaderFile = new File(templates, pathLoaderConf);
         File dstNxserver = new File(sdkTemp, "nxserver");
@@ -224,7 +234,7 @@ public class SDKInfo {
         IOUtils.writeLines(sdkConf, lines);
     }
 
-     public static SDKInfo loadSDK(File dir) throws IOException {
+    public static SDKInfo loadSDK(File dir) throws IOException {
         if (!dir.isDirectory()) {
             throw new FileNotFoundException(
                     "The given file is not a directory: " + dir);

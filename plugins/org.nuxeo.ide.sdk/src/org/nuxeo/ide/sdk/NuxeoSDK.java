@@ -37,6 +37,8 @@ import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.nuxeo.ide.common.UI;
+import org.nuxeo.ide.sdk.comp.ComponentsLoader;
+import org.nuxeo.ide.sdk.comp.IComponentProvider;
 import org.nuxeo.ide.sdk.deploy.Deployment;
 import org.nuxeo.ide.sdk.index.Index;
 import org.nuxeo.ide.sdk.server.ServerController;
@@ -59,7 +61,7 @@ public class NuxeoSDK {
     private static ListenerList sdkChangedListeners = new ListenerList();
 
     private static ListenerList deploymentChangedListeners = new ListenerList();
-    
+
     static void initialize() throws BackingStoreException {
         SDKInfo info = SDKRegistry.getDefaultSDK();
         if (info != null) {
@@ -111,6 +113,7 @@ public class NuxeoSDK {
                     sdk.testClasspath = null;
                     sdk.index = null;
                     sdk.testIndex = null;
+                    sdk.compProvider = null;
                 }
                 reloadSDKClasspathContainer();
             } catch (CoreException e) {
@@ -125,7 +128,7 @@ public class NuxeoSDK {
     }
 
     public static void addSDKChangedListener(SDKChangedListener listener) {
-	sdkChangedListeners.add(listener);
+        sdkChangedListeners.add(listener);
     }
 
     public static void removeSDKChangedListener(SDKChangedListener listener) {
@@ -138,17 +141,21 @@ public class NuxeoSDK {
         }
     }
 
-    public static void addDeploymentChangedListener(DeploymentChangedListener listener) {
+    public static void addDeploymentChangedListener(
+            DeploymentChangedListener listener) {
         deploymentChangedListeners.add(listener);
     }
-    
-    public static void removeDeploymentChangedListener(DeploymentChangedListener listener) {
+
+    public static void removeDeploymentChangedListener(
+            DeploymentChangedListener listener) {
         deploymentChangedListeners.remove(listener);
     }
-    
-    public static void fireDeployementChanged(NuxeoSDK sdk, Deployment deployment) {
+
+    public static void fireDeployementChanged(NuxeoSDK sdk,
+            Deployment deployment) {
         for (Object listener : deploymentChangedListeners.getListeners()) {
-            ((DeploymentChangedListener) listener).deploymentChanged(sdk, deployment);
+            ((DeploymentChangedListener) listener).deploymentChanged(sdk,
+                    deployment);
         }
     }
 
@@ -157,6 +164,8 @@ public class NuxeoSDK {
     protected File root;
 
     protected ServerController controller;
+
+    protected volatile IComponentProvider compProvider;
 
     protected volatile Index index;
 
@@ -175,7 +184,6 @@ public class NuxeoSDK {
     // */
     // protected volatile Index index;
 
-
     public NuxeoSDK(SDKInfo info) {
         this.info = info;
         this.root = info.getInstallDirectory();
@@ -188,6 +196,24 @@ public class NuxeoSDK {
 
     public SDKInfo getInfo() {
         return info;
+    }
+
+    public void flushComponents() {
+        synchronized (this) {
+            compProvider = null;
+        }
+    }
+
+    public IComponentProvider getComponentProvider() {
+        IComponentProvider provider = compProvider;
+        if (provider == null) {
+            synchronized (this) {
+                compProvider = ComponentsLoader.load(new File(root,
+                        SDKInfo.SDK_COMPONENTS_PATH));
+                provider = compProvider;
+            }
+        }
+        return provider;
     }
 
     public Index getArtifactIndex() {

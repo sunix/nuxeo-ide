@@ -5,6 +5,7 @@ import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 import org.eclipse.ui.progress.IProgressConstants;
+import org.nuxeo.ide.sdk.server.ui.ComponentView;
 import org.nuxeo.ide.sdk.server.ui.ServerView;
 
 public class NuxeoPerspective implements IPerspectiveFactory {
@@ -22,6 +23,7 @@ public class NuxeoPerspective implements IPerspectiveFactory {
         layout.addPerspectiveShortcut(JavaUI.ID_PERSPECTIVE);
 
         layout.addShowViewShortcut("org.nuxeo.ide.sdk.server.ui.ServerView");
+        layout.addShowViewShortcut(ComponentView.class.getName());
 
         layout.addNewWizardShortcut("org.eclipse.jdt.ui.wizards.JavaProjectWizard");
         layout.addNewWizardShortcut("org.nuxeo.ide.sdk.projects.plugin.PluginProjectWizard");
@@ -89,6 +91,7 @@ public class NuxeoPerspective implements IPerspectiveFactory {
         IFolderLayout left = layout.createFolder("left", IPageLayout.LEFT,
                 (float) 0.26, editorArea);
         left.addView(IPageLayout.ID_PROJECT_EXPLORER);
+        left.addView(ComponentView.class.getName());
         left.addPlaceholder(JavaUI.ID_PACKAGES_VIEW);
         left.addPlaceholder(JavaUI.ID_TYPE_HIERARCHY);
         left.addPlaceholder(IPageLayout.ID_OUTLINE);

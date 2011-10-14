@@ -13,8 +13,10 @@ import org.osgi.service.prefs.BackingStoreException;
 public class SDKProvider implements IConnectProvider {
 
     @Override
-    public File[] getLibraries(IProject project, IProgressMonitor monitor) throws IOException, StorageException, BackingStoreException, CoreException {
-       return ConnectPlugin.getStudioProvider().getLibraries(project);
+    public File[] getLibraries(IProject project, IProgressMonitor monitor)
+            throws IOException, StorageException, BackingStoreException,
+            CoreException {
+        return ConnectPlugin.getStudioProvider().getLibraries(project);
     }
 
 }

@@ -229,6 +229,14 @@
             id="org.nuxeo.ide.sdk.server.ui.ServerView"
             name="Nuxeo Server">
       </view>
+      <view
+            allowMultiple="false"
+            category="org.nuxeo.ide.views"
+            class="org.nuxeo.ide.sdk.server.ui.ComponentView"
+            icon="icons/nx.gif"
+            id="org.nuxeo.ide.sdk.server.ui.ComponentView"
+            name="Nuxeo Components">
+      </view>
    </extension>
 
 <extension

@@ -21,9 +21,6 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtension;
-import org.eclipse.core.runtime.IExtensionPoint;
-import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
@@ -180,6 +177,6 @@ public class SDKRegistry {
             throw new CoreException(new Status(IStatus.ERROR,
                     SDKPlugin.PLUGIN_ID, "Only one connect provider allowed"));
         }
-        return (IConnectProvider)configs[0].createExecutableExtension("class");
+        return (IConnectProvider) configs[0].createExecutableExtension("class");
     }
 }

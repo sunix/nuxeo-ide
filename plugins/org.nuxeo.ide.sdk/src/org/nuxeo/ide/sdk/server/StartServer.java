@@ -18,8 +18,6 @@ package org.nuxeo.ide.sdk.server;
 
 import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.sdk.NuxeoSDK;
-import org.nuxeo.ide.sdk.deploy.Deployment;
-import org.nuxeo.ide.sdk.deploy.DeploymentPreferences;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -55,6 +53,8 @@ public class StartServer extends ProcessRunner {
             UI.showError("Failed to start Nuxeo Server" + e.getMessage(), e);
             return;
         }
+        // TODO implement it as a listener?
+        NuxeoSDK.getDefault().flushComponents();
         // notify listeners
         ctrl.fireServerStarted();
     }

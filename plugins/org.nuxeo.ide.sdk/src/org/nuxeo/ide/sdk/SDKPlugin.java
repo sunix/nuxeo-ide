@@ -3,6 +3,8 @@ package org.nuxeo.ide.sdk;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.nuxeo.ide.common.forms.PreferencesFormData;
 import org.nuxeo.ide.sdk.server.ProjectOutputChecker;
@@ -23,7 +25,7 @@ public class SDKPlugin extends AbstractUIPlugin {
     protected TemplateManager tempMgr;
 
     protected ProjectOutputChecker projectOutputChecker;
-    
+
     protected IConnectProvider connectProvider;
 
     /**
@@ -43,12 +45,14 @@ public class SDKPlugin extends AbstractUIPlugin {
         plugin = this;
         projectOutputChecker = new ProjectOutputChecker();
         connectProvider = SDKRegistry.getConnectProvider();
-        ResourcesPlugin.getWorkspace().addResourceChangeListener(projectOutputChecker);
+        ResourcesPlugin.getWorkspace().addResourceChangeListener(
+                projectOutputChecker);
         NuxeoSDK.initialize();
     }
 
     public void stop(BundleContext context) throws Exception {
-        ResourcesPlugin.getWorkspace().removeResourceChangeListener(projectOutputChecker);
+        ResourcesPlugin.getWorkspace().removeResourceChangeListener(
+                projectOutputChecker);
         NuxeoSDK.dispose();
         connectProvider = null;
         plugin = null;
@@ -68,6 +72,7 @@ public class SDKPlugin extends AbstractUIPlugin {
     public IConnectProvider getConnectProvider() {
         return connectProvider;
     }
+
     /**
      * Returns the shared instance
      * 
@@ -83,6 +88,19 @@ public class SDKPlugin extends AbstractUIPlugin {
 
     public static void log(int status, String message, Throwable cause) {
         getDefault().getLog().log(new Status(status, PLUGIN_ID, message, cause));
+    }
+
+    @Override
+    protected void initializeImageRegistry(ImageRegistry reg) {
+        reg.put("icons/comp/component.gif",
+                ImageDescriptor.createFromURL(getBundle().getEntry(
+                        "icons/comp/component.gif")));
+        reg.put("icons/comp/service.gif",
+                ImageDescriptor.createFromURL(getBundle().getEntry(
+                        "icons/comp/service.gif")));
+        reg.put("icons/comp/xpoint.gif",
+                ImageDescriptor.createFromURL(getBundle().getEntry(
+                        "icons/comp/xpoint.gif")));
     }
 
 }
