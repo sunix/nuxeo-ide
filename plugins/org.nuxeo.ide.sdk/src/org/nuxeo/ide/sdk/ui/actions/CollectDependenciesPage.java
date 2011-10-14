@@ -167,7 +167,7 @@ public class CollectDependenciesPage extends WizardPage {
             mainEntries = removeExistingEntries(project, mainEntries);
 
             Set<Dependency> testDeps = DependencyProvider.getTestDependencies(project);
-            DependencyEntry[] testEntries = sdk.getArtifactIndex().resolve(
+            DependencyEntry[] testEntries = sdk.getTestArtifactIndex().resolve(
                     testDeps);
             // remove test dependencies already in main dependencies
             testEntries = removeDuplicateEntries(testEntries, mainEntries);
@@ -200,6 +200,9 @@ public class CollectDependenciesPage extends WizardPage {
     public List<Artifact> getCheckedArtifacts() {
         ArrayList<Artifact> result = new ArrayList<Artifact>();
         for (Object o : tv.getCheckedElements()) {
+            if (tv.getGrayed(o)) {
+                continue;
+            }
             if (o instanceof DependencyEntry) {
                 result.add(((DependencyEntry) o).getArtifact());
             }
