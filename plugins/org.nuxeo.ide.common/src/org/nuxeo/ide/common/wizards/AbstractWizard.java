@@ -17,6 +17,8 @@
 package org.nuxeo.ide.common.wizards;
 
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -29,7 +31,9 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
+import org.nuxeo.ide.common.Activator;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -111,6 +115,10 @@ public abstract class AbstractWizard<T> extends Wizard implements INewWizard,
         }
         try {
             return execute(ctx);
+        } catch (Exception e) {
+            Status status  =new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Templating error", e);
+            StatusManager.getManager().handle(status);
+            return false;
         } finally {
             isWorking = false;
         }
@@ -118,7 +126,7 @@ public abstract class AbstractWizard<T> extends Wizard implements INewWizard,
 
     protected abstract T createExecutionContext();
 
-    protected abstract boolean execute(T context);
+    protected abstract boolean execute(T context) throws Exception;
 
     @Override
     public void pageChanged(PageChangedEvent event) {

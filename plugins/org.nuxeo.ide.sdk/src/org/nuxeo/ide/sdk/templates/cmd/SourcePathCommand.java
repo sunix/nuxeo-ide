@@ -18,6 +18,11 @@ package org.nuxeo.ide.sdk.templates.cmd;
 
 import java.io.File;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaModelException;
+import org.nuxeo.ide.common.UI;
+import org.nuxeo.ide.sdk.java.ClasspathEditor;
 import org.nuxeo.ide.sdk.model.PomModel;
 import org.nuxeo.ide.sdk.templates.TemplateContext;
 import org.osgi.framework.Bundle;
@@ -28,13 +33,13 @@ import org.w3c.dom.Element;
  * 
  * 
  */
-public class SourcePathCommand implements Command {
+public class SourcePathCommand implements Command, PostCreateCommand {
 
-    protected String path;
+    protected String name;
     
     @Override
     public void init(Element element) {
-        path = element.getAttribute("path");
+        name = element.getAttribute("name");
     }
 
     @Override
@@ -42,8 +47,20 @@ public class SourcePathCommand implements Command {
             throws Exception {
               File pomFile = new File(projectDir, "pom.xml");
         PomModel pom = new PomModel(pomFile);
-        pom.addBuildHelperSource(path);
+        pom.addBuildHelperSource(name);
         pom.write(pomFile);  
+    }
+
+    @Override
+    public void execute(IProject project, TemplateContext ctx) throws Exception {
+        try {
+            ClasspathEditor editor = new ClasspathEditor(project);
+            editor.extendClasspath(name);
+            editor.flush();
+        } catch (JavaModelException e) {
+            UI.showError("Cannot extend classpath of " + project.getName(), e);
+        }
+
     }
 
 }

@@ -111,7 +111,7 @@ public abstract class FeatureCreationWizard extends
     }
     
     @Override
-    protected boolean execute(FeatureTemplateContext ctx) {
+    protected boolean execute(FeatureTemplateContext ctx) throws Exception {
         ctx.setTemplate(templateName);
         CreateFeatureFromTemplate op = newCreateFeatureFromTemplate(ctx);
         return CreateFeatureFromTemplate.run(getShell(), getContainer(), op);

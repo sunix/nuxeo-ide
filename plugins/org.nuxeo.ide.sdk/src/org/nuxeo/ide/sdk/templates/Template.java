@@ -68,6 +68,7 @@ public class Template implements Comparable<Template> {
      */
     protected String extensions;
 
+
     protected Template(String id) {
         this.id = id;
         this.name = id;

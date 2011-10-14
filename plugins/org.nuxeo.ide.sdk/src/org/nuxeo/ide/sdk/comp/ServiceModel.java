@@ -30,7 +30,11 @@ public class ServiceModel implements IViewItem {
     protected String name;
 
     protected ComponentModel component;
-
+    
+    public static String simpleName(String fqn) {
+        return fqn.substring(fqn.lastIndexOf('.')+1);
+    }
+    
     public ServiceModel(ComponentModel component, String name) {
         this.component = component;
         this.name = name;

@@ -17,27 +17,30 @@ public class JavaClassCommand implements Command, PostCreateCommand {
     @Override
     public void init(Element element) {
         Document doc = element.getOwnerDocument();
-        String src = element.getAttribute("src").trim();
+        String srcName = element.getAttribute("src").trim();
         String path = element.getAttribute("path").trim();
         String to = element.getAttribute("to").trim();
         
-        if (src.isEmpty()) {
-            src = "src/main/java";
+        
+        if (srcName.isEmpty()) {
+            srcName = "java";
         }
+
+        String srcPath  = "src/main/"+srcName+"/";
         
         Element sourcePath = doc.createElement("sourcePath");
         sourcePathCommand = new SourcePathCommand();
-        sourcePath.setAttribute("path", src);
+        sourcePath.setAttribute("name", srcName);
         sourcePathCommand.init(sourcePath);
     
-        Element tranform = doc.createElement("rename");
-        tranform.setAttribute("path", src + "/" + path);
-        tranform.setAttribute("to", src + "/" + to);
+        Element tranform = doc.createElement("transform");
+        tranform.setAttribute("path", srcPath + path);
+        tranform.setAttribute("to", srcPath + to);
         transformCommand.init(tranform);
         
         Element organize = doc.createElement("organizeImports");
         Element organizeClass = doc.createElement("class");
-        organizeClass.setAttribute("path", src + "/" + path);
+        organizeClass.setAttribute("path", srcPath  + path);
         organize.appendChild(organizeClass);
         organizeImportsCommand.init(organize);
     }
@@ -52,6 +55,7 @@ public class JavaClassCommand implements Command, PostCreateCommand {
     @Override
     public void execute(IProject project, TemplateContext ctx) throws Exception {
         organizeImportsCommand.execute(project, ctx);
+        sourcePathCommand.execute(project, ctx);
     }
 
 }

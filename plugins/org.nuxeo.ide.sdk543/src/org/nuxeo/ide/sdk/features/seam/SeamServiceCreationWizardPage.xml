@@ -1,0 +1,19 @@
+<panel cols="2"  layout="grid">
+
+<text>Project:</text>
+<project id="project" hfill="true">
+<validator type="required">The project field is required</validator>
+</project>
+<text>Package:</text>
+<package id="package" hfill="true">
+<validator type="regex" value="[A-Za-z_]+(.[A-Za-z0-9_]+)*">Not a valid package name</validator>
+</package>
+<text>Service:</text>
+<service id="service" hfill="true">
+<validator type="regex" value="[A-Za-z_]+(.[A-Za-z0-9_]+)*">Not a valid service name</validator>
+</service>
+<text>Component:</text>
+<textbox id="component" hfill="true">
+<validator type="regex" value="[A-Za-z]+[A-Za-z0-9_]*">Not a valid component name</validator>
+</textbox>
+</panel>

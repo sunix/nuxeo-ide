@@ -16,9 +16,7 @@
  */
 package org.nuxeo.ide.sdk.features.seam;
 
-import org.nuxeo.ide.sdk.features.CreateFeatureFromTemplate;
 import org.nuxeo.ide.sdk.features.FeatureCreationWizard;
-import org.nuxeo.ide.sdk.features.FeatureTemplateContext;
 
 
 public class SeamFeatureCreationWizard extends FeatureCreationWizard {
@@ -35,10 +33,5 @@ public class SeamFeatureCreationWizard extends FeatureCreationWizard {
         addPage(new SeamComponentCreationWizardPage(name));
     }
     
-    @Override
-    protected CreateFeatureFromTemplate newCreateFeatureFromTemplate(
-            FeatureTemplateContext ctx) {
-        return new CreateSeamFeatureFromTemplate(ctx);
-    }
 }
 

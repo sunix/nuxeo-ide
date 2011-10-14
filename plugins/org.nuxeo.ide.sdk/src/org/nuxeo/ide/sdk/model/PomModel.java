@@ -267,9 +267,10 @@ public class PomModel extends XmlFile {
         return sources;
     }
 
-    public void addBuildHelperSource(String path) {
+    public void addBuildHelperSource(String name) {
         Element sources = getBuildHelperElement("source");
         Node source = getFirstElement(sources, "source");
+        String path = "src/main/"+name;
         while (source != null) {
             if (path.equals(source.getTextContent().trim()) == true) {
                 return;

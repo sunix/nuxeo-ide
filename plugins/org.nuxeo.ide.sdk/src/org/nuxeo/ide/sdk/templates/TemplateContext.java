@@ -16,10 +16,17 @@
  */
 package org.nuxeo.ide.sdk.templates;
 
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.nuxeo.ide.common.forms.Form;
+import org.nuxeo.ide.common.forms.UIObject;
 
 /**
  * The base class for all template contexts.
@@ -31,7 +38,7 @@ import org.nuxeo.ide.common.forms.Form;
 public class TemplateContext extends HashMap<String, Object> {
 
     protected String template;
-
+    
     protected File projectLocation;
 
     public TemplateContext() {
@@ -73,6 +80,14 @@ public class TemplateContext extends HashMap<String, Object> {
 
     public void setTemplate(String template) {
         this.template = template;
+    }
+
+    public void setProperties(Form form) throws IntrospectionException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        for (Map.Entry<String, UIObject<?>> e:form.getBindings().entrySet()) {
+            String k = e.getKey();
+            UIObject<?> v = e.getValue();
+            put(k, v.toString());
+        }
     }
 
     public String getProperty(String key) {

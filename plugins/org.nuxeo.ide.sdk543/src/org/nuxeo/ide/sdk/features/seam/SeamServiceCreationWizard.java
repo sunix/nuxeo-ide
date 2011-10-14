@@ -16,11 +16,17 @@
  */
 package org.nuxeo.ide.sdk.features.seam;
 
+
+
 public class SeamServiceCreationWizard extends SeamFeatureCreationWizard {
 
     public SeamServiceCreationWizard() {
         super("Service");
     }
 
+    @Override
+    public void addPages() {
+        super.addPage(new SeamServiceCreationWizardPage(name));
+    }
 }
 
