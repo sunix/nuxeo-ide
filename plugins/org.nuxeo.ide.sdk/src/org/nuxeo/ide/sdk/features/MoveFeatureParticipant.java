@@ -70,7 +70,7 @@ public class MoveFeatureParticipant extends MoveParticipant {
             try {
                 if (!pkg.getJavaProject().getProject().isNatureEnabled(
                         NuxeoNature.ID)) {
-                    pkg = null;
+                    return false;
                 }
             } catch (Exception e) {
                 // do nothing
@@ -119,10 +119,10 @@ public class MoveFeatureParticipant extends MoveParticipant {
     @Override
     public RefactoringStatus checkConditions(IProgressMonitor pm,
             CheckConditionsContext context) throws OperationCanceledException {
-        if (type == null) {
+        if (type == null || pkg == null) {
             return new RefactoringStatus();
         }
-        if (pkg == null || pkg.isDefaultPackage()) {
+        if (pkg.isDefaultPackage()) {
             throw new OperationCanceledException("cannot locate feature in default package not supported");
         }
         IFile mf = type.getProject().getFile(ManifestWriter.PATH);
