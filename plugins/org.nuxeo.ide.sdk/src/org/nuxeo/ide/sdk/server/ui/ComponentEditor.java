@@ -25,6 +25,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
@@ -102,7 +103,7 @@ public class ComponentEditor extends EditorPart {
 
         Section section;
 
-        if (component.getImpl() != null) {
+        if (component.getImpl() != null && component.getImpl().length() > 0) {
             section = toolkit.createSection(panel, Section.EXPANDED
                     | Section.TITLE_BAR | Section.DESCRIPTION);
             section.setText("Implementation");
@@ -137,7 +138,7 @@ public class ComponentEditor extends EditorPart {
         section = toolkit.createSection(panel, Section.EXPANDED
                 | Section.TITLE_BAR | Section.DESCRIPTION);
         section.setText("Extension Points");
-        section.setDescription("The list of extension points exposed by this component. Select an etension point to view its documentation (if any was provided).");
+        section.setDescription("The list of extension points exposed by this component. Select an etension point to view its documentation (if any was provided).\nNote that <code>...</code> sections in the documentation contains examples of usage (the <code> tag itself is only a marker).");
         section.setClient(createXPointsTable(section));
         applyLayout(section);
 
@@ -186,7 +187,12 @@ public class ComponentEditor extends EditorPart {
 
     protected Control createServiceList(Composite parent) {
         Composite panel = toolkit.createComposite(parent);
-        panel.setLayout(new RowLayout());
+        panel.setLayout(new RowLayout(SWT.VERTICAL));
+        if (component.getServices().length == 0) {
+            toolkit.createLabel(panel, "No services are provided").setForeground(
+                    Display.getCurrent().getSystemColor(SWT.COLOR_RED));
+            return panel;
+        }
         for (final ServiceModel model : component.getServices()) {
             ImageHyperlink link = toolkit.createImageHyperlink(panel, SWT.NONE);
             link.setImage(model.getImage());
@@ -199,10 +205,15 @@ public class ComponentEditor extends EditorPart {
     protected Control createXPointsTable(Composite parent) {
         Composite panel = toolkit.createComposite(parent);
         panel.setLayout(new GridLayout());
+        applyLayout(panel);
+        if (component.getExtensionPoints().length == 0) {
+            toolkit.createLabel(panel, "No extension points are provided").setForeground(
+                    Display.getCurrent().getSystemColor(SWT.COLOR_RED));
+            return panel;
+        }
         for (ExtensionPointModel model : component.getExtensionPoints()) {
             createXPointEntry(panel, model);
         }
-        applyLayout(panel);
         return panel;
     }
 
