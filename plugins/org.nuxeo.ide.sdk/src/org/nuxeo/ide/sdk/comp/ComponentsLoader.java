@@ -82,14 +82,15 @@ public class ComponentsLoader {
         ComponentModel component = new ComponentModel(name);
         component.bundle = element.getAttribute("bundle");
         component.version = element.getAttribute("version");
-        component.documentation = element.getAttribute("documentation");
         component.impl = element.getAttribute("class");
 
         Node node = element.getFirstChild();
         while (node != null) {
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 String tag = node.getNodeName();
-                if ("services".equals(tag)) {
+                if ("documentation".equals(tag)) {
+                    component.documentation = ((Element) node).getTextContent().trim();
+                } else if ("services".equals(tag)) {
                     loadServices(reg, component, (Element) node, sset);
                 } else if ("extension-points".equals(tag)) {
                     loadExtensionPoints(reg, component, (Element) node, xpset);
@@ -134,7 +135,7 @@ public class ComponentsLoader {
                     && "extension-point".equals(node.getNodeName())) {
                 Element el = (Element) node;
                 String name = el.getAttribute("name");
-                String documentation = el.getAttribute("documentation");
+                String documentation = el.getTextContent().trim();
                 xpoints.add(name);
                 ExtensionPointModel xp = new ExtensionPointModel(component,
                         name, documentation);

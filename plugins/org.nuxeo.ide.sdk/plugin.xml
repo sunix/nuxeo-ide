@@ -476,5 +476,15 @@
          priority="normal">
    </content-type>
 </extension>
+<extension
+      point="org.eclipse.ui.editors">
+   <editor
+         class="org.nuxeo.ide.sdk.server.ui.ComponentEditor"
+         default="false"
+         icon="icons/nx.gif"
+         id="org.nuxeo.ide.sdk.server.ui.ComponentEditor"
+         name="Nuxeo Component">
+   </editor>
+</extension>
 
 </plugin>

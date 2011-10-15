@@ -16,7 +16,9 @@
  */
 package org.nuxeo.ide.sdk.server.ui;
 
-import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.IOpenListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -25,6 +27,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
@@ -32,7 +35,11 @@ import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.common.ViewItemProvider;
 import org.nuxeo.ide.sdk.NuxeoSDK;
 import org.nuxeo.ide.sdk.SDKChangedListener;
+import org.nuxeo.ide.sdk.comp.ComponentEditorInput;
+import org.nuxeo.ide.sdk.comp.ComponentModel;
 import org.nuxeo.ide.sdk.comp.ComponentRegistry;
+import org.nuxeo.ide.sdk.comp.ExtensionPointModel;
+import org.nuxeo.ide.sdk.comp.ServiceModel;
 import org.nuxeo.ide.sdk.server.ui.widgets.ComponentBrowser;
 import org.nuxeo.ide.sdk.server.ui.widgets.ExtensionPointBrowser;
 import org.nuxeo.ide.sdk.server.ui.widgets.ServiceBrowser;
@@ -49,9 +56,11 @@ public class ComponentView extends ViewPart implements SDKChangedListener {
 
     protected CTabFolder tabs;
 
-    protected TreeViewer tv;
-
     protected ServiceBrowser services;
+
+    protected ComponentBrowser components;
+
+    protected ExtensionPointBrowser xpoints;
 
     protected ComponentRegistry registry;
 
@@ -62,6 +71,11 @@ public class ComponentView extends ViewPart implements SDKChangedListener {
         initServer();
     }
 
+    @Override
+    public void handleSDKChanged(NuxeoSDK sdk) {
+        initServer();
+    }
+
     protected void initServer() {
         NuxeoSDK sdk = NuxeoSDK.getDefault();
         if (sdk != null) {
@@ -69,13 +83,14 @@ public class ComponentView extends ViewPart implements SDKChangedListener {
         } else {
             registry = new ComponentRegistry();
         }
+        initInputs();
     }
 
-    @Override
-    public void handleSDKChanged(NuxeoSDK sdk) {
-        initServer();
-        if (tv != null) {
-            tv.setInput(registry);
+    protected void initInputs() {
+        if (services != null) {
+            services.setInputRegistry(registry);
+            components.setInputRegistry(registry);
+            xpoints.setInputRegistry(registry);
         }
     }
 
@@ -88,37 +103,20 @@ public class ComponentView extends ViewPart implements SDKChangedListener {
 
         form.setText("Browse Nuxeo Components");
 
-        // Section section = toolkit.createSection(form.getBody(),
-        // Section.EXPANDED | Section.TITLE_BAR | Section.DESCRIPTION);
-        // section.setText("Server Components");
-        // section.setDescription("Browse components available in the Nuxeo SDK.");
-        //
-        // GridData gd = new GridData();
-        // gd.horizontalAlignment = SWT.FILL;
-        // gd.grabExcessHorizontalSpace = true;
-        // gd.verticalAlignment = SWT.FILL;
-        // gd.grabExcessVerticalSpace = true;
-        // section.setLayoutData(gd);
-
         tabs = new CTabFolder(form.getBody(), SWT.TOP | SWT.FLAT | SWT.H_SCROLL
                 | SWT.V_SCROLL);
 
-        // section.setClient(pages);
-
         services = new ServiceBrowser(tabs);
-        services.setDefaultInput();
         toolkit.adapt(services);
         CTabItem item = new CTabItem(tabs, SWT.NONE);
         item.setControl(services);
         item.setText("Services");
-        ComponentBrowser components = new ComponentBrowser(tabs);
-        components.setDefaultInput();
+        components = new ComponentBrowser(tabs);
         toolkit.adapt(components);
         item = new CTabItem(tabs, SWT.NONE);
         item.setControl(components);
         item.setText("Components");
-        ExtensionPointBrowser xpoints = new ExtensionPointBrowser(tabs);
-        xpoints.setDefaultInput();
+        xpoints = new ExtensionPointBrowser(tabs);
         toolkit.adapt(xpoints);
         item = new CTabItem(tabs, SWT.NONE);
         item.setControl(xpoints);
@@ -134,31 +132,42 @@ public class ComponentView extends ViewPart implements SDKChangedListener {
         toolkit.adapt(tabs);
 
         tabs.setSelection(0);
-        // tabs.getHorizontalBar().setEnabled(false);
-        // tabs.getVerticalBar().setEnabled(false);
 
-        // Tree tree = toolkit.createTree(section, SWT.H_SCROLL | SWT.V_SCROLL
-        // | SWT.BORDER);
-        //
-        // section.setClient(tree);
+        IOpenListener openListener = new IOpenListener() {
+            @Override
+            public void open(OpenEvent event) {
+                if (!event.getSelection().isEmpty()) {
+                    openElement(((IStructuredSelection) event.getSelection()).getFirstElement());
+                }
+            }
+        };
+        services.getTableViewer().addOpenListener(openListener);
+        components.getTableViewer().addOpenListener(openListener);
+        xpoints.getTableViewer().addOpenListener(openListener);
+        initInputs();
+    }
 
-        // gd = new GridData();
-        // gd.horizontalAlignment = SWT.FILL;
-        // gd.grabExcessHorizontalSpace = true;
-        // gd.verticalAlignment = SWT.FILL;
-        // gd.grabExcessVerticalSpace = true;
-        // section.setLayoutData(gd);
+    protected void openElement(Object element) {
+        if (element instanceof ComponentModel) {
+            ComponentModel comp = (ComponentModel) element;
+            openEditor(comp);
+        } else if (element instanceof ServiceModel) {
+            ServiceModel service = (ServiceModel) element;
+            openEditor(service.getComponent());
+        } else if (element instanceof ExtensionPointModel) {
+            ExtensionPointModel xpoint = (ExtensionPointModel) element;
+            openEditor(xpoint.getComponent());
+        }
+    }
 
-        // tv = new TreeViewer(tree);
-        //
-        // tree.setLayoutData(gd);
-        //
-        // MyProvider provider = new MyProvider();
-        // tv.setLabelProvider(provider);
-        // tv.setContentProvider(provider);
-        //
-        // tv.setInput(registry);
-
+    protected void openEditor(ComponentModel component) {
+        try {
+            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(
+                    new ComponentEditorInput(component),
+                    ComponentEditor.class.getName());
+        } catch (Exception e) {
+            UI.showError("Failed to open component editor", e);
+        }
     }
 
     @Override

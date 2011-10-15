@@ -19,6 +19,7 @@ package org.nuxeo.ide.sdk.server.ui.widgets;
 import org.eclipse.swt.widgets.Composite;
 import org.nuxeo.ide.common.widgets.ViewItemTableBrowser;
 import org.nuxeo.ide.sdk.NuxeoSDK;
+import org.nuxeo.ide.sdk.comp.ComponentRegistry;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -43,4 +44,7 @@ public class ComponentBrowser extends ViewItemTableBrowser {
         }
     }
 
+    public void setInputRegistry(ComponentRegistry registry) {
+        setInput(registry.getComponents());
+    }
 }
