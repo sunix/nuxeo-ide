@@ -47,6 +47,7 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
@@ -209,7 +210,7 @@ public class ComponentEditor extends EditorPart {
         gd.grabExcessHorizontalSpace = true;
         gd.horizontalAlignment = SWT.FILL;
         text.setLayoutData(gd);
-        label = toolkit.createLabel(panel, "Bundle:", SWT.BOLD);
+        label = toolkit.createLabel(panel, "Bundle:");
         label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
         text = new Text(panel, SWT.READ_ONLY | SWT.SINGLE);
         text.setText(component.getBundle());
@@ -217,6 +218,26 @@ public class ComponentEditor extends EditorPart {
         gd.grabExcessHorizontalSpace = true;
         gd.horizontalAlignment = SWT.FILL;
         text.setLayoutData(gd);
+        if (component.getSrc() != null) {
+            label = toolkit.createLabel(panel, "Source:");
+            label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+            Hyperlink src = toolkit.createHyperlink(panel, component.getSrc(),
+                    SWT.NONE);
+            src.addHyperlinkListener(new HyperlinkAdapter() {
+                @Override
+                public void linkActivated(HyperlinkEvent e) {
+                    try {
+                        openSourceFile();
+                    } catch (Throwable t) {
+                        UI.showError("Failed to open the source file", t);
+                    }
+                }
+            });
+            gd = new GridData();
+            gd.grabExcessHorizontalSpace = true;
+            gd.horizontalAlignment = SWT.FILL;
+            text.setLayoutData(gd);
+        }
     }
 
     protected Control createServiceList(Composite parent) {
@@ -296,7 +317,7 @@ public class ComponentEditor extends EditorPart {
             // TODO: open the file when Nuxeo SDK is in the local file system
             File config = new File(
                     NuxeoSDK.getDefault().getInfo().getInstallDirectory(),
-                    "config");
+                    "nxserver/config");
             File file = new File(config, src);
             if (!file.isFile()) {
                 UI.showInfo("This component is part of the global Nuxeo configuration.\nSee the '"
@@ -304,6 +325,7 @@ public class ComponentEditor extends EditorPart {
                 return;
             } else {
                 Program.launch(file.getAbsolutePath());
+                return;
             }
         }
         String jar = src.substring(0, i);
