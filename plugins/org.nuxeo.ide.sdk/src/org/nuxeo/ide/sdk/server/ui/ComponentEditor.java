@@ -16,13 +16,21 @@
  */
 package org.nuxeo.ide.sdk.server.ui;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.ui.ISharedImages;
 import org.eclipse.jdt.ui.JavaUI;
+import org.eclipse.jface.action.Action;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -31,6 +39,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
@@ -42,6 +51,9 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.EditorPart;
+import org.nuxeo.ide.common.IOUtils;
+import org.nuxeo.ide.common.UI;
+import org.nuxeo.ide.sdk.NuxeoSDK;
 import org.nuxeo.ide.sdk.comp.ComponentModel;
 import org.nuxeo.ide.sdk.comp.ExtensionPointModel;
 import org.nuxeo.ide.sdk.comp.ServiceModel;
@@ -84,6 +96,27 @@ public class ComponentEditor extends EditorPart {
         return false;
     }
 
+    protected void createToolbar() {
+        Action lookup = new Action() {
+            @Override
+            public void run() {
+                try {
+                    openSourceFile();
+                } catch (Throwable t) {
+                    UI.showError("Failed to open the source file", t);
+                }
+            }
+        };
+        lookup.setId(ComponentEditor.class.getName() + "#lookup");
+        lookup.setText("Open");
+        lookup.setToolTipText("Open component XML definition");
+        lookup.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(
+                org.eclipse.ui.ISharedImages.IMG_OBJ_FILE));
+        form.getToolBarManager().add(lookup);
+        form.getToolBarManager().update(true);
+        // form.getToolBarManager().add(createExtension);
+    }
+
     @Override
     public void createPartControl(Composite parent) {
         // ColumnLayout layout = new ColumnLayout();
@@ -96,6 +129,7 @@ public class ComponentEditor extends EditorPart {
         form.setImage(component.getImage());
         toolkit.decorateFormHeading(form.getForm());
         form.getBody().setLayout(layout);
+        createToolbar();
 
         Composite panel = form.getBody();
 
@@ -250,6 +284,71 @@ public class ComponentEditor extends EditorPart {
         component = null;
     }
 
+    protected void openSourceFile() throws IOException {
+        String src = component.getSrc();
+        if (src == null) {
+            UI.showWarning("No component source was provided by the server!");
+            return;
+        }
+        int i = src.indexOf('!');
+        // TODO this will not work for now for the cloud version.
+        if (i == -1) {
+            // TODO: open the file when Nuxeo SDK is in the local file system
+            File config = new File(
+                    NuxeoSDK.getDefault().getInfo().getInstallDirectory(),
+                    "config");
+            File file = new File(config, src);
+            if (!file.isFile()) {
+                UI.showInfo("This component is part of the global Nuxeo configuration.\nSee the '"
+                        + src + "' file in the Nuxeo server configuration.");
+                return;
+            } else {
+                Program.launch(file.getAbsolutePath());
+            }
+        }
+        String jar = src.substring(0, i);
+        String path = src.substring(i + 1);
+        File nxserver = new File(
+                NuxeoSDK.getDefault().getInfo().getInstallDirectory(),
+                "nxserver");
+        File bundles = new File(nxserver, "bundles");
+        File file = new File(bundles, jar);
+        if (!file.exists()) {
+            bundles = new File(nxserver, "plugins");
+            file = new File(bundles, jar);
+            if (!file.exists()) {
+                UI.showWarning("Unable to find the source file for this component: "
+                        + src);
+                return;
+            }
+        }
+        if (file.isFile()) { // a JAR
+            ZipFile zip = new ZipFile(file);
+            if (path.startsWith("/")) {
+                path = path.substring(1);
+            }
+            ZipEntry entry = zip.getEntry(path);
+            if (entry == null) {
+                UI.showWarning("Unable to find the entry '" + path
+                        + "' in the JAR: " + jar);
+                return;
+            } else {
+                InputStream in = zip.getInputStream(entry);
+                try {
+                    File tmp = File.createTempFile("nxide-" + file.getName(),
+                            ".xml");
+                    tmp.deleteOnExit();
+                    IOUtils.copyToFile(in, tmp, true);
+                    Program.launch(tmp.getAbsolutePath());
+                } finally {
+                    zip.close();
+                }
+            }
+        } else {
+            Program.launch(file.getAbsolutePath());
+        }
+    }
+
     public static class HyperlinkHandler extends HyperlinkAdapter {
         public String typeName;
 
@@ -263,9 +362,4 @@ public class ComponentEditor extends EditorPart {
         }
     }
 
-    static class Title extends Composite {
-        Title(Composite parent) {
-            super(parent, SWT.NONE);
-        }
-    }
 }

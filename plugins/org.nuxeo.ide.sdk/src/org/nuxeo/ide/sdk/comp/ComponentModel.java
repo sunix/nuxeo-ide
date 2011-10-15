@@ -36,6 +36,8 @@ public class ComponentModel implements IViewItem {
 
     protected String impl;
 
+    protected String src;
+
     protected String version;
 
     protected String documentation;
@@ -58,6 +60,10 @@ public class ComponentModel implements IViewItem {
 
     public String getDocumentation() {
         return documentation;
+    }
+
+    public String getSrc() {
+        return src;
     }
 
     public String getImpl() {

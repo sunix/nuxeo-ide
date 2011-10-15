@@ -83,6 +83,10 @@ public class ComponentsLoader {
         component.bundle = element.getAttribute("bundle");
         component.version = element.getAttribute("version");
         component.impl = element.getAttribute("class");
+        component.src = element.getAttribute("src");
+        if (component.src.length() == 0) {
+            component.src = null;
+        }
 
         Node node = element.getFirstChild();
         while (node != null) {
