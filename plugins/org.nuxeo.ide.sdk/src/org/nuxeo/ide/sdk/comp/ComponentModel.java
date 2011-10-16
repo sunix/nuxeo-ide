@@ -46,6 +46,8 @@ public class ComponentModel implements IViewItem {
 
     protected ExtensionPointModel[] xpoints;
 
+    protected ExtensionModel[] extensions;
+
     public ComponentModel(String name) {
         this.name = name;
     }
@@ -80,6 +82,10 @@ public class ComponentModel implements IViewItem {
 
     public ExtensionPointModel[] getExtensionPoints() {
         return xpoints;
+    }
+
+    public ExtensionModel[] getExtensions() {
+        return extensions;
     }
 
     @Override

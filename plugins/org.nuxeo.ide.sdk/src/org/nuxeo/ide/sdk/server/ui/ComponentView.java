@@ -32,14 +32,11 @@ import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.nuxeo.ide.common.UI;
-import org.nuxeo.ide.common.ViewItemProvider;
 import org.nuxeo.ide.sdk.NuxeoSDK;
 import org.nuxeo.ide.sdk.SDKChangedListener;
-import org.nuxeo.ide.sdk.comp.ComponentEditorInput;
-import org.nuxeo.ide.sdk.comp.ComponentModel;
-import org.nuxeo.ide.sdk.comp.ComponentRegistry;
-import org.nuxeo.ide.sdk.comp.ExtensionPointModel;
-import org.nuxeo.ide.sdk.comp.ServiceModel;
+import org.nuxeo.ide.sdk.comp.ComponentRef;
+import org.nuxeo.ide.sdk.comp.ExtensionPointRef;
+import org.nuxeo.ide.sdk.comp.ServiceRef;
 import org.nuxeo.ide.sdk.server.ui.widgets.ComponentBrowser;
 import org.nuxeo.ide.sdk.server.ui.widgets.ExtensionPointBrowser;
 import org.nuxeo.ide.sdk.server.ui.widgets.ServiceBrowser;
@@ -62,35 +59,23 @@ public class ComponentView extends ViewPart implements SDKChangedListener {
 
     protected ExtensionPointBrowser xpoints;
 
-    protected ComponentRegistry registry;
-
     @Override
     public void init(IViewSite site) throws PartInitException {
         super.init(site);
         NuxeoSDK.addSDKChangedListener(this);
-        initServer();
+        initInputs();
     }
 
     @Override
     public void handleSDKChanged(NuxeoSDK sdk) {
-        initServer();
-    }
-
-    protected void initServer() {
-        NuxeoSDK sdk = NuxeoSDK.getDefault();
-        if (sdk != null) {
-            registry = sdk.getComponentProvider().getComponentRegistry();
-        } else {
-            registry = new ComponentRegistry();
-        }
         initInputs();
     }
 
     protected void initInputs() {
         if (services != null) {
-            services.setInputRegistry(registry);
-            components.setInputRegistry(registry);
-            xpoints.setInputRegistry(registry);
+            services.setDefaultInput();
+            components.setDefaultInput();
+            xpoints.setDefaultInput();
         }
     }
 
@@ -148,23 +133,29 @@ public class ComponentView extends ViewPart implements SDKChangedListener {
     }
 
     protected void openElement(Object element) {
-        if (element instanceof ComponentModel) {
-            ComponentModel comp = (ComponentModel) element;
-            openEditor(comp);
-        } else if (element instanceof ServiceModel) {
-            ServiceModel service = (ServiceModel) element;
-            openEditor(service.getComponent());
-        } else if (element instanceof ExtensionPointModel) {
-            ExtensionPointModel xpoint = (ExtensionPointModel) element;
-            openEditor(xpoint.getComponent());
+        ComponentRef ref = null;
+        if (element instanceof ComponentRef) {
+            ref = (ComponentRef) element;
+        } else if (element instanceof ServiceRef) {
+            ServiceRef service = (ServiceRef) element;
+            ref = NuxeoSDK.getDefault().getComponentIndex().getComponent(
+                    service.getComponent());
+        } else if (element instanceof ExtensionPointRef) {
+            ExtensionPointRef xpoint = (ExtensionPointRef) element;
+            ref = NuxeoSDK.getDefault().getComponentIndex().getComponent(
+                    xpoint.getComponent());
+        }
+        if (ref != null) {
+            openEditor(ref);
+        } else {
+            UI.showError("No component matching this resource was found");
         }
     }
 
-    protected void openEditor(ComponentModel component) {
+    protected void openEditor(ComponentRef ref) {
         try {
             PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(
-                    new ComponentEditorInput(component),
-                    ComponentEditor.class.getName());
+                    ref, ComponentEditor.class.getName());
         } catch (Exception e) {
             UI.showError("Failed to open component editor", e);
         }
@@ -187,18 +178,4 @@ public class ComponentView extends ViewPart implements SDKChangedListener {
         super.dispose();
     }
 
-    static class MyProvider extends ViewItemProvider {
-
-        @Override
-        public Object[] getElements(Object inputElement) {
-            if (inputElement instanceof ComponentRegistry) {
-                return ((ComponentRegistry) inputElement).getComponents();
-            } else if (inputElement != null
-                    && inputElement.getClass().isArray()) {
-                return (Object[]) inputElement;
-            }
-            return UI.EMPTY_OBJECTS;
-        }
-
-    }
 }

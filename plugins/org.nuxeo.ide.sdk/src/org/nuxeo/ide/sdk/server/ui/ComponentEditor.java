@@ -34,7 +34,10 @@ import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
@@ -56,6 +59,8 @@ import org.nuxeo.ide.common.IOUtils;
 import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.sdk.NuxeoSDK;
 import org.nuxeo.ide.sdk.comp.ComponentModel;
+import org.nuxeo.ide.sdk.comp.ComponentRef;
+import org.nuxeo.ide.sdk.comp.ExtensionModel;
 import org.nuxeo.ide.sdk.comp.ExtensionPointModel;
 import org.nuxeo.ide.sdk.comp.ServiceModel;
 
@@ -84,7 +89,22 @@ public class ComponentEditor extends EditorPart {
             throws PartInitException {
         setSite(site);
         setInput(input);
-        component = (ComponentModel) input.getAdapter(ComponentModel.class);
+        ComponentRef ref = (ComponentRef) input.getAdapter(ComponentRef.class);
+        NuxeoSDK sdk = NuxeoSDK.getDefault();
+        if (sdk == null) {
+            throw new PartInitException("Cannot open component "
+                    + ref.getName() + ". No NuxeoSDK was defined");
+        }
+        try {
+            component = sdk.getComponentIndexManager().getComponent(ref);
+        } catch (Exception e) {
+            throw new PartInitException("Failed to find component file: "
+                    + ref.getName() + ". Source: " + ref.getSrc(), e);
+        }
+        if (component == null) {
+            throw new PartInitException("Unable to find component file: "
+                    + ref.getName() + ". Source: " + ref.getSrc());
+        }
     }
 
     @Override
@@ -177,6 +197,13 @@ public class ComponentEditor extends EditorPart {
         section.setClient(createXPointsTable(section));
         applyLayout(section);
 
+        section = toolkit.createSection(panel, Section.EXPANDED
+                | Section.TITLE_BAR | Section.DESCRIPTION);
+        section.setText("Extensions");
+        section.setDescription("The list of extensions contributed by this component.");
+        section.setClient(createExtensionSection(section));
+        applyLayout(section);
+
         form.reflow(true);
     }
 
@@ -243,7 +270,8 @@ public class ComponentEditor extends EditorPart {
     protected Control createServiceList(Composite parent) {
         Composite panel = toolkit.createComposite(parent);
         panel.setLayout(new RowLayout(SWT.VERTICAL));
-        if (component.getServices().length == 0) {
+        if (component.getServices() == null
+                || component.getServices().length == 0) {
             toolkit.createLabel(panel, "No services are provided").setForeground(
                     Display.getCurrent().getSystemColor(SWT.COLOR_RED));
             return panel;
@@ -261,7 +289,8 @@ public class ComponentEditor extends EditorPart {
         Composite panel = toolkit.createComposite(parent);
         panel.setLayout(new GridLayout());
         applyLayout(panel);
-        if (component.getExtensionPoints().length == 0) {
+        if (component.getExtensionPoints() == null
+                || component.getExtensionPoints().length == 0) {
             toolkit.createLabel(panel, "No extension points are provided").setForeground(
                     Display.getCurrent().getSystemColor(SWT.COLOR_RED));
             return panel;
@@ -273,19 +302,85 @@ public class ComponentEditor extends EditorPart {
     }
 
     protected void createXPointEntry(Composite parent, ExtensionPointModel model) {
-        ExpandableComposite panel = toolkit.createExpandableComposite(parent,
+        ExpandableComposite section = toolkit.createExpandableComposite(parent,
                 ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT);
-        panel.setText(model.getName());
-        Text label = toolkit.createText(panel,
+        section.setText(model.getName());
+        Composite panel = toolkit.createComposite(section);
+        panel.setLayout(new GridLayout(2, false));
+        Label label = toolkit.createLabel(panel, "Extension Point Name:");
+        label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+        Text text = new Text(panel, SWT.READ_ONLY | SWT.SINGLE);
+        text.setText(model.getName());
+        applyLayout(text);
+        label = toolkit.createLabel(panel, "Contribution Types:");
+        label.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+        Composite types = toolkit.createComposite(panel);
+        types.setLayout(new RowLayout(SWT.VERTICAL));
+        for (final String ctype : model.getContributionTypes()) {
+            Hyperlink hyperlink = toolkit.createHyperlink(types, ctype,
+                    SWT.NONE);
+            hyperlink.addHyperlinkListener(new HyperlinkAdapter() {
+                @Override
+                public void linkActivated(HyperlinkEvent e) {
+                    new OpenClassAction(ctype).run();
+                }
+            });
+        }
+        applyLayout(types);
+        Text docu = toolkit.createText(panel,
                 DocumentationFormat.format(model.getDocumentation()), SWT.NONE
                         | SWT.READ_ONLY);
-        panel.setClient(label);
-        applyLayout(panel);
-        panel.addExpansionListener(new ExpansionAdapter() {
+        GridData gd = new GridData();
+        gd.horizontalAlignment = SWT.FILL;
+        gd.grabExcessHorizontalSpace = true;
+        gd.horizontalSpan = 2;
+        docu.setLayoutData(gd);
+        section.setClient(panel);
+        applyLayout(section);
+        section.addExpansionListener(new ExpansionAdapter() {
             public void expansionStateChanged(ExpansionEvent e) {
                 form.reflow(true);
             }
         });
+    }
+
+    protected Composite createExtensionSection(Composite parent) {
+        Composite panel = toolkit.createComposite(parent);
+        panel.setLayout(new GridLayout());
+        applyLayout(panel);
+        ExtensionModel[] xts = component.getExtensions();
+        if (xts == null || xts.length == 0) {
+            toolkit.createLabel(panel, "No contributed extensions").setForeground(
+                    Display.getCurrent().getSystemColor(SWT.COLOR_RED));
+            return panel;
+        }
+        for (final ExtensionModel model : xts) {
+            Link link = new Link(panel, SWT.WRAP);
+            applyLayout(link);
+            link.setText("Found contributions to '"
+                    + model.getTarget().getName()
+                    + "' extension point in component <a>"
+                    + model.getTarget().getComponent() + "</a>");
+            link.addListener(SWT.Selection, new Listener() {
+                @Override
+                public void handleEvent(Event e) {
+                    ComponentRef ref = NuxeoSDK.getDefault().getComponentIndex().getComponent(
+                            e.text);
+                    if (ref == null) {
+                        UI.showError("No such component were found: "
+                                + model.getTarget().getComponent());
+                        return;
+                    }
+                    try {
+                        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(
+                                ref, ComponentEditor.class.getName());
+                    } catch (PartInitException ee) {
+                        // do nothing
+                    }
+                }
+            });
+        }
+        return panel;
     }
 
     @Override

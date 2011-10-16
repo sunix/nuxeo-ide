@@ -17,50 +17,54 @@
 package org.nuxeo.ide.sdk.comp;
 
 import org.eclipse.swt.graphics.Image;
-import org.nuxeo.ide.common.IViewItem;
-import org.nuxeo.ide.common.UI;
+import org.nuxeo.ide.common.HasImage;
+import org.nuxeo.ide.common.HasLabel;
 import org.nuxeo.ide.sdk.SDKPlugin;
 
 /**
+ * A light weight reference to a service.
+ * 
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class ExtensionPointModel implements IViewItem {
-
-    protected ComponentModel component;
+public final class ServiceRef implements HasLabel, HasImage,
+        Comparable<ServiceRef> {
 
     protected String name;
 
-    protected String[] contribs;
+    protected String component;
 
-    protected String documentation;
-
-    public ExtensionPointModel(ComponentModel component, String name,
-            String documentation) {
-        this.component = component;
+    public ServiceRef(String name, String component) {
         this.name = name;
-        this.documentation = documentation;
+        this.component = component;
     }
 
-    public ComponentModel getComponent() {
-        return component;
-    }
-
+    /**
+     * The service name
+     */
     public String getName() {
         return name;
     }
 
-    public String[] getContributionTypes() {
-        return contribs;
-    }
-
-    public String getDocumentation() {
-        return documentation;
+    /**
+     * The component owning that service
+     */
+    public String getComponent() {
+        return component;
     }
 
     @Override
-    public String toString() {
-        return name;
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (obj.getClass() == ServiceRef.class) {
+            return ((ServiceRef) obj).name.equals(name);
+        }
+        return false;
     }
 
     @Override
@@ -69,40 +73,19 @@ public class ExtensionPointModel implements IViewItem {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (obj instanceof ExtensionPointModel) {
-            return name.equals(((ExtensionPointModel) obj).name);
-        }
-        return false;
-    }
-
-    @Override
-    public Object[] getChildren() {
-        return UI.EMPTY_OBJECTS;
+    public int compareTo(ServiceRef o) {
+        return name.compareTo(o.name);
     }
 
     @Override
     public String getLabel() {
-        return component.name + "#" + name;
-    }
-
-    @Override
-    public Object getParent() {
-        return component;
+        return name;
     }
 
     @Override
     public Image getImage() {
         return SDKPlugin.getDefault().getImageRegistry().get(
-                "icons/comp/xpoint.gif");
-    }
-
-    @Override
-    public boolean hasChildren() {
-        return false;
+                "icons/comp/service.gif");
     }
 
 }

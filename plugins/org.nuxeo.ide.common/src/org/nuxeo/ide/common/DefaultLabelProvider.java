@@ -14,20 +14,34 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.sdk.comp;
+package org.nuxeo.ide.common;
+
+import org.eclipse.jface.viewers.BaseLabelProvider;
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.swt.graphics.Image;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public interface IComponentProvider {
+public class DefaultLabelProvider extends BaseLabelProvider implements
+        ILabelProvider {
 
-    public ComponentRegistry getComponentRegistry();
+    @Override
+    public Image getImage(Object element) {
+        if (element instanceof HasImage) {
+            return ((HasImage) element).getImage();
+        }
+        return null;
+    }
 
-    public String[] getComponents();
+    @Override
+    public String getText(Object element) {
+        if (element instanceof HasLabel) {
+            return ((HasLabel) element).getLabel();
+        }
+        return element == null ? "[NULL]" : element.toString();
 
-    public String[] getServices();
-
-    public String[] getExtensionPoints();
+    }
 
 }

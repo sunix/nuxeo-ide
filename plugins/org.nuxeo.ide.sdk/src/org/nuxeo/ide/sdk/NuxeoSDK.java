@@ -37,8 +37,8 @@ import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.nuxeo.ide.common.UI;
-import org.nuxeo.ide.sdk.comp.ComponentsLoader;
-import org.nuxeo.ide.sdk.comp.IComponentProvider;
+import org.nuxeo.ide.sdk.comp.ComponentIndex;
+import org.nuxeo.ide.sdk.comp.ComponentIndexManager;
 import org.nuxeo.ide.sdk.deploy.Deployment;
 import org.nuxeo.ide.sdk.index.Index;
 import org.nuxeo.ide.sdk.server.ServerController;
@@ -87,6 +87,7 @@ public class NuxeoSDK {
                 changed = true;
             } else {
                 if (!sdk.info.equals(info)) {
+                    sdk.destroy();
                     sdk = new NuxeoSDK(info);
                     changed = true;
                 }
@@ -109,11 +110,11 @@ public class NuxeoSDK {
         if (sdk != null) {
             try {
                 synchronized (sdk) {
+                    sdk.compIndexMgr.flushCache();
                     sdk.classpath = null;
                     sdk.testClasspath = null;
                     sdk.index = null;
                     sdk.testIndex = null;
-                    sdk.compProvider = null;
                 }
                 reloadSDKClasspathContainer();
             } catch (CoreException e) {
@@ -165,7 +166,7 @@ public class NuxeoSDK {
 
     protected ServerController controller;
 
-    protected volatile IComponentProvider compProvider;
+    protected ComponentIndexManager compIndexMgr;
 
     protected volatile Index index;
 
@@ -188,6 +189,20 @@ public class NuxeoSDK {
         this.info = info;
         this.root = info.getInstallDirectory();
         this.controller = new ServerController(info);
+        this.compIndexMgr = new ComponentIndexManager(this.root);
+    }
+
+    protected void destroy() {
+        compIndexMgr.destroy(); // TODO may be use a listener here?
+        compIndexMgr = null;
+        // TODO stop controller or it is using listeners?
+        controller = null;
+        info = null;
+        root = null;
+    }
+
+    public ComponentIndexManager getComponentIndexManager() {
+        return compIndexMgr;
     }
 
     public File getInstallDirectory() {
@@ -198,22 +213,12 @@ public class NuxeoSDK {
         return info;
     }
 
-    public void flushComponents() {
-        synchronized (this) {
-            compProvider = null;
-        }
+    public void flushComponentIndex() {
+        compIndexMgr.flushCache();
     }
 
-    public IComponentProvider getComponentProvider() {
-        IComponentProvider provider = compProvider;
-        if (provider == null) {
-            synchronized (this) {
-                compProvider = ComponentsLoader.load(new File(root,
-                        SDKInfo.SDK_COMPONENTS_PATH));
-                provider = compProvider;
-            }
-        }
-        return provider;
+    public ComponentIndex getComponentIndex() {
+        return getComponentIndexManager().getIndex();
     }
 
     public Index getArtifactIndex() {

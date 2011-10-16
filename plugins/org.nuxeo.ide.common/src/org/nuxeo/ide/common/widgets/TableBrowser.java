@@ -18,6 +18,7 @@ package org.nuxeo.ide.common.widgets;
 
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -108,7 +109,9 @@ public abstract class TableBrowser extends Composite {
     }
 
     protected TableViewer createTable(int tableStyle) {
-        return new TableViewer(this, tableStyle);
+        TableViewer tv = new TableViewer(this, tableStyle);
+        tv.setComparator(new ViewerComparator());
+        return tv;
     }
 
     protected abstract boolean acceptElement(Object object, String filter);

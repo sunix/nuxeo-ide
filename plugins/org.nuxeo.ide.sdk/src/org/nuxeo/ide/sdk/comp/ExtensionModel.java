@@ -14,18 +14,29 @@
  * Contributors:
  *     bstefanescu
  */
-package org.nuxeo.ide.common;
+package org.nuxeo.ide.sdk.comp;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public interface IViewItem extends HasImage, HasLabel {
+public class ExtensionModel {
 
-    public boolean hasChildren();
+    protected ExtensionPointRef target;
 
-    public Object[] getChildren();
+    protected String documentation;
 
-    public Object getParent();
+    public ExtensionModel(ExtensionPointRef target, String documentation) {
+        this.target = target;
+        this.documentation = documentation;
+    }
+
+    public String getDocumentation() {
+        return documentation;
+    }
+
+    public ExtensionPointRef getTarget() {
+        return target;
+    }
 
 }

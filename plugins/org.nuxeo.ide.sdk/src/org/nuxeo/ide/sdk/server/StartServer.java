@@ -54,7 +54,10 @@ public class StartServer extends ProcessRunner {
             return;
         }
         // TODO implement it as a listener?
-        NuxeoSDK.getDefault().flushComponents();
+        NuxeoSDK sdk = NuxeoSDK.getDefault();
+        if (sdk != null) {
+            sdk.getComponentIndexManager().flushCache();
+        }
         // notify listeners
         ctrl.fireServerStarted();
     }

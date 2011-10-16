@@ -42,7 +42,6 @@ public class ViewItemTableBrowser extends TableBrowser {
         ViewItemProvider provider = new ViewItemProvider();
         tv.setLabelProvider(provider);
         tv.setContentProvider(provider);
-        tv.setComparator(new ViewerComparator());
     }
 
     @Override

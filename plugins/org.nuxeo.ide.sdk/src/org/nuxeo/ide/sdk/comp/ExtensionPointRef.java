@@ -17,55 +17,52 @@
 package org.nuxeo.ide.sdk.comp;
 
 import org.eclipse.swt.graphics.Image;
-import org.nuxeo.ide.common.IViewItem;
-import org.nuxeo.ide.common.UI;
+import org.nuxeo.ide.common.HasImage;
+import org.nuxeo.ide.common.HasLabel;
 import org.nuxeo.ide.sdk.SDKPlugin;
 
 /**
+ * A light weight reference to an extension point.
+ * 
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class ExtensionPointModel implements IViewItem {
+public final class ExtensionPointRef implements HasLabel, HasImage,
+        Comparable<ExtensionPointRef> {
 
-    protected ComponentModel component;
+    protected String id;
 
     protected String name;
 
-    protected String[] contribs;
+    protected String component;
 
-    protected String documentation;
-
-    public ExtensionPointModel(ComponentModel component, String name,
-            String documentation) {
-        this.component = component;
+    public ExtensionPointRef(String name, String component) {
         this.name = name;
-        this.documentation = documentation;
+        this.component = component;
+        this.id = name + "#" + component;
     }
 
-    public ComponentModel getComponent() {
-        return component;
+    /**
+     * Extension point ID. (i.e. component#xpointName)
+     * 
+     * @return
+     */
+    public String getId() {
+        return id;
     }
 
+    /**
+     * The extension point name
+     */
     public String getName() {
         return name;
     }
 
-    public String[] getContributionTypes() {
-        return contribs;
-    }
-
-    public String getDocumentation() {
-        return documentation;
-    }
-
-    @Override
-    public String toString() {
-        return name;
-    }
-
-    @Override
-    public int hashCode() {
-        return name.hashCode();
+    /**
+     * The component owning that extension point
+     */
+    public String getComponent() {
+        return component;
     }
 
     @Override
@@ -73,36 +70,34 @@ public class ExtensionPointModel implements IViewItem {
         if (obj == this) {
             return true;
         }
-        if (obj instanceof ExtensionPointModel) {
-            return name.equals(((ExtensionPointModel) obj).name);
+        if (obj == null) {
+            return false;
+        }
+        if (obj.getClass() == ExtensionPointRef.class) {
+            return ((ExtensionPointRef) obj).id.equals(id);
         }
         return false;
     }
 
     @Override
-    public Object[] getChildren() {
-        return UI.EMPTY_OBJECTS;
+    public int hashCode() {
+        return id.hashCode();
+    }
+
+    @Override
+    public int compareTo(ExtensionPointRef o) {
+        return id.compareTo(o.id);
     }
 
     @Override
     public String getLabel() {
-        return component.name + "#" + name;
-    }
-
-    @Override
-    public Object getParent() {
-        return component;
+        return id;
     }
 
     @Override
     public Image getImage() {
         return SDKPlugin.getDefault().getImageRegistry().get(
                 "icons/comp/xpoint.gif");
-    }
-
-    @Override
-    public boolean hasChildren() {
-        return false;
     }
 
 }

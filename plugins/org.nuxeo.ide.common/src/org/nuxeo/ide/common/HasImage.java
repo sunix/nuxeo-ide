@@ -16,16 +16,22 @@
  */
 package org.nuxeo.ide.common;
 
+import org.eclipse.swt.graphics.Image;
+
 /**
+ * Interface useful for objects willing to provide image information to be
+ * rendered in table / tree views
+ * 
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public interface IViewItem extends HasImage, HasLabel {
+public interface HasImage {
 
-    public boolean hasChildren();
-
-    public Object[] getChildren();
-
-    public Object getParent();
+    /**
+     * Get the object icon
+     * 
+     * @return
+     */
+    Image getImage();
 
 }

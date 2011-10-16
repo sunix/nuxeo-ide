@@ -17,15 +17,19 @@
 package org.nuxeo.ide.common;
 
 /**
+ * Interface useful for objects willing to provide label information to be
+ * rendered in table / tree views
+ * 
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public interface IViewItem extends HasImage, HasLabel {
+public interface HasLabel {
 
-    public boolean hasChildren();
-
-    public Object[] getChildren();
-
-    public Object getParent();
+    /**
+     * Get the object label
+     * 
+     * @return
+     */
+    String getLabel();
 
 }

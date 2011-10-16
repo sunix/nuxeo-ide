@@ -34,13 +34,13 @@ import org.nuxeo.ide.common.UI;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
- *
+ * 
  */
 public class SDKInfo {
 
     public static final String SDK_PATH = "sdk";
 
-    public static final String SDK_COMPONENTS_PATH = "sdk/components.xml";
+    public static final String SDK_COMPONENTS_PATH = "sdk/components.index";
 
     public static final String SDK_SOURCES_PATH = "sdk/sources";
 
@@ -159,11 +159,12 @@ public class SDKInfo {
             throws IOException {
         sdkTemp.mkdirs();
         enabledDevClassloader(new File(templates, "default"), sdkTemp);
-        enableLoaderTimer(new File(templates,"common"), sdkTemp);
+        enableLoaderTimer(new File(templates, "common"), sdkTemp);
         enableSeamHotReload(new File(templates, "common"), sdkTemp);
     }
 
-    protected void enableSeamHotReload(File templates, File sdkTemp) throws IOException {
+    protected void enableSeamHotReload(File templates, File sdkTemp)
+            throws IOException {
         File config = new File(sdkTemp, "nxserver/config");
         config.mkdirs();
         File seamDebugMarker = new File(config, "seam-debug.properties");
@@ -176,7 +177,9 @@ public class SDKInfo {
         File dst = new File(sdkTemp, "META-INF/nuxeo-preprocessor.xml");
         dst.getParentFile().mkdirs();
         String content = IOUtils.readFile(src);
-        content = content.replace("</install>", "\n<!-- patch seam -->\n<mkdir path=\"${war}/WEB-INF\" />\n<mkdir path=\"${war}/WEB-INF/dev\" />\n<!-- end patch seam-->\n</install>");
+        content = content.replace(
+                "</install>",
+                "\n<!-- patch seam -->\n<mkdir path=\"${war}/WEB-INF\" />\n<mkdir path=\"${war}/WEB-INF/dev\" />\n<!-- end patch seam-->\n</install>");
         IOUtils.writeFile(dst, content);
     }
 

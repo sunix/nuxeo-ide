@@ -17,15 +17,14 @@
 package org.nuxeo.ide.sdk.server.ui.widgets;
 
 import org.eclipse.swt.widgets.Composite;
-import org.nuxeo.ide.common.widgets.ViewItemTableBrowser;
+import org.nuxeo.ide.common.widgets.DefaultTableBrowser;
 import org.nuxeo.ide.sdk.NuxeoSDK;
-import org.nuxeo.ide.sdk.comp.ComponentRegistry;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class ExtensionPointBrowser extends ViewItemTableBrowser {
+public class ExtensionPointBrowser extends DefaultTableBrowser {
 
     public ExtensionPointBrowser(Composite parent) {
         super(parent);
@@ -39,14 +38,10 @@ public class ExtensionPointBrowser extends ViewItemTableBrowser {
     public void setDefaultInput() {
         NuxeoSDK sdk = NuxeoSDK.getDefault();
         if (sdk != null) {
-            setInput(sdk.getComponentProvider().getComponentRegistry().getExtensionPoints());
+            setInput(sdk.getComponentIndex().getExtensionPoints());
         } else {
             setInput(null);
         }
-    }
-
-    public void setInputRegistry(ComponentRegistry registry) {
-        setInput(registry.getExtensionPoints());
     }
 
 }
