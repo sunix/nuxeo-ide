@@ -16,6 +16,7 @@
  */
 package org.nuxeo.ide.sdk.features.component;
 
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.nuxeo.ide.common.forms.Form;
 import org.nuxeo.ide.sdk.features.FeatureTemplateContext;
@@ -49,8 +50,9 @@ public class ComponentWizardPage extends FeatureWizardPage {
     @Override
     public void update(FeatureTemplateContext ctx) {
         super.update(ctx);
-        String className = ctx.getClassName();
-        // TODO expose as service
+        // String className = ctx.getClassName();
+        ctx.put("exportAsService",
+                ((Button) form.getWidgetControl("exportAsService")).getSelection());
     }
 
 }
