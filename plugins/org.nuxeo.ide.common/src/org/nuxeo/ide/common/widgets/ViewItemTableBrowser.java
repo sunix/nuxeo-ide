@@ -17,7 +17,6 @@
 package org.nuxeo.ide.common.widgets;
 
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.widgets.Composite;
 import org.nuxeo.ide.common.IViewItem;
 import org.nuxeo.ide.common.ViewItemProvider;
