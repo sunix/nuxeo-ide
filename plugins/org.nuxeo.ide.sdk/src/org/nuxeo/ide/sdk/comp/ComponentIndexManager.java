@@ -113,7 +113,14 @@ public class ComponentIndexManager extends ServerLifeCycleAdapter {
     }
 
     public File getComponentFile(ComponentRef ref) {
-        String src = ref.getSrc();
+        return getComponentFile(ref.getSrc());
+    }
+
+    public File getComponentFile(ComponentModel component) {
+        return getComponentFile(component.getSrc());
+    }
+
+    public File getComponentFile(String src) {
         if (src == null || src.length() == 0) {
             return null;
         }
@@ -121,7 +128,9 @@ public class ComponentIndexManager extends ServerLifeCycleAdapter {
         if (file == null) {
             try {
                 file = locateFile(src);
-                filesCache.put(src, file);
+                if (file != null) {
+                    filesCache.put(src, file);
+                }
             } catch (Exception e) {
                 SDKPlugin.log(IStatus.ERROR,
                         "Failed to lookup component file: " + src, e);
@@ -172,7 +181,11 @@ public class ComponentIndexManager extends ServerLifeCycleAdapter {
                 try {
                     int next = random.nextInt();
                     String prefix = Integer.toHexString(next);
-                    File tmp = new File(cacheDir, prefix + "_" + file.getName());
+                    int s = path.lastIndexOf('/');
+                    if (s > -1) {
+                        path = path.substring(s + 1);
+                    }
+                    File tmp = new File(cacheDir, prefix + "_" + path);
                     IOUtils.copyToFile(in, tmp, true);
                     return tmp;
                 } finally {
