@@ -174,7 +174,7 @@ public class ComponentEditor extends EditorPart {
         section.setText("Documentation");
         Text label = toolkit.createText(section,
                 DocumentationFormat.format(component.getDocumentation()),
-                SWT.READ_ONLY);
+                SWT.READ_ONLY | SWT.MULTI);
 
         section.setClient(label);
         applyLayout(section);
@@ -324,8 +324,8 @@ public class ComponentEditor extends EditorPart {
         }
         applyLayout(types);
         Text docu = toolkit.createText(panel,
-                DocumentationFormat.format(model.getDocumentation()), SWT.NONE
-                        | SWT.READ_ONLY);
+                DocumentationFormat.format(model.getDocumentation()),
+                SWT.READ_ONLY | SWT.MULTI);
         GridData gd = new GridData();
         gd.horizontalAlignment = SWT.FILL;
         gd.grabExcessHorizontalSpace = true;
