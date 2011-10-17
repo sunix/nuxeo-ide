@@ -95,18 +95,14 @@ public class NuxeoSDK {
         }
         if (changed) {
             instance = sdk;
-            fireSDKChanged(sdk);
-            try {
-                reloadSDKClasspathContainer();
-            } catch (CoreException e) {
-                UI.showError("Failed to rebuild Nuxeo Projects", e);
-            }
+            reload();
         }
         return sdk;
     }
 
     public static void reload() {
         NuxeoSDK sdk = instance;
+        fireSDKChanged(sdk);
         if (sdk != null) {
             try {
                 synchronized (sdk) {

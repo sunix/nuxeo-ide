@@ -18,9 +18,6 @@ package org.nuxeo.ide.sdk.server.ui;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.ui.ISharedImages;
@@ -55,7 +52,6 @@ import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.EditorPart;
-import org.nuxeo.ide.common.IOUtils;
 import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.sdk.NuxeoSDK;
 import org.nuxeo.ide.sdk.comp.ComponentModel;
@@ -401,66 +397,14 @@ public class ComponentEditor extends EditorPart {
     }
 
     protected void openSourceFile() throws IOException {
-        String src = component.getSrc();
-        if (src == null) {
-            UI.showWarning("No component source was provided by the server!");
+        NuxeoSDK sdk = NuxeoSDK.getDefault();
+        if (sdk == null) {
+            UI.showError("No Nuxeo SDK is configured");
             return;
         }
-        int i = src.indexOf('!');
-        // TODO this will not work for now for the cloud version.
-        if (i == -1) {
-            // TODO: open the file when Nuxeo SDK is in the local file system
-            File config = new File(
-                    NuxeoSDK.getDefault().getInfo().getInstallDirectory(),
-                    "nxserver/config");
-            File file = new File(config, src);
-            if (!file.isFile()) {
-                UI.showInfo("This component is part of the global Nuxeo configuration.\nSee the '"
-                        + src + "' file in the Nuxeo server configuration.");
-                return;
-            } else {
-                Program.launch(file.getAbsolutePath());
-                return;
-            }
-        }
-        String jar = src.substring(0, i);
-        String path = src.substring(i + 1);
-        File nxserver = new File(
-                NuxeoSDK.getDefault().getInfo().getInstallDirectory(),
-                "nxserver");
-        File bundles = new File(nxserver, "bundles");
-        File file = new File(bundles, jar);
-        if (!file.exists()) {
-            bundles = new File(nxserver, "plugins");
-            file = new File(bundles, jar);
-            if (!file.exists()) {
-                UI.showWarning("Unable to find the source file for this component: "
-                        + src);
-                return;
-            }
-        }
-        if (file.isFile()) { // a JAR
-            ZipFile zip = new ZipFile(file);
-            if (path.startsWith("/")) {
-                path = path.substring(1);
-            }
-            ZipEntry entry = zip.getEntry(path);
-            if (entry == null) {
-                UI.showWarning("Unable to find the entry '" + path
-                        + "' in the JAR: " + jar);
-                return;
-            } else {
-                InputStream in = zip.getInputStream(entry);
-                try {
-                    File tmp = File.createTempFile("nxide-" + file.getName(),
-                            ".xml");
-                    tmp.deleteOnExit();
-                    IOUtils.copyToFile(in, tmp, true);
-                    Program.launch(tmp.getAbsolutePath());
-                } finally {
-                    zip.close();
-                }
-            }
+        File file = sdk.getComponentIndexManager().getComponentFile(component);
+        if (file == null) {
+            UI.showError("Cannot find component file: " + component.getSrc());
         } else {
             Program.launch(file.getAbsolutePath());
         }
