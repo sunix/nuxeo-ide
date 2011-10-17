@@ -69,7 +69,6 @@ public class DeleteFeatureParticipant extends DeleteParticipant {
         RefactoringStatus status = new RefactoringStatus();
         ResourceChangeChecker checker = (ResourceChangeChecker) context.getChecker(ResourceChangeChecker.class);
         IResourceChangeDescriptionFactory deltaFactory = checker.getDeltaFactory();
-        deltaFactory.delete(type.file);
         IFile mf = type.getProject().getFile(ManifestWriter.PATH);
         deltaFactory.change(mf);
         status.addInfo("Deleting extension file: " + type.file.getName());
@@ -119,7 +118,6 @@ public class DeleteFeatureParticipant extends DeleteParticipant {
     public Change createChange(IProgressMonitor pm) throws CoreException,
             OperationCanceledException {
         CompositeChange result = new CompositeChange("Synchronizing extensions");
-        result.add(new DeleteResourceChange(type.file.getFullPath(), true));
         IFile mf = type.getProject().getFile(ManifestWriter.PATH);
         if (mf.exists()) {
             ManifestChange change = new ManifestChange(mf);
