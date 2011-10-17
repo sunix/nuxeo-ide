@@ -29,6 +29,7 @@ import org.nuxeo.ide.common.forms.UIObject;
 import org.nuxeo.ide.common.forms.WidgetName;
 import org.nuxeo.ide.sdk.SDKInfo;
 import org.nuxeo.ide.sdk.SDKRegistry;
+import org.nuxeo.ide.sdk.ui.BotHelper;
 import org.nuxeo.ide.sdk.ui.widgets.SDKTableViewerFactory;
 import org.w3c.dom.Element;
 
@@ -45,7 +46,9 @@ public class SDKTableWidget extends UIObject<Table> {
     protected Table createControl(Composite parent, Element element,
             BindingContext ctx) {
         viewer = SDKTableViewerFactory.getTable(parent);
-        return viewer.getTable();
+        Table table = viewer.getTable();
+        BotHelper.setOwner(table, this);
+        return table;
     }
 
     public CheckboxTableViewer getViewer() {

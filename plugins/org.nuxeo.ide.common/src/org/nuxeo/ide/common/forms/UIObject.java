@@ -137,6 +137,7 @@ public abstract class UIObject<T extends Control> {
         if (ctx.getLayout() != null) {
             ctx.getLayout().applyLayout(ctrl, element);
         }
+        ctrl.setData("org.eclipse.swtbot.widget.key", id);
         return ctrl;
     }
 

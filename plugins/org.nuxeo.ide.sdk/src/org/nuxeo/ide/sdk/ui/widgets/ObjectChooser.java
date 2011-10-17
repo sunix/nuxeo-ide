@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.nuxeo.ide.common.forms.HasText;
+import org.nuxeo.ide.sdk.ui.BotHelper;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -72,7 +73,7 @@ public abstract class ObjectChooser<T> extends Composite implements HasText {
         gd.horizontalAlignment = SWT.FILL;
         gd.grabExcessHorizontalSpace = true;
         text.setLayoutData(gd);
-
+        
         btn = new Button(this, SWT.NONE);
         btn.setText(btnLabel);
         btn.addSelectionListener(new SelectionAdapter() {
@@ -90,6 +91,8 @@ public abstract class ObjectChooser<T> extends Composite implements HasText {
                 text.setFocus();
             }
         });
+        BotHelper.setOwner(text, this);
+        BotHelper.setOwner(btn, this);
     }
 
     public T getValue() {

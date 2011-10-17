@@ -52,6 +52,7 @@ public abstract class AbstractWizard<T> extends Wizard implements INewWizard,
     public void init(IWorkbench workbench, IStructuredSelection currentSelection) {
         this.workbench = workbench;
         this.selection = currentSelection;
+        setWindowTitle("New Nuxeo Artifact");
     }
 
     @Override
