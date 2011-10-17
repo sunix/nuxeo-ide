@@ -51,6 +51,10 @@ public class Artifact {
         } else {
             artifactId = gav.substring(i);
         }
+        int k = version.indexOf(':');
+        if (k != -1) {
+            version = version.substring(0, k);
+        }
         return new Artifact(groupId, artifactId, version);
     }
 
