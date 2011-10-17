@@ -27,13 +27,16 @@ import org.nuxeo.ide.sdk.NuxeoSDK;
  */
 public class Artifact {
 
-    public static Artifact fromClassPathEntry(IClasspathEntry entry) {
-        String jarName = entry.getPath().lastSegment();
+    public static Artifact fromJarName(String jarName) {
         String gav = NuxeoSDK.getDefault().getArtifactIndex().get(jarName);
         if (gav == null) {
             return null;
         }
         return fromGav(gav);
+    }
+
+    public static Artifact fromClassPathEntry(IClasspathEntry entry) {
+        return fromJarName(entry.getPath().lastSegment());
     }
 
     public static Artifact fromGav(String gav) {
