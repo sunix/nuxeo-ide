@@ -25,10 +25,14 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.ListenerList;
 import org.nuxeo.ide.common.IOUtils;
 import org.nuxeo.ide.sdk.NuxeoSDK;
 import org.nuxeo.ide.sdk.SDKInfo;
 import org.nuxeo.ide.sdk.SDKPlugin;
+import org.nuxeo.ide.sdk.server.ServerConstants;
+import org.nuxeo.ide.sdk.server.ServerController;
+import org.nuxeo.ide.sdk.server.ServerLifeCycleAdapter;
 
 /**
  * Manage Nuxeo components declared on server
@@ -38,7 +42,7 @@ import org.nuxeo.ide.sdk.SDKPlugin;
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class ComponentIndexManager {
+public class ComponentIndexManager extends ServerLifeCycleAdapter {
 
     protected volatile ComponentIndex index;
 
@@ -52,6 +56,8 @@ public class ComponentIndexManager {
 
     protected Random random;
 
+    protected ListenerList listeners;
+
     public ComponentIndexManager(File root) {
         random = new Random();
         this.root = root;
@@ -60,6 +66,7 @@ public class ComponentIndexManager {
         cacheDir.mkdirs();
         filesCache = new Hashtable<String, File>();
         loader = new ComponentLoader();
+        listeners = new ListenerList();
     }
 
     public void destroy() {
@@ -68,6 +75,7 @@ public class ComponentIndexManager {
         loader = null;
         cacheDir = null;
         random = null;
+        listeners = null;
     }
 
     public synchronized void flushCache() {
@@ -174,6 +182,30 @@ public class ComponentIndexManager {
         } else {
             return file;
         }
+    }
+
+    @Override
+    public void serverStateChanged(ServerController ctrl, int state) {
+        if (state == ServerConstants.STARTED) {
+            flushCache();
+            fireComponentIndexChanged();
+        }
+    }
+
+    protected void fireComponentIndexChanged() {
+        for (Object listener : listeners.getListeners()) {
+            ((ComponentIndexChangedListener) listener).componentIndexChanged(this);
+        }
+    }
+
+    public void addComponentIndexChangedListener(
+            ComponentIndexChangedListener listener) {
+        listeners.add(listener);
+    }
+
+    public void removeComponentIndexChangedListener(
+            ComponentIndexChangedListener listener) {
+        listeners.remove(listener);
     }
 
 }

@@ -190,6 +190,7 @@ public class NuxeoSDK {
         this.root = info.getInstallDirectory();
         this.controller = new ServerController(info);
         this.compIndexMgr = new ComponentIndexManager(this.root);
+        controller.addServerLifeCycleListener(compIndexMgr);
     }
 
     protected void destroy() {

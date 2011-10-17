@@ -25,6 +25,7 @@ import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -34,6 +35,8 @@ import org.eclipse.ui.part.ViewPart;
 import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.sdk.NuxeoSDK;
 import org.nuxeo.ide.sdk.SDKChangedListener;
+import org.nuxeo.ide.sdk.comp.ComponentIndexChangedListener;
+import org.nuxeo.ide.sdk.comp.ComponentIndexManager;
 import org.nuxeo.ide.sdk.comp.ComponentRef;
 import org.nuxeo.ide.sdk.comp.ExtensionPointRef;
 import org.nuxeo.ide.sdk.comp.ServiceRef;
@@ -45,7 +48,8 @@ import org.nuxeo.ide.sdk.server.ui.widgets.ServiceBrowser;
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class ComponentView extends ViewPart implements SDKChangedListener {
+public class ComponentView extends ViewPart implements SDKChangedListener,
+        ComponentIndexChangedListener {
 
     protected Form form;
 
@@ -62,13 +66,22 @@ public class ComponentView extends ViewPart implements SDKChangedListener {
     @Override
     public void init(IViewSite site) throws PartInitException {
         super.init(site);
+        handleSDKChanged(NuxeoSDK.getDefault());
         NuxeoSDK.addSDKChangedListener(this);
-        initInputs();
     }
 
     @Override
     public void handleSDKChanged(NuxeoSDK sdk) {
         initInputs();
+        if (sdk != null) {
+            sdk.getComponentIndexManager().addComponentIndexChangedListener(
+                    this);
+        }
+    }
+
+    @Override
+    public void componentIndexChanged(ComponentIndexManager mgr) {
+        safeInitInputs();
     }
 
     protected void initInputs() {
@@ -76,6 +89,19 @@ public class ComponentView extends ViewPart implements SDKChangedListener {
             services.setDefaultInput();
             components.setDefaultInput();
             xpoints.setDefaultInput();
+        }
+    }
+
+    protected void safeInitInputs() {
+        if (Display.getCurrent() == null) {
+            Display.getDefault().asyncExec(new Runnable() {
+                @Override
+                public void run() {
+                    initInputs();
+                }
+            });
+        } else {
+            initInputs();
         }
     }
 
@@ -171,6 +197,12 @@ public class ComponentView extends ViewPart implements SDKChangedListener {
 
     @Override
     public void dispose() {
+        NuxeoSDK.removeSDKChangedListener(this);
+        NuxeoSDK sdk = NuxeoSDK.getDefault();
+        if (sdk != null) {
+            sdk.getComponentIndexManager().removeComponentIndexChangedListener(
+                    this);
+        }
         if (toolkit != null) {
             toolkit.dispose();
             toolkit = null;
