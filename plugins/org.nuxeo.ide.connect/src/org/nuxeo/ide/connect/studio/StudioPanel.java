@@ -211,6 +211,7 @@ public class StudioPanel extends Composite implements IStudioListener {
                             StudioProvider provider = ConnectPlugin.getStudioProvider();
                             monitor.worked(1);
                             provider.updateProjects(Connector.getDefault().getProjects());
+                            provider.fireStudioProjectsChanged();
                             monitor.worked(9);
                             return Status.OK_STATUS;
                         } catch (Exception e) {

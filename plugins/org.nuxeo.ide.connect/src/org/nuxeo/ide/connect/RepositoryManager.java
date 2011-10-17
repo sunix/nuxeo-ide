@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.nuxeo.ide.common.IOUtils;
 import org.nuxeo.ide.common.UI;
@@ -32,6 +33,21 @@ public class RepositoryManager implements IBindingListener, IStudioListener {
         }
 
         public void download() {
+            if (Display.getCurrent() == null) {
+                Display.getDefault().asyncExec(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        doDownload();
+                    }
+
+                });
+            } else {
+                doDownload();
+            }
+        }
+
+        private void doDownload() {
             try {
                 PlatformUI.getWorkbench().getActiveWorkbenchWindow().run(false,
                         true, new RepositoryDownloadTask(this));
