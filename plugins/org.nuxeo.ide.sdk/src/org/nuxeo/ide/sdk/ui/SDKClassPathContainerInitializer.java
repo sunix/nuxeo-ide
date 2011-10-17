@@ -65,4 +65,9 @@ public class SDKClassPathContainerInitializer extends
                 null);
     }
 
+    @Override
+    public boolean canUpdateClasspathContainer(IPath containerPath,
+            IJavaProject project) {
+        return false;
+    }
 }

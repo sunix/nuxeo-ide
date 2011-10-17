@@ -213,6 +213,22 @@
             </adapt>
          </enabledWhen>
      </page>
+     <page
+            name="Download Sources"
+            class="org.nuxeo.ide.sdk.ui.SDKClassPathContainerEntryPage"
+            id="org.nuxeo.ide.sdk.ui.SDKClassPathContainerEntryPage">
+         <enabledWhen>
+            <and>
+             <test
+                     property="org.eclipse.core.resources.projectNature"
+                     value="org.nuxeo.ide.NuxeoNature" />            
+              <instanceof value="org.eclipse.jdt.core.IPackageFragmentRoot"/>
+              <not>
+                <test property="org.eclipse.jdt.core.inSourceFolder"/>
+              </not>
+            </and>
+         </enabledWhen>
+      </page>     
    </extension>
 
    <extension
