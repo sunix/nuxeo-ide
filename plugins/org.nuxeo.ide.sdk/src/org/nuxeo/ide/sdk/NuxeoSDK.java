@@ -104,18 +104,18 @@ public class NuxeoSDK {
         NuxeoSDK sdk = instance;
         fireSDKChanged(sdk);
         if (sdk != null) {
-            try {
-                synchronized (sdk) {
-                    sdk.compIndexMgr.flushCache();
-                    sdk.classpath = null;
-                    sdk.testClasspath = null;
-                    sdk.index = null;
-                    sdk.testIndex = null;
-                }
-                reloadSDKClasspathContainer();
-            } catch (CoreException e) {
-                UI.showError("Failed to rebuild Nuxeo Projects", e);
+            synchronized (sdk) {
+                sdk.compIndexMgr.flushCache();
+                sdk.classpath = null;
+                sdk.testClasspath = null;
+                sdk.index = null;
+                sdk.testIndex = null;
             }
+        }
+        try {
+            reloadSDKClasspathContainer();
+        } catch (CoreException e) {
+            UI.showError("Failed to rebuild Nuxeo Projects", e);
         }
     }
 
