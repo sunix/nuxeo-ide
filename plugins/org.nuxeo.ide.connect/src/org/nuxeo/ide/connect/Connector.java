@@ -116,6 +116,7 @@ public class Connector {
         HttpURLConnection conn = (HttpURLConnection)url.openConnection();
         conn.setRequestProperty("Content-Type", "application/studio-registry");
         conn.setRequestMethod("POST");
+        conn.setDoOutput(true);
         conn.setRequestProperty("Authorization", "Basic " + auth);
         OutputStream out = conn.getOutputStream();
         try {
