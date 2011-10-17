@@ -40,6 +40,8 @@ public class StudioProvider {
 
     protected StudioProject[] projects;
 
+    protected boolean projectsChanged;
+    
     protected ListenerList listeners;
 
     protected BindingManager bindingManager;
@@ -54,7 +56,7 @@ public class StudioProvider {
         addStudioListener(bindingManager);
         addStudioListener(repositoryManager);
         try {
-            reload(false);
+            reload();
         } catch (Exception e) {
             UI.showError(
                     "Failed to load studio provider service. Nuxeo Studio integration will not work! ",
@@ -80,7 +82,11 @@ public class StudioProvider {
         listeners.remove(listener);
     }
 
-    protected void fireStudioProjectsChanged() {
+    public void fireStudioProjectsChanged() {
+        if (!projectsChanged) {
+            return;
+        }
+        projectsChanged = false;
         for (Object o : listeners.getListeners()) {
             ((IStudioListener) o).handleProjectsUpdate(this);
         }
@@ -108,10 +114,6 @@ public class StudioProvider {
     }
 
     public void reload() throws IOException {
-        reload(true);
-    }
-
-    public void reload(boolean fireEvents) throws IOException {
         if (file.exists()) {
             FileInputStream in = new FileInputStream(file);
             List<StudioProject> result = StudioProject.readProjects(in);
@@ -121,9 +123,7 @@ public class StudioProvider {
             projects = new StudioProject[0];
             repositoryManager.erase();
         }
-        if (fireEvents) {
-            fireStudioProjectsChanged();
-        }
+        projectsChanged = true;
     }
 
     public BindingManager getBindingManager() {

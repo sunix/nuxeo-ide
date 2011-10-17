@@ -39,7 +39,7 @@ public class ConnectPreferencePage extends FormPreferencePage implements
         IWorkbenchPreferencePage, FormData {
 
     protected ConnectPreferences prefs;
-
+    
     public ConnectPreferencePage() {
         super(ConnectPlugin.getDefault().getPreferences());
         setFormData(this);
@@ -125,6 +125,7 @@ public class ConnectPreferencePage extends FormPreferencePage implements
     @Override
     public void store(Form form) throws Exception {
         prefs.save();
+        ConnectPlugin.getStudioProvider().fireStudioProjectsChanged();
     }
 
     @Override

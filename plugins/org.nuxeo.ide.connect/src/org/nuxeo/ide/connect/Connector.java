@@ -137,7 +137,7 @@ public class Connector {
 
     protected InputStream doGet(URL location) throws IOException {
         if (auth == null) {
-            return null;
+            throw new IOException("No authentification info, cannot connect to " + location);
         }
         HttpURLConnection uc = (HttpURLConnection) location.openConnection();
         uc.setRequestMethod("GET");
