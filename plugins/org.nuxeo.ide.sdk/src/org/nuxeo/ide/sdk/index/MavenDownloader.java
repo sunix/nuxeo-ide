@@ -52,7 +52,7 @@ public class MavenDownloader {
         // URL[] urls = null;
         IPath path = artifact.getSourceJarPathObject();
         File file = new File(System.getProperty("user.home")
-                + ".m2/repository/" + path);
+                + "/.m2/repository/" + path);
         if (file.isFile()) {
             return new FileRef(file);
         }
