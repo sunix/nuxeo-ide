@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.nuxeo.ide.common.forms.HasText;
 import org.nuxeo.ide.sdk.comp.ServiceModel;
+import org.nuxeo.ide.sdk.ui.BotHelper;
 
 
 /**
@@ -97,6 +98,8 @@ public class ServiceChooser extends Composite implements HasText {
                 text.setFocus();
             }
         });
+        BotHelper.setOwner(text, this);
+        BotHelper.setOwner(btn, this);
     }
 
     public String getValue() {
