@@ -91,6 +91,7 @@ public class SDKRegistry {
             for (SDKInfo sdk : sdks) {
                 Preferences sdkPrefs = prefs.node(sdk.getId());
                 sdkPrefs.put("path", sdk.getPath());
+                sdkPrefs.put("name", sdk.getName());
                 sdkPrefs.put("version", sdk.getVersion());
             }
         }
