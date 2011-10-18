@@ -16,6 +16,7 @@
  */
 package org.nuxeo.ide.sdk.server.ui.widgets;
 
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Composite;
 import org.nuxeo.ide.common.widgets.DefaultTableBrowser;
 import org.nuxeo.ide.sdk.NuxeoSDK;
@@ -43,4 +44,4 @@ public class ServiceBrowser extends DefaultTableBrowser {
         }
     }
 
-}
+    }
