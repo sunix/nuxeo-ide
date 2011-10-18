@@ -21,26 +21,32 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ltk.core.refactoring.Change;
-import org.eclipse.ltk.core.refactoring.resource.ResourceChange;
+import org.eclipse.ltk.core.refactoring.resource.RenameResourceChange;
 import org.nuxeo.ide.common.IOUtils;
 import org.nuxeo.ide.sdk.SDKPlugin;
 
-public class ReplaceIdChange extends ResourceChange {
+public class RenameResourceAndReplaceContentChange extends RenameResourceChange {
 
     protected final IFile file;
+    protected final IPath path;
     protected final String id;
     protected final String newId;
+    protected final String suffix;
     
-    public ReplaceIdChange(IFile file, String id, String newId) {
+    public RenameResourceAndReplaceContentChange(IFile file, String id, String newId, String suffix) {
+        super(file.getFullPath(), newId + suffix);
         this.file = file;
+        this.path = file.getFullPath().removeLastSegments(1).append(newId+suffix);
         this.id = id;
         this.newId = newId;
+        this.suffix = suffix;
     }
     
     @Override
@@ -49,13 +55,10 @@ public class ReplaceIdChange extends ResourceChange {
     }
 
     @Override
-    protected IResource getModifiedResource() {
-        return file;
-    }
-
-    @Override
     public Change perform(IProgressMonitor pm) throws CoreException {
-        InputStream in = file.getContents();
+        super.perform(pm);
+        IFile newFile = (IFile)ResourcesPlugin.getWorkspace().getRoot().findMember(path);
+        InputStream in = newFile.getContents();
         String content;
         try {
             content = IOUtils.read(in);
@@ -63,8 +66,8 @@ public class ReplaceIdChange extends ResourceChange {
             throw new CoreException(new Status(IStatus.ERROR, SDKPlugin.PLUGIN_ID, "Cannot read content of " + file.getName(), e));
         }
         content = content.replace(id, newId);
-        file.setContents(new ByteArrayInputStream(content.getBytes()), IFile.KEEP_HISTORY, pm);
-        return new ReplaceIdChange(file, newId, id);
+        newFile.setContents(new ByteArrayInputStream(content.getBytes()), IFile.KEEP_HISTORY, pm);
+        return new RenameResourceAndReplaceContentChange(newFile, newId, id, suffix);
     }
 
 }

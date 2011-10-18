@@ -23,6 +23,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.mapping.IResourceChangeDescriptionFactory;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -117,10 +118,13 @@ public class RenameFeatureParticipant extends RenameParticipant {
                 @Override
                 public void visitResource(IFile file, String suffix,
                         @SuppressWarnings("hiding") ContentType type) {
-                    deltaFactory.move(
-                            file,
-                            file.getParent().getLocation().append(
-                                    new Path(fqn + suffix)));
+                    IPath newPath = file.getParent().getLocation().append(
+                            new Path(newId + suffix));
+                    IFile newFile = file.getParent().getFile(newPath);
+                    deltaFactory.move(file, newPath);
+                    if (!type.equals(ContentType.BinaryContent)) {
+                        deltaFactory.change(newFile);
+                    }
                 }
 
             });
@@ -138,7 +142,8 @@ public class RenameFeatureParticipant extends RenameParticipant {
             return new NullChange("No extension found for renamed class");
         }
         content = content.replace(id, newId);
-        CompositeChange result = new CompositeChange("Rename feature " + id + " to " + newId);
+        CompositeChange result = new CompositeChange("Rename feature " + id
+                + " to " + newId);
         createResourceChange(result);
         result.add(new ExtensionChange(type.getProject().getFile(
                 ExtensionModel.getPath(newId)), content, false));
@@ -164,8 +169,11 @@ public class RenameFeatureParticipant extends RenameParticipant {
             @Override
             public void visitResource(IFile file, String suffix,
                     @SuppressWarnings("hiding") ContentType type) {
-                result.add(new RenameResourceChange(file.getFullPath(), newId
-                        + suffix));
+                if (!type.equals(ContentType.BinaryContent)) {
+                    result.add(new RenameResourceAndReplaceContentChange(file, id, newId, suffix));
+                } else {
+                    result.add(new RenameResourceChange(file.getFullPath(), newId+suffix));
+                }
             }
 
         });
