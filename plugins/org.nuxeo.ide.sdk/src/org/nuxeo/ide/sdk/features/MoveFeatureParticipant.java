@@ -196,8 +196,12 @@ public class MoveFeatureParticipant extends MoveParticipant {
             @Override
             public void visitResource(IFile file, String suffix,
                     @SuppressWarnings("hiding") ContentType type) {
-                result.add(new RenameResourceChange(file.getFullPath(), newId
-                        + suffix));
+                if (ContentType.BinaryContent.equals(type)) {
+                    result.add(new RenameResourceChange(file.getFullPath(), newId
+                            + suffix));
+                } else {
+                    result.add(new RenameResourceAndReplaceContentChange(file, id, newId, suffix));             
+                }
             }
 
         });
