@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.nuxeo.ide.common.forms.HasText;
-import org.nuxeo.ide.sdk.comp.ServiceModel;
+import org.nuxeo.ide.sdk.comp.ServiceRef;
 import org.nuxeo.ide.sdk.ui.BotHelper;
 
 
@@ -148,7 +148,7 @@ public class ServiceChooser extends Composite implements HasText {
         if (status == Dialog.CANCEL) {
             return value;
         }
-        return ((ServiceModel)dialog.getResult()[0]).getName();
+        return ((ServiceRef)dialog.getResult()[0]).getName();
     }
 
 }
