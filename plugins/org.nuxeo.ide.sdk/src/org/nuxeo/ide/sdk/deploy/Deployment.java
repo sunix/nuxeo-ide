@@ -113,7 +113,12 @@ public class Deployment {
         for (IProject project : projects) {
             // default classes
             String javaOutputPath = outputPath(project, new Path("src/main/java"));
-            builder.append("bundle:").append(javaOutputPath).append(crlf);
+            if (javaOutputPath == null) {
+                javaOutputPath = outputPath(project, new Path("src/main/resources"));
+            }
+            if (javaOutputPath != null) {
+                builder.append("bundle:").append(javaOutputPath).append(crlf);
+            }
             String seamOutputPath = outputPath(project, new Path("src/main/seam"));
             // seam classes
             if (seamOutputPath != null) {
