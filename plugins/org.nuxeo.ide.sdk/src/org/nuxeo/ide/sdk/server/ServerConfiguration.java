@@ -90,7 +90,7 @@ public class ServerConfiguration {
         if (isDebug) {
             args += " " + getDebugVmArgs();
         }
-        return args;
+        return args + " " + getRemoteManagementVmArgs(); 
     }
 
     public String getDebugVmArgs() {
@@ -98,10 +98,7 @@ public class ServerConfiguration {
                 + ",server=y,suspend=" + (suspend ? "y" : "n");
     }
 
-    public String getRemoteManagementVmArgs(int jmxPort) {
-        return "-Dcom.sun.management.jmxremote=true " + 
-               "-Dcom.sun.management.jmxremote.ssl=false " +
-               "-Dcom.sun.management.jmxremote.port="+jmxPort + " "+
-               "-Dcom.sun.management.jmxremote.authenticate=false";
+    public String getRemoteManagementVmArgs() {
+        return "-Dcom.sun.management.jmxremote=true ";
     }
 }
