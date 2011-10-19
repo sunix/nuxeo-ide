@@ -121,10 +121,10 @@ public class SDKClassPathContainerEntryPage extends PropertyPage {
                 return;
             }
             ref.installTo(sdk.getBundlesSrcDir());
-            NuxeoSDK.reload();
             Display.getDefault().asyncExec(new Runnable() {
                 @Override
                 public void run() {
+                    NuxeoSDK.reload();
                     setMessage("Sources are configured");
                 }
             });
