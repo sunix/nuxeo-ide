@@ -6,3 +6,7 @@ Bundle-Version: 1.1.1.qualifier
 Bundle-Vendor: Nuxeo
 Fragment-Host: org.nuxeo.ide.sdk
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.eclipse.jdt.core,
+ org.nuxeo.ide.common,
+ org.eclipse.core.runtime,
+ org.eclipse.ui
