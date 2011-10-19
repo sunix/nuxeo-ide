@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Nuxeo IDE Common
 Bundle-SymbolicName: org.nuxeo.ide.common;singleton:=true
-Bundle-Version: 1.1.0.v20111019_1744
+Bundle-Version: 1.1.1.qualifier
 Require-Bundle: org.eclipse.equinox.registry,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
