@@ -3,17 +3,10 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Nuxeo IDE Common
 Bundle-SymbolicName: org.nuxeo.ide.common;singleton:=true
 Bundle-Version: 1.2.0.qualifier
-Require-Bundle: org.eclipse.equinox.registry,
- org.eclipse.core.runtime,
+Require-Bundle: org.eclipse.ui,
  org.eclipse.core.resources,
- org.eclipse.ui,
- org.eclipse.ui.ide,
- org.eclipse.jdt.core,
- org.eclipse.jdt.ui,
- org.eclipse.jface.text,
- org.eclipse.jdt.apt.core,
- org.eclipse.jdt.launching,
- org.eclipse.debug.ui
+ org.eclipse.core.runtime,
+ org.eclipse.ui.ide
 Bundle-Activator: org.nuxeo.ide.common.Activator
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: Nuxeo
