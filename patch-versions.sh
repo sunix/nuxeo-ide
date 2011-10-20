@@ -1,48 +1,46 @@
 #!/bin/bash
 
-parseversiondetails() {
-    IFS='.' read major minor micro
-    echo $major $minor $micro
-}
-
-parseversion() {
-    IFS='-' read version label
-    echo $version | parseversiondetails 
-    echo $label
-    if [ $label = "SNAPSHOT" ]; then
-      echo qualifier
+parse_project_version() {
+    set -x
+    version=$(expr $1 : "\(.*\)[\.-].*")
+    mvn_label=$(expr $1 : ".*[\.-]\(.*\)")
+    major=$(expr $version : "\(.*\)\..*\..*")
+    minor=$(expr $version : ".*\.\(.*\)\..*")
+    micro=$(expr $version : ".*\..*\.\(.*\)")
+    if [ $mvn_label = "SNAPSHOT" ]; then
+      osgi_label=.qualifier
+      mvn_label="-SNAPSHOT"
     else
-      echo $label
+      osgi_label=".$mvn_label"
+      mvn_label=".$mvn_label"
     fi
 }
 
 set -ex
 
-set -- $1 $(mvn -N -o help:evaluate -Dexpression='project.version' | grep -v '^\[' | parseversion)
+[ $# -ne 1 ] && echo "usage: $0 [release|after-release|minor-branch|major-branch]" && exit 1
 
 operation=$1
-major=$2
-minor=$3
-micro=$4
-mvn_label=$5
-osgi_label=$6
+project_version=$(mvn -N -o help:evaluate -Dexpression='project.version' | grep -v '^\[')
 
-previous_maven=${major}.${minor}.${micro}-${mvn_label}
-previous_osgi=${major}.${minor}.${micro}.${osgi_label}
+parse_project_version $project_version
+
+previous_maven=${major}.${minor}.${micro}${mvn_label}
+previous_osgi=${major}.${minor}.${micro}${osgi_label}
 
 if [ $operation = release ]; then
-  next_label=R${major}${minor}x_v$(date "+v%Y%m%d_%H%M")
-  next_maven=${major}.${minor}.${micro}.${next_label}
-  next_osgi=${major}.${minor}.${micro}.${next_label}
+  next_label=R${major}${minor}x_v$(date "+%Y%m%d_%H%M")
+  next_maven=${major}.${minor}.${micro}${next_label}
+  next_osgi=${major}.${minor}.${micro}${next_label}
 elif [ $operation = after-release ]; then
   next_maven=${major}.${minor}.$((micro+1))-SNAPSHOT
   next_osgi=${major}.${minor}.$((micro+1)).qualifier
 elif [ $operation = minor-branch]; then
-  next_maven=${major}.$((minor+1)).0-${mvn_label}
-  next_osgi=${major}.$((minor+1)).0.${osgi_label}
+  next_maven=${major}.$((minor+1)).0${mvn_label}
+  next_osgi=${major}.$((minor+1)).0${osgi_label}
 elif [ $operation = major-branch]; then
-  next_maven=$((major+1)).0.0-${mvn_label}
-  next_osgi=$((major+1)).0.0.${osgi_label}
+  next_maven=$((major+1)).0.0${mvn_label}
+  next_osgi=$((major+1)).0.0${osgi_label}
 fi
 
 patch -p1 <<EOF 
@@ -103,9 +101,9 @@ diff -r b872b22ad3d5 -r 927d1d313a1d plugins/org.nuxeo.ide.common/META-INF/MANIF
  Bundle-SymbolicName: org.nuxeo.ide.common;singleton:=true
 -Bundle-Version: ${previous_osgi}
 +Bundle-Version: ${next_osgi}
- Require-Bundle: org.eclipse.equinox.registry,
-  org.eclipse.core.runtime,
-  org.eclipse.core.resources,
+ Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.resources,
+ org.eclipse.core.runtime,
 diff -r b872b22ad3d5 -r 927d1d313a1d plugins/org.nuxeo.ide.common/pom.xml
 --- a/plugins/org.nuxeo.ide.common/pom.xml	Sat Oct 01 00:57:16 2011 +0200
 +++ b/plugins/org.nuxeo.ide.common/pom.xml	Sat Oct 01 10:25:17 2011 +0200
