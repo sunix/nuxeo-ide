@@ -31,8 +31,8 @@ previous_maven=${major}.${minor}.${micro}-${mvn_label}
 previous_osgi=${major}.${minor}.${micro}.${osgi_label}
 
 if [ $operation = release ]; then
-  next_label=$(date "+v%Y%m%d_%H%M")
-  next_maven=${major}.${minor}.${micro}-${next_label}
+  next_label=R${major}${minor}x_v$(date "+v%Y%m%d_%H%M")
+  next_maven=${major}.${minor}.${micro}.${next_label}
   next_osgi=${major}.${minor}.${micro}.${next_label}
 elif [ $operation = after-release ]; then
   next_maven=${major}.${minor}.$((micro+1))-SNAPSHOT
