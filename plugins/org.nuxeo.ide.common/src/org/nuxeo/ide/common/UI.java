@@ -37,9 +37,6 @@ public class UI {
     }
 
     public static void showError(String message, Throwable t, String title) {
-        if (t != null) {
-            t.printStackTrace();
-        }
         StatusManager mgr = StatusManager.getManager();
         IStatus status = new Status(
                 IStatus.ERROR,
@@ -53,10 +50,9 @@ public class UI {
     }
 
     public static void showError(String message, String title) {
-        MessageDialog dlg = new MessageDialog(
-                Display.getDefault().getActiveShell(), title, null, message,
-                MessageDialog.ERROR, new String[] { "Ok" }, 0);
-        dlg.open();
+        StatusManager mgr = StatusManager.getManager();
+        IStatus status = new Status(IStatus.ERROR, title, message);
+        mgr.handle(status, StatusManager.SHOW|StatusManager.LOG);;
     }
 
     public static void showWarning(String message) {
@@ -69,7 +65,7 @@ public class UI {
                 IStatus.WARNING,
                 Activator.getDefault().getContext().getBundle().getSymbolicName(),
                 message);
-        mgr.handle(status, StatusManager.SHOW);
+        mgr.handle(status, StatusManager.SHOW|StatusManager.LOG);
     }
 
     public static void showInfo(String message) {
