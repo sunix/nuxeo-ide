@@ -30,7 +30,7 @@ import org.nuxeo.ecm.webapp.helpers.ResourcesAccessor;
  *   - send/retrive info from an external service
  *   - ...
  */
-@Name("${bean}")
+@Name("${bean?uncap_first}")
 @Scope(ScopeType.EVENT)
 public class ${class} implements Serializable {
 
@@ -70,7 +70,7 @@ public class ${class} implements Serializable {
     // This the method that will be called when the action button/link is
     // clicked
     public String doGet() {
-        String message = "Hello from ${bean} : ";
+        String message = "Hello from ${bean?uncap_first} : ";
         List<DocumentModel> selectedDocs = getCurrentlySelectedDocuments();
         if (selectedDocs != null) {
             message = message + " (" + selectedDocs.size()
