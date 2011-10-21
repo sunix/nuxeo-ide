@@ -34,7 +34,7 @@ import java.util.zip.ZipInputStream;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
- * 
+ *
  */
 public class IOUtils {
 
@@ -48,7 +48,7 @@ public class IOUtils {
      * Copies recursively source to destination.
      * <p>
      * The source file is assumed to be a directory.
-     * 
+     *
      * @param src the source directory
      * @param dst the destination directory
      * @throws IOException
@@ -73,10 +73,10 @@ public class IOUtils {
     /**
      * Copy the files contained by 'src' directory into the destination 'dst'
      * directory. if destination directory doesn't exists it will be created.
-     * 
+     *
      * If src is a file and not a directory then copy it inside the dst
      * directory.
-     * 
+     *
      * @throws IOException
      */
     public static void copyTreeContent(File src, File dst, boolean overwrite) throws IOException {
@@ -222,7 +222,7 @@ public class IOUtils {
     /**
      * If prefix ends in / the content of that directory is unziped - otherwise
      * the root directory will be also unziped.
-     * 
+     *
      * @param in
      * @param prefix
      * @param dir
@@ -247,8 +247,6 @@ public class IOUtils {
                     file.getParentFile().mkdirs();
                     copyToFile(in, file, overwrite);
                 }
-            } else {
-                UI.showError(name + " does not start with " + prefix);
             }
             entry = in.getNextEntry();
         }
@@ -276,7 +274,7 @@ public class IOUtils {
         InputStream in = new FileInputStream(file);
         return readLines(in);
     }
- 
+
     public static List<String> readLines(InputStream in) throws IOException {
         List<String> lines = new ArrayList<String>();
         BufferedReader reader = null;
@@ -370,7 +368,7 @@ public class IOUtils {
 
     /**
      * Delete the given file then delete all its empty parents.
-     * 
+     *
      * @param file
      */
     public static void deleteFilePath(File file) {
@@ -386,7 +384,7 @@ public class IOUtils {
         String content = readFile(other);
         appendFile(file, content);
     }
-   
+
     public static void appendFile(File file, List<String> lines) throws IOException {
         for (String line:lines) {
             appendFile(file, line + "/n");
@@ -396,7 +394,7 @@ public class IOUtils {
     public static void appendFile(File file, String buf) throws IOException {
         appendFile(file, buf.getBytes());
     }
-    
+
     public static void appendFile(File file, byte[] buf) throws IOException {
         FileOutputStream fos = null;
         try {
