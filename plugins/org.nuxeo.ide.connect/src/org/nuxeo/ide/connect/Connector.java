@@ -22,7 +22,6 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.List;
 
 import org.eclipse.core.internal.preferences.Base64;
@@ -33,7 +32,7 @@ import org.osgi.service.prefs.BackingStoreException;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
- * 
+ *
  */
 public class Connector {
 
@@ -126,7 +125,7 @@ public class Connector {
             out.close();
         }
         int status = conn.getResponseCode();
-        if (status != HttpURLConnection.HTTP_OK) {
+        if (status > 399) {
             throw new IOException("Server Error: " + status);
         }
         return true;
@@ -143,7 +142,7 @@ public class Connector {
         HttpURLConnection uc = (HttpURLConnection) location.openConnection();
         uc.setRequestMethod("GET");
         uc.setRequestProperty("Authorization", "Basic " + auth);
-        int status = ((HttpURLConnection) uc).getResponseCode();
+        int status = uc.getResponseCode();
         if (status != HttpURLConnection.HTTP_OK) {
             throw new IOException("Server error: " + status);
         }
