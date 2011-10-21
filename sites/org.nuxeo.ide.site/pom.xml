@@ -10,7 +10,7 @@
   <parent>
     <groupId>org.nuxeo.ide</groupId>
     <artifactId>org.nuxeo.ide.tycho</artifactId>
-    <version>1.1.2-SNAPSHOT</version>
+    <version>1.1.2R11x_v20111021_1146</version>
     <relativePath>../..</relativePath>
   </parent>
 
