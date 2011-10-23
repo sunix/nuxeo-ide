@@ -216,7 +216,9 @@ public class ServerController implements ServerConstants {
     public void writeDevBundles(Deployment deployment) throws IOException,
             StorageException, BackingStoreException, CoreException {
         File file = new File(root, "nxserver/dev.bundles");
-        IOUtils.writeFile(file, deployment.getContentAsString());
+        String content = deployment == null ? ""
+                : deployment.getContentAsString();
+        IOUtils.writeFile(file, content);
     }
 
 }
