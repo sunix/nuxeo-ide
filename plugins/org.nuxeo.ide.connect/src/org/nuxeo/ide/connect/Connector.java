@@ -32,11 +32,12 @@ import org.osgi.service.prefs.BackingStoreException;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
- *
+ * 
  */
 public class Connector {
 
-    public static Connector getDefault() throws StorageException, BackingStoreException, MalformedURLException  {
+    public static Connector getDefault() throws StorageException,
+            BackingStoreException, MalformedURLException {
         ConnectPreferences prefs = ConnectPreferences.load();
         return new Connector(prefs.getHost(), prefs.getUsername(),
                 prefs.getPassword());
@@ -101,8 +102,9 @@ public class Connector {
         return IOUtils.read(is);
     }
 
-    public InputStream downloadJarArtifact(String projectId) throws IOException  {
-        URL location = new URL(baseUrl, "maven/nuxeo-studio/" + projectId + "/0.0.0-SNAPSHOT/" + projectId + "-0.0.0-SNAPSHOT.jar");
+    public InputStream downloadJarArtifact(String projectId) throws IOException {
+        URL location = new URL(baseUrl, "maven/nuxeo-studio/" + projectId
+                + "/0.0.0-SNAPSHOT/" + projectId + "-0.0.0-SNAPSHOT.jar");
         return doGet(location);
     }
 
@@ -112,15 +114,15 @@ public class Connector {
             return false;
         }
         URL url = new URL(baseUrl, "api/projects/" + projectId + "/operations");
-        HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestProperty("Content-Type", "application/studio-registry");
         conn.setRequestMethod("POST");
         conn.setDoOutput(true);
         conn.setRequestProperty("Authorization", "Basic " + auth);
         OutputStream out = conn.getOutputStream();
         try {
-        out.write(reg.getBytes("UTF-8"));
-        out.flush();
+            out.write(reg.getBytes("UTF-8"));
+            out.flush();
         } finally {
             out.close();
         }
@@ -137,13 +139,14 @@ public class Connector {
 
     protected InputStream doGet(URL location) throws IOException {
         if (auth == null) {
-            throw new IOException("No authentification info, cannot connect to " + location);
+            throw new IOException(
+                    "No authentification info, cannot connect to " + location);
         }
         HttpURLConnection uc = (HttpURLConnection) location.openConnection();
         uc.setRequestMethod("GET");
         uc.setRequestProperty("Authorization", "Basic " + auth);
         int status = uc.getResponseCode();
-        if (status != HttpURLConnection.HTTP_OK) {
+        if (status > 399) {
             throw new IOException("Server error: " + status);
         }
         return uc.getInputStream();
