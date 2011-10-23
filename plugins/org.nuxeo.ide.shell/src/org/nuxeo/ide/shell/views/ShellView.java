@@ -52,7 +52,7 @@ public class ShellView extends ViewPart {
                 public void run() {
                     try {
                         Shell.get().main(
-                                new String[] { "http://localhost:8080/ecr/automation" });
+                                new String[] { "http://localhost:8080/nuxeo/site/automation" });
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
