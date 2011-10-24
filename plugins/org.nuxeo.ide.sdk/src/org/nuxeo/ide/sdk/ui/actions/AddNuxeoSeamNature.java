@@ -18,25 +18,30 @@ package org.nuxeo.ide.sdk.ui.actions;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.nuxeo.ide.common.RemoveNaturesAction;
-import org.nuxeo.ide.sdk.ui.NuxeoNature;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
- * Fake remove nature - used as an example
+ * Fake add nature - used as an example
  * 
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class RemoveNuxeoNature extends RemoveNaturesAction {
+public class AddNuxeoSeamNature extends AddNuxeoNature {
 
-    public RemoveNuxeoNature() {
-        super(NuxeoNature.ID);
+    public AddNuxeoSeamNature() {
     }
 
     @Override
-    public void uninstall(IProject project, String natureId)
-            throws CoreException {
-        super.uninstall(project, natureId);
-        // TODO do custom uninstall
+    public void install(IProject project, String natureId,
+            IProgressMonitor monitor) throws CoreException {
+        super.install(project, natureId, monitor);
+        applyClasspath(project, "seam-classpath.xml", monitor);
+    }
+
+    @Override
+    protected void createSourceFolders(IProject project,
+            IProgressMonitor monitor) throws CoreException {
+        super.createSourceFolders(project, monitor);
+        createSourceFolder(project, "src/main/seam", monitor);
     }
 }

@@ -64,7 +64,7 @@ public class OrganizeImportsCommand implements PostCreateCommand {
 
     @Override
     public void execute(IProject project, TemplateContext ctx) throws Exception {
-        Object elements = null;
+        Object[] elements = null;
         IJavaProject jproject = JavaCore.create(project);
         if (paths.isEmpty()) {
             elements = new Object[] { jproject };
@@ -76,16 +76,18 @@ public class OrganizeImportsCommand implements PostCreateCommand {
                 if (resource != null && resource.exists()) {
                     result.add(JavaCore.create(resource));
                 }
-                elements = result.toArray();
             }
+            elements = result.toArray();
         }
-        StructuredSelection selection = new StructuredSelection(
-                (Object[]) elements);
-        try {
-            new OrganizeImportsAction(new FakeSite(selection)).run(selection);
-        } catch (Throwable t) {
-            SDKPlugin.log(IStatus.ERROR,
-                    "Failed to run organize imports comnad", t);
+        if (elements != null && elements.length > 0) {
+            StructuredSelection selection = new StructuredSelection(
+                    (Object[]) elements);
+            try {
+                new OrganizeImportsAction(new FakeSite(selection)).run(selection);
+            } catch (Throwable t) {
+                SDKPlugin.log(IStatus.ERROR,
+                        "Failed to run organize imports comnad", t);
+            }
         }
     }
 

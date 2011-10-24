@@ -1,13 +1,11 @@
 package org.nuxeo.ide.sdk;
 
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.nuxeo.ide.common.forms.PreferencesFormData;
-import org.nuxeo.ide.sdk.server.ProjectOutputChecker;
 import org.nuxeo.ide.sdk.templates.TemplateManager;
 import org.osgi.framework.BundleContext;
 
@@ -23,8 +21,6 @@ public class SDKPlugin extends AbstractUIPlugin {
     private static SDKPlugin plugin;
 
     protected TemplateManager tempMgr;
-
-    protected ProjectOutputChecker projectOutputChecker;
 
     protected IConnectProvider connectProvider;
 
@@ -43,21 +39,15 @@ public class SDKPlugin extends AbstractUIPlugin {
         tempMgr = new TemplateManager();
         tempMgr.loadRegistry(context.getBundle());
         plugin = this;
-        projectOutputChecker = new ProjectOutputChecker();
         connectProvider = SDKRegistry.getConnectProvider();
-        ResourcesPlugin.getWorkspace().addResourceChangeListener(
-                projectOutputChecker);
         NuxeoSDK.initialize();
     }
 
     public void stop(BundleContext context) throws Exception {
-        ResourcesPlugin.getWorkspace().removeResourceChangeListener(
-                projectOutputChecker);
         NuxeoSDK.dispose();
         connectProvider = null;
         plugin = null;
         tempMgr = null;
-        projectOutputChecker = null;
         super.stop(context);
     }
 

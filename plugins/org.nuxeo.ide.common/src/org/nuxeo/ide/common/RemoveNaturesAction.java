@@ -16,8 +16,14 @@
  */
 package org.nuxeo.ide.common;
 
+import java.util.ArrayList;
+
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
@@ -42,11 +48,48 @@ public abstract class RemoveNaturesAction implements IObjectActionDelegate {
     }
 
     public void run(IAction action) {
-        NatureInstaller.removeNatures(selection, natureIds);
+        removeNatures(selection, natureIds);
     }
 
     public void selectionChanged(IAction action, ISelection selection) {
         this.selection = selection;
+    }
+
+    public void removeNatures(final ISelection selection,
+            final String... natureIds) {
+        if (selection instanceof IStructuredSelection) {
+            try {
+                Object[] objs = ((IStructuredSelection) selection).toArray();
+                for (Object obj : objs) {
+                    if (obj instanceof IProject) {
+                        IProject project = (IProject) obj;
+                        for (String natureId : natureIds) {
+                            if (project.getNature(natureId) != null) {
+                                uninstall(project, natureId);
+                            }
+                        }
+                    }
+                }
+            } catch (CoreException e) {
+                UI.showError("Failed to remove nature", e);
+            }
+        }
+    }
+
+    public void uninstall(IProject project, String natureId)
+            throws CoreException {
+        IProjectDescription description = project.getDescription();
+        String[] natures = description.getNatureIds();
+        ArrayList<String> newNatures = new ArrayList<String>();
+        for (String nature : natures) {
+            if (!natureId.equals(nature)) {
+                newNatures.add(nature);
+            }
+        }
+        if (newNatures.size() != natures.length) {
+            description.setNatureIds(newNatures.toArray(new String[newNatures.size()]));
+            project.setDescription(description, null);
+        }
     }
 
 }

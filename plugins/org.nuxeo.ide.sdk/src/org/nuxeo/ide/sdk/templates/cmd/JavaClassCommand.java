@@ -11,36 +11,37 @@ import org.w3c.dom.Element;
 public class JavaClassCommand implements Command, PostCreateCommand {
 
     protected SourcePathCommand sourcePathCommand = new SourcePathCommand();
+
     protected final TransformCommand transformCommand = new TransformCommand();
+
     protected final OrganizeImportsCommand organizeImportsCommand = new OrganizeImportsCommand();
-    
+
     @Override
     public void init(Element element) {
         Document doc = element.getOwnerDocument();
         String srcName = element.getAttribute("src").trim();
         String path = element.getAttribute("path").trim();
         String to = element.getAttribute("to").trim();
-        
-        
+
         if (srcName.isEmpty()) {
             srcName = "java";
         }
 
-        String srcPath  = "src/main/"+srcName+"/";
-        
+        String srcPath = "src/main/" + srcName + "/";
+
         Element sourcePath = doc.createElement("sourcePath");
         sourcePathCommand = new SourcePathCommand();
         sourcePath.setAttribute("name", srcName);
         sourcePathCommand.init(sourcePath);
-    
+
         Element tranform = doc.createElement("transform");
         tranform.setAttribute("path", srcPath + path);
         tranform.setAttribute("to", srcPath + to);
         transformCommand.init(tranform);
-        
+
         Element organize = doc.createElement("organizeImports");
         Element organizeClass = doc.createElement("class");
-        organizeClass.setAttribute("path", srcPath  + path);
+        organizeClass.setAttribute("path", srcPath + to);
         organize.appendChild(organizeClass);
         organizeImportsCommand.init(organize);
     }

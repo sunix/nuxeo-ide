@@ -107,7 +107,14 @@
          </visibility>
 
          <action
-            label="Add Nuxeo Nature"
+            label="Convert to Nuxeo Seam Project"
+            class="org.nuxeo.ide.sdk.ui.actions.AddNuxeoSeamNature"
+            menubarPath="org.nuxeo.ide.tools/group0"
+            enablesFor="+"
+            id="org.nuxeo.ide.tools.addNuxeoSeamNature">
+         </action>        
+         <action
+            label="Convert to Nuxeo Project"
             class="org.nuxeo.ide.sdk.ui.actions.AddNuxeoNature"
             menubarPath="org.nuxeo.ide.tools/group0"
             enablesFor="+"
