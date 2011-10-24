@@ -67,22 +67,24 @@ public class ServiceChooserDialog extends SelectionStatusDialog {
 
             @Override
             public void selectionChanged(SelectionChangedEvent event) {
-               ISelection selection = event.getSelection();
-               updateStatus(selection);
+                ISelection selection = event.getSelection();
+                updateStatus(selection);
             }
-            
+
         });
         updateStatus(tv.getSelection());
         return contents;
     }
-    
+
     protected void updateStatus(ISelection selection) {
         if (selection.isEmpty()) {
-            updateStatus(new Status(IStatus.ERROR, SDKPlugin.PLUGIN_ID, "no service selected"));
+            updateStatus(new Status(IStatus.ERROR, SDKPlugin.PLUGIN_ID,
+                    "no service selected"));
         } else {
             updateStatus(new Status(IStatus.OK, SDKPlugin.PLUGIN_ID, ""));
-        }        
+        }
     }
+
     protected ServiceBrowser createBrowser(Composite contents) {
         ServiceBrowser myBrowser = new ServiceBrowser(contents);
         GridData data = new GridData();
@@ -90,6 +92,7 @@ public class ServiceChooserDialog extends SelectionStatusDialog {
         data.grabExcessVerticalSpace = true;
         data.horizontalAlignment = GridData.FILL;
         data.verticalAlignment = GridData.FILL;
+        data.heightHint = 400;
         myBrowser.setLayoutData(data);
 
         myBrowser.setDefaultInput();
