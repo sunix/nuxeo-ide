@@ -35,6 +35,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.contentoutline.ContentOutline;
 import org.nuxeo.ide.common.wizards.AbstractWizard;
+import org.nuxeo.ide.sdk.NuxeoSDK;
 import org.nuxeo.ide.sdk.ui.NuxeoNature;
 
 /**
@@ -57,6 +58,10 @@ public abstract class FeatureCreationWizard extends
                 : null;
     }
 
+    public String getTargetProjectNature() {
+        return NuxeoNature.ID;
+    }
+
     @Override
     public void init(IWorkbench wb, IStructuredSelection currentSelection) {
         super.init(wb, currentSelection);
@@ -70,12 +75,15 @@ public abstract class FeatureCreationWizard extends
         }
     }
 
-    public IJavaProject getSelectedNuxeoProject() {
+    public IJavaProject getTargetProject() {
         IJavaProject project = getSelectedProject();
         try {
-            if (project != null
-                    && project.getProject().isNatureEnabled(NuxeoNature.ID)) {
-                return project;
+            if (project != null) {
+                String nature = getTargetProjectNature();
+                if (nature != null
+                        && project.getProject().isNatureEnabled(NuxeoNature.ID)) {
+                    return project;
+                }
             }
         } catch (CoreException e) {
             e.printStackTrace(); // TODO
@@ -101,15 +109,27 @@ public abstract class FeatureCreationWizard extends
         return selectedElement;
     }
 
-    @Override
-    protected FeatureTemplateContext createExecutionContext() {
-        return new FeatureTemplateContext();
+    public String getTargetVersion() {
+        NuxeoSDK sdk = NuxeoSDK.getDefault();
+        if (sdk == null) {
+            return "0.0.0";
+        } else {
+            return NuxeoSDK.getDefault().getVersion();
+        }
     }
 
-    protected CreateFeatureFromTemplate newCreateFeatureFromTemplate(FeatureTemplateContext ctx) {
-            return new CreateFeatureFromTemplate(ctx);
+    @Override
+    protected FeatureTemplateContext createExecutionContext() {
+        FeatureTemplateContext ctx = new FeatureTemplateContext();
+        ctx.setTargetVersion(getTargetVersion());
+        return ctx;
     }
-    
+
+    protected CreateFeatureFromTemplate newCreateFeatureFromTemplate(
+            FeatureTemplateContext ctx) {
+        return new CreateFeatureFromTemplate(ctx);
+    }
+
     @Override
     protected boolean execute(FeatureTemplateContext ctx) throws Exception {
         ctx.setTemplate(templateName);

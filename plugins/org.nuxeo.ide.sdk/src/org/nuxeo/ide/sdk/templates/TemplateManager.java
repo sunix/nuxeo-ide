@@ -32,7 +32,9 @@ import org.nuxeo.ide.sdk.templates.cmd.AppendCommand;
 import org.nuxeo.ide.sdk.templates.cmd.BinaryResourceCommand;
 import org.nuxeo.ide.sdk.templates.cmd.Command;
 import org.nuxeo.ide.sdk.templates.cmd.DependenciesCommand;
+import org.nuxeo.ide.sdk.templates.cmd.IfCommand;
 import org.nuxeo.ide.sdk.templates.cmd.JavaClassCommand;
+import org.nuxeo.ide.sdk.templates.cmd.ManifestCommand;
 import org.nuxeo.ide.sdk.templates.cmd.MkdirCommand;
 import org.nuxeo.ide.sdk.templates.cmd.OrganizeImportsCommand;
 import org.nuxeo.ide.sdk.templates.cmd.RenameCommand;
@@ -78,6 +80,7 @@ public class TemplateManager {
     protected void initCommands() {
         commands.put("rename", RenameCommand.class);
         commands.put("mkdir", MkdirCommand.class);
+        commands.put("manifest", ManifestCommand.class);
         commands.put("transform", TransformCommand.class);
         commands.put("append", AppendCommand.class);
         commands.put("select", SelectCommand.class);
@@ -89,6 +92,7 @@ public class TemplateManager {
         commands.put("javaClass", JavaClassCommand.class);
         commands.put("resourceBundle", ResourceBundleCommand.class);
         commands.put("organizeImports", OrganizeImportsCommand.class);
+        commands.put("if", IfCommand.class);
     }
 
     public void addCommand(String key, Class<? extends Command> type) {
@@ -114,6 +118,7 @@ public class TemplateManager {
     }
 
     public synchronized TemplateRegistry getRegistry(String targetVersion) {
+        targetVersion = normalizeVersion(targetVersion);
         TemplateRegistry reg = regs.get(targetVersion);
         if (reg == null) {
             reg = regs.get(ANY_VERSION);
@@ -126,13 +131,16 @@ public class TemplateManager {
         if (sdk == null) {
             return null;
         }
-        String v = sdk.getInfo().getVersion();
+        return getRegistry(sdk.getInfo().getVersion());
+    }
+
+    public static String normalizeVersion(String v) {
         if (v == null) {
             v = "0.0.0";
         } else if (v.endsWith("-SNAPSHOT")) {
             v = v.substring(0, v.length() - "-SNAPSHOT".length());
         }
-        return getRegistry(v);
+        return v;
     }
 
     public void loadRegistry(Bundle bundle) {

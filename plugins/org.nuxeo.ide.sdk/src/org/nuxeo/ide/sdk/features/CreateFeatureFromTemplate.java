@@ -52,7 +52,13 @@ public class CreateFeatureFromTemplate extends WorkspaceModifyOperation {
     }
 
     public TemplateRegistry getTemplateRegistry() {
-        return SDKPlugin.getDefault().getTemplateManager().getDefaultRegistry();
+        String targetVersion = ctx.getTargetVersion();
+        if (targetVersion == null) {
+            return SDKPlugin.getDefault().getTemplateManager().getDefaultRegistry();
+        } else {
+            return SDKPlugin.getDefault().getTemplateManager().getRegistry(
+                    targetVersion);
+        }
     }
 
     protected void postCreate(IProgressMonitor monitor) throws Exception {

@@ -21,7 +21,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Composite;
 import org.nuxeo.ide.common.forms.Form;
 import org.nuxeo.ide.common.wizards.FormWizardPage;
-import org.nuxeo.ide.sdk.ui.NuxeoNature;
 import org.nuxeo.ide.sdk.ui.widgets.ObjectChooser;
 import org.nuxeo.ide.sdk.ui.widgets.PackageChooser;
 import org.nuxeo.ide.sdk.ui.widgets.PackageChooserWidget;
@@ -33,9 +32,9 @@ import org.nuxeo.ide.sdk.ui.widgets.ProjectChooserWidget;
  * 'project' and 'package'. The page is correctly initializing the
  * project/package chooser widgets and updating the template context with the
  * selected values.
- *
+ * 
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
- *
+ * 
  */
 public abstract class FeatureWizardPage extends
         FormWizardPage<FeatureTemplateContext> {
@@ -53,14 +52,25 @@ public abstract class FeatureWizardPage extends
         return newForm;
     }
 
+    protected String getTargetProjectNature() {
+        return getWizard().getTargetProjectNature();
+    }
+
+    public FeatureCreationWizard getWizard() {
+        return (FeatureCreationWizard) super.getWizard();
+    }
+
     @Override
     public void createControl(Composite parent) {
         super.createControl(parent);
         ProjectChooser projChooser = (ProjectChooser) form.getWidgetControl("project");
         final PackageChooser pkgChooser = (PackageChooser) form.getWidgetControl("package");
         FeatureCreationWizard wiz = (FeatureCreationWizard) getWizard();
-        IJavaProject project = wiz.getSelectedNuxeoProject();
-        projChooser.setNature(NuxeoNature.ID);
+        IJavaProject project = wiz.getTargetProject();
+        String nature = getTargetProjectNature();
+        if (nature != null) {
+            projChooser.setNature(nature);
+        }
         if (project != null) {
             projChooser.setValue(project);
             pkgChooser.setProject(project);

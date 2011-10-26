@@ -31,7 +31,12 @@ public class ProjectChooserWidget extends ObjectChooserWidget<ProjectChooser> {
     @Override
     protected ProjectChooser createControl(Composite parent, Element element,
             BindingContext ctx) {
-        return new ProjectChooser(parent);
+        String nature = getAttribute(element, "nature");
+        ProjectChooser chooser = new ProjectChooser(parent);
+        if (nature != null) {
+            chooser.setNature(nature);
+        }
+        return chooser;
     }
 
 }

@@ -16,7 +16,8 @@
  */
 package org.nuxeo.ide.sdk.ui.widgets;
 
-import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
@@ -26,6 +27,7 @@ import org.eclipse.jdt.ui.JavaElementLabelProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
+import org.nuxeo.ide.sdk.SDKPlugin;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -79,8 +81,22 @@ public class PackageChooser extends ObjectChooser<IPackageFragment> {
     }
 
     public IPackageFragmentRoot getSourceRoot(IJavaProject project) {
-        IResource resource = project.getProject().getFolder("src/main/java");
-        return project.getPackageFragmentRoot(resource);
+        IFolder resource = project.getProject().getFolder("src/main/java");
+        if (resource.exists()) {
+            return project.getPackageFragmentRoot(resource);
+        }
+        try {
+            for (IPackageFragmentRoot root : project.getPackageFragmentRoots()) {
+                if (root.getKind() == IPackageFragmentRoot.K_SOURCE) {
+                    return root;
+                }
+            }
+        } catch (Exception e) {
+            SDKPlugin.log(IStatus.ERROR, "Failed to find source package root",
+                    e);
+            // do nothing
+        }
+        return null;
     }
 
     protected IPackageFragment choosePackage(IPackageFragment pack) {

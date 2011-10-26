@@ -52,12 +52,22 @@ public abstract class AbstractProjectWizard extends
         }
     }
 
+    public String getTargetVersion() {
+        NuxeoSDK sdk = NuxeoSDK.getDefault();
+        if (sdk == null) {
+            return "0.0.0";
+        } else {
+            return NuxeoSDK.getDefault().getVersion();
+        }
+    }
+
     @Override
     protected ProjectTemplateContext createExecutionContext() {
         ProjectTemplateContext ctx = new ProjectTemplateContext();
+        String version = getTargetVersion();
+        ctx.setTargetVersion(version);
         // initialize defaults
         ctx.setTemplate(defaultTemplate);
-        String version = NuxeoSDK.getDefault().getVersion();
         String osgiVersion = toOsgiVersion(version);
         ctx.put(Constants.TARGET_VERSION, version);
         ctx.put(Constants.PARENT_VERSION, version);
@@ -72,9 +82,8 @@ public abstract class AbstractProjectWizard extends
         if (!version.endsWith("-SNAPSHOT")) {
             return version;
         }
-        return version.substring(0,
-                    version.length() - "-SNAPSHOT".length())
-                    + ".qualifier";
+        return version.substring(0, version.length() - "-SNAPSHOT".length())
+                + ".qualifier";
     }
 
     @Override

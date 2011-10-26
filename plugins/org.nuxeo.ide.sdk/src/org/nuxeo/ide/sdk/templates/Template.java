@@ -17,16 +17,12 @@
 package org.nuxeo.ide.sdk.templates;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.jar.Attributes;
-import java.util.jar.Manifest;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.FileLocator;
@@ -61,37 +57,13 @@ public class Template implements Comparable<Template> {
     /**
      * @deprecated replace this by using commands
      */
-    protected ManifestModification[] manifestModifs;
-
-    /**
-     * @deprecated replace this by using commands
-     */
     protected String extensions;
-
 
     protected Template(String id) {
         this.id = id;
         this.name = id;
         this.commands = new ArrayList<Command>();
         this.postCreateCommands = new ArrayList<PostCreateCommand>();
-    }
-
-    /**
-     * @deprecated
-     * @param mf
-     */
-    public void setManifestModifications(ManifestModification[] mf) {
-        this.manifestModifs = mf;
-    }
-
-    /**
-     * Return null if not manifest modifications are required.
-     * 
-     * @deprecated
-     * @return
-     */
-    public ManifestModification[] getManifestModifications() {
-        return manifestModifs;
     }
 
     /**
@@ -201,8 +173,6 @@ public class Template implements Comparable<Template> {
             cmd.execute(ctx, bundle, dir);
         }
         applyExtensions(bundle, ctx, dir);
-        applyManifestModifications(dir, ctx);
-        applyDependencies(dir);
     }
 
     /**
@@ -245,7 +215,8 @@ public class Template implements Comparable<Template> {
         }
     }
 
-    protected static void loadCommand(TemplateManager manager, Template temp,
+    public static void loadCommand(TemplateManager manager,
+            List<Command> commands, List<PostCreateCommand> postCreateCommands,
             Element el, String tag) throws Exception {
         ElementHandler cmd = manager.getCommand(tag);
         if (cmd == null) {
@@ -254,13 +225,13 @@ public class Template implements Comparable<Template> {
         cmd.init(el);
         boolean knownType = false;
         if (cmd instanceof Command) {
-            temp.commands.add((Command) cmd);
+            commands.add((Command) cmd);
             knownType = true;
         }
         if (cmd instanceof PostCreateCommand) {
-            temp.postCreateCommands.add((PostCreateCommand) cmd);
+            postCreateCommands.add((PostCreateCommand) cmd);
             knownType = true;
-        } 
+        }
         if (!knownType) {
             throw new IllegalArgumentException("Unknown command type: " + tag
                     + " -> " + cmd);
@@ -275,48 +246,6 @@ public class Template implements Comparable<Template> {
     @Override
     public String toString() {
         return id + " [" + src + "]";
-    }
-
-    /** TODO refactor */
-
-    protected void applyManifestModifications(File dir, TemplateContext ctx)
-            throws IOException {
-        if (manifestModifs == null) {
-            return;
-        }
-        File file = Util.getManifest(dir);
-        InputStream in = new FileInputStream(file);
-        boolean modified = false;
-        Manifest mf = new Manifest(in);
-        try {
-            Attributes attrs = mf.getMainAttributes();
-            for (ManifestModification mm : manifestModifs) {
-                String key = attrs.getValue(mm.key);
-                String value = Vars.expand(mm.value, ctx);
-                if (key == null) {
-                    attrs.putValue(mm.key, value);
-                    modified = true;
-                } else if (mm.overwrite) {
-                    attrs.putValue(mm.key, value);
-                    modified = true;
-                } else if (mm.append) { // append
-                    if (!key.contains(value)) {
-                        attrs.putValue(mm.key, key + ", " + value);
-                        modified = true;
-                    }
-                } // else let it as is
-            }
-        } finally {
-            in.close();
-            if (modified) {
-                FileOutputStream out = new FileOutputStream(file);
-                try {
-                    mf.write(out);
-                } finally {
-                    out.close();
-                }
-            }
-        }
     }
 
     protected void applyExtensions(Bundle bundle, TemplateContext ctx, File dir)
@@ -342,39 +271,11 @@ public class Template implements Comparable<Template> {
         }
     }
 
-    protected void applyDependencies(File dir) throws IOException {
-
-        // TODO
-    }
-
-    static class ManifestModification {
-        String key;
-
-        String value;
-
-        boolean overwrite;
-
-        boolean append;
-    }
-
-    static class Dependency {
-        String groupId;
-
-        String artifactId;
-
-        String version;
-
-        String scope;
-
-        String type;
-    }
-
     public static Template load(TemplateManager manager, Element element)
             throws Exception {
         Template temp = new Template(element.getAttribute("id"));
         Node child = element.getFirstChild();
         temp.src = Util.getAttribute(element, "src");
-        List<ManifestModification> manifest = new ArrayList<Template.ManifestModification>();
         while (child != null) {
             if (child.getNodeType() == Node.ELEMENT_NODE) {
                 Element el = (Element) child;
@@ -383,24 +284,14 @@ public class Template implements Comparable<Template> {
                     temp.name = el.getTextContent().trim();
                 } else if ("description".equals(tag)) {
                     temp.description = el.getTextContent().trim();
-                } else if ("manifest".equals(tag)) {
-                    ManifestModification mf = new ManifestModification();
-                    mf.key = el.getAttribute("key");
-                    mf.value = el.getAttribute("value");
-                    mf.overwrite = Util.getBooleanAttribute(el, "overwrite",
-                            false);
-                    mf.append = Util.getBooleanAttribute(el, "append", false);
-                    manifest.add(mf);
                 } else if ("extension".equals(tag)) {
                     temp.extensions = el.getAttribute("src").trim();
                 } else {
-                    loadCommand(manager, temp, el, tag);
+                    loadCommand(manager, temp.commands,
+                            temp.postCreateCommands, el, tag);
                 }
             }
             child = child.getNextSibling();
-        }
-        if (!manifest.isEmpty()) {
-            temp.manifestModifs = manifest.toArray(new ManifestModification[manifest.size()]);
         }
         return temp;
     }

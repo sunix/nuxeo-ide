@@ -16,10 +16,7 @@
  */
 package org.nuxeo.ide.sdk.templates;
 
-import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -37,8 +34,10 @@ import org.nuxeo.ide.common.forms.UIObject;
 @SuppressWarnings("serial")
 public class TemplateContext extends HashMap<String, Object> {
 
+    protected String targetVersion;
+
     protected String template;
-    
+
     protected File projectLocation;
 
     public TemplateContext() {
@@ -66,6 +65,14 @@ public class TemplateContext extends HashMap<String, Object> {
         }
     }
 
+    public void setTargetVersion(String targetVersion) {
+        this.targetVersion = targetVersion;
+    }
+
+    public String getTargetVersion() {
+        return targetVersion;
+    }
+
     public String getTemplate() {
         return template;
     }
@@ -82,8 +89,10 @@ public class TemplateContext extends HashMap<String, Object> {
         this.template = template;
     }
 
-    public void setProperties(Form form) throws IntrospectionException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        for (Map.Entry<String, UIObject<?>> e:form.getBindings().entrySet()) {
+    public void setProperties(Form form) throws IntrospectionException,
+            IllegalAccessException, IllegalArgumentException,
+            InvocationTargetException {
+        for (Map.Entry<String, UIObject<?>> e : form.getBindings().entrySet()) {
             String k = e.getKey();
             UIObject<?> v = e.getValue();
             put(k, v.toString());

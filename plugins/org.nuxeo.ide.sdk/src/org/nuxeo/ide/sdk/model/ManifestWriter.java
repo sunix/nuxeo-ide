@@ -32,6 +32,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.nuxeo.ide.common.IOUtils;
+import org.nuxeo.ide.sdk.ProjectLayout;
 import org.nuxeo.ide.sdk.SDKPlugin;
 
 /**
@@ -137,7 +138,7 @@ public abstract class ManifestWriter {
         @Override
         public Manifest load(Object project) throws Exception {
             this.project = (IProject) project;
-            this.file = this.project.getFile(PATH);
+            this.file = ProjectLayout.getManifest(this.project);
             if (file.exists()) {
                 InputStream in = file.getContents(true);
                 try {
@@ -173,7 +174,7 @@ public abstract class ManifestWriter {
         @Override
         public Manifest load(Object project) throws Exception {
             File dir = (File) project;
-            file = new File(dir, PATH);
+            file = ProjectLayout.getManifest(dir);
             if (file.isFile()) {
                 InputStream in = new FileInputStream(file);
                 try {
