@@ -1,0 +1,8 @@
+<component name="${package}.${className}">
+
+  <extension target="org.eclipse.ecr.core.operation.OperationServiceComponent"
+    point="operations" >
+      <operation class="${package}.${className}" />
+   </extension>
+    
+</component>

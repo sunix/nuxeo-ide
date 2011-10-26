@@ -1,0 +1,64 @@
+<panel cols="2"  layout="grid">
+
+<text>Project:</text>
+<project id="project" hfill="true">
+<validator type="required">The project field is required</validator>
+</project>
+<text>Package:</text>
+<package id="package" hfill="true">
+<validator type="regex" value="[A-Za-z_]+(.[A-Za-z0-9_]+)*">Not a valid package name</validator>
+</package>
+<text>Name:</text>
+<textbox id="className" hfill="true">
+<validator type="regex" value="[A-Za-z]+[A-Za-z0-9_]*">Not a valid class name</validator>
+</textbox>
+
+<frame layout="grid" cols="2" label="Listener attributes" hfill="true" colspan="2">
+<checkbox id="async" value="false" colspan="2">Asynchronous</checkbox>
+<checkbox id="postCommit" value="false" colspan="2">Post Commit</checkbox>
+<text>Order:</text>
+<textbox id="order" value="100" hfill="true">
+<validator type="regex" value="[0-9]*">Not a valid number</validator>
+</textbox>
+</frame>
+
+<frame layout="grid" cols="1" label="Events to listen to:" hfill="true" vfill="true" colspan="2">
+
+<dynalist id="selectedEvents" vfill="true" hfill="true" height="200">
+  <item value="aboutToCreate">About to create</item>
+  <item value="emptyDocumentModelCreated">Empty document created</item>
+  <item value="documentCreated">Document created</item>
+  <item value="documentImported">Document imported</item>
+  <item value="aboutToRemove">About to remove</item>
+  <item value="documentRemoved">Document removed</item>
+  <item value="aboutToRemoveVersion">About to remove version</item>
+  <item value="versionRemoved">Version Removed</item>
+  <item value="beforeDocumentModification ">Before document modification</item>
+  <item value="beforeDocumentSecurityModification">Before document security modification</item>
+  <item value="documentModified">Document modified</item>
+  <item value="documentSecurityUpdated">Document security updated</item>
+  <item value="documentLocked">Document locked</item>
+  <item value="documentUnlocked">Document unlocked</item>
+  <item value="aboutToCopy">About to copy</item>
+  <item value="documentCreatedByCopy">Document created by copy</item>
+  <item value="documentDuplicated">Document duplicated</item>
+  <item value="aboutToMove">About to move</item>
+  <item value="documentMoved">Document moved</item>
+  <item value="documentPublished">Document published</item>
+  <item value="documentProxyPublished">Document proxy published</item>
+  <item value="documentProxyUpdated">Document proxy updated</item>
+  <item value="sectionContentPublished">Section content published</item>
+  <item value="beforeRestoringDocument">Before restoring document</item>
+  <item value="documentRestored">Document restored</item>
+  <item value="sessionSaved">Session saved</item>
+  <item value="childrenOrderChanged">Children order changed</item>
+  <item value="aboutToCheckout">About to checkout</item>
+  <item value="documentCheckedOut">Document checked out</item>
+  <item value="aboutToCheckIn">About to check in</item>
+  <item value="documentCheckedIn">Document checked in</item>
+  <item value="subscriptionAssigned">Subscription assigned</item>
+  <item value="emailDocumentSend">E-Mail document sent</item>
+</dynalist>
+</frame>
+
+</panel>

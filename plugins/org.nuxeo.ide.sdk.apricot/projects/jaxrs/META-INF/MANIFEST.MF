@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: ${projectName}
+Bundle-SymbolicName: ${projectName}
+Bundle-Version: 1.0.0.qualifier
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Import-Package: org.osgi.framework,
+ javax.ws.rs,
+ javax.ws.rs.core, 
+ org.eclipse.ecr.web.jaxrs.scan
+Nuxeo-WebModule: org.eclipse.ecr.web.jaxrs.scan.DynamicApplicationFactory

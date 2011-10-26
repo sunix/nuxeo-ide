@@ -1,0 +1,82 @@
+<templates version="0.0.0">
+
+  <template id="apricot" src="projects/plugin">
+    <name>Apricot Project</name>
+    <description>An empty Apricot project</description>
+
+    <mkdir path="src/${packagePath}" />
+
+    <!--  process templates -->
+    <!-- transform path=".classpath" /-->
+    <transform path=".project" />
+    <transform path="META-INF/MANIFEST.MF" />
+    
+    <select path = "" />
+  </template>
+
+  <template id="jaxrs" src="projects/jaxrs">
+    <name>Apricot JAX-RS Project</name>
+    <description>A JAX-RS Apricot project</description>
+
+    <mkdir path="src/${packagePath}" />
+
+    <transform path=".project" />
+    <transform path="META-INF/MANIFEST.MF" />
+    
+    <transform path="src/packagePath/MyRoot.java" to="src/${packagePath}/${className}.java"/>
+
+    <select path = "src/${packagePath}/${className}.java" />
+  </template>
+
+  <template id ="component" src="features/component/project">
+    <name>Apricot Component</name>
+    <description>An Apricot component object</description>
+
+    <transform path="OSGI-INF/extensions.xml" to="OSGI-INF/extensions/${package}.${className}.xml" />
+    <manifest>
+      <append key="Nuxeo-Component" value="OSGI-INF/extensions/${package}.${className}.xml" />
+      <append key="Import-Package" value="org.eclipse.ecr.runtime.model" />
+    </manifest>
+    
+    <transform path="src/packagePath/MyComponent.java" to="src/${packagePath}/${className}.java" />
+    
+    <select path = "src/${packagePath}/${className}.java" />
+  </template>
+
+  <template id ="operation" src="features/automation/project">
+    <name>Apricot Operation</name>
+    <description>An operation object</description>
+
+    <transform path="src/packagePath/MyOperation.java" to="src/${packagePath}/${className}.java" />
+    <transform path="OSGI-INF/extensions.xml" to="OSGI-INF/extensions/${package}.${className}.xml" />
+
+    <manifest path="META-INF/MANIFEST.MF">
+        <append key="Nuxeo-Component" value="OSGI-INF/extensions/${package}.${className}.xml" />        
+        <append key="Import-Package" value="org.eclipse.ecr.core.api" />
+        <append key="Import-Package" value="org.eclipse.ecr.automation.core" />
+        <append key="Import-Package" value="org.eclipse.ecr.automation.core.collectors" />
+        <append key="Import-Package" value="org.eclipse.ecr.automation.core.annotations" />
+    </manifest>
+    
+    <select path = "src/${packagePath}/${className}.java" />
+  </template>
+
+  <template id ="listener" src="features/listener/project">
+    <name>Listener</name>
+    <description>A listener object</description>
+
+    <transform path="src/packagePath/MyListener.java" to="src/${packagePath}/${className}.java" />
+
+    <transform path="OSGI-INF/extensions.xml" to="OSGI-INF/extensions/${package}.${className}.xml" />
+
+    <manifest path="META-INF/MANIFEST.MF">
+        <append key="Nuxeo-Component" value="OSGI-INF/extensions/${package}.${className}.xml" />
+           
+        <append key="Import-Package" value="org.eclipse.ecr.core.api" />
+        <append key="Import-Package" value="org.eclipse.ecr.core.event" />
+    </manifest>
+    
+    <select path = "src/${packagePath}/${className}.java" />
+  </template>
+
+</templates>
