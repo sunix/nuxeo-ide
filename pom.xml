@@ -27,7 +27,7 @@
     <module>features/org.nuxeo.ide.sdk.apricot.feature</module>
     <module>sites/org.nuxeo.ide.site</module>
     <module>sites/org.nuxeo.ide.apricot.site</module>
-    <module>plugins/org.nuxeo.ide.qatests</module>
+    <!--module>plugins/org.nuxeo.ide.qatests</module-->
   </modules>
 
   <scm>
