@@ -81,7 +81,7 @@ public abstract class FeatureCreationWizard extends
             if (project != null) {
                 String nature = getTargetProjectNature();
                 if (nature != null
-                        && project.getProject().isNatureEnabled(NuxeoNature.ID)) {
+                        && project.getProject().isNatureEnabled(nature)) {
                     return project;
                 }
             }
