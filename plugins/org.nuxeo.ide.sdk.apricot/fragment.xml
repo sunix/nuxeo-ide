@@ -10,19 +10,19 @@
       </category>
       <wizard
             category="org.nuxeo.ide.project.newWizards"
-            class="org.nuxeo.ide.sdk.apricot.projects.jaxrs.ApricotJaxrsProjectWizard"
-            icon="icons/web.gif"
-            id="org.nuxeo.ide.sdk.apricot.projects.jaxrs.ApricotJaxrsProjectWizard"
-            name="Apricot JAX-RS Plugin Project"
+            class="org.nuxeo.ide.sdk.apricot.projects.plugin.ApricotProjectWizard"
+            icon="icons/nx.gif"
+            id="org.nuxeo.ide.sdk.apricot.projects.plugin.ApricotProjectWizard"
+            name="Apricot Plugin Project"
             preferredPerspectives="org.eclipse.jdt.ui.JavaPerspective,org.eclipse.jdt.ui.JavaBrowsingPerspective,org.eclipse.jdt.ui.JavaHierarchyPerspective"
             project="true">
       </wizard>
       <wizard
             category="org.nuxeo.ide.project.newWizards"
-            class="org.nuxeo.ide.sdk.apricot.projects.plugin.ApricotProjectWizard"
-            icon="icons/nx.gif"
-            id="org.nuxeo.ide.sdk.apricot.projects.plugin.ApricotProjectWizard"
-            name="Apricot Plugin Project"
+            class="org.nuxeo.ide.sdk.apricot.projects.jaxrs.ApricotJaxrsProjectWizard"
+            icon="icons/web.gif"
+            id="org.nuxeo.ide.sdk.apricot.projects.jaxrs.ApricotJaxrsProjectWizard"
+            name="Apricot JAX-RS Plugin Project"
             preferredPerspectives="org.eclipse.jdt.ui.JavaPerspective,org.eclipse.jdt.ui.JavaBrowsingPerspective,org.eclipse.jdt.ui.JavaHierarchyPerspective"
             project="true">
       </wizard>
