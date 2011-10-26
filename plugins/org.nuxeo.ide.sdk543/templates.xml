@@ -109,7 +109,9 @@
     <name>Gadget</name>
     <description>A gadget object</description>
 
-    <manifest key="Nuxeo-Component" value="gadget/${gadgetName}/gadgets-contrib.xml" append="true"/>
+    <manifest>
+        <append key="Nuxeo-Component" value="gadget/${gadgetName}/gadgets-contrib.xml" />
+    </manifest>
 
 	<rename path="src/main/resources/gadget/gadgetName" to="src/main/resources/gadget/${gadgetName}"/>
 	<transform path="src/main/resources/gadget/${gadgetName}/gadgetName.xml" to="src/main/resources/gadget/${gadgetName}/${gadgetName}.xml"/>
@@ -126,7 +128,9 @@
     <name>Automation Gadget</name>
     <description>A gadget that invoke a Nuxeo operation</description>
 
-    <manifest key="Nuxeo-Component" value="gadget/${gadgetName}/gadgets-contrib.xml" append="true"/>
+    <manifest>
+        <append key="Nuxeo-Component" value="gadget/${gadgetName}/gadgets-contrib.xml" />
+    </manifest>
 
 	<rename path="src/main/resources/gadget/gadgetName" to="src/main/resources/gadget/${gadgetName}"/>
 	<transform path="src/main/resources/gadget/${gadgetName}/gadgetName.xml" to="src/main/resources/gadget/${gadgetName}/${gadgetName}.xml"/>
@@ -160,7 +164,9 @@
     <description>A Permission</description>
     
     <transform path="src/main/resources/OSGI-INF/permissions.xml" to="src/main/resources/OSGI-INF/permission-${name}.xml" />
-    <manifest key="Nuxeo-Component" value="OSGI-INF/permission-${name}.xml" append="true" />
+    <manifest>
+        <append key="Nuxeo-Component" value="OSGI-INF/permission-${name}.xml" />
+    </manifest>
     
     <select path = "src/main/resources/OSGI-INF/permission-${name}.xml" />ean
   </template>
@@ -170,7 +176,9 @@
     <description>A Permission Visibility</description>
 
     <transform path="src/main/resources/OSGI-INF/permissions-visibility.xml" />
-    <manifest key="Nuxeo-Component" value="OSGI-INF/permissions-visibility.xml" append="true" />
+    <manifest>
+        <append key="Nuxeo-Component" value="OSGI-INF/permissions-visibility.xml" />
+    </manifest>
 
     <dependencies>
         <dependency groupId="org.nuxeo.ecm.core" artifactId="nuxeo-core"/>

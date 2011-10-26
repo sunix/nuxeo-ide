@@ -22,7 +22,6 @@ import org.nuxeo.ide.common.forms.Form;
 import org.nuxeo.ide.common.wizards.FormWizardPage;
 import org.nuxeo.ide.sdk.features.FeatureCreationWizard;
 import org.nuxeo.ide.sdk.features.FeatureTemplateContext;
-import org.nuxeo.ide.sdk.ui.NuxeoNature;
 import org.nuxeo.ide.sdk.ui.widgets.ProjectChooser;
 import org.nuxeo.ide.sdk.ui.widgets.ProjectChooserWidget;
 
@@ -44,13 +43,24 @@ public class GadgetWizardPage extends FormWizardPage<FeatureTemplateContext> {
         return form;
     }
 
+    protected String getTargetProjectNature() {
+        return getWizard().getTargetProjectNature();
+    }
+
+    public FeatureCreationWizard getWizard() {
+        return (FeatureCreationWizard) getWizard();
+    }
+
     @Override
     public void createControl(Composite parent) {
         super.createControl(parent);
         ProjectChooser projChooser = (ProjectChooser) form.getWidgetControl("project");
-        FeatureCreationWizard wiz = (FeatureCreationWizard) getWizard();
-        IJavaProject project = wiz.getSelectedNuxeoProject();
-        projChooser.setNature(NuxeoNature.ID);
+        FeatureCreationWizard wiz = getWizard();
+        IJavaProject project = wiz.getTargetProject();
+        String nature = wiz.getTargetProjectNature();
+        if (nature != null) {
+            projChooser.setNature(nature);
+        }
         if (project != null) {
             projChooser.setValue(project);
         }

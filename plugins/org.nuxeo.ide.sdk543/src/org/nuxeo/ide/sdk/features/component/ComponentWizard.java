@@ -24,6 +24,10 @@ import org.nuxeo.ide.sdk.features.FeatureCreationWizard;
  */
 public class ComponentWizard extends FeatureCreationWizard {
 
+    protected ComponentWizard(String template) {
+        super(template);
+    }
+
     public ComponentWizard() {
         super("component");
     }

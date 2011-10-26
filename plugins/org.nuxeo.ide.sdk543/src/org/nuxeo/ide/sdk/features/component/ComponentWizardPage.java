@@ -31,7 +31,7 @@ import org.nuxeo.ide.sdk.ui.widgets.ProjectChooserWidget;
 public class ComponentWizardPage extends FeatureWizardPage {
 
     public ComponentWizardPage() {
-        super("createOperation1", "Create Operation", null);
+        super("createOperation1", "Create Component", null);
     }
 
     @Override
