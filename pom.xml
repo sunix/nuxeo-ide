@@ -21,9 +21,12 @@
     <module>plugins/org.nuxeo.ide.sdk</module>
     <module>plugins/org.nuxeo.ide.sdk543</module>
     <module>plugins/org.nuxeo.ide.shell</module>
+    <module>plugins/org.nuxeo.ide.sdk.apricot.wizards</module>
     <module>features/org.nuxeo.ide.sdk.feature</module>
     <module>features/org.nuxeo.ide.shell.feature</module>
+    <module>features/org.nuxeo.ide.sdk.apricot.feature</module>
     <module>sites/org.nuxeo.ide.site</module>
+    <module>sites/org.nuxeo.ide.apricot.site</module>
     <module>plugins/org.nuxeo.ide.qatests</module>
   </modules>
 
