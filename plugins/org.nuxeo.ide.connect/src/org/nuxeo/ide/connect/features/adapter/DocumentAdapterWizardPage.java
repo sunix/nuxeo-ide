@@ -58,7 +58,7 @@ public class DocumentAdapterWizardPage extends FeatureWizardPage {
         super.createControl(parent);
         ProjectChooser projChooser = (ProjectChooser) form.getWidgetControl("project");
         FeatureCreationWizard wiz = (FeatureCreationWizard) getWizard();
-        IJavaProject project = wiz.getSelectedNuxeoProject();
+        IJavaProject project = wiz.getTargetProject();
         final StudioSchemasTable table = (StudioSchemasTable) form.getWidgetControl("schemas");
         if (project != null) {
             updateSchemas(table, project.getProject());

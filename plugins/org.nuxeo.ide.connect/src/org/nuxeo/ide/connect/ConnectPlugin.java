@@ -34,7 +34,9 @@ public class ConnectPlugin extends AbstractUIPlugin {
     }
 
     public void stop(BundleContext context) throws Exception {
-        studioProvider.dispose();
+        if (studioProvider != null) {
+            studioProvider.dispose();
+        }
         plugin = null;
         studioProvider = null;
         super.stop(context);
