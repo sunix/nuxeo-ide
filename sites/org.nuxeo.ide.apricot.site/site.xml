@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/org.nuxeo.ide.shell_1.2.0.qualifier.jar" id="org.nuxeo.ide.shell" version="1.2.0.qualifier">
+      <category name="shell"/>
+   </feature>
+   <feature url="features/org.nuxeo.ide.sdk.apricot.feature_1.2.0.qualifier.jar" id="org.nuxeo.ide.sdk.apricot.feature" version="1.2.0.qualifier">
+      <category name="ide"/>
+   </feature>
+   <category-def name="ide" label="Nuxeo IDE">
+      <description>
+         Provides wizards and tools to develop Nuxeo projects
+      </description>
+   </category-def>
+   <category-def name="shell" label="Nuxeo Shell">
+      <description>
+         Provides a Nuxeo Shell view to connect to remote Nuxeo sevrers
+      </description>
+   </category-def>
+</site>

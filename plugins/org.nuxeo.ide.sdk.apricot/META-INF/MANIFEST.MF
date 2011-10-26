@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Apricot Wizards
 Bundle-SymbolicName: org.nuxeo.ide.sdk.apricot;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.2.0.qualifier
 Bundle-Vendor: Nuxeo
 Fragment-Host: org.nuxeo.ide.sdk
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
