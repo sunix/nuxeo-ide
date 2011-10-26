@@ -106,18 +106,19 @@ public abstract class AbstractWizard<T> extends Wizard implements INewWizard,
             return false;
         }
         isWorking = true;
-        final T ctx = createExecutionContext();
-
-        IWizardPage[] pages = getPages();
-        for (IWizardPage page : pages) {
-            if (page instanceof AbstractWizardPage) {
-                ((AbstractWizardPage<T>) page).update(ctx);
-            }
-        }
         try {
+            final T ctx = createExecutionContext();
+
+            IWizardPage[] pages = getPages();
+            for (IWizardPage page : pages) {
+                if (page instanceof AbstractWizardPage) {
+                    ((AbstractWizardPage<T>) page).update(ctx);
+                }
+            }
             return execute(ctx);
         } catch (Exception e) {
-            Status status  =new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Templating error", e);
+            Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+                    "Templating error", e);
             StatusManager.getManager().handle(status);
             return false;
         } finally {
