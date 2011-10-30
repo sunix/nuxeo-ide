@@ -1,6 +1,6 @@
 <component name="${package}.listener.contrib.${className}">
 
-  <extension target="org.nuxeo.ecm.core.event.EventServiceComponent"
+  <extension target="org.eclipse.ecr.core.event.EventServiceComponent"
     point="listener">
 
     <listener name="${name}" async="${async?string}" postCommit="${postCommit?string}"
@@ -9,6 +9,7 @@
       <event>${event}</event>
       </#list>
     </listener>
+    
   </extension>
 
 </component>
