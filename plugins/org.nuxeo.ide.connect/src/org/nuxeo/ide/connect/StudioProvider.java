@@ -26,6 +26,7 @@ import java.util.List;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ListenerList;
+import org.eclipse.jdt.core.JavaModelException;
 import org.nuxeo.ide.common.IOUtils;
 import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.connect.studio.StudioProject;
@@ -150,9 +151,10 @@ public class StudioProvider {
      * @param project
      * @param studioProjects
      * @return
+     * @throws JavaModelException 
      */
     public StudioProjectBinding setBinding(IProject project,
-            String... projectIds) {
+            String... projectIds) throws JavaModelException {
         return bindingManager.setBinding(project, projectIds);
     }
 

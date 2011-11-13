@@ -29,6 +29,7 @@ import org.codehaus.jackson.JsonParser.Feature;
 import org.codehaus.jackson.JsonToken;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.nuxeo.ide.connect.ConnectPlugin;
 import org.nuxeo.ide.connect.ConnectPreferences;
 import org.nuxeo.ide.connect.studio.tree.ProjectTree;
 
