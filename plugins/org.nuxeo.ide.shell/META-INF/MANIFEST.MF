@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Nuxeo Shell
 Bundle-SymbolicName: org.nuxeo.ide.shell;singleton:=true
-Bundle-Version: 1.1.4.R11x_v20111113_1736
+Bundle-Version: 1.1.5.qualifier
 Bundle-Activator: org.nuxeo.ide.shell.Activator
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
