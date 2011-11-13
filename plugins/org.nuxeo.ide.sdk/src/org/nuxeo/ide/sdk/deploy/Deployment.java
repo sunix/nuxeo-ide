@@ -142,8 +142,8 @@ public class Deployment {
             // studio project dependencies
             IConnectProvider connectProvider = SDKPlugin.getDefault().getConnectProvider();
             if (connectProvider != null) {
-                for (File lib : connectProvider.getLibraries(project, null)) {
-                    builder.append("bundle:").append(lib.getPath()).append(crlf);
+                for (IConnectProvider.Infos infos : connectProvider.getLibrariesInfos(project, null)) {
+                    builder.append("bundle:").append(infos.file.getPath()).append(crlf);
                 }
             }
         }
