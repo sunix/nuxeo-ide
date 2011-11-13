@@ -61,15 +61,17 @@ public class Artifact {
         return new Artifact(groupId, artifactId, version);
     }
 
-    protected String id;
+    protected final String id;
 
-    protected String groupId;
+    protected final String groupId;
 
-    protected String artifactId;
+    protected final String artifactId;
 
     protected String version;
 
     protected String scope;
+    
+    protected boolean managed;
 
     public Artifact(String groupId, String artifactId) {
         this(groupId, artifactId, null);
@@ -80,10 +82,19 @@ public class Artifact {
         this.artifactId = artifactId;
         this.version = version;
         this.id = groupId + ':' + artifactId;
+        this.managed = true;
     }
 
     public boolean isSnapshot() {
         return version != null && version.contains("SNAPSHOT");
+    }
+    
+    public boolean isManaged() {
+        return managed;
+    }
+    
+    public void setUnmanaged() {
+        managed = false;
     }
 
     public void setScope(String scope) {

@@ -30,7 +30,7 @@ public class DependencyEntry {
     protected Artifact artifact;
 
     protected List<Dependency> deps;
-
+    
     public DependencyEntry(Artifact artifact) {
         this.artifact = artifact;
         deps = new ArrayList<Dependency>();

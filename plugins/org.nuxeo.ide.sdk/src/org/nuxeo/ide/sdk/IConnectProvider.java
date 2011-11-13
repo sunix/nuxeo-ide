@@ -13,6 +13,16 @@ public interface IConnectProvider {
     
     public static String ID = "org.nuxeo.ide.sdk.connect_provider";
 
-    File[] getLibraries(IProject project, IProgressMonitor monitor) throws IOException, StorageException, BackingStoreException, CoreException;
+    public class Infos {
+        public final File file;
+        public final String gav;
+        
+        public Infos(File file, String gav) {
+            this.file = file;
+            this.gav = gav;
+        }
+    }
+    
+    Infos[] getLibrariesInfos(IProject project, IProgressMonitor monitor) throws IOException, StorageException, BackingStoreException, CoreException;
 
 }

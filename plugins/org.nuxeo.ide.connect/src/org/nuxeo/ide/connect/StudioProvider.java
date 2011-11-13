@@ -30,6 +30,7 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.nuxeo.ide.common.IOUtils;
 import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.connect.studio.StudioProject;
+import org.nuxeo.ide.sdk.IConnectProvider;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -185,17 +186,15 @@ public class StudioProvider {
         return null;
     }
 
-    public File[] getLibraries(IProject project) {
-        StudioProjectBinding binding = getBinding(project);
-        if (binding == null) {
-            return new File[0];
+    public IConnectProvider.Infos[] getLibrariesInfos(IProject project) {
+            StudioProjectBinding binding = getBinding(project);
+        ArrayList<IConnectProvider.Infos> infos = new ArrayList<IConnectProvider.Infos>();
+        for (String id:binding.getProjectIds()) {
+            @SuppressWarnings("hiding")
+            File file = repositoryManager.getFile(id);
+            String gav = "nuxeo-studio:"+id+":0.0.0-SNAPSHOT";
+            infos.add(new IConnectProvider.Infos(file, gav));
         }
-        String[] ids = binding.getProjectIds();
-        List<File> files = new ArrayList<File>(ids.length);
-        for (String id:ids) {
-            files.add(repositoryManager.getFile(id));
-        }
-        return files.toArray(new File[files.size()]);
+        return infos.toArray(new IConnectProvider.Infos[infos.size()]);
     }
-
 }

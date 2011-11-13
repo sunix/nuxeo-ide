@@ -16,7 +16,6 @@
  */
 package org.nuxeo.ide.connect;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,6 +27,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.JavaModelException;
 import org.nuxeo.ide.common.StringUtils;
+import org.nuxeo.ide.sdk.IConnectProvider;
 import org.nuxeo.ide.sdk.java.ClasspathEditor;
 
 /**
@@ -50,18 +50,18 @@ public class BindingManager implements IResourceChangeListener, IStudioListener 
             String... projectIds) throws JavaModelException {
         ClasspathEditor editor = new ClasspathEditor(project);
         try {
-            for (File file : ConnectPlugin.getStudioProvider().getLibraries(
+            for (IConnectProvider.Infos infos : ConnectPlugin.getStudioProvider().getLibrariesInfos(
                     project)) {
-                editor.removeLibrary(new Path(file.getAbsolutePath()));
+                editor.removeLibrary(new Path(infos.file.getAbsolutePath()));
             }
             if (projectIds == null || projectIds.length == 0) {
                 removeBinding(project);
                 return null;
             }
             StudioProjectBinding binding = createBinding(project, projectIds);
-            for (File file : ConnectPlugin.getStudioProvider().getLibraries(
+            for (IConnectProvider.Infos infos : ConnectPlugin.getStudioProvider().getLibrariesInfos(
                     project)) {
-                editor.addLibrary(new Path(file.getAbsolutePath()));
+                editor.addLibrary(new Path(infos.file.getAbsolutePath()));
             }
             return binding;
         } finally {

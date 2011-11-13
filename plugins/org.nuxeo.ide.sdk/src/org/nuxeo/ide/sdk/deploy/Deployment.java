@@ -35,6 +35,7 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
+import org.nuxeo.ide.sdk.IConnectProvider;
 import org.nuxeo.ide.sdk.SDKPlugin;
 import org.nuxeo.ide.sdk.userlibs.UserLib;
 import org.osgi.service.prefs.BackingStoreException;
@@ -106,20 +107,24 @@ public class Deployment {
         return result;
     }
 
-    public String getContentAsString() throws IOException, StorageException, BackingStoreException, CoreException {
+    public String getContentAsString() throws IOException, StorageException,
+            BackingStoreException, CoreException {
         String crlf = "\n";
         StringBuilder builder = new StringBuilder();
         builder.append("# Projects").append(crlf);
         for (IProject project : projects) {
             // default classes
-            String javaOutputPath = outputPath(project, new Path("src/main/java"));
+            String javaOutputPath = outputPath(project, new Path(
+                    "src/main/java"));
             if (javaOutputPath == null) {
-                javaOutputPath = outputPath(project, new Path("src/main/resources"));
+                javaOutputPath = outputPath(project, new Path(
+                        "src/main/resources"));
             }
             if (javaOutputPath != null) {
                 builder.append("bundle:").append(javaOutputPath).append(crlf);
             }
-            String seamOutputPath = outputPath(project, new Path("src/main/seam"));
+            String seamOutputPath = outputPath(project, new Path(
+                    "src/main/seam"));
             // seam classes
             if (seamOutputPath != null) {
                 builder.append("seam:").append(seamOutputPath).append(crlf);
@@ -127,15 +132,20 @@ public class Deployment {
             // l10n resource bundle fragments
             IFolder l10n = project.getFolder("src/main/resources/OSGI-INF/l10n");
             if (l10n.exists()) {
-                for (IResource m:l10n.members()) {
+                for (IResource m : l10n.members()) {
                     if (IResource.FILE == m.getType()) {
-                        builder.append("resourceBundleFragment:").append(m.getLocation().toOSString()).append(crlf) ;                       
+                        builder.append("resourceBundleFragment:").append(
+                                m.getLocation().toOSString()).append(crlf);
                     }
                 }
             }
             // studio project dependencies
-            for (File lib:SDKPlugin.getDefault().getConnectProvider().getLibraries(project, null)) {
-                builder.append("bundle:").append(lib.getPath()).append(crlf);
+            IConnectProvider connectProvider = SDKPlugin.getDefault().getConnectProvider();
+            if (connectProvider != null) {
+                for (IConnectProvider.Infos infos : SDKPlugin.getDefault().getConnectProvider().getLibrariesInfos(
+                        project, null)) {
+                    builder.append("bundle:").append(infos.file.getPath()).append(crlf);
+                }
             }
         }
         builder.append(crlf);
@@ -149,7 +159,8 @@ public class Deployment {
         return builder.toString();
     }
 
-    protected String outputPath(IProject project, IPath sourcePath) throws JavaModelException {
+    protected String outputPath(IProject project, IPath sourcePath)
+            throws JavaModelException {
         IJavaProject java = JavaCore.create(project);
         IFolder folder = project.getFolder(sourcePath);
         if (!folder.exists()) {
@@ -161,8 +172,9 @@ public class Deployment {
         if (outputLocation == null) {
             outputLocation = java.getOutputLocation();
         }
-        IFolder output = project.getWorkspace().getRoot().getFolder(outputLocation);
-        
+        IFolder output = project.getWorkspace().getRoot().getFolder(
+                outputLocation);
+
         String path = output.getRawLocation().toOSString();
         return path;
     }

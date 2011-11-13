@@ -18,13 +18,18 @@ package org.nuxeo.ide.sdk.ui.actions;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.equinox.security.storage.StorageException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.ui.ISharedImages;
 import org.eclipse.jdt.ui.JavaUI;
@@ -47,12 +52,15 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.nuxeo.ide.common.UI;
+import org.nuxeo.ide.sdk.IConnectProvider;
 import org.nuxeo.ide.sdk.NuxeoSDK;
+import org.nuxeo.ide.sdk.SDKPlugin;
 import org.nuxeo.ide.sdk.index.Dependency;
 import org.nuxeo.ide.sdk.index.DependencyEntry;
 import org.nuxeo.ide.sdk.index.DependencyProvider;
 import org.nuxeo.ide.sdk.model.Artifact;
 import org.nuxeo.ide.sdk.model.PomModel;
+import org.osgi.service.prefs.BackingStoreException;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -114,7 +122,7 @@ public class CollectDependenciesPage extends WizardPage {
                 }
             }
         });
-        computeDependencies(tv);
+        computeDependencies();
     }
 
     protected DependencyEntry[] removeExistingEntries(IJavaProject project,
@@ -152,46 +160,50 @@ public class CollectDependenciesPage extends WizardPage {
         return list.toArray(new DependencyEntry[list.size()]);
     }
 
-    protected void computeDependencies(CheckboxTreeViewer tv) {
+    protected DependencyEntry[] getStudioEntries(IProject project) throws IOException, StorageException, BackingStoreException, CoreException {
+        ArrayList<DependencyEntry> entries = 
+                new ArrayList<DependencyEntry>();
+        for (IConnectProvider.Infos infos : SDKPlugin.getDefault().getConnectProvider().getLibrariesInfos(
+                project.getProject(), null)) {
+            Artifact artifact = Artifact.fromGav(infos.gav);
+            artifact.setUnmanaged();
+            entries.add(new DependencyEntry(artifact));
+        }
+        return entries.toArray(new DependencyEntry[entries.size()]);
+    }
+
+    protected void computeDependencies() {
         NuxeoSDK sdk = NuxeoSDK.getDefault();
         if (sdk == null) {
             UI.showError("Failed to collect dependencies: No Nuxeo SDK was configured");
             return;
         }
+        ArrayList<DependencyEntry> entries =
+                new ArrayList<DependencyEntry>();
         try {
             IJavaProject project = ((SyncPomWizard) getWizard()).getSelectedProject();
             Set<Dependency> mainDeps = DependencyProvider.getNonTestDependencies(project);
             DependencyEntry[] mainEntries = sdk.getArtifactIndex().resolve(
                     mainDeps);
             // then remove deps already in pom
-            mainEntries = removeExistingEntries(project, mainEntries);
+            entries.addAll(Arrays.asList(removeExistingEntries(project, mainEntries)));
 
             Set<Dependency> testDeps = DependencyProvider.getTestDependencies(project);
             DependencyEntry[] testEntries = sdk.getTestArtifactIndex().resolve(
                     testDeps);
             // remove test dependencies already in main dependencies
             testEntries = removeDuplicateEntries(testEntries, mainEntries);
-            // then remove deps already in pom
-            testEntries = removeExistingEntries(project, testEntries);
             // add test scope
             for (DependencyEntry entry : testEntries) {
                 entry.getArtifact().setScope("test");
             }
+            // then remove deps already in pom
+            entries.addAll(Arrays.asList(removeExistingEntries(project, testEntries)));
+            
+            DependencyEntry[] studioEntries = getStudioEntries(project.getProject());
+            entries.addAll(Arrays.asList(removeExistingEntries(project, studioEntries)));
 
-            DependencyEntry[] entries = null;
-            if (mainEntries.length == 0) {
-                entries = testEntries;
-            } else if (testEntries.length == 0) {
-                entries = mainEntries;
-            } else {
-                entries = new DependencyEntry[mainEntries.length
-                        + testEntries.length];
-                System.arraycopy(mainEntries, 0, entries, 0, mainEntries.length);
-                System.arraycopy(testEntries, 0, entries, mainEntries.length,
-                        testEntries.length);
-            }
-
-            tv.setInput(entries);
+            tv.setInput(entries.toArray(new DependencyEntry[entries.size()]));
         } catch (Exception e) {
             UI.showError("Failed to collect dependencies", e);
         }
