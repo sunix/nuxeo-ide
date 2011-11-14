@@ -189,6 +189,9 @@ public class StudioProvider {
     public IConnectProvider.Infos[] getLibrariesInfos(IProject project) {
             StudioProjectBinding binding = getBinding(project);
         ArrayList<IConnectProvider.Infos> infos = new ArrayList<IConnectProvider.Infos>();
+        if (binding == null) {
+            return new IConnectProvider.Infos[0];
+        }
         for (String id:binding.getProjectIds()) {
             @SuppressWarnings("hiding")
             File file = repositoryManager.getFile(id);
