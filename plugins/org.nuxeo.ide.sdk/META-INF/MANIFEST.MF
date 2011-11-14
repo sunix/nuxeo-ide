@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Nuxeo IDE SDK
 Bundle-SymbolicName: org.nuxeo.ide.sdk;singleton:=true
-Bundle-Version: 1.1.5.R11x_v20111114_1737
+Bundle-Version: 1.1.6.qualifier
 Bundle-Activator: org.nuxeo.ide.sdk.SDKPlugin
 Bundle-Vendor: Nuxeo
 Require-Bundle: org.eclipse.ui,
