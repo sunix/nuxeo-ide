@@ -1,5 +1,22 @@
+/*
+ * (C) Copyright 2006-2011 Nuxeo SA (http://nuxeo.com/) and contributors.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Lesser General Public License
+ * (LGPL) version 2.1 which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/lgpl.html
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * Contributors:
+ *     bstefanescu
+ */
 package org.nuxeo.ide.sdk;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -65,17 +82,28 @@ public class SDKPlugin extends AbstractUIPlugin {
 
     /**
      * Returns the shared instance
-     * 
+     *
      * @return the shared instance
      */
     public static SDKPlugin getDefault() {
         return plugin;
     }
 
+    /**
+     *
+     * @param status a status value from {@link IStatus}
+     * @param message
+     */
     public static void log(int status, String message) {
         getDefault().getLog().log(new Status(status, PLUGIN_ID, message));
     }
 
+    /**
+     *
+     * @param status a status value from {@link IStatus}
+     * @param message
+     * @param cause
+     */
     public static void log(int status, String message, Throwable cause) {
         getDefault().getLog().log(new Status(status, PLUGIN_ID, message, cause));
     }
