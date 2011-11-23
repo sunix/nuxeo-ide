@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2006-2010 Nuxeo SAS (http://nuxeo.com/) and contributors.
+ * (C) Copyright 2006-2011 Nuxeo SA (http://nuxeo.com/) and contributors.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser General Public License
@@ -12,13 +12,14 @@
  * Lesser General Public License for more details.
  *
  * Contributors:
- *     bstefanescu
+ *     bstefanescu, jcarsique
  */
 package org.nuxeo.ide.sdk.index;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -27,7 +28,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.regex.Pattern;
 
+import org.eclipse.core.runtime.IStatus;
+import org.nuxeo.ide.sdk.SDKPlugin;
 import org.nuxeo.ide.sdk.model.Artifact;
 import org.nuxeo.ide.sdk.model.PomModel;
 import org.nuxeo.ide.sdk.userlibs.UserLib;
@@ -35,23 +39,31 @@ import org.nuxeo.ide.sdk.userlibs.UserLibPreferences;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
- * 
+ *
  */
 public class Index {
 
     public static Index load(File file, String builtinIndex) {
-        Map<String, String> map = null;
+        Map<String, String> map = new HashMap<String, String>();
         try {
-            if (file.isFile()) {
-                map = loadIndex(file);
-            } else if (builtinIndex != null) {
+            final Pattern filePattern = Pattern.compile(file.getName());
+            File[] files = file.getParentFile().listFiles(new FilenameFilter() {
+
+                @Override
+                public boolean accept(File directory, String filename) {
+                    return filePattern.matcher(filename).matches();
+                }
+            });
+            for (File indexFile : files) {
+                map.putAll(loadIndex(indexFile));
+            }
+            if (files.length == 0 && builtinIndex != null) {
+                SDKPlugin.log(IStatus.WARNING,
+                        "Fallback on builtin index file.");
                 map = loadBuiltinIndex(builtinIndex);
             }
         } catch (Throwable t) {
-            t.printStackTrace(); // TODO log
-        }
-        if (map == null) {
-            map = new HashMap<String, String>();
+            SDKPlugin.log(IStatus.ERROR, "Couldn't load index.", t);
         }
         return new Index(map);
     }
