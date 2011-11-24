@@ -49,11 +49,11 @@ public class SDKInfo {
 
     public static final String SDK_ARTIFACTS_FILE = "artifacts.properties";
 
-    public static final String SDK_ARTIFACTS_PATH = "sdk/artifacts*.properties";
+    public static final String SDK_ARTIFACTS_PATH = "sdk/artifacts.*.properties";
 
     public static final String SDK_TEST_ARTIFACTS_FILE = "test-artifacts.properties";
 
-    public static final String SDK_TEST_ARTIFACTS_PATH = "sdk/test-artifacts*.properties";
+    public static final String SDK_TEST_ARTIFACTS_PATH = "sdk/test-artifacts.*.properties";
 
     protected String id;
 
