@@ -258,13 +258,11 @@ public class OperationScanner {
                                     param.setWidget(((StringLiteral) expr).getLiteralValue());
                                 } else if ("values".equals(key)) {
                                     List<Expression> values = ((ArrayInitializer) expr).expressions();
-                                    if (!values.isEmpty()) {
-                                        ArrayList<String> vlist = new ArrayList<String>();
-                                        for (Expression v : values) {
-                                            vlist.add(((StringLiteral) v).getLiteralValue());
-                                        }
-                                        param.setValues(vlist.toArray(new String[vlist.size()]));
+                                    ArrayList<String> vlist = new ArrayList<String>();
+                                    for (Expression v : values) {
+                                        vlist.add(((StringLiteral) v).getLiteralValue());
                                     }
+                                    param.setValues(vlist.toArray(new String[vlist.size()]));
                                 } else if ("order".equals(key)) {
                                     param.setOrder(Integer.parseInt(((NumberLiteral) expr).getToken()));
                                 }

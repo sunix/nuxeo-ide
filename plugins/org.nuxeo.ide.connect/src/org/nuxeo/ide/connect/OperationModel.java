@@ -107,7 +107,7 @@ public class OperationModel {
 
         protected boolean required = true;
 
-        protected String[] values;
+        protected String[] values = new String[0];
 
         protected String widget;
 
