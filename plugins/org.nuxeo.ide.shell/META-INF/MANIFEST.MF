@@ -7,7 +7,7 @@ Bundle-Activator: org.nuxeo.ide.shell.Activator
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: .,
- lib/nuxeo-shell-5.5-SNAPSHOT.jar
+ lib/nuxeo-shell-5.5.jar
 Export-Package: org.nuxeo.ide.shell,
  org.nuxeo.ide.shell.views
 Require-Bundle: org.eclipse.core.runtime,
