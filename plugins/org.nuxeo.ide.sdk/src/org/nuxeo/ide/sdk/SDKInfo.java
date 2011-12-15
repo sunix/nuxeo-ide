@@ -157,9 +157,17 @@ public class SDKInfo {
     protected void generateSDKTemplate(File templates, File sdkTemp)
             throws IOException {
         sdkTemp.mkdirs();
+        createDefaults(sdkTemp);
         enabledDevClassloader(new File(templates, "default"), sdkTemp);
         enableLoaderTimer(new File(templates, "common"), sdkTemp);
         enableSeamHotReload(new File(templates, "common"), sdkTemp);
+    }
+
+    protected void createDefaults(File sdkTemp) throws IOException {
+        File defaults = new File(sdkTemp, "nuxeo.defaults");
+        defaults.createNewFile();
+        IOUtils.writeFile(defaults,
+                "nuxeo.templats.include=default\nsdk.target=.\n");
     }
 
     protected void enableSeamHotReload(File templates, File sdkTemp)
