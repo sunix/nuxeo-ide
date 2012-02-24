@@ -64,6 +64,7 @@ public class Console extends StyledText implements ConsoleReaderFactory,
         in = new In();
         out = new Out();
         reader = new ConsoleReader(in, out, null, new SWTTerminal(this));
+        reader.setAutoprintThreshhold(2000);
         // reader.setCompletionHandler(new SwingCompletionHandler(this));
         complete = reader.getClass().getDeclaredMethod("complete");
         complete.setAccessible(true);
