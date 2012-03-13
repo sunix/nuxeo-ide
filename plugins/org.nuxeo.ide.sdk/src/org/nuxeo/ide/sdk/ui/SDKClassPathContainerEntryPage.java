@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2006-2010 Nuxeo SAS (http://nuxeo.com/) and contributors.
+ * (C) Copyright 2006-2012 Nuxeo SA (http://nuxeo.com/) and contributors.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser General Public License
@@ -43,7 +43,7 @@ import org.nuxeo.ide.sdk.model.Artifact;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
- * 
+ *
  */
 public class SDKClassPathContainerEntryPage extends PropertyPage {
 
@@ -53,7 +53,7 @@ public class SDKClassPathContainerEntryPage extends PropertyPage {
                 IPackageFragmentRoot.class);
         if (root == null) {
             Label label = new Label(parent, SWT.NONE);
-            label.setText("Input si not a classpath entry!");
+            label.setText("Input is not a classpath entry!");
             return label;
         }
 
@@ -63,7 +63,7 @@ public class SDKClassPathContainerEntryPage extends PropertyPage {
             if (path != null) {
                 msg = "Sources are already configured";
             } else {
-                msg = "Souces are not yet configured";
+                msg = "Sources are not yet configured";
             }
         } catch (JavaModelException e) {
             msg = "Failed to get source status";
@@ -116,7 +116,7 @@ public class SDKClassPathContainerEntryPage extends PropertyPage {
         try {
             FileRef ref = MavenDownloader.downloadSourceJar(artifact);
             if (ref == null) {
-                UI.showError("No sources found for corresponding artifact: "
+                UI.showError("Sources not found for corresponding artifact: "
                         + artifact);
                 return;
             }
@@ -129,7 +129,7 @@ public class SDKClassPathContainerEntryPage extends PropertyPage {
                 }
             });
         } catch (IOException e) {
-            UI.showError("Faield to download artifact file", e);
+            UI.showError("Failed to download file for: " + artifact, e);
         }
     }
 
