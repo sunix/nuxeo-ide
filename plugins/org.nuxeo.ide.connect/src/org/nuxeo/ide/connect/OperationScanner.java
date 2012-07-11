@@ -48,10 +48,11 @@ import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.StringLiteral;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.nuxeo.ide.common.UI;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
- * 
+ *
  */
 public class OperationScanner {
 
@@ -123,14 +124,14 @@ public class OperationScanner {
     /**
      * Get the operation model corresponding to the given compilation unit - if
      * any is found.
-     * 
+     *
      * Try to compile the given compilation unit and return the corresponding
      * operation model if one is found. If the compilation unit doesn't contains
      * any operation - null is returned.
      * <p>
      * Note that the effective compilation is done only if the compilation unit
      * represents an operation.
-     * 
+     *
      * @param unit
      * @return the operation model or null
      */
@@ -144,7 +145,11 @@ public class OperationScanner {
         if (type.getAnnotation("Operation").exists()) {
             ASTNode node = compile(unit, monitor);
             OperationBuilder builder = new OperationBuilder(type);
-            node.accept(builder);
+            try {
+                node.accept(builder);
+            } catch (Throwable e) {
+                UI.showError("Cannot introspect operation " + unit.getElementName(), e);
+            }
             return builder.op;
         }
         return null;
@@ -160,6 +165,21 @@ public class OperationScanner {
         return parser.createAST(monitor);
     }
 
+    static class UnknownExpressionTypeException extends RuntimeException {
+
+        private static final long serialVersionUID = 1L;
+
+        public UnknownExpressionTypeException(String message, Throwable cause) {
+            super(message, cause);
+        }
+
+        public UnknownExpressionTypeException(String message) {
+            super(message);
+        }
+
+
+
+    }
     static class OperationBuilder extends ASTVisitor {
 
         protected OperationModel op;
@@ -168,9 +188,18 @@ public class OperationScanner {
             op = new OperationModel(type);
         }
 
+
         @Override
-        @SuppressWarnings({ "unchecked" })
         public boolean visit(TypeDeclaration node) {
+            try {
+                return doVisit(node);
+            } catch (Throwable e) {
+                throw new UnknownExpressionTypeException("Cannot extract annotations values in " + node.toString(), e);
+            }
+        }
+
+    @SuppressWarnings({ "unchecked" })
+        protected boolean doVisit(TypeDeclaration node) {
             List<IExtendedModifier> mods = node.modifiers();
             for (IExtendedModifier m : mods) {
                 if (m instanceof NormalAnnotation) {
@@ -251,20 +280,20 @@ public class OperationScanner {
                                 String key = attr.getName().getFullyQualifiedName();
                                 Expression expr = attr.getValue();
                                 if ("name".equals(key)) {
-                                    param.setName(((StringLiteral) expr).getLiteralValue());
+                                    param.setName(extractValue(expr, String.class));
                                 } else if ("required".equals(key)) {
-                                    param.setRequired(((BooleanLiteral) expr).booleanValue());
+                                    param.setRequired(extractValue(expr, Boolean.class));
                                 } else if ("widget".equals(key)) {
-                                    param.setWidget(((StringLiteral) expr).getLiteralValue());
+                                    param.setWidget(extractValue(expr, String.class));
                                 } else if ("values".equals(key)) {
                                     List<Expression> values = ((ArrayInitializer) expr).expressions();
                                     ArrayList<String> vlist = new ArrayList<String>();
                                     for (Expression v : values) {
-                                        vlist.add(((StringLiteral) v).getLiteralValue());
+                                        vlist.add(extractValue(v, String.class));
                                     }
                                     param.setValues(vlist.toArray(new String[vlist.size()]));
                                 } else if ("order".equals(key)) {
-                                    param.setOrder(Integer.parseInt(((NumberLiteral) expr).getToken()));
+                                    param.setOrder(extractValue(expr, Integer.class));
                                 }
                             }
                             op.addParam(param);
@@ -275,6 +304,25 @@ public class OperationScanner {
 
             return false;
         }
+
+        protected <T> T extractValue(Expression expr, Class<T> clazz) {
+            if (expr instanceof QualifiedName) {
+                return clazz.cast(((QualifiedName) expr).getQualifier().resolveConstantExpressionValue());
+            }
+            if (expr instanceof StringLiteral) {
+                return clazz.cast(((StringLiteral) expr).getLiteralValue());
+            }
+            if (expr instanceof NumberLiteral) {
+                return clazz.cast(((NumberLiteral) expr).getToken());
+            }
+            if (expr instanceof BooleanLiteral) {
+                return clazz.cast(((BooleanLiteral)expr).booleanValue());
+            }
+            throw new IllegalArgumentException(
+                    "Cannot handle widget value of type "
+                            + expr.getClass().getSimpleName());
+        }
+
 
         public String getTypeSignature(Type type) {
             if (type.isSimpleType()) {
