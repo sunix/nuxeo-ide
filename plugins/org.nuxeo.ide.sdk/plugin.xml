@@ -302,7 +302,7 @@
               tooltip="Select projects to deploy on server"
               class="org.nuxeo.ide.sdk.server.ui.AutoDeployConfiguration">
        </action>
-       <action id="org.nuxeo.ide.sdk.ui.server.deployAction"
+       <action id="org.nuxeo.ide.sdk.ui.server.reloadProjects"
               label="Reload Projects"
           menubarPath="ctrl"
               toolbarPath="ctrl"
