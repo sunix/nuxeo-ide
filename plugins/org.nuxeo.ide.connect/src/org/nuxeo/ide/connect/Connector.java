@@ -32,7 +32,7 @@ import org.osgi.service.prefs.BackingStoreException;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
- * 
+ *
  */
 public class Connector {
 
@@ -94,26 +94,25 @@ public class Connector {
     }
 
     public String getProjectContent(String projectId) throws Exception {
-        if (auth == null) {
-            return null;
-        }
         URL location = new URL(baseUrl, "api/projects/" + projectId);
         InputStream is = doGet(location);
         return IOUtils.read(is);
     }
 
     public InputStream downloadJarArtifact(String projectId) throws IOException {
-        URL location = new URL(baseUrl, "maven/nuxeo-studio/" + projectId
-                + "/0.0.0-SNAPSHOT/" + projectId + "-0.0.0-SNAPSHOT.jar");
+        StudioProvider provider = ConnectPlugin.getStudioProvider();
+        StudioProject project = provider.getProject(projectId);
+        URL location = new URL(baseUrl, "maven/" + project.getGAV().formatPath());
         return doGet(location);
     }
 
     public boolean exportOperationRegistry(String projectId, String reg)
             throws Exception {
-        if (auth == null) {
-            return false;
-        }
         URL url = new URL(baseUrl, "api/projects/" + projectId + "/operations");
+        if (auth == null) {
+            throw new IOException(
+                    "No authentification info, cannot connect to " + url.toExternalForm());
+        }
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestProperty("Content-Type", "application/studio-registry");
         conn.setRequestMethod("POST");

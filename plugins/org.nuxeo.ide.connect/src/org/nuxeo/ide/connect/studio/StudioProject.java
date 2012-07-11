@@ -29,13 +29,12 @@ import org.codehaus.jackson.JsonParser.Feature;
 import org.codehaus.jackson.JsonToken;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.nuxeo.ide.connect.ConnectPlugin;
 import org.nuxeo.ide.connect.ConnectPreferences;
 import org.nuxeo.ide.connect.studio.tree.ProjectTree;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
- * 
+ *
  */
 public class StudioProject implements Comparable<StudioProject> {
 
@@ -49,6 +48,8 @@ public class StudioProject implements Comparable<StudioProject> {
 
     protected String name;
 
+    protected GAV gav;
+
     protected String targetVersion;
 
     protected Map<String, Map<String, StudioFeature>> features;
@@ -58,6 +59,30 @@ public class StudioProject implements Comparable<StudioProject> {
     protected Map<String, String> categories;
 
     protected TargetPlatform platform;
+
+    public static class GAV {
+        public final String groupId;
+        public final String artifactId;
+        public final String version;
+
+        GAV(String[] infos) {
+            groupId = infos[0];
+            artifactId = infos[1];
+            version = infos[2];
+        }
+
+        public String formatPath() {
+            return String.format("%s/%s/%s/%s-%s.jar", groupId,artifactId,version,artifactId,version);
+        }
+
+        public String formatGAV() {
+            return String.format("%s:%s:%s", groupId, artifactId, version);
+        }
+
+        public String toString() {
+            return formatGAV();
+        }
+    }
 
     private StudioProject() {
         this.features = new HashMap<String, Map<String, StudioFeature>>();
@@ -78,6 +103,9 @@ public class StudioProject implements Comparable<StudioProject> {
         return id;
     }
 
+    public GAV getGAV() {
+        return gav;
+    }
     public String getName() {
         return name;
     }
@@ -133,7 +161,7 @@ public class StudioProject implements Comparable<StudioProject> {
 
     /**
      * Get project defined document schemas. Platform schemas are not included.
-     * 
+     *
      * @return
      */
     public DocumentSchema[] getDocumentSchemas() {
@@ -147,7 +175,7 @@ public class StudioProject implements Comparable<StudioProject> {
     /**
      * Get project defined document types. Platform document types are not
      * included
-     * 
+     *
      * @return
      */
     public DocumentType[] getDocumentTypes() {
@@ -305,6 +333,8 @@ public class StudioProject implements Comparable<StudioProject> {
                 readCategories(jp, project);
             } else if (key.equals("platform")) {
                 readPlatform(jp, project);
+            } else if (key.equals("gav")) {
+                project.gav = new GAV(jp.getText().split(":"));
             }
         }
 
