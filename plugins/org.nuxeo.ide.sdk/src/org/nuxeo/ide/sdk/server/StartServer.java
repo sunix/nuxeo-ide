@@ -21,7 +21,7 @@ import org.nuxeo.ide.sdk.NuxeoSDK;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
- * 
+ *
  */
 public class StartServer extends ProcessRunner {
 

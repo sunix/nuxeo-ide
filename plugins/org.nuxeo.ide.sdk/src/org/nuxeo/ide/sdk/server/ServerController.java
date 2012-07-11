@@ -32,7 +32,7 @@ import org.osgi.service.prefs.BackingStoreException;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
- * 
+ *
  */
 public class ServerController implements ServerConstants {
 
@@ -206,6 +206,7 @@ public class ServerController implements ServerConstants {
         builder.command().add("-jar");
         builder.command().add(
                 new File(root, "bin/nuxeo-launcher.jar").getAbsolutePath());
+        builder.command().add("--gui=false");
         if (command != null) {
             builder.command().add(command);
         }
