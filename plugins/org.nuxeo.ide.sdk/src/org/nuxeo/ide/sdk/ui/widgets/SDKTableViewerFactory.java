@@ -43,7 +43,7 @@ public class SDKTableViewerFactory {
 
     public static CheckboxTableViewer getTable(Composite parent) {
         final CheckboxTableViewer tv = CheckboxTableViewer.newCheckList(parent,
-                SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+                SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 
         tv.setContentProvider(new SDKContentProvider());
 
