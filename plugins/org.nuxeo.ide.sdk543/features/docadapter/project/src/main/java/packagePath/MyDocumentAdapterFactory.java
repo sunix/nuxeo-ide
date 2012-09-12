@@ -12,7 +12,10 @@ public class ${className}Factory implements DocumentAdapterFactory {
 
     @Override
     public Object getAdapter(DocumentModel doc, Class<?> itf) {
-        return new ${className}(doc);
+        if (<#list schemas as schema>doc.hasSchema("${schema.id}")<#if schema_has_next> && </#if></#list>){
+            return new ${className}(doc);
+        }else{
+            return null;
+        }
     }
-
 }

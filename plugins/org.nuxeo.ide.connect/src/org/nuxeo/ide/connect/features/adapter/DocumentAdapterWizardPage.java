@@ -17,6 +17,7 @@
 package org.nuxeo.ide.connect.features.adapter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jdt.core.IJavaProject;
@@ -100,6 +101,9 @@ public class DocumentAdapterWizardPage extends FeatureWizardPage {
             }
         }
         ctx.put("fields", fields);
+        ArrayList<DocumentSchema> schemaList = new ArrayList<DocumentSchema>();
+        Collections.addAll(schemaList, schemas);
+        ctx.put("schemas", schemaList);
     }
 
 }
