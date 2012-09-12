@@ -68,7 +68,6 @@ public class Template implements Comparable<Template> {
      */
     protected String extensions;
 
-
     protected Template(String id) {
         this.id = id;
         this.name = id;
@@ -217,6 +216,8 @@ public class Template implements Comparable<Template> {
             dir.getParentFile().mkdir();
             tmp.renameTo(dir);
         } else {
+            dir.delete();
+            dir.mkdir();
             IOUtils.copyTreeContent(tmp, dir, false);
         }
     }
@@ -260,7 +261,7 @@ public class Template implements Comparable<Template> {
         if (cmd instanceof PostCreateCommand) {
             temp.postCreateCommands.add((PostCreateCommand) cmd);
             knownType = true;
-        } 
+        }
         if (!knownType) {
             throw new IllegalArgumentException("Unknown command type: " + tag
                     + " -> " + cmd);
