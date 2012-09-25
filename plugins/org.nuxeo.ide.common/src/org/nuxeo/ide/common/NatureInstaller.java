@@ -90,7 +90,7 @@ public class NatureInstaller {
                     }
                 }
             } catch (CoreException e) {
-                e.printStackTrace();
+                UI.showError("Error while removing nature", e);
             }
         }
     }

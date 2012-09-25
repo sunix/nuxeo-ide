@@ -20,6 +20,7 @@ import java.util.Arrays;
 
 import org.eclipse.jdt.core.CompletionProposal;
 import org.eclipse.jdt.ui.text.java.JavaContentAssistInvocationContext;
+import org.nuxeo.ide.common.UI;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -75,7 +76,7 @@ public abstract class MethodArgumentMatcher {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            UI.showError("Error while compiling studio proposal", e);
         }
     }
 

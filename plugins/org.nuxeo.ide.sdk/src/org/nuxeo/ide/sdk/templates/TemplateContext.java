@@ -25,6 +25,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.common.forms.Form;
 import org.nuxeo.ide.common.forms.UIObject;
 
@@ -62,7 +63,7 @@ public class TemplateContext extends HashMap<String, Object> {
                 put("authorTag", "");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            UI.showError("Cannot fill template context", e);
         }
     }
 

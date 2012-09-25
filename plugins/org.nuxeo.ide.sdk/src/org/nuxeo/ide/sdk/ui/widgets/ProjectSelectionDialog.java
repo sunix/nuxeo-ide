@@ -28,6 +28,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.CheckedTreeSelectionDialog;
+import org.nuxeo.ide.common.UI;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -90,7 +91,7 @@ public class ProjectSelectionDialog extends CheckedTreeSelectionDialog {
                 }
                 return list.toArray(new IJavaProject[list.size()]);
             } catch (CoreException e) {
-                e.printStackTrace();
+                UI.showError("Cannot fetch elements", e);
                 return null;
             }
         }

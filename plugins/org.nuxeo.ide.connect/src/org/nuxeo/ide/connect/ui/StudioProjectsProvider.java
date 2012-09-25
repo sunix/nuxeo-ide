@@ -68,7 +68,7 @@ public class StudioProjectsProvider extends BaseLabelProvider implements
             try {
                 return ((StudioProjectBinding) inputElement).getProjects();
             } catch (Exception e) {
-                e.printStackTrace();
+                UI.showError("Cannot fetch studio binding", e);
             }
         } else if (inputElement.getClass().isArray()) {
             return (Object[]) inputElement;

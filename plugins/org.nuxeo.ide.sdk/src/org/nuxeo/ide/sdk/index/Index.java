@@ -31,6 +31,7 @@ import java.util.TreeMap;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.IStatus;
+import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.sdk.SDKPlugin;
 import org.nuxeo.ide.sdk.model.Artifact;
 import org.nuxeo.ide.sdk.model.PomModel;
@@ -142,7 +143,7 @@ public class Index {
                         return lib.getArtifact();
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    UI.showError("Cannot resolve dependency", e);
                 }
             }
         } else {
@@ -157,7 +158,7 @@ public class Index {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                UI.showError("Cannot resolve dependency", e);
             }
         }
         return null;

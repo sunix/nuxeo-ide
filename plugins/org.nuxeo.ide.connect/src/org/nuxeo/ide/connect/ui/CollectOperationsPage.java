@@ -188,7 +188,7 @@ public class CollectOperationsPage extends WizardPage {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                UI.showError("Cannot scan operations", e);
             }
             return UI.EMPTY_OBJECTS;
         }

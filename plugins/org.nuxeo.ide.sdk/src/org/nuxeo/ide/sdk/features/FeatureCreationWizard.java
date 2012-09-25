@@ -34,6 +34,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.contentoutline.ContentOutline;
+import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.common.wizards.AbstractWizard;
 import org.nuxeo.ide.sdk.ui.NuxeoNature;
 
@@ -78,7 +79,7 @@ public abstract class FeatureCreationWizard extends
                 return project;
             }
         } catch (CoreException e) {
-            e.printStackTrace(); // TODO
+            UI.showError("Cannot get selected project", e);
         }
         return null;
     }
@@ -210,7 +211,7 @@ public abstract class FeatureCreationWizard extends
             }
             return jelem;
         } catch (JavaModelException e) {
-            e.printStackTrace(); // TODO
+            UI.showError("Cannot find default element",e);
         }
         return null;
     }

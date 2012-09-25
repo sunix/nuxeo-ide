@@ -20,6 +20,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IType;
+import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.sdk.model.ExtensionModel;
 
 /**
@@ -43,7 +44,7 @@ public class FeatureType {
                 return new FeatureType(unit, type, file);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            UI.showError("Cannot convert element to feature", e);
         }
         return null;
     }

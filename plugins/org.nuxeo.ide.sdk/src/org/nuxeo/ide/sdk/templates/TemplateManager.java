@@ -27,6 +27,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.eclipse.core.runtime.Platform;
+import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.sdk.NuxeoSDK;
 import org.nuxeo.ide.sdk.templates.cmd.AppendCommand;
 import org.nuxeo.ide.sdk.templates.cmd.BinaryResourceCommand;
@@ -152,7 +153,7 @@ public class TemplateManager {
                     TemplateRegistry reg = loadRegistry(fragment, url);
                     regs.put(reg.getVersion(), reg);
                 } catch (Exception e) {
-                    e.printStackTrace(); // TODO log
+                    UI.showError("Cannot load bundle registry", e);
                 }
             }
         }

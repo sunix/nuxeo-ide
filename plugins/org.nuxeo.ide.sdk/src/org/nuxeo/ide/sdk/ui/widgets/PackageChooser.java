@@ -26,6 +26,7 @@ import org.eclipse.jdt.ui.JavaElementLabelProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
+import org.nuxeo.ide.common.UI;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -91,7 +92,7 @@ public class PackageChooser extends ObjectChooser<IPackageFragment> {
                 packages = froot.getChildren();
             }
         } catch (JavaModelException e) {
-            e.printStackTrace(); // TODO
+            UI.showError("Cannot find root fragment", e);
         }
         if (packages == null) {
             packages = new IJavaElement[0];

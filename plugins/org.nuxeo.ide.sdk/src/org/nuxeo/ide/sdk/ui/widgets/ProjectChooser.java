@@ -30,6 +30,7 @@ import org.eclipse.jdt.ui.JavaElementLabelProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
+import org.nuxeo.ide.common.UI;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -75,7 +76,7 @@ public class ProjectChooser extends ObjectChooser<IJavaProject> {
         try {
             return chooseProject(project);
         } catch (CoreException e) {
-            e.printStackTrace(); // TODO
+            UI.showError("Cannot select project", e);
         }
         return null;
     }

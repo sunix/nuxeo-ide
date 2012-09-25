@@ -27,6 +27,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.JavaModelException;
 import org.nuxeo.ide.common.StringUtils;
+import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.sdk.IConnectProvider;
 import org.nuxeo.ide.sdk.java.ClasspathEditor;
 
@@ -80,7 +81,7 @@ public class BindingManager implements IResourceChangeListener, IStudioListener 
             listener.handleNewBinding(binding);
             return binding;
         } catch (Exception e) {
-            e.printStackTrace(); // TODO
+           UI.showError("Cannot create binding", e);
         }
         return null;
     }
@@ -95,7 +96,7 @@ public class BindingManager implements IResourceChangeListener, IStudioListener 
             project.setPersistentProperty(
                     StudioProjectBinding.STUDIO_BINDING_P, null);
         } catch (Exception e) {
-            e.printStackTrace(); // TODO
+            UI.showError("Cannot remove binding", e);
         }
     }
 
@@ -110,7 +111,7 @@ public class BindingManager implements IResourceChangeListener, IStudioListener 
                     bindings.put(project.getName(), binding);
                 }
             } catch (Exception e) {
-                e.printStackTrace(); // TODO
+                UI.showError("Cannot get studio binding", e);
             }
         }
         return binding;

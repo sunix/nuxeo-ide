@@ -24,6 +24,7 @@ import org.eclipse.jdt.core.CompletionRequestor;
 import org.eclipse.jdt.ui.text.java.JavaContentAssistInvocationContext;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.swt.graphics.Image;
+import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.connect.ConnectPlugin;
 import org.nuxeo.ide.connect.StudioProjectBinding;
 
@@ -219,7 +220,7 @@ public class StudioArgumentProposalCollector extends CompletionRequestor
             System.out.println("ident: " + ctx.computeIdentifierPrefix());
             System.out.println("------------");
         } catch (Exception e) {
-            e.printStackTrace();
+            UI.showError("Error while compiling studio proposal", e);
         }
     }
 

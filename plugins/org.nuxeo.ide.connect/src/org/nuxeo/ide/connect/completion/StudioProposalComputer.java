@@ -29,6 +29,7 @@ import org.eclipse.jdt.ui.text.java.ContentAssistInvocationContext;
 import org.eclipse.jdt.ui.text.java.IJavaCompletionProposalComputer;
 import org.eclipse.jdt.ui.text.java.JavaContentAssistInvocationContext;
 import org.eclipse.swt.graphics.Point;
+import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.connect.ConnectPlugin;
 import org.nuxeo.ide.connect.StudioProjectBinding;
 
@@ -94,7 +95,7 @@ public class StudioProposalComputer implements IJavaCompletionProposalComputer {
                 unit.codeComplete(offset, collector, new NullProgressMonitor());
                 return collector.getProposals();
             } catch (Exception e) {
-                e.printStackTrace();
+                UI.showError("Error while compiling studio proposal", e);
             }
         }
         return Collections.emptyList();

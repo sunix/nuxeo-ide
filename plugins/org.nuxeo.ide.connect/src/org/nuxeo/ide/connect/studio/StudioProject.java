@@ -29,6 +29,7 @@ import org.codehaus.jackson.JsonParser.Feature;
 import org.codehaus.jackson.JsonToken;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.connect.ConnectPreferences;
 import org.nuxeo.ide.connect.studio.tree.ProjectTree;
 
@@ -228,7 +229,7 @@ public class StudioProject implements Comparable<StudioProject> {
                         + "/ide?project=" + getId();
             }
         } catch (Exception e) {
-            e.printStackTrace(); // TODO
+            UI.showError("Cannot compute project URL", e);
         }
         return null;
     }

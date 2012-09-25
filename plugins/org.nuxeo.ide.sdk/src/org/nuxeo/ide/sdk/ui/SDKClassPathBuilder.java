@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.JavaCore;
+import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.sdk.NuxeoSDK;
 import org.nuxeo.ide.sdk.userlibs.UserLib;
 import org.nuxeo.ide.sdk.userlibs.UserLibPreferences;
@@ -93,7 +94,7 @@ public class SDKClassPathBuilder {
                 result.add(JavaCore.newLibraryEntry(path, srcPath, Path.ROOT));
             }
         } catch (BackingStoreException e) {
-            e.printStackTrace(); // TODO
+            UI.showError("Cannot save classpath", e);
         }
     }
 

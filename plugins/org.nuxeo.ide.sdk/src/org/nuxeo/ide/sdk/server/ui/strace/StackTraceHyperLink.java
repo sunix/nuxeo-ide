@@ -27,7 +27,7 @@ import org.eclipse.jdt.internal.debug.ui.console.JavaStackTraceHyperlink;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
- * 
+ *
  */
 public class StackTraceHyperLink extends JavaStackTraceHyperlink {
 
@@ -52,7 +52,7 @@ public class StackTraceHyperLink extends JavaStackTraceHyperlink {
                 Object result = null;
                 try {
                     // search for the type in the workspace
-                    result = OpenTypeAction.findTypeInWorkspace(typeName);
+                    result = OpenTypeAction.findTypeInWorkspace(typeName, false);
                     searchCompleted(result, typeName, lineNumber, null);
                 } catch (CoreException e) {
                     searchCompleted(null, typeName, lineNumber, e.getStatus());
