@@ -27,7 +27,7 @@ import org.eclipse.jdt.internal.debug.ui.console.JavaExceptionHyperLink;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
- *
+ * 
  */
 public class ExceptionHyperLink extends JavaExceptionHyperLink {
 
@@ -45,7 +45,7 @@ public class ExceptionHyperLink extends JavaExceptionHyperLink {
                 Object result = null;
                 try {
                     // search for the type in the workspace
-                    result = OpenTypeAction.findTypeInWorkspace(typeName, false);
+                    result = OpenTypeAction.findTypeInWorkspace(typeName);
                     searchCompleted(result, typeName, lineNumber, null);
                 } catch (CoreException e) {
                     searchCompleted(null, typeName, lineNumber, e.getStatus());
