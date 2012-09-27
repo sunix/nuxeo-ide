@@ -37,6 +37,8 @@ import org.nuxeo.ide.sdk.java.ClasspathEditor;
  */
 public class BindingManager implements IResourceChangeListener, IStudioListener {
 
+    protected static final char PROJECT_SEP = ',';
+
     protected final Map<String, StudioProjectBinding> bindings;
 
     protected final IBindingListener listener;
@@ -75,7 +77,7 @@ public class BindingManager implements IResourceChangeListener, IStudioListener 
         try {
             project.setPersistentProperty(
                     StudioProjectBinding.STUDIO_BINDING_P,
-                    StringUtils.join(projectIds, ','));
+                    StringUtils.join(projectIds, PROJECT_SEP));
             StudioProjectBinding binding = new StudioProjectBinding(projectIds);
             bindings.put(project.getName(), binding);
             listener.handleNewBinding(binding);
@@ -106,7 +108,7 @@ public class BindingManager implements IResourceChangeListener, IStudioListener 
             try {
                 String v = project.getPersistentProperty(StudioProjectBinding.STUDIO_BINDING_P);
                 if (v != null) {
-                    String[] projectIds = StringUtils.split(v, '.');
+                    String[] projectIds = StringUtils.split(v, PROJECT_SEP);
                     binding = new StudioProjectBinding(projectIds);
                     bindings.put(project.getName(), binding);
                 }
