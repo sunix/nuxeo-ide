@@ -103,7 +103,9 @@ public class SDKClassPathBuilder {
         File[] files = root.listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
-                return name.endsWith(".jar");
+                // accept jar and xpi (especially for firebug.xpi), reject
+                // others like txt or xml that are not zip files
+                return name.endsWith(".jar") || name.endsWith(".xpi");
             }
         });
         if (files != null) {
