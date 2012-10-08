@@ -15,6 +15,8 @@ import org.nuxeo.ide.common.UI;
 
 public class RepositoryManager implements IBindingListener, IStudioListener {
 
+    static final String studioJarSuffix = "-0.0.0-SNAPSHOT.jar";
+
     protected final File root;
 
     protected static class Entry {
@@ -68,7 +70,7 @@ public class RepositoryManager implements IBindingListener, IStudioListener {
             Entry entry = entries.get(projectId);
             if (!entries.containsKey(projectId)) {
                 entry = new Entry(projectId, new File(root, projectId
-                        + "-0.0.0-SNAPSHOT.jar"));
+                        + studioJarSuffix));
                 entry.download();
                 entries.put(projectId, entry);
             }
@@ -81,10 +83,12 @@ public class RepositoryManager implements IBindingListener, IStudioListener {
         } else {
             for (File file : root.listFiles()) {
                 String name = file.getName();
-                int suffixIndex = name.lastIndexOf("-0.0.0-SNAPSHOT.jar");
-                String projectId = name.substring(0, suffixIndex);
-                Entry entry = new Entry(projectId, file);
-                entries.put(projectId, entry);
+                if (name.endsWith(studioJarSuffix)) {
+                    int suffixIndex = name.lastIndexOf(studioJarSuffix);
+                    String projectId = name.substring(0, suffixIndex);
+                    Entry entry = new Entry(projectId, file);
+                    entries.put(projectId, entry);
+                }
             }
         }
     }
