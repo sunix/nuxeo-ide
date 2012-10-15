@@ -21,8 +21,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
@@ -195,7 +193,6 @@ public class StudioProvider {
             return new IConnectProvider.Infos[0];
         }
         for (String id : binding.getProjectIds()) {
-            @SuppressWarnings("hiding")
             File file = repositoryManager.getFile(id);
             String gav = "nuxeo-studio:" + id + ":0.0.0-SNAPSHOT";
             infos.add(new IConnectProvider.Infos(file, gav));
@@ -203,7 +200,7 @@ public class StudioProvider {
         return infos.toArray(new IConnectProvider.Infos[infos.size()]);
     }
 
-    public void clear() throws JavaModelException {
+    public void clear() throws CoreException {
         // Remove all bindings + studio classpath dependency
         bindingManager.removeBindings();
         // Delete studio projects

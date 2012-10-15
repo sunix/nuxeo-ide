@@ -24,12 +24,14 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.JavaModelException;
 import org.nuxeo.ide.common.StringUtils;
 import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.sdk.IConnectProvider;
 import org.nuxeo.ide.sdk.java.ClasspathEditor;
+import org.nuxeo.ide.sdk.ui.NuxeoNature;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -110,9 +112,12 @@ public class BindingManager implements IResourceChangeListener, IStudioListener 
         }
     }
 
-    public void removeBindings() throws JavaModelException {
+    public void removeBindings() throws CoreException {
         IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
         for (IProject project : projects) {
+            if (!NuxeoNature.isNuxeoProject(project)) {
+                continue;
+            }
             removeBinding(project);
         }
     }
