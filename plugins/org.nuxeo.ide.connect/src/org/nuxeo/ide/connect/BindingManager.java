@@ -92,10 +92,10 @@ public class BindingManager implements IResourceChangeListener, IStudioListener 
         bindings.remove(project.getName());
     }
 
-    public void removeBinding(IProject project) {
+    public void removeBinding(IProject project) throws JavaModelException {
+        ClasspathEditor editor = new ClasspathEditor(project);
         try {
             // Remove classpath dependency
-            ClasspathEditor editor = new ClasspathEditor(project);
             for (IConnectProvider.Infos infos : ConnectPlugin.getStudioProvider().getLibrariesInfos(
                     project)) {
                 editor.removeLibrary(new Path(infos.file.getAbsolutePath()));
@@ -105,10 +105,12 @@ public class BindingManager implements IResourceChangeListener, IStudioListener 
                     StudioProjectBinding.STUDIO_BINDING_P, null);
         } catch (Exception e) {
             UI.showError("Cannot remove binding", e);
+        } finally {
+            editor.flush();
         }
     }
 
-    public void removeBindings() {
+    public void removeBindings() throws JavaModelException {
         IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
         for (IProject project : projects) {
             removeBinding(project);
@@ -149,7 +151,11 @@ public class BindingManager implements IResourceChangeListener, IStudioListener 
             break;
         case IResourceChangeEvent.PRE_DELETE:
             if (resource instanceof IProject) {
-                removeBinding((IProject) resource);
+                try {
+                    removeBinding((IProject) resource);
+                } catch (JavaModelException e) {
+                    UI.showError("Cannot remove studio binding", e);
+                }
                 return;
             }
             break;

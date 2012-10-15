@@ -203,12 +203,10 @@ public class StudioProvider {
         return infos.toArray(new IConnectProvider.Infos[infos.size()]);
     }
 
-    public void clear() {
+    public void clear() throws JavaModelException {
         // Remove all bindings + studio classpath dependency
         bindingManager.removeBindings();
         // Delete studio projects
         repositoryManager.erase();
-        repositoryManager.garbage(new HashSet<StudioProjectBinding>(
-                Arrays.asList(bindingManager.getLiveBindings())));
     }
 }
