@@ -125,7 +125,7 @@ public class ConnectPreferencePage extends FormPreferencePage implements
     @Override
     public void store(Form form) throws Exception {
         prefs.save();
-        //ConnectPlugin.getStudioProvider().fireStudioProjectsChanged();
+        ConnectPlugin.getStudioProvider().fireStudioProjectsChanged();
     }
 
     @Override
