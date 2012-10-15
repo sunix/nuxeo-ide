@@ -83,7 +83,7 @@ public class BindingManager implements IResourceChangeListener, IStudioListener 
             listener.handleNewBinding(binding);
             return binding;
         } catch (Exception e) {
-           UI.showError("Cannot create binding", e);
+            UI.showError("Cannot create binding", e);
         }
         return null;
     }
@@ -92,13 +92,28 @@ public class BindingManager implements IResourceChangeListener, IStudioListener 
         bindings.remove(project.getName());
     }
 
-    public void removeBinding(IProject project) {
-        clearBinding(project);
+    public void removeBinding(IProject project) throws JavaModelException {
+        ClasspathEditor editor = new ClasspathEditor(project);
         try {
+            // Remove classpath dependency
+            for (IConnectProvider.Infos infos : ConnectPlugin.getStudioProvider().getLibrariesInfos(
+                    project)) {
+                editor.removeLibrary(new Path(infos.file.getAbsolutePath()));
+            }
+            clearBinding(project);
             project.setPersistentProperty(
                     StudioProjectBinding.STUDIO_BINDING_P, null);
         } catch (Exception e) {
             UI.showError("Cannot remove binding", e);
+        } finally {
+            editor.flush();
+        }
+    }
+
+    public void removeBindings() throws JavaModelException {
+        IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+        for (IProject project : projects) {
+            removeBinding(project);
         }
     }
 
@@ -136,7 +151,11 @@ public class BindingManager implements IResourceChangeListener, IStudioListener 
             break;
         case IResourceChangeEvent.PRE_DELETE:
             if (resource instanceof IProject) {
-                removeBinding((IProject) resource);
+                try {
+                    removeBinding((IProject) resource);
+                } catch (JavaModelException e) {
+                    UI.showError("Cannot remove studio binding", e);
+                }
                 return;
             }
             break;

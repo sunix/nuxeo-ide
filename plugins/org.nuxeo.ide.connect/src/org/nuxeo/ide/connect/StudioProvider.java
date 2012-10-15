@@ -21,6 +21,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
@@ -37,17 +39,17 @@ import org.nuxeo.ide.sdk.IConnectProvider;
  * 
  */
 public class StudioProvider {
-    
+
     protected File file;
 
     protected StudioProject[] projects;
 
     protected boolean projectsChanged;
-    
+
     protected ListenerList listeners;
 
     protected BindingManager bindingManager;
-    
+
     protected RepositoryManager repositoryManager;
 
     public StudioProvider(File root) {
@@ -152,7 +154,7 @@ public class StudioProvider {
      * @param project
      * @param studioProjects
      * @return
-     * @throws JavaModelException 
+     * @throws JavaModelException
      */
     public StudioProjectBinding setBinding(IProject project,
             String... projectIds) throws JavaModelException {
@@ -187,17 +189,24 @@ public class StudioProvider {
     }
 
     public IConnectProvider.Infos[] getLibrariesInfos(IProject project) {
-            StudioProjectBinding binding = getBinding(project);
+        StudioProjectBinding binding = getBinding(project);
         ArrayList<IConnectProvider.Infos> infos = new ArrayList<IConnectProvider.Infos>();
         if (binding == null) {
             return new IConnectProvider.Infos[0];
         }
-        for (String id:binding.getProjectIds()) {
+        for (String id : binding.getProjectIds()) {
             @SuppressWarnings("hiding")
             File file = repositoryManager.getFile(id);
-            String gav = "nuxeo-studio:"+id+":0.0.0-SNAPSHOT";
+            String gav = "nuxeo-studio:" + id + ":0.0.0-SNAPSHOT";
             infos.add(new IConnectProvider.Infos(file, gav));
         }
         return infos.toArray(new IConnectProvider.Infos[infos.size()]);
+    }
+
+    public void clear() throws JavaModelException {
+        // Remove all bindings + studio classpath dependency
+        bindingManager.removeBindings();
+        // Delete studio projects
+        repositoryManager.erase();
     }
 }

@@ -107,6 +107,10 @@ public class ConnectPreferences {
     }
 
     public void save() throws Exception {
+        // Remove all studio bindings from Nuxeo IDE projects
+        StudioProvider studioProvider = ConnectPlugin.getStudioProvider();
+        studioProvider.clear();
+
         IEclipsePreferences root = getPreferencesNode();
         ISecurePreferences sroot = getSecurePreferencesNode();
 
@@ -145,7 +149,8 @@ public class ConnectPreferences {
         root.sync();
     }
 
-    public static ConnectPreferences load() throws StorageException, BackingStoreException  {
+    public static ConnectPreferences load() throws StorageException,
+            BackingStoreException {
         IEclipsePreferences root = getPreferencesNode();
         ISecurePreferences sroot = getSecurePreferencesNode();
 
