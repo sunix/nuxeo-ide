@@ -37,6 +37,7 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.nuxeo.ide.sdk.IConnectProvider;
 import org.nuxeo.ide.sdk.SDKPlugin;
+import org.nuxeo.ide.sdk.SDKRegistry;
 import org.nuxeo.ide.sdk.userlibs.UserLib;
 import org.osgi.service.prefs.BackingStoreException;
 

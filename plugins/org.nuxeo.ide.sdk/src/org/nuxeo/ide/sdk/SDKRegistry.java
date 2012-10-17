@@ -165,19 +165,20 @@ public class SDKRegistry {
         return prefs.get("defaultSDK", null);
     }
 
-    public static IConnectProvider getConnectProvider() throws CoreException {
+    public static <T> T loadInstance(Class<T> clazz, String id) throws CoreException {
         IConfigurationElement configs[] = Platform.getExtensionRegistry().getConfigurationElementsFor(
-                IConnectProvider.ID);
+                id);
         ;
         if (configs.length == 0) {
             throw new CoreException(new Status(IStatus.ERROR,
-                    SDKPlugin.PLUGIN_ID, "No connect provider configured"));
+                    SDKPlugin.PLUGIN_ID, "No class of " + clazz.getSimpleName() + " contribued"));
 
         }
         if (configs.length > 1) {
             throw new CoreException(new Status(IStatus.ERROR,
                     SDKPlugin.PLUGIN_ID, "Only one connect provider allowed"));
         }
-        return (IConnectProvider) configs[0].createExecutableExtension("class");
+        return clazz.cast(configs[0].createExecutableExtension("class"));
     }
+    
 }
