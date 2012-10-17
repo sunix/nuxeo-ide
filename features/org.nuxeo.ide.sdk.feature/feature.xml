@@ -44,6 +44,20 @@
          unpack="false"/>
 
    <plugin
+         id="org.nuxeo.ide.sdk.helios"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.nuxeo.ide.sdk.juno"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
          id="org.nuxeo.ide.sdk543"
          download-size="0"
          install-size="0"

@@ -40,6 +40,8 @@ public class SDKPlugin extends AbstractUIPlugin {
     protected TemplateManager tempMgr;
 
     protected IConnectProvider connectProvider;
+    
+    protected IEclipseAdapter eclipseAdapter;
 
     /**
      * The constructor
@@ -56,7 +58,8 @@ public class SDKPlugin extends AbstractUIPlugin {
         tempMgr = new TemplateManager();
         tempMgr.loadRegistry(context.getBundle());
         plugin = this;
-        connectProvider = SDKRegistry.getConnectProvider();
+        connectProvider = SDKRegistry.loadInstance(IConnectProvider.class, IConnectProvider.ID);
+        eclipseAdapter = SDKRegistry.loadInstance(IEclipseAdapter.class, IEclipseAdapter.ID);
         NuxeoSDK.initialize();
     }
 
@@ -78,6 +81,11 @@ public class SDKPlugin extends AbstractUIPlugin {
 
     public IConnectProvider getConnectProvider() {
         return connectProvider;
+    }
+    
+    
+    public IEclipseAdapter getEclipseAdapter() {
+        return eclipseAdapter;
     }
 
     /**

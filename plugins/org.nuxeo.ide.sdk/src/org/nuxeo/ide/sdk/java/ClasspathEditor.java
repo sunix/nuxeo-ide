@@ -121,6 +121,19 @@ public class ClasspathEditor {
         }
     }
 
+    public void removeLibraries() {
+        Iterator<IClasspathEntry> it = entries.iterator();
+        while (it.hasNext()) {
+            IClasspathEntry entry = it.next();
+            switch (entry.getEntryKind()) {
+            case IClasspathEntry.CPE_LIBRARY:
+            case IClasspathEntry.CPE_VARIABLE:
+                it.remove();
+                dirty = true;
+            }
+        }
+    }
+    
     public void flush() throws JavaModelException {
         if (dirty) {
             java.setRawClasspath(

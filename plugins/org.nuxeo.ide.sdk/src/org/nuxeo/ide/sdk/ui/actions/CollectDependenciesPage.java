@@ -55,6 +55,7 @@ import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.sdk.IConnectProvider;
 import org.nuxeo.ide.sdk.NuxeoSDK;
 import org.nuxeo.ide.sdk.SDKPlugin;
+import org.nuxeo.ide.sdk.SDKRegistry;
 import org.nuxeo.ide.sdk.index.Dependency;
 import org.nuxeo.ide.sdk.index.DependencyEntry;
 import org.nuxeo.ide.sdk.index.DependencyProvider;

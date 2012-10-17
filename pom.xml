@@ -23,7 +23,8 @@
     <module>features/org.nuxeo.ide.sdk.feature</module>
     <module>features/org.nuxeo.ide.shell.feature</module>
     <module>sites/org.nuxeo.ide.site</module>
-    <!--module>plugins/org.nuxeo.ide.qatests</module -->
+    <module>plugins/org.nuxeo.ide.sdk.helios</module>
+    <module>plugins/org.nuxeo.ide.sdk.juno</module>
   </modules>
 
   <scm>
@@ -35,7 +36,6 @@
   <properties>
     <tycho-version>0.12.0</tycho-version>
     <platform-version-name>helios</platform-version-name>
-    <eclipse-site>http://download.eclipse.org/releases/${platform-version-name}</eclipse-site>
     <wikitext-site>http://download.eclipse.org/tools/mylyn/update/weekly</wikitext-site>
     <swtbot-site>http://download.eclipse.org/technology/swtbot/${platform-version-name}/dev-build/update-site</swtbot-site>
     <orbit-site>http://download.eclipse.org/tools/orbit/downloads/drops/R20110523182458/repository</orbit-site>
@@ -57,10 +57,16 @@
         </property>
       </activation>
       <properties>
-        <eclipse-site>http://download.eclipse.org/releases/helios</eclipse-site>
         <platform-version>[3.6,3.7)</platform-version>
         <swtbot-site>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site</swtbot-site>
       </properties>
+      <repositories>
+	<repository>
+	  <id>eclipse-juno</id>
+	  <layout>p2</layout>
+          <url>http://download.eclipse.org/releases/juno</url>
+	</repository>
+      </repositories>
     </profile>
     <profile>
       <id>platform-indigo</id>
@@ -71,8 +77,20 @@
         </property>
       </activation>
       <properties>
-        <eclipse-site>http://download.eclipse.org/releases/indigo</eclipse-site>
         <platform-version>[3.7,3.8)</platform-version>
+        <swtbot-site>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site</swtbot-site>
+      </properties>
+    </profile>
+    <profile>
+      <id>platform-juno</id>
+      <activation>
+        <property>
+          <name>platform-version-name</name>
+          <value>juno</value>
+        </property>
+      </activation>
+      <properties>
+        <platform-version>[4.2,4.3)</platform-version>
         <swtbot-site>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site</swtbot-site>
       </properties>
     </profile>
@@ -91,9 +109,14 @@
       </releases>
     </repository>
     <repository>
-      <id>eclipse</id>
+      <id>helios</id>
       <layout>p2</layout>
-      <url>${eclipse-site}</url>
+      <url>http://download.eclipse.org/releases/helios</url>
+    </repository>
+    <repository>
+      <id>juno</id>
+      <layout>p2</layout>
+      <url>http://download.eclipse.org/releases/juno</url>
     </repository>
     <repository>
       <id>swtbot</id>
