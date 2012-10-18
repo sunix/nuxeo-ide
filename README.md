@@ -26,16 +26,16 @@ To facilitate development and debugging
 
 Nuxeo IDE was developed by the Nuxeo team, is a free and open source tool provided under the Eclipse Public Licence. We invite community members to collaborate with us to improve the tool and take it to the next level.
 
-#How to install Nuxeo IDE Eclipse plugin:
+##How to install Nuxeo IDE Eclipse plugin:
 
-- Go to your Eclipse:
-*Menu Help > Eclipse Marketplace...
-*Search for "nuxeo"
-*Install Nuxeo IDE
+- Go to your Eclipse
+- Menu Help > Eclipse Marketplace...
+- Search for "nuxeo"
+- Install Nuxeo IDE
 
-More information on: http://www.nuxeo.com/en/products/nuxeo-ide
-Documentation: http://doc.nuxeo.com/display/IDEDOC/Nuxeo+IDE+Documentation+Center
-Nuxeo IDE eclipse plugin link: http://marketplace.eclipse.org/content/nuxeo-ide
+- More information on: http://www.nuxeo.com/en/products/nuxeo-ide
+- Documentation: http://doc.nuxeo.com/display/IDEDOC/Nuxeo+IDE+Documentation+Center
+- Nuxeo IDE eclipse plugin link: http://marketplace.eclipse.org/content/nuxeo-ide
 
 ## About Nuxeo
 
