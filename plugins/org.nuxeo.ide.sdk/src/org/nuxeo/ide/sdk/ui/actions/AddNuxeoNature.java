@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2006-2010 Nuxeo SAS (http://nuxeo.com/) and contributors.
+ * (C) Copyright 2006-2012 Nuxeo SAS (http://nuxeo.com/) and contributors.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser General Public License
@@ -13,20 +13,21 @@
  *
  * Contributors:
  *     bstefanescu
+ *     Vladimir Pasquier <vpasquier@nuxeo.com>
  */
 package org.nuxeo.ide.sdk.ui.actions;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.LinkedList;
+import java.util.List;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.nuxeo.ide.common.AddNaturesAction;
+import org.nuxeo.ide.sdk.java.ClasspathEditor;
 import org.nuxeo.ide.sdk.ui.NuxeoNature;
+import org.nuxeo.ide.sdk.ui.SDKClassPathContainer;
 
 /**
  * Fake add nature - used as an example
@@ -69,23 +70,13 @@ public class AddNuxeoNature extends AddNaturesAction {
 
     protected void applyClasspath(IProject project, String name,
             IProgressMonitor monitor) throws CoreException {
-        IFile cp = project.getFile(".classpath");
-        InputStream in = getClass().getResourceAsStream(name);
-        if (in != null) {
-            try {
-                if (!cp.exists()) {
-                    cp.create(in, true, new NullProgressMonitor());
-                } else {
-                    cp.setContents(in, true, true, new NullProgressMonitor());
-                }
-            } finally {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    // do nothing
-                }
-            }
-        }
+        ClasspathEditor editor = new ClasspathEditor(project);
+        // Add Nuxeo Containers
+        List<String> containers = new LinkedList<String>();
+        containers.add(SDKClassPathContainer.ID);
+        containers.add(SDKClassPathContainer.ID_TESTS);
+        editor.addContainers(containers);
+        editor.flush();
     }
 
 }
