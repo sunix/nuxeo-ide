@@ -25,6 +25,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.nuxeo.ide.common.AddNaturesAction;
+import org.nuxeo.ide.sdk.SDKRegistry;
 import org.nuxeo.ide.sdk.java.ClasspathEditor;
 import org.nuxeo.ide.sdk.ui.NuxeoNature;
 import org.nuxeo.ide.sdk.ui.SDKClassPathContainer;
@@ -45,6 +46,9 @@ public class AddNuxeoNature extends AddNaturesAction {
     public void install(IProject project, String natureId,
             IProgressMonitor monitor) throws CoreException {
         super.install(project, natureId, monitor);
+        if (!SDKRegistry.getWorkspacePreferences().getBoolean(
+                "useSDKClasspath", Boolean.TRUE))
+            return;
         applyClasspath(project);
     }
 

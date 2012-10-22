@@ -40,7 +40,7 @@ public class SDKRegistry {
                 "sdks");
     }
 
-    private final static Preferences getWorkspacePreferences() {
+    public final static Preferences getWorkspacePreferences() {
         return new InstanceScope().getNode(SDKPlugin.PLUGIN_ID);
     }
 
