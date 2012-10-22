@@ -17,6 +17,8 @@
  */
 package org.nuxeo.ide.sdk.server.ui;
 
+import java.io.File;
+
 import org.eclipse.core.resources.IPathVariableManager;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -62,8 +64,10 @@ public class SDKFormData implements FormData {
             IWorkspace workspace = ResourcesPlugin.getWorkspace();
             IPathVariableManager pathMan = workspace.getPathVariableManager();
             String name = "SDKLINK";
-            IPath value = new Path(workspace.getRoot().getFullPath().toString()
+            IPath value = new Path(workspace.getRoot().getLocation().toString()
                     + Path.SEPARATOR + Constants.NXSDK_BROWSER_LINK_FOLDER);
+            if (!value.toFile().mkdir())
+                return;
             if (pathMan.validateName(name).isOK()
                     && pathMan.validateValue(value).isOK()) {
                 pathMan.setValue(name, value);
