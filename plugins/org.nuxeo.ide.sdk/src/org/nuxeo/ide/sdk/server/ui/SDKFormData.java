@@ -17,8 +17,6 @@
  */
 package org.nuxeo.ide.sdk.server.ui;
 
-import java.io.File;
-
 import org.eclipse.core.resources.IPathVariableManager;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -52,29 +50,28 @@ public class SDKFormData implements FormData {
         SDKRegistry.setDefaultSDK(sdk);
         SDKRegistry.setUseSDKClasspath(!(Boolean) form.getWidgetValue("nosdkcp"));
         // Create linked resource from the SDK
-        SetSDKResourceVariable();
+        setResourceVariable(Constants.NXSDK_BROWSER_LINK_FOLDER,
+                new Path(sdk.getPath() + Path.SEPARATOR + "sdk"));
     }
 
     /**
-     * Set a resource variable in Eclipse to make browsable the SDK attached
-     * after binding a project
+     * Set a resource variable in Eclipse
+     * 
+     * @param variableResourceName (value of the variable)
+     * @param pathValue (value of the resource variable)
      */
-    protected void SetSDKResourceVariable() {
+    protected void setResourceVariable(String variableResourceName,
+            IPath pathValue) {
         try {
             IWorkspace workspace = ResourcesPlugin.getWorkspace();
             IPathVariableManager pathMan = workspace.getPathVariableManager();
-            String name = "SDKLINK";
-            IPath value = new Path(workspace.getRoot().getLocation().toString()
-                    + Path.SEPARATOR + Constants.NXSDK_BROWSER_LINK_FOLDER);
-            if (!value.toFile().mkdir())
-                return;
-            if (pathMan.validateName(name).isOK()
-                    && pathMan.validateValue(value).isOK()) {
-                pathMan.setValue(name, value);
+            pathValue.toFile().mkdir();
+            if (pathMan.validateName(variableResourceName).isOK()
+                    && pathMan.validateValue(pathValue).isOK()) {
+                pathMan.setValue(variableResourceName, pathValue);
             }
         } catch (Exception e) {
-            UI.showError("Unable to create resource variable: " + e);
+            UI.showError("Unable to create resource variable because of: " + e);
         }
     }
-
 }

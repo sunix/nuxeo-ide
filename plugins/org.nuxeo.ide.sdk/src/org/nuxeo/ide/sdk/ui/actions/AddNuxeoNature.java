@@ -88,13 +88,18 @@ public class AddNuxeoNature extends AddNaturesAction {
     public void CreateSDKLinkResource(IProject project) throws CoreException {
         try {
             IWorkspace workspace = ResourcesPlugin.getWorkspace();
-            IFolder link = project.getFolder("Link");
+            IFolder sdkLink = project.getFolder(Constants.NXSDK_BROWSER_LINK_FOLDER);
             IPath location = new Path(Constants.NXSDK_BROWSER_LINK_FOLDER);
-            if (workspace.validateLinkLocation(link, location).isOK()) {
-                link.createLink(location, IResource.NONE, null);
+            // Recreate linked resource if exists (in case of updating the SDK)
+            if (sdkLink.isLinked()) {
+                sdkLink.delete(true, null);
+            }
+            if (workspace.validateLinkLocation(sdkLink, location).isOK()) {
+                sdkLink.createLink(location, IResource.DERIVED, null);
             }
         } catch (Exception e) {
-            UI.showError("Unable to create link resource for sdk: " + e);
+            UI.showError("Unable to create link resource for sdk because of "
+                    + e);
         }
     }
 }
