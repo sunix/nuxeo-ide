@@ -45,19 +45,7 @@ public class AddNuxeoNature extends AddNaturesAction {
     public void install(IProject project, String natureId,
             IProgressMonitor monitor) throws CoreException {
         super.install(project, natureId, monitor);
-        createSourceFolders(project, monitor);
         applyClasspath(project);
-    }
-
-    protected void createSourceFolders(IProject project,
-            IProgressMonitor monitor) throws CoreException {
-        createSourceFolder(project, "src", monitor);
-        createSourceFolder(project, "src/main", monitor);
-        createSourceFolder(project, "src/test", monitor);
-        createSourceFolder(project, "src/main/java", monitor);
-        createSourceFolder(project, "src/main/resources", monitor);
-        createSourceFolder(project, "src/test/java", monitor);
-        createSourceFolder(project, "src/test/resources", monitor);
     }
 
     protected void createSourceFolder(IProject project, String path,

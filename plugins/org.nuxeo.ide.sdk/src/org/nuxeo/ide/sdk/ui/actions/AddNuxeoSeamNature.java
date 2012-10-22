@@ -37,10 +37,8 @@ public class AddNuxeoSeamNature extends AddNuxeoNature {
         super.install(project, natureId, monitor);
     }
 
-    @Override
     protected void createSourceFolders(IProject project,
             IProgressMonitor monitor) throws CoreException {
-        super.createSourceFolders(project, monitor);
         createSourceFolder(project, "src/main/seam", monitor);
     }
 }
