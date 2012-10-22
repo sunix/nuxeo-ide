@@ -131,25 +131,6 @@ public class ClasspathEditor {
     }
 
     /**
-     * Create SDK link resource for browsing it
-     * 
-     * @param project
-     * @throws CoreException
-     */
-    public void CreateSDKLinkResource(IProject project) throws CoreException {
-        try {
-            IWorkspace workspace = ResourcesPlugin.getWorkspace();
-            IFolder link = project.getFolder("Link");
-            IPath location = new Path(Constants.NXSDK_BROWSER_LINK_FOLDER);
-            if (workspace.validateLinkLocation(link, location).isOK()) {
-                link.createLink(location, IResource.NONE, null);
-            }
-        } catch (Exception e) {
-            UI.showError("Unable to create link resource for sdk: " + e);
-        }
-    }
-
-    /**
      * Removing containers to the project classpath
      * 
      * @param containers
