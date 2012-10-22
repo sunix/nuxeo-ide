@@ -24,6 +24,8 @@ package org.nuxeo.ide.sdk.templates;
  */
 public interface Constants {
 
+    public static final String NXSDK_BROWSER_LINK_FOLDER = "nxsdk_browser";
+
     public static final String CLASSPATH_CONTAINER = "classpathContainer";
 
     public static final String TEST_CLASSPATH_CONTAINER = "testClasspathContainer";

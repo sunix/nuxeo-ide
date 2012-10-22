@@ -75,6 +75,8 @@ public class AddNuxeoNature extends AddNaturesAction {
         containers.add(SDKClassPathContainer.ID);
         containers.add(SDKClassPathContainer.ID_TESTS);
         editor.addContainers(containers);
+        // Add Linked Resource for browsing the SDK
+        editor.CreateSDKLinkResource(project);
         editor.flush();
     }
 

@@ -16,10 +16,17 @@
  */
 package org.nuxeo.ide.sdk.server.ui;
 
+import org.eclipse.core.resources.IPathVariableManager;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
+import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.common.forms.Form;
 import org.nuxeo.ide.common.forms.FormData;
 import org.nuxeo.ide.sdk.SDKInfo;
 import org.nuxeo.ide.sdk.SDKRegistry;
+import org.nuxeo.ide.sdk.templates.Constants;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -41,6 +48,28 @@ public class SDKFormData implements FormData {
         SDKInfo sdk = w.getDefaultSDK();
         SDKRegistry.setDefaultSDK(sdk);
         SDKRegistry.setUseSDKClasspath(!(Boolean) form.getWidgetValue("nosdkcp"));
+        // Create linked resource from the SDK
+        SetSDKResourceVariable();
+    }
+
+    /**
+     * Set a resource variable in Eclipse to make browsable the SDK attached
+     * after binding a project
+     */
+    protected void SetSDKResourceVariable() {
+        try {
+            IWorkspace workspace = ResourcesPlugin.getWorkspace();
+            IPathVariableManager pathMan = workspace.getPathVariableManager();
+            String name = "SDKLINK";
+            IPath value = new Path(workspace.getRoot().getFullPath().toString()
+                    + Path.SEPARATOR + Constants.NXSDK_BROWSER_LINK_FOLDER);
+            if (pathMan.validateName(name).isOK()
+                    && pathMan.validateValue(value).isOK()) {
+                pathMan.setValue(name, value);
+            }
+        } catch (Exception e) {
+            UI.showError("Unable to create resource variable: " + e);
+        }
     }
 
 }

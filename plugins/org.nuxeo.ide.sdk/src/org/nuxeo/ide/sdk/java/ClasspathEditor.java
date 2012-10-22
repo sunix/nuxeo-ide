@@ -24,6 +24,10 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IAccessRule;
@@ -33,6 +37,8 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
+import org.nuxeo.ide.common.UI;
+import org.nuxeo.ide.sdk.templates.Constants;
 
 /**
  * 
@@ -124,4 +130,22 @@ public class ClasspathEditor {
         dirty = false;
     }
 
+    /**
+     * Create SDK link resource for browsing it
+     * 
+     * @param project
+     * @throws CoreException
+     */
+    public void CreateSDKLinkResource(IProject project) throws CoreException {
+        try {
+            IWorkspace workspace = ResourcesPlugin.getWorkspace();
+            IFolder link = project.getFolder("Link");
+            IPath location = new Path(Constants.NXSDK_BROWSER_LINK_FOLDER);
+            if (workspace.validateLinkLocation(link, location).isOK()) {
+                link.createLink(location, IResource.NONE, null);
+            }
+        } catch (Exception e) {
+            UI.showError("Unable to create link resource for sdk: " + e);
+        }
+    }
 }
