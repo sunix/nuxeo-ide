@@ -148,4 +148,21 @@ public class ClasspathEditor {
             UI.showError("Unable to create link resource for sdk: " + e);
         }
     }
+
+    /**
+     * Removing containers to the project classpath
+     * 
+     * @param containers
+     * @throws JavaModelException
+     */
+    public void removeContainers(List<String> containers) {
+        for (String container : containers) {
+            IClasspathEntry classPathEntry = JavaCore.newContainerEntry(
+                    new Path(container), new IAccessRule[0],
+                    new IClasspathAttribute[] { JavaCore.newClasspathAttribute(
+                            "owner.project.facets", "java") }, false);
+            entries.remove(classPathEntry);
+        }
+        dirty = true;
+    }
 }

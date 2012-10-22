@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2006-2010 Nuxeo SAS (http://nuxeo.com/) and contributors.
+ * (C) Copyright 2006-2012 Nuxeo SAS (http://nuxeo.com/) and contributors.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser General Public License
@@ -13,13 +13,19 @@
  *
  * Contributors:
  *     bstefanescu
+ *     Vladimir Pasquier <vpasquier@nuxeo.com>
  */
 package org.nuxeo.ide.sdk.ui.actions;
+
+import java.util.LinkedList;
+import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.nuxeo.ide.common.RemoveNaturesAction;
+import org.nuxeo.ide.sdk.java.ClasspathEditor;
 import org.nuxeo.ide.sdk.ui.NuxeoNature;
+import org.nuxeo.ide.sdk.ui.SDKClassPathContainer;
 
 /**
  * Fake remove nature - used as an example
@@ -37,6 +43,12 @@ public class RemoveNuxeoNature extends RemoveNaturesAction {
     public void uninstall(IProject project, String natureId)
             throws CoreException {
         super.uninstall(project, natureId);
-        // TODO do custom uninstall
+        // Remove Nuxeo SDK Containers
+        ClasspathEditor editor = new ClasspathEditor(project);
+        List<String> containers = new LinkedList<String>();
+        containers.add(SDKClassPathContainer.ID);
+        containers.add(SDKClassPathContainer.ID_TESTS);
+        editor.removeContainers(containers);
+        editor.flush();
     }
 }
