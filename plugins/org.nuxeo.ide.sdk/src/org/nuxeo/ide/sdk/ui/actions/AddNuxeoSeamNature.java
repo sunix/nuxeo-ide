@@ -35,7 +35,6 @@ public class AddNuxeoSeamNature extends AddNuxeoNature {
     public void install(IProject project, String natureId,
             IProgressMonitor monitor) throws CoreException {
         super.install(project, natureId, monitor);
-        applyClasspath(project);
     }
 
     @Override
