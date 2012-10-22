@@ -46,7 +46,7 @@ public class AddNuxeoNature extends AddNaturesAction {
             IProgressMonitor monitor) throws CoreException {
         super.install(project, natureId, monitor);
         createSourceFolders(project, monitor);
-        applyClasspath(project, "classpath.xml", monitor);
+        applyClasspath(project);
     }
 
     protected void createSourceFolders(IProject project,
@@ -68,8 +68,7 @@ public class AddNuxeoNature extends AddNaturesAction {
         }
     }
 
-    protected void applyClasspath(IProject project, String name,
-            IProgressMonitor monitor) throws CoreException {
+    protected void applyClasspath(IProject project) throws CoreException {
         ClasspathEditor editor = new ClasspathEditor(project);
         // Add Nuxeo Containers
         List<String> containers = new LinkedList<String>();
