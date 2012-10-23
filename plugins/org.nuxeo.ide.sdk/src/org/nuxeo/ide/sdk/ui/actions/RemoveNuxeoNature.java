@@ -20,12 +20,10 @@ package org.nuxeo.ide.sdk.ui.actions;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.nuxeo.ide.common.RemoveNaturesAction;
 import org.nuxeo.ide.sdk.java.ClasspathEditor;
-import org.nuxeo.ide.sdk.templates.Constants;
 import org.nuxeo.ide.sdk.ui.NuxeoNature;
 import org.nuxeo.ide.sdk.ui.SDKClassPathContainer;
 
@@ -52,21 +50,6 @@ public class RemoveNuxeoNature extends RemoveNaturesAction {
         containers.add(SDKClassPathContainer.ID_TESTS);
         editor.removeContainers(containers);
         editor.flush();
-        // Remove SDK linked resource if exists
-        cleanUpLinkedResources(project);
     }
 
-    /**
-     * Cleanup SDK linked resources
-     * 
-     * @param project
-     * @throws CoreException
-     */
-    protected void cleanUpLinkedResources(IProject project)
-            throws CoreException {
-        IFolder sdkLink = project.getFolder(Constants.NXSDK_BROWSER_LINK_FOLDER);
-        if (sdkLink.isLinked()) {
-            sdkLink.delete(true, null);
-        }
-    }
 }
