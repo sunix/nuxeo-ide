@@ -51,7 +51,7 @@ public class SDKFormData implements FormData {
         SDKRegistry.setUseSDKClasspath(!(Boolean) form.getWidgetValue("nosdkcp"));
         // Create linked resource from the SDK
         setResourceVariable(Constants.NXSDK_BROWSER_LINK_FOLDER,
-                new Path(sdk.getPath() + Path.SEPARATOR + "sdk"));
+                new Path(sdk.getPath()));
     }
 
     /**
