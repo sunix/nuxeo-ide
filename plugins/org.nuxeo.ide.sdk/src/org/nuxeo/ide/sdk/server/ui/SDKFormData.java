@@ -18,8 +18,11 @@
 package org.nuxeo.ide.sdk.server.ui;
 
 import org.eclipse.core.resources.IPathVariableManager;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.nuxeo.ide.common.UI;
@@ -55,7 +58,7 @@ public class SDKFormData implements FormData {
     }
 
     /**
-     * Set a resource variable in Eclipse
+     * Set a resource variable in Eclipse and create the related project
      * 
      * @param variableResourceName (value of the variable)
      * @param pathValue (value of the resource variable)
@@ -65,7 +68,8 @@ public class SDKFormData implements FormData {
         try {
             IWorkspace workspace = ResourcesPlugin.getWorkspace();
             IPathVariableManager pathMan = workspace.getPathVariableManager();
-            pathValue.toFile().mkdir();
+            createProjectResource(variableResourceName, pathValue, workspace);
+            pathMan.getValue(variableResourceName).removeFileExtension();
             if (pathMan.validateName(variableResourceName).isOK()
                     && pathMan.validateValue(pathValue).isOK()) {
                 pathMan.setValue(variableResourceName, pathValue);
@@ -73,5 +77,24 @@ public class SDKFormData implements FormData {
         } catch (Exception e) {
             UI.showError("Unable to create resource variable because of: " + e);
         }
+    }
+
+    /**
+     * Create the related project for displaying the resource
+     * 
+     * @param variableResourceName
+     * @param pathValue
+     * @param workspace
+     * @throws CoreException
+     */
+    protected void createProjectResource(String variableResourceName,
+            IPath pathValue, IWorkspace workspace) throws CoreException {
+        final IProject newProjectHandle = workspace.getRoot().getProject(
+                variableResourceName);
+        if (newProjectHandle.exists())
+            return;
+        IProjectDescription description = workspace.newProjectDescription(newProjectHandle.getName());
+        description.setLocation(pathValue);
+        newProjectHandle.create(description, null);
     }
 }
