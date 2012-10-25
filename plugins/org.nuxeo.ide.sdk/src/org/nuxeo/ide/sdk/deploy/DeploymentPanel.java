@@ -80,10 +80,18 @@ public class DeploymentPanel extends Composite {
         Label sep0 = new Label(this, SWT.SEPARATOR | SWT.HORIZONTAL);
         Label label1 = new Label(this, SWT.NONE);
         label1.setText("Projects");
+
         projects = new ProjectCheckList(this);
+
+        // Add Select/Unselect button
+        new SelectAllButton(this, projects.getTableViewer());
+
         Label label2 = new Label(this, SWT.NONE);
         label2.setText("User Libraries");
         libraries = new UserLibCheckList(this);
+
+        // Add Select/Unselect button
+        new SelectAllButton(this, libraries.getTableViewer());
 
         GridData gd = new GridData();
         gd.horizontalSpan = 2;
