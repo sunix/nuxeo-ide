@@ -69,7 +69,9 @@ public class SDKFormData implements FormData {
             IWorkspace workspace = ResourcesPlugin.getWorkspace();
             IPathVariableManager pathMan = workspace.getPathVariableManager();
             createProjectResource(variableResourceName, pathValue, workspace);
-            pathMan.getValue(variableResourceName).removeFileExtension();
+            if (pathMan.getValue(variableResourceName) != null) {
+                pathMan.getValue(variableResourceName).removeFileExtension();
+            }
             if (pathMan.validateName(variableResourceName).isOK()
                     && pathMan.validateValue(pathValue).isOK()) {
                 pathMan.setValue(variableResourceName, pathValue);
@@ -91,10 +93,15 @@ public class SDKFormData implements FormData {
             IPath pathValue, IWorkspace workspace) throws CoreException {
         final IProject newProjectHandle = workspace.getRoot().getProject(
                 variableResourceName);
-        if (newProjectHandle.exists())
-            return;
-        IProjectDescription description = workspace.newProjectDescription(newProjectHandle.getName());
-        description.setLocation(pathValue);
-        newProjectHandle.create(description, null);
+        try {
+            if (newProjectHandle.exists())
+                return;
+            IProjectDescription description = workspace.newProjectDescription(newProjectHandle.getName());
+            description.setLocation(pathValue);
+            newProjectHandle.create(description, null);
+        } catch (Exception e) {
+            UI.showError("Unable to create a new project in the Eclipse workspace: "
+                    + e);
+        }
     }
 }
