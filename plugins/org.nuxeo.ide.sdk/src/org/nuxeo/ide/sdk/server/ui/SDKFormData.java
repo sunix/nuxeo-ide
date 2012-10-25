@@ -17,9 +17,11 @@
  */
 package org.nuxeo.ide.sdk.server.ui;
 
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IPathVariableManager;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -68,40 +70,77 @@ public class SDKFormData implements FormData {
         try {
             IWorkspace workspace = ResourcesPlugin.getWorkspace();
             IPathVariableManager pathMan = workspace.getPathVariableManager();
-            createProjectResource(variableResourceName, pathValue, workspace);
+            IProject sdkProject = createProjectResource(variableResourceName,
+                    workspace);
             if (pathMan.getValue(variableResourceName) != null) {
                 pathMan.getValue(variableResourceName).removeFileExtension();
             }
             if (pathMan.validateName(variableResourceName).isOK()
                     && pathMan.validateValue(pathValue).isOK()) {
                 pathMan.setValue(variableResourceName, pathValue);
+                CreateSDKLink(sdkProject, workspace, pathMan);
             }
         } catch (Exception e) {
-            UI.showError("Unable to create resource variable because of: " + e);
+            UI.showError("Unable to create link resource for sdk because of "
+                    + e);
         }
     }
 
     /**
-     * Create the related project for displaying the resource
+     * Create SDK link resource for browsing it
      * 
-     * @param variableResourceName
-     * @param pathValue
+     * @param sdkProject
      * @param workspace
+     * @param pathMan
      * @throws CoreException
      */
-    protected void createProjectResource(String variableResourceName,
-            IPath pathValue, IWorkspace workspace) throws CoreException {
+    protected void CreateSDKLink(IProject sdkProject, IWorkspace workspace,
+            IPathVariableManager pathMan) throws CoreException {
+        try {
+            IPath pathFromVariable = pathMan.getValue(Constants.NXSDK_BROWSER_LINK_FOLDER);
+            IFolder sdkLink = sdkProject.getFolder(Constants.NXSDK_BROWSER_LINK_FOLDER);
+            // Recreate linked resource if exists (in case of updating the SDK)
+            if (sdkLink.isLinked()) {
+                sdkLink.delete(true, null);
+            }
+            if (workspace.validateLinkLocation(sdkLink, pathFromVariable).isOK()) {
+                sdkLink.createLink(pathFromVariable, IResource.FOLDER, null);
+            }
+        } catch (Exception e) {
+            UI.showError("Unable to create link resource for sdk because of "
+                    + e);
+        }
+    }
+
+    /**
+     * Create the related project for displaying the resource in a folder
+     * 
+     * @param variableResourceName
+     * @param workspace
+     * @return
+     * @throws CoreException
+     */
+    protected IProject createProjectResource(String variableResourceName,
+            IWorkspace workspace) throws CoreException {
         final IProject newProjectHandle = workspace.getRoot().getProject(
                 variableResourceName);
+        if (newProjectHandle.exists())
+            return newProjectHandle;
         try {
-            if (newProjectHandle.exists())
-                return;
             IProjectDescription description = workspace.newProjectDescription(newProjectHandle.getName());
-            description.setLocation(pathValue);
             newProjectHandle.create(description, null);
         } catch (Exception e) {
             UI.showError("Unable to create a new project in the Eclipse workspace: "
                     + e);
         }
+        try {
+            IFolder subFolder = newProjectHandle.getFolder(variableResourceName);
+            newProjectHandle.open(null);
+            if (!subFolder.exists())
+                subFolder.create(false, false, null);
+        } catch (Exception e) {
+            UI.showError("Unable to create a new folder in the project: " + e);
+        }
+        return newProjectHandle;
     }
 }
