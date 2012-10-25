@@ -104,7 +104,7 @@ public class SDKFormData implements FormData {
                 sdkLink.delete(true, null);
             }
             if (workspace.validateLinkLocation(sdkLink, pathFromVariable).isOK()) {
-                sdkLink.createLink(pathFromVariable, IResource.FOLDER, null);
+                sdkLink.createLink(pathFromVariable, IResource.NONE, null);
             }
         } catch (Exception e) {
             UI.showError("Unable to create link resource for sdk because of "
