@@ -73,7 +73,7 @@ public class SDKFormData implements FormData {
             IProject sdkProject = createProjectResource(variableResourceName,
                     workspace);
             if (pathMan.getValue(variableResourceName) != null) {
-                pathMan.getValue(variableResourceName).removeFileExtension();
+                pathMan.setValue(variableResourceName, null);
             }
             if (pathMan.validateName(variableResourceName).isOK()
                     && pathMan.validateValue(pathValue).isOK()) {
@@ -99,8 +99,7 @@ public class SDKFormData implements FormData {
         try {
             IPath pathFromVariable = pathMan.getValue(Constants.NXSDK_BROWSER_LINK_FOLDER);
             IFolder sdkLink = sdkProject.getFolder(Constants.NXSDK_BROWSER_LINK_FOLDER);
-            // Recreate linked resource if exists (in case of updating the SDK)
-            if (sdkLink.isLinked()) {
+            if (sdkLink.exists()) {
                 sdkLink.delete(true, null);
             }
             if (workspace.validateLinkLocation(sdkLink, pathFromVariable).isOK()) {
