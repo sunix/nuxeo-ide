@@ -509,5 +509,20 @@
          name="Nuxeo Component">
    </editor>
 </extension>
-
+<!-- Commands bound to actions -->
+<extension
+point="org.eclipse.ui.commands">
+  <command
+    categoryId="org.eclipse.ui.category.edit"
+    id="org.nuxeo.ide.sdk.ui.server.reloadProjects.command"
+    defaultHandler="net.bioclipse.cdk.ui.handlers.Create3dHandler"
+    name="Reload projects on server"/>
+</extension>
+<!-- Action Key Shortcuts-->
+<extension point="org.eclipse.ui.bindings">
+    <key sequence="CTRL+r"
+      commandId="org.nuxeo.ide.sdk.ui.server.reloadProjects.command"
+      schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+      contextId="org.nuxeo.ide.sdk.ui.NuxeoPerspective"/>
+</extension>
 </plugin>
