@@ -156,12 +156,7 @@ public class BindingManager implements IResourceChangeListener, IStudioListener 
             break;
         case IResourceChangeEvent.PRE_DELETE:
             if (resource instanceof IProject) {
-                try {
-                    removeBinding((IProject) resource);
-                } catch (JavaModelException e) {
-                    UI.showError("Cannot remove studio binding", e);
-                }
-                return;
+                clearBinding((IProject) resource);
             }
             break;
         }
