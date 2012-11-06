@@ -22,8 +22,11 @@ import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -84,14 +87,14 @@ public class DeploymentPanel extends Composite {
         projects = new ProjectCheckList(this);
 
         // Add Select/Unselect button
-        new SelectAllButton(this, projects.getTableViewer());
+        Button selectAllProjects = selectAllButton();
 
         Label label2 = new Label(this, SWT.NONE);
         label2.setText("User Libraries");
         libraries = new UserLibCheckList(this);
 
         // Add Select/Unselect button
-        new SelectAllButton(this, libraries.getTableViewer());
+        Button selectAllLibraries = selectAllButton();
 
         GridData gd = new GridData();
         gd.horizontalSpan = 2;
@@ -158,5 +161,52 @@ public class DeploymentPanel extends Composite {
                     }
                 });
 
+        selectAllProjects.addSelectionListener(new SelectionListener() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                if (projects.getTableViewer().getCheckedElements().length != 0) {
+                    projects.getTableViewer().setAllChecked(false);
+                    deployment.clearProjects();
+                } else {
+                    projects.getTableViewer().setAllChecked(true);
+                    deployment.addProjects((IProject[]) projects.getCheckedProjects());
+                }
+            }
+
+            @Override
+            public void widgetDefaultSelected(SelectionEvent e) {
+                widgetSelected(e);
+            }
+        });
+
+        selectAllLibraries.addSelectionListener(new SelectionListener() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                if (libraries.getTableViewer().getCheckedElements().length != 0) {
+                    libraries.getTableViewer().setAllChecked(false);
+                    deployment.clearLibraries();
+                } else {
+                    libraries.getTableViewer().setAllChecked(true);
+                    deployment.addLibraries((UserLib[]) libraries.getCheckedLibs());
+                }
+            }
+
+            @Override
+            public void widgetDefaultSelected(SelectionEvent e) {
+                widgetSelected(e);
+            }
+        });
+
+    }
+
+    /**
+     * Select/Unselect All buttons
+     */
+    protected Button selectAllButton() {
+        Button selectButton = new Button(this, SWT.PUSH);
+        selectButton.setLocation(50, 50);
+        selectButton.setText("Select/Unselect All");
+        selectButton.pack();
+        return selectButton;
     }
 }

@@ -19,6 +19,7 @@ package org.nuxeo.ide.sdk.deploy;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -70,8 +71,16 @@ public class Deployment {
         projects.add(project);
     }
 
+    public void addProjects(IProject[] projects) {
+        this.projects.addAll(Arrays.asList(projects));
+    }
+
     public void removeProject(IProject project) {
         projects.remove(project);
+    }
+
+    public void clearProjects() {
+        projects.clear();
     }
 
     public IProject[] getProjects() {
@@ -82,8 +91,18 @@ public class Deployment {
         libs.add(lib.getPath());
     }
 
+    public void addLibraries(UserLib[] libs) {
+        for (UserLib lib : libs) {
+            this.libs.add(lib.getPath());
+        }
+    }
+
     public void removeLibrary(UserLib lib) {
         libs.remove(lib.getPath());
+    }
+
+    public void clearLibraries() {
+        libs.clear();
     }
 
     public List<String> getProjectNames() {
@@ -144,7 +163,8 @@ public class Deployment {
             if (connectProvider != null) {
                 for (IConnectProvider.Infos infos : SDKPlugin.getDefault().getConnectProvider().getLibrariesInfos(
                         project, null)) {
-                    builder.append("bundle:").append(infos.file.getPath()).append(crlf);
+                    builder.append("bundle:").append(infos.file.getPath()).append(
+                            crlf);
                 }
             }
         }
