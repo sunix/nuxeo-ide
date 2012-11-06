@@ -54,6 +54,10 @@
           </additionalProjectnatures>
           <classpathContainers>
             <classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER</classpathContainer>
+            <#if isExpertMode == "true">
+            <classpathContainer>org.nuxeo.ide.SDK_CONTAINER</classpathContainer>
+            <classpathContainer>org.nuxeo.ide.SDK_TEST_CONTAINER</classpathContainer>
+            </#if>
           </classpathContainers>
         </configuration>
       </plugin>

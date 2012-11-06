@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2006-2010 Nuxeo SAS (http://nuxeo.com/) and contributors.
+ * (C) Copyright 2006-2012 Nuxeo SAS (http://nuxeo.com/) and contributors.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser General Public License
@@ -13,12 +13,14 @@
  *
  * Contributors:
  *     bstefanescu
+ *     Vladimir Pasquier <vpasquier@nuxeo.com>
  */
 package org.nuxeo.ide.sdk.projects;
 
 import org.eclipse.swt.widgets.Composite;
 import org.nuxeo.ide.common.wizards.FormWizardPage;
 import org.nuxeo.ide.sdk.NuxeoSDK;
+import org.nuxeo.ide.sdk.SDKRegistry;
 import org.nuxeo.ide.sdk.templates.Constants;
 
 /**
@@ -79,7 +81,7 @@ public class NuxeoProjectPage2 extends FormWizardPage<ProjectTemplateContext>
     public void update(ProjectTemplateContext ctx) {
         ctx.setPropertyIfNotNull(form, ARTIFACT_ID);
         ctx.setPropertyIfNotNull(form, ARTIFACT_VERSION);
-        
+
         // compute bundle version
         String artifactVersion = form.getWidgetValueAsString(ARTIFACT_VERSION);
         if (artifactVersion == null || artifactVersion.trim().isEmpty()) {
@@ -87,7 +89,7 @@ public class NuxeoProjectPage2 extends FormWizardPage<ProjectTemplateContext>
         }
         String bundleVersion = AbstractProjectWizard.toOsgiVersion(artifactVersion);
         ctx.put(BUNDLE_VERSION, bundleVersion);
-        
+
         ctx.setPropertyIfNotNull(form, GROUP_ID);
 
         ctx.setPropertyIfNotNull(form, ARTIFACT_NAME);
@@ -97,6 +99,10 @@ public class NuxeoProjectPage2 extends FormWizardPage<ProjectTemplateContext>
         ctx.setPropertyIfNotNull(form, PARENT_ARTIFACT_ID);
         ctx.setPropertyIfNotNull(form, PARENT_VERSION);
 
+        ctx.setProperty(
+                IS_EXPERT_MODE,
+                String.valueOf(SDKRegistry.getWorkspacePreferences().getBoolean(
+                        "useSDKClasspath", Boolean.TRUE)));
     }
 
     @Override

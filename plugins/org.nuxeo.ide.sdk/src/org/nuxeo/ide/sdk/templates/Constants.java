@@ -61,4 +61,6 @@ public interface Constants {
 
     public final static String PARENT_ARTIFACT_ID = "parentArtifactId";
 
+    public final static String IS_EXPERT_MODE = "isExpertMode";
+
 }

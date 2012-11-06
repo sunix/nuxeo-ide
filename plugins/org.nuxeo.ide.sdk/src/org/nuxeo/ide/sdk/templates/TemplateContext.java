@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2006-2010 Nuxeo SAS (http://nuxeo.com/) and contributors.
+ * (C) Copyright 2006-2012 Nuxeo SAS (http://nuxeo.com/) and contributors.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser General Public License
@@ -13,13 +13,11 @@
  *
  * Contributors:
  *     bstefanescu
+ *     Vladimir Pasquier <vpasquier@nuxeo.com>
  */
 package org.nuxeo.ide.sdk.templates;
 
-import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -39,7 +37,7 @@ import org.nuxeo.ide.common.forms.UIObject;
 public class TemplateContext extends HashMap<String, Object> {
 
     protected String template;
-    
+
     protected File projectLocation;
 
     public TemplateContext() {
@@ -83,8 +81,10 @@ public class TemplateContext extends HashMap<String, Object> {
         this.template = template;
     }
 
-    public void setProperties(Form form) throws IntrospectionException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-        for (Map.Entry<String, UIObject<?>> e:form.getBindings().entrySet()) {
+    public void setProperties(Form form) throws IntrospectionException,
+            IllegalAccessException, IllegalArgumentException,
+            InvocationTargetException {
+        for (Map.Entry<String, UIObject<?>> e : form.getBindings().entrySet()) {
             String k = e.getKey();
             UIObject<?> v = e.getValue();
             put(k, v.toString());
@@ -93,6 +93,11 @@ public class TemplateContext extends HashMap<String, Object> {
 
     public String getProperty(String key) {
         return (String) get(key);
+    }
+
+    public String setProperty(String key, String value) {
+        put(key, value);
+        return value;
     }
 
     public String setProperty(Form form, String key) {
