@@ -123,6 +123,7 @@ public class DeploymentsTable extends Composite {
         tv.add(deployment);
         tv.setCheckedElements(new Object[] { deployment });
         tv.setSelection(new StructuredSelection(deployment));
+        dialog.refreshDeploymentPanel();
     }
 
     public void removeDeployment(Deployment deployment) {
