@@ -16,9 +16,15 @@
  */
 package org.nuxeo.ide.sdk.projects;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.wizard.WizardPage;
 import org.nuxeo.ide.common.wizards.AbstractWizard;
 import org.nuxeo.ide.sdk.NuxeoSDK;
+import org.nuxeo.ide.sdk.SDKRegistry;
+import org.nuxeo.ide.sdk.java.ClasspathEditor;
 import org.nuxeo.ide.sdk.templates.Constants;
 import org.nuxeo.ide.sdk.templates.TemplateRegistry;
 import org.nuxeo.ide.sdk.ui.SDKClassPathContainer;
@@ -72,18 +78,32 @@ public abstract class AbstractProjectWizard extends
         if (!version.endsWith("-SNAPSHOT")) {
             return version;
         }
-        return version.substring(0,
-                    version.length() - "-SNAPSHOT".length())
-                    + ".qualifier";
+        return version.substring(0, version.length() - "-SNAPSHOT".length())
+                + ".qualifier";
     }
 
     @Override
-    protected boolean execute(ProjectTemplateContext ctx) {
+    protected boolean execute(ProjectTemplateContext ctx)
+            throws JavaModelException {
         String v = (String) ctx.get(Constants.PROJECT_PACKAGE);
         if (v != null) {
             ctx.put(Constants.PROJECT_PACKAGE_PATH, v.replace('.', '/'));
         }
         CreateProjectFromTemplate op = new CreateProjectFromTemplate(ctx);
-        return CreateProjectFromTemplate.run(getShell(), getContainer(), op);
+        if (!CreateProjectFromTemplate.run(getShell(), getContainer(), op)) {
+            return false;
+        }
+        // Check Expert Mode
+        if (!SDKRegistry.getWorkspacePreferences().getBoolean(
+                "useSDKClasspath", Boolean.TRUE)) {
+            // If expert mode activated - Remove Nuxeo SDK Containers
+            ClasspathEditor editor = new ClasspathEditor(op.getProject());
+            List<String> containers = new LinkedList<String>();
+            containers.add(SDKClassPathContainer.ID);
+            containers.add(SDKClassPathContainer.ID_TESTS);
+            editor.removeContainers(containers);
+            editor.flush();
+        }
+        return true;
     }
 }
