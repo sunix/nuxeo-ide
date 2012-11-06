@@ -27,7 +27,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IAccessRule;
-import org.eclipse.jdt.core.IClasspathAttribute;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
@@ -91,9 +90,7 @@ public class ClasspathEditor {
             throws JavaModelException {
         for (String container : containers) {
             IClasspathEntry classPathEntry = JavaCore.newContainerEntry(
-                    new Path(container), new IAccessRule[0],
-                    new IClasspathAttribute[] { JavaCore.newClasspathAttribute(
-                            "owner.project.facets", "java") }, false);
+                    new Path(container), new IAccessRule[0], null, false);
             entries.add(classPathEntry);
         }
         dirty = true;
@@ -133,9 +130,7 @@ public class ClasspathEditor {
     public void removeContainers(List<String> containers) {
         for (String container : containers) {
             IClasspathEntry classPathEntry = JavaCore.newContainerEntry(
-                    new Path(container), new IAccessRule[0],
-                    new IClasspathAttribute[] { JavaCore.newClasspathAttribute(
-                            "owner.project.facets", "java") }, false);
+                    new Path(container), new IAccessRule[0], null, false);
             entries.remove(classPathEntry);
         }
         dirty = true;
