@@ -23,10 +23,8 @@ import org.eclipse.jface.viewers.BaseLabelProvider;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
@@ -63,6 +61,8 @@ public class DeploymentsTable extends Composite {
      * a cache of deployment names for validation
      */
     protected Set<String> names;
+
+    protected DeploymentDialog dialog;
 
     public DeploymentsTable(Composite parent) {
         super(parent, SWT.BORDER);
@@ -123,7 +123,6 @@ public class DeploymentsTable extends Composite {
         tv.add(deployment);
         tv.setCheckedElements(new Object[] { deployment });
         tv.setSelection(new StructuredSelection(deployment));
-        // tv.setInput(prefs);
     }
 
     public void removeDeployment(Deployment deployment) {
@@ -198,9 +197,9 @@ public class DeploymentsTable extends Composite {
         tv.getTable().addListener(SWT.Selection, new Listener() {
             @Override
             public void handleEvent(Event event) {
-                if (event.detail == SWT.CHECK) {
-                    itemChecked(event);
-                }
+                itemChecked(event);
+                dialog.refreshDeploymentPanel();
+                delete.setEnabled(!tv.getSelection().isEmpty());
             }
         });
 
@@ -242,13 +241,6 @@ public class DeploymentsTable extends Composite {
                 widgetSelected(e);
             }
         });
-
-        tv.addSelectionChangedListener(new ISelectionChangedListener() {
-            @Override
-            public void selectionChanged(SelectionChangedEvent event) {
-                delete.setEnabled(!event.getSelection().isEmpty());
-            }
-        });
     }
 
     public void dispose() {
@@ -258,11 +250,12 @@ public class DeploymentsTable extends Composite {
     }
 
     protected void itemChecked(Event event) {
-        if (((TableItem) event.item).getChecked()) {
-            for (TableItem item : tv.getTable().getItems()) {
-                if (item != event.item && item.getChecked()) {
-                    item.setChecked(false);
-                }
+        TableItem selectedItem = (TableItem) event.item;
+        selectedItem.setChecked(true);
+        tv.getTable().setSelection(selectedItem);
+        for (TableItem item : tv.getTable().getItems()) {
+            if (item != selectedItem && item.getChecked()) {
+                item.setChecked(false);
             }
         }
     }
@@ -278,8 +271,6 @@ public class DeploymentsTable extends Composite {
         @Override
         public Image getImage(Object element) {
             return null;
-            // return PlatformUI.getWorkbench().getSharedImages().getImage(
-            // ISharedImages.IMG_OBJ_ELEMENT);
         }
     }
 
@@ -296,6 +287,10 @@ public class DeploymentsTable extends Composite {
         @Override
         public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
         }
+    }
+
+    public void setDialog(DeploymentDialog dialog) {
+        this.dialog = dialog;
     }
 
 }

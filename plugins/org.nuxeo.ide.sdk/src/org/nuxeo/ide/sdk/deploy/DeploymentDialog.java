@@ -19,8 +19,6 @@ package org.nuxeo.ide.sdk.deploy;
 import java.util.HashSet;
 
 import org.eclipse.jface.dialogs.TitleAreaDialog;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.DisposeEvent;
@@ -68,6 +66,7 @@ public class DeploymentDialog extends TitleAreaDialog {
         SashForm sash = new SashForm(composite, SWT.HORIZONTAL | SWT.FLAT);
         sash.setLayout(new FillLayout());
         table = new DeploymentsTable(sash);
+        table.setDialog(this);
         Composite panelContainer = new Composite(sash, SWT.NONE);
         panelContainer.setLayout(new FillLayout());
         panel = new DeploymentPanel(panelContainer);
@@ -92,17 +91,19 @@ public class DeploymentDialog extends TitleAreaDialog {
             }
         });
 
-        table.getTableViewer().addSelectionChangedListener(
-                new ISelectionChangedListener() {
-                    public void selectionChanged(SelectionChangedEvent event) {
-                        Deployment deployment = table.getSelection();
-                        updatePanel(deployment);
-                    }
-                });
-
         table.refresh();
 
+        refreshDeploymentPanel();
+
         return composite;
+    }
+
+    /**
+     * Refresh deployment panel regarding to profile selection
+     */
+    protected void refreshDeploymentPanel() {
+        Deployment deployment = table.getSelection();
+        updatePanel(deployment);
     }
 
     protected void updatePanel(Deployment deployment) {
