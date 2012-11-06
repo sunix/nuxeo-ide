@@ -65,8 +65,6 @@
           </additionalProjectnatures>
           <classpathContainers>
             <classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER</classpathContainer>
-            <classpathContainer>org.nuxeo.ide.SDK_CONTAINER</classpathContainer>
-            <classpathContainer>org.nuxeo.ide.SDK_TEST_CONTAINER</classpathContainer>
           </classpathContainers>
         </configuration>
       </plugin>
