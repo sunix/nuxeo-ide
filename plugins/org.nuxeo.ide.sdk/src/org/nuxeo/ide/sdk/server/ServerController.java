@@ -22,17 +22,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ListenerList;
-import org.eclipse.equinox.security.storage.StorageException;
 import org.nuxeo.ide.common.IOUtils;
 import org.nuxeo.ide.sdk.SDKInfo;
 import org.nuxeo.ide.sdk.deploy.Deployment;
-import org.osgi.service.prefs.BackingStoreException;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
- *
+ * 
  */
 public class ServerController implements ServerConstants {
 
@@ -214,8 +211,7 @@ public class ServerController implements ServerConstants {
         return builder;
     }
 
-    public void writeDevBundles(Deployment deployment) throws IOException,
-            StorageException, BackingStoreException, CoreException {
+    public void writeDevBundles(Deployment deployment) throws Exception {
         File file = new File(root, "nxserver/dev.bundles");
         String content = deployment == null ? ""
                 : deployment.getContentAsString();

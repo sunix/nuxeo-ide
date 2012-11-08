@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2006-2010 Nuxeo SAS (http://nuxeo.com/) and contributors.
+ * (C) Copyright 2006-2012 Nuxeo SAS (http://nuxeo.com/) and contributors.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser General Public License
@@ -13,11 +13,11 @@
  *
  * Contributors:
  *     bstefanescu
+ *     Vladimir Pasquier <vpasquier@nuxeo.com>
  */
 package org.nuxeo.ide.sdk.deploy;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -27,19 +27,18 @@ import java.util.Set;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.equinox.security.storage.StorageException;
 import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.nuxeo.ide.sdk.IConnectProvider;
 import org.nuxeo.ide.sdk.SDKPlugin;
+import org.nuxeo.ide.sdk.index.UnitProvider;
 import org.nuxeo.ide.sdk.userlibs.UserLib;
-import org.osgi.service.prefs.BackingStoreException;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
@@ -126,27 +125,34 @@ public class Deployment {
         return result;
     }
 
-    public String getContentAsString() throws IOException, StorageException,
-            BackingStoreException, CoreException {
+    public String getContentAsString() throws Exception {
         String crlf = "\n";
         StringBuilder builder = new StringBuilder();
         builder.append("# Projects").append(crlf);
         for (IProject project : projects) {
+            // Sort units per type
+            UnitProvider unitProvider = new UnitProvider();
+            unitProvider.getUnitsForDep(project,
+                    "org.jboss.seam.annotations.Name");
+            String projectPath = project.getWorkspace().getRoot().getLocation().toOSString();
             // default classes
-            String javaOutputPath = outputPath(project, new Path(
-                    "src/main/java"));
-            if (javaOutputPath == null) {
-                javaOutputPath = outputPath(project, new Path(
-                        "src/main/resources"));
+            for (ICompilationUnit unit : unitProvider.getPojoUnits()) {
+                String javaOutputPath = classNameOutput(unit.getPath().toOSString());
+                if (javaOutputPath == null) {
+                    javaOutputPath = outputPath(project, new Path(
+                            "src/main/resources"));
+                } else {
+                    builder.append("bundle:").append(projectPath).append(
+                            javaOutputPath).append(crlf);
+                }
             }
-            if (javaOutputPath != null) {
-                builder.append("bundle:").append(javaOutputPath).append(crlf);
-            }
-            String seamOutputPath = outputPath(project, new Path(
-                    "src/main/seam"));
             // seam classes
-            if (seamOutputPath != null) {
-                builder.append("seam:").append(seamOutputPath).append(crlf);
+            for (ICompilationUnit unit : unitProvider.getDepUnits()) {
+                String seamOutputPath = classNameOutput(unit.getPath().toOSString());
+                if (seamOutputPath != null) {
+                    builder.append("seam:").append(projectPath).append(
+                            seamOutputPath).append(crlf);
+                }
             }
             // l10n resource bundle fragments
             IFolder l10n = project.getFolder("src/main/resources/OSGI-INF/l10n");
@@ -177,6 +183,18 @@ public class Deployment {
             }
         }
         return builder.toString();
+    }
+
+    /**
+     * TODO: Serious Refactor
+     */
+    protected String classNameOutput(String fileName) {
+        int mid = fileName.lastIndexOf(".");
+        fileName = fileName.substring(0, mid).concat(".class");
+        String separator = File.separator;
+        fileName = fileName.replace(separator + "src" + separator, separator
+                + "bin" + separator);
+        return fileName.replace(separator + "java" + separator, separator);
     }
 
     protected String outputPath(IProject project, IPath sourcePath)
