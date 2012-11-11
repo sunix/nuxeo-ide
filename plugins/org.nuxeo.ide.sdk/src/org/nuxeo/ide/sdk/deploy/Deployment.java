@@ -157,7 +157,7 @@ public class Deployment {
             // Write into dev.bundles the path to pojo-bin
             if (!unitProvider.getPojoUnits().isEmpty()) {
                 builder.append("bundle:").append(projectPath + "pojo-bin").append(
-                        crlf);
+                        File.separator).append("main").append(crlf);
             }
             // Seam classes -> copy all seam classes into seam-bin output
             // folder
@@ -168,7 +168,7 @@ public class Deployment {
             // Write into dev.bundles the path to seam-bin
             if (!unitProvider.getDepUnits().isEmpty()) {
                 builder.append("seam:").append(projectPath + "seam-bin").append(
-                        crlf);
+                        File.separator).append("main").append(crlf);
             }
             // l10n resource bundle fragments
             IFolder l10n = project.getFolder("src/main/resources/OSGI-INF/l10n");
