@@ -29,6 +29,8 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.internal.core.JavaElement;
+import org.eclipse.jdt.internal.core.PackageFragment;
 
 /**
  * UnitProvider retrieves all unit classes having given dependencies
@@ -39,6 +41,11 @@ public class UnitProvider {
     protected List<ICompilationUnit> pojoUnits;
 
     protected List<ICompilationUnit> depUnits;
+
+    /**
+     * Examples: org, com...
+     */
+    protected String parentNameSpace = "";
 
     public void getUnitsForDep(IProject project, String depName)
             throws Exception {
@@ -57,10 +64,14 @@ public class UnitProvider {
         depUnits = new ArrayList<ICompilationUnit>();
         pojoUnits = new ArrayList<ICompilationUnit>();
         for (Object pkg : root.getChildren()) {
+            if (parentNameSpace.isEmpty()
+                    && !((PackageFragment) pkg).getElementName().isEmpty()) {
+                parentNameSpace = ((JavaElement) pkg).getElementName();
+            }
             for (ICompilationUnit unit : ((IPackageFragment) pkg).getCompilationUnits()) {
                 if (isDepUnit(depName, unit)) {
                     depUnits.add(unit);
-                    break;
+                    continue;
                 }
                 pojoUnits.add(unit);
             }
@@ -84,4 +95,9 @@ public class UnitProvider {
     public List<ICompilationUnit> getDepUnits() {
         return depUnits;
     }
+
+    public String getParentNameSpace() {
+        return parentNameSpace;
+    }
+
 }

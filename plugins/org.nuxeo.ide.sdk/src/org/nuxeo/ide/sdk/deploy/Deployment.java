@@ -41,13 +41,15 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
+import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.sdk.IConnectProvider;
 import org.nuxeo.ide.sdk.SDKPlugin;
 import org.nuxeo.ide.sdk.index.UnitProvider;
 import org.nuxeo.ide.sdk.userlibs.UserLib;
 
 /**
- * TODO: Serious Refactor
+ * Deployment provides all projects outputs (sources, resources) giving to
+ * server the dev.bundle file with project outputs locations
  */
 public class Deployment {
 
@@ -57,10 +59,13 @@ public class Deployment {
 
     protected Set<String> libs;
 
+    protected UnitProvider unitProvider;
+
     public Deployment(String name) {
         this.name = name;
         projects = new HashSet<IProject>();
         libs = new HashSet<String>();
+        unitProvider = new UnitProvider();
     }
 
     public void setName(String name) {
@@ -136,55 +141,34 @@ public class Deployment {
         builder.append("# Projects").append(crlf);
         for (IProject project : projects) {
             // Sort units per type
-            UnitProvider unitProvider = new UnitProvider();
             unitProvider.getUnitsForDep(project,
                     "org.jboss.seam.annotations.Name");
             // Workspace - Project Path
             String workspacePath = project.getWorkspace().getRoot().getLocation().toOSString();
             String projectPath = workspacePath + File.separator
                     + project.getName() + File.separator;
-            // Seam Bin Path
-            String seamBin = projectPath + "seam-bin";
-            String pojoBin = projectPath + "pojo-bin";
             // Resources copy
-            String resourcesOutputPath = outputPath(project, new Path(
-                    "src/main/resources"));
-            File resourcesDirectory = new File(resourcesOutputPath);
-            File resourcesDirectoryOutput = new File(pojoBin + File.separator
-                    + "main");
-            resourcesDirectory.mkdirs();
-            copyFolder(resourcesDirectory, resourcesDirectoryOutput);
-            // Delete sources folder in preprocess deployment (TODO: there is
-            // not org in some proprietary soft for instance...)
-            IFolder folder = project.getFolder(File.separator + "pojo-bin"
-                    + File.separator + "main" + File.separator + "org");
-            folder.delete(true, null);
-            // default classes
+            resourcesCopy(project, projectPath + "pojo-bin");
+            // default classes -> copy all pojo classes into pojo-bin output
+            // folder
             for (ICompilationUnit unit : unitProvider.getPojoUnits()) {
-                String javaOutputPath = classNamePojoOutput(unit.getPath().toOSString());
-                String parentOutputPath = parentPojoNameOutput(unit.getParent().getPath().toOSString());
-                File sourcesDirectory = new File(projectPath + File.separator
-                        + parentOutputPath);
-                sourcesDirectory.mkdirs();
-                File clazz = new File(workspacePath + javaOutputPath);
-                copyFile(clazz, new File(workspacePath + javaOutputPath));
+                unitOutputCopy(workspacePath, projectPath, unit, "pojo-bin");
             }
+            // Write into dev.bundles the path to pojo-bin
             if (!unitProvider.getPojoUnits().isEmpty()) {
-                builder.append("bundle:").append(pojoBin).append(crlf);
+                builder.append("bundle:").append(projectPath + "pojo-bin").append(
+                        crlf);
             }
-            // Seam classes
+            // Seam classes -> copy all seam classes into seam-bin output
+            // folder
+
             for (ICompilationUnit unit : unitProvider.getDepUnits()) {
-                String seamOutputPath = classNameSeamOutput(unit.getPath().toOSString());
-                String parentOutputPath = parentSeamNameOutput(unit.getParent().getPath().toOSString());
-                File dir = new File(workspacePath + parentOutputPath);
-                dir.mkdirs();
-                File seamClass = new File(workspacePath + seamOutputPath);
-                copyFile(seamClass, new File(workspacePath + seamOutputPath));
-                File seamOutputFile = new File(seamOutputPath);
-                seamOutputFile.delete();
+                unitOutputCopy(workspacePath, projectPath, unit, "seam-bin");
             }
+            // Write into dev.bundles the path to seam-bin
             if (!unitProvider.getDepUnits().isEmpty()) {
-                builder.append("seam:").append(seamBin).append(crlf);
+                builder.append("seam:").append(projectPath + "seam-bin").append(
+                        crlf);
             }
             // l10n resource bundle fragments
             IFolder l10n = project.getFolder("src/main/resources/OSGI-INF/l10n");
@@ -217,13 +201,36 @@ public class Deployment {
         return builder.toString();
     }
 
+    protected void unitOutputCopy(String workspacePath, String projectPath,
+            ICompilationUnit unit, String outputFolder) throws IOException {
+        // Retrieve the output class of java unit
+        String javaOutputPath = classNameOutput(unit.getPath().toOSString(),
+                outputFolder);
+        File clazz = new File(workspacePath + javaOutputPath);
+        // Copy each class in the structure created into
+        // output folders
+        copyFile(clazz, new File(workspacePath + javaOutputPath));
+    }
+
+    protected void resourcesCopy(IProject project, String pojoBin)
+            throws JavaModelException, IOException {
+        String resourcesOutputPath = outputPath(project, new Path(
+                "src/main/resources"));
+        File resourcesDirectory = new File(resourcesOutputPath);
+        File resourcesDirectoryOutput = new File(pojoBin + File.separator
+                + "main");
+        resourcesDirectory.mkdirs();
+        copyFolder(resourcesDirectory, resourcesDirectoryOutput);
+    }
+
     public void copyFile(File sourceFile, File destFile) throws IOException {
-        if (!destFile.exists()) {
-            destFile.createNewFile();
-        }
         FileChannel source = null;
         FileChannel destination = null;
         try {
+            if (!destFile.exists()) {
+                destFile.getParentFile().mkdirs();
+                destFile.createNewFile();
+            }
             source = new FileInputStream(sourceFile).getChannel();
             destination = new FileOutputStream(destFile).getChannel();
             long count = 0;
@@ -231,6 +238,11 @@ public class Deployment {
             while ((count += destination.transferFrom(source, count, size
                     - count)) < size)
                 ;
+        } catch (Exception e) {
+            UI.showError(
+                    "Unable to copy file for the given source '"
+                            + sourceFile.getAbsolutePath() + "' and dest '"
+                            + destFile.getAbsolutePath() + "'", e);
         } finally {
             if (source != null) {
                 source.close();
@@ -241,38 +253,31 @@ public class Deployment {
         }
     }
 
-    protected String classNamePojoOutput(String fileName) {
+    /**
+     * Retrieve the output class of java unit with a given @param outputFolder
+     */
+    protected String classNameOutput(String fileName, String outputFolder) {
         int mid = fileName.lastIndexOf(".");
         fileName = fileName.substring(0, mid).concat(".class");
         String separator = File.separator;
         fileName = fileName.replace(separator + "src" + separator, separator
-                + "pojo-bin" + separator);
+                + outputFolder + separator);
         return fileName.replace(separator + "java" + separator, separator);
     }
 
-    protected String classNameSeamOutput(String fileName) {
-        int mid = fileName.lastIndexOf(".");
-        fileName = fileName.substring(0, mid).concat(".class");
+    /**
+     * Get output class parent folder path with a given @param outputFolder
+     */
+    protected String parentNameOutput(String fileName, String outputFolder) {
         String separator = File.separator;
         fileName = fileName.replace(separator + "src" + separator, separator
-                + "seam-bin" + separator);
+                + outputFolder + separator);
         return fileName.replace(separator + "java" + separator, separator);
     }
 
-    protected String parentPojoNameOutput(String fileName) {
-        String separator = File.separator;
-        fileName = fileName.replace(separator + "src" + separator, separator
-                + "pojo-bin" + separator);
-        return fileName.replace(separator + "java" + separator, separator);
-    }
-
-    protected String parentSeamNameOutput(String fileName) {
-        String separator = File.separator;
-        fileName = fileName.replace(separator + "src" + separator, separator
-                + "seam-bin" + separator);
-        return fileName.replace(separator + "java" + separator, separator);
-    }
-
+    /**
+     * Retrieve from source path output path in output/bin folder
+     */
     protected String outputPath(IProject project, IPath sourcePath)
             throws JavaModelException {
         IJavaProject java = JavaCore.create(project);
@@ -295,16 +300,20 @@ public class Deployment {
 
     public void copyFolder(File src, File dest) throws IOException {
         if (src.isDirectory()) {
-            if (!dest.exists()) {
-                dest.mkdirs();
-            }
-            String files[] = src.list();
-            for (String file : files) {
-                File srcFile = new File(src, file);
-                File destFile = new File(dest, file);
-                copyFolder(srcFile, destFile);
+            // Check if its sources directory (do not copy before introspection)
+            if (!src.getName().equals(unitProvider.getParentNameSpace())) {
+                if (!dest.exists()) {
+                    dest.mkdirs();
+                }
+                String files[] = src.list();
+                for (String file : files) {
+                    File srcFile = new File(src, file);
+                    File destFile = new File(dest, file);
+                    copyFolder(srcFile, destFile);
+                }
             }
         } else {
+
             InputStream in = new FileInputStream(src);
             // if (dest.exists()) {
             // dest.createNewFile();
