@@ -17,6 +17,7 @@
  */
 package org.nuxeo.ide.sdk.index;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,31 +39,43 @@ import org.eclipse.jdt.internal.core.PackageFragment;
  */
 public class UnitProvider {
 
-    protected List<ICompilationUnit> pojoUnits;
+    protected List<ICompilationUnit> pojoUnits = new ArrayList<ICompilationUnit>();
 
-    protected List<ICompilationUnit> depUnits;
+    protected List<ICompilationUnit> depUnits = new ArrayList<ICompilationUnit>();
 
     /**
      * Examples: org, com...
      */
     protected String parentNameSpace = "";
 
+    /**
+     * For a given @param depName java unit import, retrieves all unit classes
+     * having given dependencies Parse all resources from src/main folder (could
+     * be src/main/java, src/main/seam...)
+     */
     public void getUnitsForDep(IProject project, String depName)
             throws Exception {
         IJavaProject jproject = JavaCore.create(project);
-        IResource rootResource = project.getProject().getFolder("src/main/java");
-        if (rootResource.exists()) {
-            IPackageFragmentRoot root = jproject.getPackageFragmentRoot(rootResource);
-            if (root != null) {
-                introspectPackageRoot(root, depName);
+        String rootSourcePath = "src/main";
+        IResource rootResourceFolder = project.getFolder("src/main");
+        File rootFolder = new File(
+                rootResourceFolder.getLocation().toOSString());
+        if (rootFolder.exists()) {
+            for (File child : rootFolder.listFiles()) {
+                if (child.isDirectory()) {
+                    IResource rootResource = project.getFolder(rootSourcePath
+                            + "/" + child.getName());
+                    IPackageFragmentRoot root = jproject.getPackageFragmentRoot(rootResource);
+                    if (root != null) {
+                        introspectPackageRoot(root, depName);
+                    }
+                }
             }
         }
     }
 
     protected void introspectPackageRoot(IPackageFragmentRoot root,
             String depName) throws Exception {
-        depUnits = new ArrayList<ICompilationUnit>();
-        pojoUnits = new ArrayList<ICompilationUnit>();
         for (Object pkg : root.getChildren()) {
             if (parentNameSpace.isEmpty()
                     && !((PackageFragment) pkg).getElementName().isEmpty()) {
