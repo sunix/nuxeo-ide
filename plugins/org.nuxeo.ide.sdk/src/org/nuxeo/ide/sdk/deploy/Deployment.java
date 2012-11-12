@@ -161,7 +161,6 @@ public class Deployment {
             }
             // Seam classes -> copy all seam classes into seam-bin output
             // folder
-
             for (ICompilationUnit unit : unitProvider.getDepUnits()) {
                 unitOutputCopy(workspacePath, projectPath, unit, "seam-bin");
             }
@@ -227,10 +226,9 @@ public class Deployment {
         FileChannel source = null;
         FileChannel destination = null;
         try {
-            if (!destFile.exists()) {
-                destFile.getParentFile().mkdirs();
-                destFile.createNewFile();
-            }
+            destFile.delete();
+            destFile.getParentFile().mkdirs();
+            destFile.createNewFile();
             source = new FileInputStream(sourceFile).getChannel();
             destination = new FileOutputStream(destFile).getChannel();
             long count = 0;
@@ -302,9 +300,8 @@ public class Deployment {
         if (src.isDirectory()) {
             // Check if its sources directory (do not copy before introspection)
             if (!src.getName().equals(unitProvider.getParentNameSpace())) {
-                if (!dest.exists()) {
-                    dest.mkdirs();
-                }
+                dest.delete();
+                dest.mkdirs();
                 String files[] = src.list();
                 for (String file : files) {
                     File srcFile = new File(src, file);
