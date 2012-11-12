@@ -186,8 +186,8 @@
      <extension src="features/seam/MyAction-extensions.xml" />
      <resourceBundle from="MyAction" to="${package}.${class}" />
      <binaryResource path="web/nuxeo.war/icons/MyAction-action.png" to="web/nuxeo.war/icons/${package}.${class}-action.png" />
-     <javaClass src="seam" path="packagePath/MyActionBean.java" to="${packagePath}/${class}.java" />
-     <select path="src/main/seam/${packagePath}/${class}.java"/>
+     <javaClass src="java" path="packagePath/MyActionBean.java" to="${packagePath}/${class}.java" />
+     <select path="src/main/java/${packagePath}/${class}.java"/>
   </template>
 
   <template id="seam:Controller" src="features/seam/controller">
@@ -198,16 +198,16 @@
      <resourceBundle from="MyController" to="${package}.${class}"/>
      <binaryResource path="web/nuxeo.war/icons/MyController-tab.png" to="web/nuxeo.war/icons/${package}.${class}-tab.png" />
      <resource path="web/nuxeo.war/incl/tabs/MyController-tab.xhtml" to="web/nuxeo.war/incl/tabs/${package}.${class}-tab.xhtml" />
-     <javaClass src="seam" path="packagePath/MyControllerBean.java" to="${packagePath}/${class}.java" />
-     <select path="src/main/seam/${packagePath}/${class}.java"/>
+     <javaClass src="java" path="packagePath/MyControllerBean.java" to="${packagePath}/${class}.java" />
+     <select path="src/main/java/${packagePath}/${class}.java"/>
   </template>
   
   <template id="seam:Service" src="features/seam/service">
      <name>Seam Service Wrapper Component</name>
      <description>A seam service wrapper bean</description>
      
-     <javaClass src="seam" path="packagePath/MyServiceWrapperBean.java" to="${packagePath}/${class}.java" />
-     <select path="src/main/seam/${packagePath}/${class}.java"/>
+     <javaClass src="java" path="packagePath/MyServiceWrapperBean.java" to="${packagePath}/${class}.java" />
+     <select path="src/main/java/${packagePath}/${class}.java"/>
   </template>
 
 </templates>
