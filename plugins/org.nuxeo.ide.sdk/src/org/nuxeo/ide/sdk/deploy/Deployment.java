@@ -61,6 +61,10 @@ public class Deployment {
 
     protected UnitProvider unitProvider;
 
+    public static final String DEPENDENCY_NAME = "org.jboss.seam.annotations.Name";
+
+    public static final String SOURCE_ELEMENT = "@Name";
+
     public Deployment(String name) {
         this.name = name;
         projects = new HashSet<IProject>();
@@ -141,8 +145,8 @@ public class Deployment {
         builder.append("# Projects").append(crlf);
         for (IProject project : projects) {
             // Sort units per type
-            unitProvider.getUnitsForDep(project,
-                    "org.jboss.seam.annotations.Name");
+            unitProvider.getUnitsForDep(project, DEPENDENCY_NAME,
+                    SOURCE_ELEMENT);
             // Workspace - Project Path
             String workspacePath = project.getWorkspace().getRoot().getLocation().toOSString();
             String projectPath = workspacePath + File.separator

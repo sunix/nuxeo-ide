@@ -53,8 +53,8 @@ public class UnitProvider {
      * having given dependencies Parse all resources from src/main folder (could
      * be src/main/java, src/main/seam...)
      */
-    public void getUnitsForDep(IProject project, String depName)
-            throws Exception {
+    public void getUnitsForDep(IProject project, String depName,
+            String sourceElement) throws Exception {
         IJavaProject jproject = JavaCore.create(project);
         String rootSourcePath = "src/main";
         IResource rootResourceFolder = project.getFolder("src/main");
@@ -67,7 +67,7 @@ public class UnitProvider {
                             + "/" + child.getName());
                     IPackageFragmentRoot root = jproject.getPackageFragmentRoot(rootResource);
                     if (root != null) {
-                        introspectPackageRoot(root, depName);
+                        introspectPackageRoot(root, depName, sourceElement);
                     }
                 }
             }
@@ -75,14 +75,14 @@ public class UnitProvider {
     }
 
     protected void introspectPackageRoot(IPackageFragmentRoot root,
-            String depName) throws Exception {
+            String depName, String sourceElement) throws Exception {
         for (Object pkg : root.getChildren()) {
             if (parentNameSpace.isEmpty()
                     && !((PackageFragment) pkg).getElementName().isEmpty()) {
                 parentNameSpace = ((JavaElement) pkg).getElementName();
             }
             for (ICompilationUnit unit : ((IPackageFragment) pkg).getCompilationUnits()) {
-                if (isDepUnit(depName, unit)) {
+                if (isDepUnit(depName, unit, sourceElement)) {
                     depUnits.add(unit);
                     continue;
                 }
@@ -91,11 +91,11 @@ public class UnitProvider {
         }
     }
 
-    protected boolean isDepUnit(String depName, ICompilationUnit unit)
-            throws JavaModelException {
+    protected boolean isDepUnit(String depName, ICompilationUnit unit,
+            String sourceElement) throws JavaModelException {
         for (IImportDeclaration imp : unit.getImports()) {
             if (imp.getElementName().equals(depName)
-                    && unit.getSource().contains("@Name")) {
+                    && unit.getSource().contains(sourceElement)) {
                 return true;
             }
         }
