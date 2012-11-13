@@ -94,7 +94,8 @@ public class UnitProvider {
     protected boolean isDepUnit(String depName, ICompilationUnit unit)
             throws JavaModelException {
         for (IImportDeclaration imp : unit.getImports()) {
-            if (imp.getElementName().equals(depName)) {
+            if (imp.getElementName().equals(depName)
+                    && unit.getSource().contains("@Name")) {
                 return true;
             }
         }
