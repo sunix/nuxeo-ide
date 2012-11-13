@@ -159,6 +159,11 @@ public class Deployment {
                 builder.append("bundle:").append(projectPath + "pojo-bin").append(
                         File.separator).append("main").append(crlf);
             }
+            // Seam bin cleanup
+            File seamBin = new File(projectPath + "seam-bin");
+            if (seamBin.exists()) {
+                deleteTree(seamBin);
+            }
             // Seam classes -> copy all seam classes into seam-bin output
             // folder
             for (ICompilationUnit unit : unitProvider.getDepUnits()) {
@@ -201,32 +206,33 @@ public class Deployment {
     }
 
     protected void unitOutputCopy(String workspacePath, String projectPath,
-            ICompilationUnit unit, String outputFolder) throws IOException {
+            ICompilationUnit unit, String outputPath) throws IOException {
         // Retrieve the output class of java unit
-        String javaOutputPath = classNameOutput(unit.getPath().toOSString(),
-                outputFolder);
-        File clazz = new File(workspacePath + javaOutputPath);
+        String clazzOutputPath = classNameOutput(unit.getPath().toOSString(),
+                outputPath);
+        File clazzOutputFile = new File(workspacePath + clazzOutputPath);
         // Copy each class in the structure created into
         // output folders
-        copyFile(clazz, new File(workspacePath + javaOutputPath));
+        copyFile(clazzOutputFile, new File(workspacePath + clazzOutputPath));
     }
 
     protected void resourcesCopy(IProject project, String pojoBin)
             throws JavaModelException, IOException {
         String resourcesOutputPath = outputPath(project, new Path(
                 "src/main/resources"));
-        File resourcesDirectory = new File(resourcesOutputPath);
-        File resourcesDirectoryOutput = new File(pojoBin + File.separator
+        File resourcesOutputFolder = new File(resourcesOutputPath);
+        File newResourcesOutputFolder = new File(pojoBin + File.separator
                 + "main");
-        resourcesDirectory.mkdirs();
-        copyFolder(resourcesDirectory, resourcesDirectoryOutput);
+        copyFolder(resourcesOutputFolder, newResourcesOutputFolder);
     }
 
     public void copyFile(File sourceFile, File destFile) throws IOException {
         FileChannel source = null;
         FileChannel destination = null;
         try {
-            destFile.delete();
+            if (destFile.exists()) {
+                destFile.delete();
+            }
             destFile.getParentFile().mkdirs();
             destFile.createNewFile();
             source = new FileInputStream(sourceFile).getChannel();
@@ -300,8 +306,12 @@ public class Deployment {
         if (src.isDirectory()) {
             // Check if its sources directory (do not copy before introspection)
             if (!src.getName().equals(unitProvider.getParentNameSpace())) {
-                dest.delete();
-                dest.mkdirs();
+                if (!dest.exists()) {
+                    dest.mkdirs();
+                } else {
+                    deleteTree(dest);
+                    dest.mkdirs();
+                }
                 String files[] = src.list();
                 for (String file : files) {
                     File srcFile = new File(src, file);
@@ -310,11 +320,7 @@ public class Deployment {
                 }
             }
         } else {
-
             InputStream in = new FileInputStream(src);
-            // if (dest.exists()) {
-            // dest.createNewFile();
-            // }
             OutputStream out = new FileOutputStream(dest);
             byte[] buffer = new byte[1024];
             int length;
@@ -326,4 +332,14 @@ public class Deployment {
         }
     }
 
+    public static void deleteTree(File dir) {
+        for (File file : dir.listFiles()) {
+            if (file.isDirectory()) {
+                deleteTree(file);
+            } else {
+                file.delete();
+            }
+        }
+        dir.delete();
+    }
 }
