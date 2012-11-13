@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-    	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <prerequisites>
     <maven>3.0</maven>
@@ -24,7 +23,7 @@
     <module>features/org.nuxeo.ide.sdk.feature</module>
     <module>features/org.nuxeo.ide.shell.feature</module>
     <module>sites/org.nuxeo.ide.site</module>
-    <!--module>plugins/org.nuxeo.ide.qatests</module-->
+    <!--module>plugins/org.nuxeo.ide.qatests</module -->
   </modules>
 
   <scm>
@@ -46,7 +45,7 @@
     <profile>
       <id>tycho-offline</id>
       <properties>
-	<nuxeo-osgi-url>http://localhost/p2</nuxeo-osgi-url>
+        <nuxeo-osgi-url>http://localhost/p2</nuxeo-osgi-url>
       </properties>
     </profile>
     <profile>
@@ -85,10 +84,10 @@
       <url>http://repository.sonatype.org/content/groups/sonatype-public-grid
       </url>
       <snapshots>
-	<enabled>true</enabled>
+        <enabled>true</enabled>
       </snapshots>
       <releases>
-	<enabled>true</enabled>
+        <enabled>true</enabled>
       </releases>
     </repository>
     <repository>
@@ -137,9 +136,9 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-	<groupId>junit</groupId>
-	<artifactId>junit</artifactId>
-	<version>4.7</version>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.7</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -147,104 +146,73 @@
   <build>
     <plugins>
       <plugin>
-	<groupId>org.eclipse.tycho</groupId>
-	<artifactId>tycho-maven-plugin</artifactId>
-	<version>${tycho-version}</version>
-	<extensions>true</extensions>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-maven-plugin</artifactId>
+        <version>${tycho-version}</version>
+        <extensions>true</extensions>
       </plugin>
       <plugin>
-	<groupId>org.eclipse.tycho</groupId>
-	<artifactId>target-platform-configuration</artifactId>
-	<version>${tycho-version}</version>
-	<configuration>
-	  <resolver>p2</resolver>
-	  <!--
-             <environments>
-               <environment>
-		 <os>linux</os>
-		 <ws>gtk</ws>
-		 <arch>x86</arch>
-               </environment>
-               <environment>
-		 <os>linux</os>
-		 <ws>gtk</ws>
-		 <arch>x86_64</arch>
-               </environment>
-               <environment>
-		 <os>win32</os>
-		 <ws>win32</ws>
-		 <arch>x86_64</arch>
-               </environment>
-               <environment>
-		 <os>win32</os>
-		 <ws>win32</ws>
-		 <arch>x86</arch>
-               </environment>
-               <environment>
-		 <os>macosx</os>
-		 <ws>carbon</ws>
-		 <arch>x86</arch>
-               </environment>
-               <environment>
-		 <os>macosx</os>
-		 <ws>cocoa</ws>
-		 <arch>x86</arch>
-               </environment>
-               <environment>
-		 <os>macosx</os>
-		 <ws>cocoa</ws>
-		 <arch>x86_64</arch>
-               </environment>
-	     </environments>
-	     -->
-	</configuration>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>target-platform-configuration</artifactId>
+        <version>${tycho-version}</version>
+        <configuration>
+          <resolver>p2</resolver>
+          <!-- <environments> <environment> <os>linux</os> <ws>gtk</ws> <arch>x86</arch> 
+            </environment> <environment> <os>linux</os> <ws>gtk</ws> <arch>x86_64</arch> 
+            </environment> <environment> <os>win32</os> <ws>win32</ws> <arch>x86_64</arch> 
+            </environment> <environment> <os>win32</os> <ws>win32</ws> <arch>x86</arch> 
+            </environment> <environment> <os>macosx</os> <ws>carbon</ws> <arch>x86</arch> 
+            </environment> <environment> <os>macosx</os> <ws>cocoa</ws> <arch>x86</arch> 
+            </environment> <environment> <os>macosx</os> <ws>cocoa</ws> <arch>x86_64</arch> 
+            </environment> </environments> -->
+        </configuration>
       </plugin>
       <plugin>
-	<groupId>org.eclipse.tycho</groupId>
-	<artifactId>maven-osgi-packaging-plugin</artifactId>
-	<version>${tycho-version}</version>
-	<configuration>
-	  <archiveSite>true</archiveSite>
-	</configuration>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>maven-osgi-packaging-plugin</artifactId>
+        <version>${tycho-version}</version>
+        <configuration>
+          <archiveSite>true</archiveSite>
+        </configuration>
       </plugin>
       <plugin>
-	<groupId>org.eclipse.tycho</groupId>
-	<artifactId>tycho-source-plugin</artifactId>
-	<version>${tycho-version}</version>
-	<executions>
-	  <execution>
-	    <id>plugin-source</id>
-	    <goals>
-	      <goal>plugin-source</goal>
-	    </goals>
-	  </execution>
-	</executions>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-source-plugin</artifactId>
+        <version>${tycho-version}</version>
+        <executions>
+          <execution>
+            <id>plugin-source</id>
+            <goals>
+              <goal>plugin-source</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
-	<inherited>true</inherited>
-	<groupId>org.eclipse.tycho</groupId>
-	<artifactId>tycho-p2-publisher-plugin</artifactId>
-	<version>${tycho-version}</version>
-	<configuration>
-	  <publishArtifacts>true</publishArtifacts>
-	</configuration>
+        <inherited>true</inherited>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-p2-publisher-plugin</artifactId>
+        <version>${tycho-version}</version>
+        <configuration>
+          <publishArtifacts>true</publishArtifacts>
+        </configuration>
       </plugin>
       <plugin>
-	<groupId>org.eclipse.tycho</groupId>
-	<artifactId>tycho-p2-director-plugin</artifactId>
-	<version>${tycho-version}</version>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-p2-director-plugin</artifactId>
+        <version>${tycho-version}</version>
       </plugin>
       <plugin>
         <groupId>org.sonatype.tycho</groupId>
         <artifactId>maven-osgi-packaging-plugin</artifactId>
-	<version>${tycho-version}</version>
+        <version>${tycho-version}</version>
         <configuration>
           <strictVersions>false</strictVersions>
         </configuration>
       </plugin>
       <plugin>
-	<groupId>org.apache.maven.plugins</groupId>
-	<artifactId>maven-release-plugin</artifactId>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
         <version>2.2.1</version>
       </plugin>
       <plugin>
@@ -255,8 +223,8 @@
         </configuration>
       </plugin>
       <plugin>
-	<groupId>org.apache.maven.plugins</groupId>
-	<artifactId>maven-release-plugin</artifactId>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
       </plugin>
     </plugins>
   </build>
