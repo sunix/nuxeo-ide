@@ -68,7 +68,6 @@ public class Deployment {
         this.name = name;
         projects = new HashSet<IProject>();
         libs = new HashSet<String>();
-        unitProvider = new UnitProvider();
     }
 
     public void setName(String name) {
@@ -143,6 +142,7 @@ public class Deployment {
         StringBuilder builder = new StringBuilder();
         builder.append("# Projects").append(crlf);
         for (IProject project : projects) {
+            unitProvider = new UnitProvider();
             // Sort units per type
             unitProvider.getUnitsForDep(project, DEPENDENCY_NAME,
                     SOURCE_ELEMENT);
