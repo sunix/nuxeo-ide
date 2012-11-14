@@ -77,7 +77,8 @@ public class UnitProvider {
     protected void introspectPackageRoot(IPackageFragmentRoot root,
             String depName, String sourceElement) throws Exception {
         for (Object pkg : root.getChildren()) {
-            if (parentNameSpace.isEmpty()
+            if (!root.getElementName().equals("resources")
+                    && parentNameSpace.isEmpty()
                     && !((PackageFragment) pkg).getElementName().isEmpty()) {
                 parentNameSpace = ((JavaElement) pkg).getElementName();
             }
