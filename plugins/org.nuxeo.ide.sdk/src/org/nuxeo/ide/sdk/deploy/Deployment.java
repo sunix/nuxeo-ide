@@ -158,10 +158,8 @@ public class Deployment {
                 unitOutputCopy(projectPath, unit, project, "pojo-bin");
             }
             // Write into dev.bundles the path to pojo-bin
-            if (!unitProvider.getPojoUnits().isEmpty()) {
-                builder.append("bundle:").append(projectPath + "pojo-bin").append(
-                        File.separator).append("main").append(crlf);
-            }
+            builder.append("bundle:").append(projectPath + "pojo-bin").append(
+                    File.separator).append("main").append(crlf);
             // Seam bin cleanup
             File seamBin = new File(projectPath + "seam-bin");
             if (seamBin.exists()) {
