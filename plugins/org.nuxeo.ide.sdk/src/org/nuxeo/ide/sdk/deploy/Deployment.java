@@ -148,8 +148,8 @@ public class Deployment {
                     SOURCE_ELEMENT);
             // Workspace - Project Path
             String workspacePath = project.getWorkspace().getRoot().getLocation().toOSString();
-            String projectPath = workspacePath + File.separator
-                    + project.getName() + File.separator;
+            String projectPath = project.getLocation().toOSString()
+                    + File.separator;
             // Resources copy
             resourcesCopy(project, projectPath + "pojo-bin");
             // default classes -> copy all pojo classes into pojo-bin output
