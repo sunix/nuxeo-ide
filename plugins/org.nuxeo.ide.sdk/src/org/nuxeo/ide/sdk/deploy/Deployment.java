@@ -209,27 +209,40 @@ public class Deployment {
     protected void unitOutputCopy(String projectPath, ICompilationUnit unit,
             IProject project, String outputPath) throws IOException,
             JavaModelException {
+        // InnerClasses
+        List<File> classes = new ArrayList<File>();
         // Retrieve the output class of java unit
         String clazzOutputPath = outputPath(project,
                 unit.getParent().getResource().getProjectRelativePath());
         File clazzOutputFile = new File(clazzOutputPath + File.separator
-                + relativeUnitPath(unit));
-        // New class output target
-        File newClazzOutputFile = new File(projectPath + outputPath
-                + File.separator + "main" + File.separator
-                + relativeUnitPath(unit));
-        if (newClazzOutputFile.exists()) {
-            // clean up
-            newClazzOutputFile.delete();
+                + relativeUnitPath(unit.getPath().toOSString()));
+        classes.add(clazzOutputFile);
+        File parent = clazzOutputFile.getParentFile();
+        int mid = unit.getElementName().lastIndexOf(".");
+        String unitName = unit.getElementName().substring(0, mid);
+        for (File child : parent.listFiles()) {
+            String name = child.getName();
+            if (name.startsWith(unitName + "$")) {
+                classes.add(child);
+            }
         }
-        // Copy each class in the structure created into
-        // output folders
-        newClazzOutputFile.getParentFile().mkdirs();
-        FileUtils.copyFile(clazzOutputFile, newClazzOutputFile);
+        for (File clazz : classes) {
+            // New class output target
+            File newClazzOutputFile = new File(projectPath + outputPath
+                    + File.separator + "main" + File.separator
+                    + relativeUnitPath(clazz.getAbsolutePath().toString()));
+            if (newClazzOutputFile.exists()) {
+                // clean up
+                newClazzOutputFile.delete();
+            }
+            // Copy each class in the structure created into
+            // output folders
+            newClazzOutputFile.getParentFile().mkdirs();
+            FileUtils.copyFile(clazz, newClazzOutputFile);
+        }
     }
 
-    protected String relativeUnitPath(ICompilationUnit unit) {
-        String unitPath = unit.getPath().toOSString();
+    protected String relativeUnitPath(String unitPath) {
         int index = unitPath.indexOf(unitProvider.getParentNameSpace());
         String relativePath = unitPath.substring(index);
         // Add .class
