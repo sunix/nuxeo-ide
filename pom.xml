@@ -28,7 +28,7 @@
 
   <scm>
     <connection>scm:hg:http://hg.nuxeo.org/tools/nuxeo-ide</connection>
-    <developerConnection>scm:hg:https://hg.nuxeo.org/tools/nuxeo-ide</developerConnection>
+    <developerConnection>scm:git:git@github.com:nuxeo/nuxeo-ide.git</developerConnection>
     <url>http://hg.nuxeo.org/nuxeo/</url>
   </scm>
 
@@ -144,17 +144,61 @@
   </dependencyManagement>
 
   <build>
+    <pluginManagement>
+      <plugins>
+	<plugin>
+	  <groupId>org.eclipse.tycho</groupId>
+	  <artifactId>tycho-maven-plugin</artifactId>
+	  <version>${tycho-version}</version>
+	</plugin>
+	<plugin>
+	  <groupId>org.eclipse.tycho</groupId>
+	  <artifactId>target-platform-configuration</artifactId>
+	  <version>${tycho-version}</version>
+	</plugin>
+	<plugin>
+	  <groupId>org.eclipse.tycho</groupId>
+	  <artifactId>maven-osgi-packaging-plugin</artifactId>
+	  <version>${tycho-version}</version>
+	</plugin>
+	<plugin>
+	  <groupId>org.eclipse.tycho</groupId>
+	  <artifactId>tycho-source-plugin</artifactId>
+	  <version>${tycho-version}</version>
+	</plugin>
+	<plugin>
+	  <inherited>true</inherited>
+	  <groupId>org.eclipse.tycho</groupId>
+	  <artifactId>tycho-p2-publisher-plugin</artifactId>
+	  <version>${tycho-version}</version>
+	</plugin>
+	<plugin>
+	  <groupId>org.eclipse.tycho</groupId>
+	  <artifactId>tycho-p2-director-plugin</artifactId>
+	  <version>${tycho-version}</version>
+	</plugin>
+	<plugin>
+	  <groupId>org.sonatype.tycho</groupId>
+	  <artifactId>maven-osgi-packaging-plugin</artifactId>
+	  <version>${tycho-version}</version>
+	</plugin>
+	<plugin>
+	  <groupId>org.apache.maven.plugins</groupId>
+	  <artifactId>maven-release-plugin</artifactId>
+	  <version>2.2.1</version>
+	</plugin>
+      </plugins>
+    </pluginManagement>
+
     <plugins>
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-maven-plugin</artifactId>
-        <version>${tycho-version}</version>
         <extensions>true</extensions>
       </plugin>
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>target-platform-configuration</artifactId>
-        <version>${tycho-version}</version>
         <configuration>
           <resolver>p2</resolver>
           <!-- <environments> <environment> <os>linux</os> <ws>gtk</ws> <arch>x86</arch> 
@@ -170,7 +214,6 @@
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>maven-osgi-packaging-plugin</artifactId>
-        <version>${tycho-version}</version>
         <configuration>
           <archiveSite>true</archiveSite>
         </configuration>
@@ -178,7 +221,6 @@
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-source-plugin</artifactId>
-        <version>${tycho-version}</version>
         <executions>
           <execution>
             <id>plugin-source</id>
@@ -192,7 +234,6 @@
         <inherited>true</inherited>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-p2-publisher-plugin</artifactId>
-        <version>${tycho-version}</version>
         <configuration>
           <publishArtifacts>true</publishArtifacts>
         </configuration>
@@ -200,24 +241,11 @@
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
         <artifactId>tycho-p2-director-plugin</artifactId>
-        <version>${tycho-version}</version>
       </plugin>
       <plugin>
         <groupId>org.sonatype.tycho</groupId>
         <artifactId>maven-osgi-packaging-plugin</artifactId>
         <version>${tycho-version}</version>
-        <configuration>
-          <strictVersions>false</strictVersions>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-release-plugin</artifactId>
-        <version>2.2.1</version>
-      </plugin>
-      <plugin>
-        <groupId>org.sonatype.tycho</groupId>
-        <artifactId>maven-osgi-packaging-plugin</artifactId>
         <configuration>
           <strictVersions>false</strictVersions>
         </configuration>
