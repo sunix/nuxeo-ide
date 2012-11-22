@@ -56,7 +56,7 @@ public class SDKFormData implements FormData {
         SDKRegistry.setUseSDKClasspath(!(Boolean) form.getWidgetValue("nosdkcp"));
         // Create linked resource from the SDK
         setResourceVariable(Constants.NXSDK_BROWSER_LINK_FOLDER,
-                new Path(sdk.getPath()));
+                sdk != null ? new Path(sdk.getPath()) : null);
     }
 
     /**
@@ -102,7 +102,8 @@ public class SDKFormData implements FormData {
             if (sdkLink.exists()) {
                 sdkLink.delete(true, null);
             }
-            if (workspace.validateLinkLocation(sdkLink, pathFromVariable).isOK()) {
+            if (pathFromVariable != null
+                    && workspace.validateLinkLocation(sdkLink, pathFromVariable).isOK()) {
                 sdkLink.createLink(pathFromVariable, IResource.NONE, null);
             }
         } catch (Exception e) {
