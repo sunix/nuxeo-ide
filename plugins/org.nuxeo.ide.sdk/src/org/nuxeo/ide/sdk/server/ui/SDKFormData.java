@@ -106,6 +106,9 @@ public class SDKFormData implements FormData {
                     && workspace.validateLinkLocation(sdkLink, pathFromVariable).isOK()) {
                 sdkLink.createLink(pathFromVariable, IResource.NONE, null);
             }
+            // exclude sdk folders from eclipse search
+            folderExcluder(sdkProject, "nxsdk/nxserver/data");
+            folderExcluder(sdkProject, "nxsdk/log");
         } catch (Exception e) {
             UI.showError("Unable to create link resource for sdk because of "
                     + e);
@@ -124,23 +127,34 @@ public class SDKFormData implements FormData {
             IWorkspace workspace) throws CoreException {
         final IProject newProjectHandle = workspace.getRoot().getProject(
                 variableResourceName);
-        if (newProjectHandle.exists())
-            return newProjectHandle;
-        try {
-            IProjectDescription description = workspace.newProjectDescription(newProjectHandle.getName());
-            newProjectHandle.create(description, null);
-        } catch (Exception e) {
-            UI.showError("Unable to create a new project in the Eclipse workspace: "
-                    + e);
-        }
-        try {
-            IFolder subFolder = newProjectHandle.getFolder(variableResourceName);
-            newProjectHandle.open(null);
-            if (!subFolder.exists())
-                subFolder.create(false, false, null);
-        } catch (Exception e) {
-            UI.showError("Unable to create a new folder in the project: " + e);
+        if (!newProjectHandle.exists()) {
+            try {
+                IProjectDescription description = workspace.newProjectDescription(newProjectHandle.getName());
+                newProjectHandle.create(description, null);
+            } catch (Exception e) {
+                UI.showError("Unable to create a new project in the Eclipse workspace: "
+                        + e);
+            }
+            try {
+                IFolder subFolder = newProjectHandle.getFolder(variableResourceName);
+                newProjectHandle.open(null);
+                if (!subFolder.exists())
+                    subFolder.create(false, false, null);
+            } catch (Exception e) {
+                UI.showError("Unable to create a new folder in the project: "
+                        + e);
+            }
         }
         return newProjectHandle;
+    }
+
+    /**
+     * Exclude sdk folders from eclipse search by setting resources derived
+     */
+    protected void folderExcluder(IProject project, String location)
+            throws CoreException {
+        IResource folder = project.getFolder(location);
+        if (folder.exists())
+            folder.setDerived(true, null);
     }
 }
