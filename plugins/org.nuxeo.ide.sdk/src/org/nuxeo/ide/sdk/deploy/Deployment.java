@@ -33,6 +33,7 @@ import org.apache.commons.io.FileUtils;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathEntry;
@@ -156,10 +157,11 @@ public class Deployment {
             // Sort units per type
             unitProvider.getUnitsForDep(project, DEPENDENCY_NAME,
                     SOURCE_ELEMENT);
+
             // Workspace - Project Path
-            String workspacePath = project.getWorkspace().getRoot().getLocation().toOSString();
             String projectPath = project.getLocation().toOSString()
                     + File.separator;
+
             // Resources copy
             resourcesCopy(project, projectPath + POJO_BIN);
             // default classes -> copy all pojo classes into pojo-bin output
@@ -170,6 +172,9 @@ public class Deployment {
             // Write into dev.bundles the path to pojo-bin
             builder.append("bundle:").append(projectPath + POJO_BIN).append(
                     File.separator).append("main").append(crlf);
+            // Exclude folder from eclipse search
+            folderExcluder(project, POJO_BIN);
+
             // Seam bin cleanup
             File seamBin = new File(projectPath + SEAM_BIN);
             if (seamBin.exists()) {
@@ -184,7 +189,10 @@ public class Deployment {
             if (!unitProvider.getDepUnits().isEmpty()) {
                 builder.append("seam:").append(projectPath + SEAM_BIN).append(
                         File.separator).append("main").append(crlf);
+                // Exclude folder from eclipse search
+                folderExcluder(project, SEAM_BIN);
             }
+
             // l10n resource bundle fragments
             IFolder l10n = project.getFolder("src/main/resources/OSGI-INF/l10n");
             if (l10n.exists()) {
@@ -236,6 +244,7 @@ public class Deployment {
                 classes.add(child);
             }
         }
+
         for (File clazz : classes) {
             // New class output target
             File newClazzOutputFile = new File(projectPath + outputPath
@@ -337,5 +346,14 @@ public class Deployment {
             }
         }
         dir.delete();
+    }
+
+    /**
+     * Exclude project folders from eclipse search by setting resources derived
+     */
+    protected void folderExcluder(IProject project, String location)
+            throws CoreException {
+        IResource folder = project.getFolder(location);
+        folder.setDerived(true, null);
     }
 }
