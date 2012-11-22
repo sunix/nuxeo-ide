@@ -64,6 +64,16 @@ public class Deployment {
 
     public static final String SOURCE_ELEMENT = "@Name";
 
+    /**
+     * Java beans output folder (not seam type)
+     */
+    public static final String POJO_BIN = "pojo-bin";
+
+    /**
+     * Seam beans output folder
+     */
+    public static final String SEAM_BIN = "seam-bin";
+
     public Deployment(String name) {
         this.name = name;
         projects = new HashSet<IProject>();
@@ -151,28 +161,28 @@ public class Deployment {
             String projectPath = project.getLocation().toOSString()
                     + File.separator;
             // Resources copy
-            resourcesCopy(project, projectPath + "pojo-bin");
+            resourcesCopy(project, projectPath + POJO_BIN);
             // default classes -> copy all pojo classes into pojo-bin output
             // folder
             for (ICompilationUnit unit : unitProvider.getPojoUnits()) {
-                unitOutputCopy(projectPath, unit, project, "pojo-bin");
+                unitOutputCopy(projectPath, unit, project, POJO_BIN);
             }
             // Write into dev.bundles the path to pojo-bin
-            builder.append("bundle:").append(projectPath + "pojo-bin").append(
+            builder.append("bundle:").append(projectPath + POJO_BIN).append(
                     File.separator).append("main").append(crlf);
             // Seam bin cleanup
-            File seamBin = new File(projectPath + "seam-bin");
+            File seamBin = new File(projectPath + SEAM_BIN);
             if (seamBin.exists()) {
                 deleteTree(seamBin);
             }
             // Seam classes -> copy all seam classes into seam-bin output
             // folder
             for (ICompilationUnit unit : unitProvider.getDepUnits()) {
-                unitOutputCopy(projectPath, unit, project, "seam-bin");
+                unitOutputCopy(projectPath, unit, project, SEAM_BIN);
             }
             // Write into dev.bundles the path to seam-bin
             if (!unitProvider.getDepUnits().isEmpty()) {
-                builder.append("seam:").append(projectPath + "seam-bin").append(
+                builder.append("seam:").append(projectPath + SEAM_BIN).append(
                         File.separator).append("main").append(crlf);
             }
             // l10n resource bundle fragments
