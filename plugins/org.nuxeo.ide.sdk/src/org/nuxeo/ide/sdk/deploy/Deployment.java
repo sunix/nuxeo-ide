@@ -354,6 +354,7 @@ public class Deployment {
     protected void folderExcluder(IProject project, String location)
             throws CoreException {
         IResource folder = project.getFolder(location);
-        folder.setDerived(true, null);
+        if (folder.exists())
+            folder.setDerived(true, null);
     }
 }
