@@ -63,10 +63,19 @@ public class Console extends StyledText implements ConsoleReaderFactory,
         super(parent, SWT.H_SCROLL | SWT.V_SCROLL);
         in = new In();
         out = new Out();
-        reader = new ConsoleReader(in, out, null, new SWTTerminal(this));
+        reader = new ConsoleReader(in, out, null, new SWTTerminal(this)) {
+            @Override
+            public int getTermheight() {
+                return getTerminal().getTerminalHeight();
+            }
+            @Override
+            public int getTermwidth() {
+                return getTerminal().getTerminalWidth();
+            }
+        };
         reader.setAutoprintThreshhold(2000);
         // reader.setCompletionHandler(new SwingCompletionHandler(this));
-        complete = reader.getClass().getDeclaredMethod("complete");
+        complete = ConsoleReader.class.getDeclaredMethod("complete");
         complete.setAccessible(true);
         setMargins(6, 6, 6, 6);
         setBackground(getDisplay().getSystemColor(SWT.COLOR_BLACK));

@@ -73,7 +73,7 @@ public class SWTTerminal extends Terminal {
      */
     @Override
     public int getTerminalHeight() {
-        return 80;
+        return 24;
     }
 
     @Override
