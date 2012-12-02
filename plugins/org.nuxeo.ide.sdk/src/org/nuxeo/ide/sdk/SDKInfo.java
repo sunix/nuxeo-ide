@@ -226,8 +226,8 @@ public class SDKInfo {
                 lines.set(i, "nuxeo.templates=default,sdk");
             } else if (line.contains("nuxeo.wizard.done=")) {
                 lines.set(i, "nuxeo.wizard.done=true");
-            } else if (line.contains("facelets.REFRESH_PERIOD=2")) {
-                lines.set(i, "facelets.REFRESH_PERIOD=2");
+            } else if (line.contains("org.nuxeo.dev=true")) {
+                lines.set(i, "org.nuxeo.dev=true");
             }
 
         }
