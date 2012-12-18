@@ -29,7 +29,7 @@ import org.eclipse.core.runtime.CoreException;
 public class NuxeoNature implements IProjectNature {
 
     public static boolean isNuxeoProject(IProject project) throws CoreException {
-        return project.isNatureEnabled(ID);
+        return project.isOpen() && project.isNatureEnabled(ID);
     }
 
     public final static String ID = "org.nuxeo.ide.NuxeoNature";
