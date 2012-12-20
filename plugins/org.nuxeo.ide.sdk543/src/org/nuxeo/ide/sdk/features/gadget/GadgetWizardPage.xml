@@ -14,7 +14,7 @@
 <textbox id="gadgetTitle" hfill="true"/>
 
 <text>Gadget category:</text>
-<combo id="category" hfill="true" readonly="false">
+<combo id="gadgetCategory" hfill="true" readonly="false">
 Nuxeo,
 Media,
 Monitoring,
