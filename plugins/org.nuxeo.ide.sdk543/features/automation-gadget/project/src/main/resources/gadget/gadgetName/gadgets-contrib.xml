@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <component name="org.nuxeo.gadgets.${gadgetName}" version="1.0">
 
+  <require>org.nuxeo.theme.nuxeo.default</require>
+
   <extension target="org.nuxeo.opensocial.gadgets.service" point="gadget">
 
     <internalGadget name="${gadgetName}" disabled="false">
@@ -11,5 +13,14 @@
       <icon>${gadgetName}.png</icon>
     </internalGadget>
 
+  </extension>
+
+  <extension target="org.nuxeo.theme.services.ThemeService" point="resources">
+    <resource name="${gadgetName}.css">
+      <path>${gadgetName}/${gadgetName}.css</path>
+    </resource>
+    <resource name="${gadgetName}.js">
+      <path>${gadgetName}/${gadgetName}.js</path>
+    </resource>
   </extension>
 </component>

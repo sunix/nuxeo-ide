@@ -129,9 +129,10 @@
     <manifest key="Nuxeo-Component" value="gadget/${gadgetName}/gadgets-contrib.xml" append="true"/>
 
 	<rename path="src/main/resources/gadget/gadgetName" to="src/main/resources/gadget/${gadgetName}"/>
+	<rename path="src/main/resources/web/nuxeo.war/gadgetName" to="src/main/resources/web/nuxeo.war/${gadgetName}"/>
 	<transform path="src/main/resources/gadget/${gadgetName}/gadgetName.xml" to="src/main/resources/gadget/${gadgetName}/${gadgetName}.xml"/>
-	<transform path="src/main/resources/gadget/${gadgetName}/gadgetName.css" to="src/main/resources/gadget/${gadgetName}/${gadgetName}.css"/>
-	<transform path="src/main/resources/gadget/${gadgetName}/gadgetName.js" to="src/main/resources/gadget/${gadgetName}/${gadgetName}.js"/>
+	<transform path="src/main/resources/web/nuxeo.war/${gadgetName}/gadgetName.css" to="src/main/resources/web/nuxeo.war/${gadgetName}/${gadgetName}.css"/>
+	<transform path="src/main/resources/web/nuxeo.war/${gadgetName}/gadgetName.js" to="src/main/resources/web/nuxeo.war/${gadgetName}/${gadgetName}.js"/>
 	<rename path="src/main/resources/gadget/${gadgetName}/gadgetName.png" to="src/main/resources/gadget/${gadgetName}/${gadgetName}.png"/>
 	<transform path="src/main/resources/gadget/${gadgetName}/gadgets-contrib.xml" to="src/main/resources/gadget/${gadgetName}/gadgets-contrib.xml"/>
 	<transform path="src/main/resources/gadget/${gadgetName}/dynamic_messages.properties" to="src/main/resources/gadget/${gadgetName}/dynamic_messages.properties"/>

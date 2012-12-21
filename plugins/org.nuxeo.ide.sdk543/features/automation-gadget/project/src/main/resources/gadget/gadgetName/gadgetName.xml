@@ -15,19 +15,11 @@
 <![CDATA[
 <html>
   <head>
-
-  <link rel="stylesheet" type="text/css" href="<#noparse>${specDirectoryUrl}</#noparse>gadget-common.css"/>
-  <link rel="stylesheet" type="text/css" href="<#noparse>${specDirectoryUrl}</#noparse>documentlists.css"/>
-  <link rel="stylesheet" type="text/css" href="<#noparse>${specDirectoryUrl}</#noparse>${gadgetName}.css"/>
+  <link rel="stylesheet" type="text/css" href="<#noparse>${clientSideBaseUrl}</#noparse>nxthemes-lib/gadget-common.css,gadget-documentlists.css,${gadgetName}.css?path=<#noparse>${contextPath}</#noparse>&basepath=<#noparse>${contextPath}</#noparse>"/>
 
   <!-- insert JS Context -->
   <#noparse>${jsContext}</#noparse>
-
-  <script src="<#noparse>${specDirectoryUrl}</#noparse>default-automation-request.js"></script>
-  <script src="<#noparse>${specDirectoryUrl}</#noparse>context-management.js"></script>
-  <script src="<#noparse>${specDirectoryUrl}</#noparse>default-documentlist-display.js"></script>
-  <script src="<#noparse>${clientSideBaseUrl}</#noparse>nxthemes-lib/jquery.js"></script>
-  <script src="<#noparse>${specDirectoryUrl}</#noparse>${gadgetName}.js"></script>
+  <script src="<#noparse>${clientSideBaseUrl}</#noparse>nxthemes-lib/gadget-default-automation-request.js,gadget-default-documentlist-display.js,gadget-context-management.js,${gadgetName}.js"></script>
 
   </head>
 <#noparse>
