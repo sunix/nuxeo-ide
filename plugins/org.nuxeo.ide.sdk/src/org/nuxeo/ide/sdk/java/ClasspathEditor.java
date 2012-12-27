@@ -14,13 +14,18 @@
  * Contributors:
  *     slacoin
  *     Vladimir Pasquier <vpasquier@nuxeo.com>
+ *     Sun Seng David TAN <stan@nuxeo.com>
  */
 package org.nuxeo.ide.sdk.java;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -32,9 +37,12 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
+import org.nuxeo.ide.common.UI;
+import org.nuxeo.ide.sdk.NuxeoSDK;
+import org.nuxeo.ide.sdk.model.PomModel;
 
 /**
- * 
+ *
  * @author matic
  * @since 1.1
  */
@@ -56,7 +64,7 @@ public class ClasspathEditor {
 
     /**
      * Extends classpath target project with src folder
-     * 
+     *
      * @param name
      * @throws JavaModelException
      */
@@ -82,7 +90,7 @@ public class ClasspathEditor {
 
     /**
      * Adding containers to the project classpath
-     * 
+     *
      * @param containers
      * @throws JavaModelException
      */
@@ -123,7 +131,7 @@ public class ClasspathEditor {
 
     /**
      * Removing containers to the project classpath
-     * 
+     *
      * @param containers
      * @throws JavaModelException
      */
@@ -135,4 +143,64 @@ public class ClasspathEditor {
         }
         dirty = true;
     }
+
+    /**
+     * Removing classpath entries that are in already in the containers. This
+     * method is intended to be called after a mvn eclipse:eclipse
+     *
+     * @param containers
+     * @throws Exception
+     */
+    public void removeDuplicates(List<String> containers) throws Exception {
+        // Get the classpath entries "lib"
+        // get only the one that are in the m2libs
+        // convert them as Dependency objects
+        // check if they are part of the containers, if yes, remove
+        Map<String, IClasspathEntry> mavenentries = new HashMap<String, IClasspathEntry>();
+        for (IClasspathEntry iClasspathEntry : entries) {
+            String libFileName = JavaCore.getResolvedClasspathEntry(
+                    iClasspathEntry).getPath().toString();
+            if (libFileName.endsWith(".jar")) {
+                // checking if this is comming from the m2repository
+                File pom = new File(libFileName.substring(0,
+                        libFileName.length() - 3)
+                        + "pom");
+                if (pom.isFile()) {
+                    try {
+                        PomModel model = new PomModel(pom);
+                        // mavendependencies.add(new Dependency(
+                        mavenentries.put(
+                                model.getGroupId() + ":"
+                                        + model.getArtifactId() + ":"
+                                        + model.getArtifactVersion(),
+                                iClasspathEntry);
+                    } catch (Exception e) {
+                        UI.showError("Failed to parse associated pom", e);
+                    }
+                }
+            }
+        }
+
+        Collection<String> artifactIndex = NuxeoSDK.getDefault().getArtifactIndex().getIndex().values();
+
+        for (String indexArtifactEntry : artifactIndex) {
+            // The index looks like
+            // "artifactId:groupId:version:other:maven:info", get the index of
+            // the third ':' character to match our key
+            // "artifactId:groupId:version"
+            int twoDotIndex = 0;
+            for (int i = 0; i < 3; i++) {
+                twoDotIndex = indexArtifactEntry.indexOf(':', twoDotIndex + 1);
+            }
+            CharSequence mavenid = indexArtifactEntry.subSequence(0,
+                    twoDotIndex);
+
+            // Removing duplicates
+            if (mavenentries.containsKey(mavenid)) {
+                entries.remove(mavenentries.get(mavenid));
+                dirty = true;
+            }
+        }
+    }
+
 }

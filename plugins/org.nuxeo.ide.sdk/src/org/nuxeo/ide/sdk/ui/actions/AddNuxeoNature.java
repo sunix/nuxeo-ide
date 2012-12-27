@@ -25,6 +25,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.nuxeo.ide.common.AddNaturesAction;
+import org.nuxeo.ide.common.UI;
+import org.nuxeo.ide.sdk.NuxeoSDK;
 import org.nuxeo.ide.sdk.SDKRegistry;
 import org.nuxeo.ide.sdk.java.ClasspathEditor;
 import org.nuxeo.ide.sdk.ui.NuxeoNature;
@@ -45,6 +47,11 @@ public class AddNuxeoNature extends AddNaturesAction {
     @Override
     public void install(IProject project, String natureId,
             IProgressMonitor monitor) throws CoreException {
+        NuxeoSDK sdk = NuxeoSDK.getDefault();
+        if (sdk == null) {
+            UI.showError("Please configure the Nuxeo SDK to convert the project");
+            return;
+        }
         super.install(project, natureId, monitor);
         if (!SDKRegistry.getWorkspacePreferences().getBoolean(
                 "useSDKClasspath", Boolean.TRUE))
@@ -68,6 +75,14 @@ public class AddNuxeoNature extends AddNaturesAction {
         containers.add(SDKClassPathContainer.ID_TESTS);
         editor.addContainers(containers);
         editor.flush();
+        // removes classpath entries that exist in The SDK
+        try {
+            editor.removeDuplicates(containers);
+            editor.flush();
+        } catch (Exception e) {
+            UI.showError("Errors occured while removing maven duplicates classpath entries", e, "Error cleaning duplicates entries");
+        }
+
     }
 
 }
