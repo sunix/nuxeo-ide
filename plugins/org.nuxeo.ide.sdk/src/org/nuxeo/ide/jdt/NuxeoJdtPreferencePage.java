@@ -25,7 +25,6 @@ import org.eclipse.jdt.internal.corext.fix.CleanUpConstants;
 import org.eclipse.jdt.internal.corext.fix.CleanUpPostSaveListener;
 import org.eclipse.jdt.internal.corext.fix.CleanUpPreferenceUtil;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
-import org.eclipse.jdt.internal.ui.javaeditor.saveparticipant.AbstractSaveParticipantPreferenceConfiguration;
 import org.eclipse.jdt.internal.ui.preferences.PreferencesAccess;
 import org.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage;
 import org.eclipse.jdt.internal.ui.viewsupport.ProjectTemplateStore;
@@ -62,6 +61,8 @@ import org.osgi.service.prefs.BackingStoreException;
  */
 @SuppressWarnings("restriction")
 public class NuxeoJdtPreferencePage extends PropertyAndPreferencePage {
+
+    public static final java.lang.String EDITOR_SAVE_PARTICIPANT_PREFIX = "editor_save_participant_";
 
     public static final String PREF_ID = NuxeoJdtPreferencePage.class.getName();
 
@@ -205,9 +206,8 @@ public class NuxeoJdtPreferencePage extends PropertyAndPreferencePage {
             node.put(CleanUpPreferenceUtil.SAVE_PARTICIPANT_KEY_PREFIX + key,
                     node.get(key, CleanUpOptions.FALSE));
         }
-        node.putBoolean(
-                AbstractSaveParticipantPreferenceConfiguration.EDITOR_SAVE_PARTICIPANT_PREFIX
-                        + CleanUpPostSaveListener.POSTSAVELISTENER_ID, true);
+        node.putBoolean(EDITOR_SAVE_PARTICIPANT_PREFIX
+                + CleanUpPostSaveListener.POSTSAVELISTENER_ID, true);
         node.putBoolean(CleanUpPreferenceUtil.SAVE_PARTICIPANT_KEY_PREFIX
                 + CleanUpConstants.CLEANUP_ON_SAVE_ADDITIONAL_OPTIONS, true);
         try {

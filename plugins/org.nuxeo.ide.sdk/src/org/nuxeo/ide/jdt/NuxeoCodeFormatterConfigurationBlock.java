@@ -26,9 +26,9 @@ import org.eclipse.jdt.internal.ui.preferences.PreferencesAccess;
 import org.eclipse.jdt.internal.ui.preferences.formatter.CodeFormatterConfigurationBlock;
 import org.eclipse.jdt.internal.ui.preferences.formatter.IProfileVersioner;
 import org.eclipse.jdt.internal.ui.preferences.formatter.ProfileManager;
-import org.eclipse.jdt.internal.ui.preferences.formatter.ProfileStore;
 import org.eclipse.jdt.internal.ui.preferences.formatter.ProfileManager.CustomProfile;
 import org.eclipse.jdt.internal.ui.preferences.formatter.ProfileManager.Profile;
+import org.eclipse.jdt.internal.ui.preferences.formatter.ProfileStore;
 import org.nuxeo.ide.common.UI;
 import org.xml.sax.InputSource;
 
@@ -67,8 +67,9 @@ public class NuxeoCodeFormatterConfigurationBlock extends
         return profileVersioner;
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
-    protected ProfileManager createProfileManager(List<Profile> profiles,
+    protected ProfileManager createProfileManager(List profiles,
             IScopeContext context, PreferencesAccess access,
             IProfileVersioner profileVersioner) {
         // just keeping the private variable at creation time
@@ -81,15 +82,19 @@ public class NuxeoCodeFormatterConfigurationBlock extends
     public void setNuxeoCodeFormatterProfile() {
 
         List<Profile> profiles = null;
-        PreferenceFilesStreamProvider preferenceFilesStreamProvider = new PreferenceFilesStreamProvider("nuxeo_formatter.xml");
+        PreferenceFilesStreamProvider preferenceFilesStreamProvider = new PreferenceFilesStreamProvider(
+                "nuxeo_formatter.xml");
         try {
-            profiles = profileStore.readProfilesFromStream(new InputSource(preferenceFilesStreamProvider.getInputStream()));
+            profiles = profileStore.readProfilesFromStream(new InputSource(
+                    preferenceFilesStreamProvider.getInputStream()));
         } catch (CoreException e) {
             try {
-                profiles = profileStore.readProfilesFromStream(new InputSource(preferenceFilesStreamProvider.getFallbackStream()));
+                profiles = profileStore.readProfilesFromStream(new InputSource(
+                        preferenceFilesStreamProvider.getFallbackStream()));
             } catch (CoreException e1) {
                 UI.showError(
-                        "An error occured while reading Nuxeo Cleanup profiles", e);
+                        "An error occured while reading Nuxeo Cleanup profiles",
+                        e);
             }
         }
         if (profiles == null || profiles.isEmpty()) {

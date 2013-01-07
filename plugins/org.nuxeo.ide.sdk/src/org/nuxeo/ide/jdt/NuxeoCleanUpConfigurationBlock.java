@@ -64,8 +64,9 @@ public class NuxeoCleanUpConfigurationBlock extends CleanUpConfigurationBlock {
         return profileVersioner;
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
-    protected ProfileManager createProfileManager(List<Profile> profiles,
+    protected ProfileManager createProfileManager(List profiles,
             IScopeContext context, PreferencesAccess access,
             IProfileVersioner profileVersioner) {
         // just keeping the private variable at creation time
