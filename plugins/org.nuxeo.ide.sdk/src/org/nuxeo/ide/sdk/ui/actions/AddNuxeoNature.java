@@ -76,7 +76,7 @@ public class AddNuxeoNature extends AddNaturesAction {
         editor.flush();
         // removes classpath entries that exist in The SDK
         try {
-            editor.removeDuplicates(containers);
+            editor.removeDuplicates();
             editor.flush();
         } catch (Exception e) {
             UI.showError(

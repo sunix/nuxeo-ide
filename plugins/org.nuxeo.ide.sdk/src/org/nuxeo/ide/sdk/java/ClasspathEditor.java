@@ -164,7 +164,7 @@ public class ClasspathEditor {
      * @param containers
      * @throws Exception
      */
-    public void removeDuplicates(List<String> containers) throws Exception {
+    public void removeDuplicates() throws Exception {
         // Get the classpath entries "lib"
         // get only the one that are in the m2libs
         // convert them as Dependency objects
