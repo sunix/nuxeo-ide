@@ -68,8 +68,6 @@ public class AddNuxeoNature extends AddNaturesAction {
 
     protected void applyClasspath(IProject project) throws CoreException {
         ClasspathEditor editor = new ClasspathEditor(project);
-        // Remove libraries
-        editor.removeLibraries();
         // Add Nuxeo Containers
         List<String> containers = new LinkedList<String>();
         containers.add(SDKClassPathContainer.ID);
