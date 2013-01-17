@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2006-2010 Nuxeo SAS (http://nuxeo.com/) and contributors.
+ * (C) Copyright 2006-2013 Nuxeo SAS (http://nuxeo.com/) and contributors.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser General Public License
@@ -12,7 +12,8 @@
  * Lesser General Public License for more details.
  *
  * Contributors:
- *     bstefanescu
+ *     Bogdan Stefanescu
+ *     Sun Seng David TAN <stan@nuxeo.com>
  */
 package org.nuxeo.ide.sdk.userlibs;
 
@@ -41,10 +42,6 @@ import org.nuxeo.ide.sdk.NuxeoSDK;
 import org.nuxeo.ide.sdk.model.M2PomModelProvider;
 import org.nuxeo.ide.sdk.model.PomModel;
 
-/**
- * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
- * 
- */
 public class UserLibPreferencePage extends FormPreferencePage implements
         IWorkbenchPreferencePage, FormData {
 
