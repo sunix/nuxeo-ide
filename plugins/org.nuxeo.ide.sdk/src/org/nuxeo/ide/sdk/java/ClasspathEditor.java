@@ -195,6 +195,10 @@ public class ClasspathEditor {
         }
 
         Collection<String> artifactIndex = NuxeoSDK.getDefault().getArtifactIndex().getIndex().values();
+        // merge the sdk test as well
+        // avoid unsupportedOperationException
+        artifactIndex = new ArrayList<String>(artifactIndex);
+        artifactIndex.addAll(NuxeoSDK.getDefault().getTestArtifactIndex().getIndex().values());
 
         for (String indexArtifactEntry : artifactIndex) {
             // The index looks like
