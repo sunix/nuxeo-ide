@@ -43,6 +43,7 @@ import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.nuxeo.ide.common.JarUtils;
+import org.nuxeo.ide.sdk.IConnectProvider;
 import org.nuxeo.ide.sdk.SDKPlugin;
 import org.nuxeo.ide.sdk.java.ProjectDeployer;
 import org.nuxeo.ide.sdk.userlibs.UserLib;
