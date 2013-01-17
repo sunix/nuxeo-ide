@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2006-2012 Nuxeo SAS (http://nuxeo.com/) and contributors.
+ * (C) Copyright 2006-2013 Nuxeo SAS (http://nuxeo.com/) and contributors.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser General Public License
@@ -14,6 +14,7 @@
  * Contributors:
  *     bstefanescu
  *     Vladimir Pasquier <vpasquier@nuxeo.com>
+ *     Sun Seng David TAN <stan@nuxeo.com>
  */
 package org.nuxeo.ide.sdk.ui.actions;
 
@@ -33,10 +34,7 @@ import org.nuxeo.ide.sdk.ui.NuxeoNature;
 import org.nuxeo.ide.sdk.ui.SDKClassPathContainer;
 
 /**
- * Fake add nature - used as an example
- * 
- * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
- * 
+ * "Convert to Nuxeo Project" action
  */
 public class AddNuxeoNature extends AddNaturesAction {
 
@@ -54,8 +52,9 @@ public class AddNuxeoNature extends AddNaturesAction {
         }
         super.install(project, natureId, monitor);
         if (!SDKRegistry.getWorkspacePreferences().getBoolean(
-                "useSDKClasspath", Boolean.TRUE))
+                "useSDKClasspath", Boolean.TRUE)) {
             return;
+        }
         applyClasspath(project);
     }
 
@@ -82,7 +81,9 @@ public class AddNuxeoNature extends AddNaturesAction {
             editor.removeDuplicates(containers);
             editor.flush();
         } catch (Exception e) {
-            UI.showError("Errors occured while removing maven duplicates classpath entries", e, "Error cleaning duplicates entries");
+            UI.showError(
+                    "Errors occured while removing maven duplicates classpath entries",
+                    e, "Error cleaning duplicates entries");
         }
 
     }
