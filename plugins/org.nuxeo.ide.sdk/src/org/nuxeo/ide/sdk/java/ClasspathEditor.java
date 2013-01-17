@@ -18,7 +18,6 @@
  */
 package org.nuxeo.ide.sdk.java;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -39,6 +38,7 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.sdk.NuxeoSDK;
+import org.nuxeo.ide.sdk.model.M2PomModelProvider;
 import org.nuxeo.ide.sdk.model.PomModel;
 
 /**
@@ -171,26 +171,21 @@ public class ClasspathEditor {
         // check if they are part of the containers, if yes, remove
         Map<String, IClasspathEntry> mavenentries = new HashMap<String, IClasspathEntry>();
         for (IClasspathEntry iClasspathEntry : entries) {
-            String libFileName = JavaCore.getResolvedClasspathEntry(
+            String libFilePath = JavaCore.getResolvedClasspathEntry(
                     iClasspathEntry).getPath().toString();
-            if (libFileName.endsWith(".jar")) {
-                // checking if this is comming from the m2repository
-                File pom = new File(libFileName.substring(0,
-                        libFileName.length() - 3)
-                        + "pom");
-                if (pom.isFile()) {
-                    try {
-                        PomModel model = new PomModel(pom);
-                        // mavendependencies.add(new Dependency(
-                        mavenentries.put(
-                                model.getGroupId() + ":"
-                                        + model.getArtifactId() + ":"
-                                        + model.getArtifactVersion(),
-                                iClasspathEntry);
-                    } catch (Exception e) {
-                        UI.showError("Failed to parse associated pom", e);
-                    }
+            // checking if this is comming from the m2repository
+            M2PomModelProvider m2PomModelProvider = new M2PomModelProvider(
+                    libFilePath);
+            try {
+                PomModel model = m2PomModelProvider.getPomModel();
+                if (model != null) {
+                    mavenentries.put(
+                            model.getGroupId() + ":" + model.getArtifactId()
+                                    + ":" + model.getArtifactVersion(),
+                            iClasspathEntry);
                 }
+            } catch (Exception e) {
+                UI.showError("Failed to parse associated pom", e);
             }
         }
 

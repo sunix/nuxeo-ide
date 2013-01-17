@@ -38,6 +38,7 @@ import org.nuxeo.ide.common.forms.Form;
 import org.nuxeo.ide.common.forms.FormData;
 import org.nuxeo.ide.common.forms.UIObject;
 import org.nuxeo.ide.sdk.NuxeoSDK;
+import org.nuxeo.ide.sdk.model.M2PomModelProvider;
 import org.nuxeo.ide.sdk.model.PomModel;
 
 /**
@@ -154,22 +155,18 @@ public class UserLibPreferencePage extends FormPreferencePage implements
         FileDialog dlg = new FileDialog(shell);
         String path = dlg.open();
         File file = new File(path);
-        String name = file.getName();
         UserLib lib = new UserLib(file.getAbsolutePath());
-        if (name.endsWith(".jar")) {
-            File pom = new File(file.getParentFile(), name.substring(0,
-                    name.length() - 3)
-                    + "pom");
-            if (pom.isFile()) {
-                try {
-                    PomModel model = new PomModel(pom);
-                    lib.setGroupId(model.getGroupId());
-                    lib.setArtifactId(model.getArtifactId());
-                    lib.setVersion(model.getArtifactVersion());
-                } catch (Exception e) {
-                    UI.showError("Failed to parse associated pom", e);
-                }
+
+        M2PomModelProvider m2PomModelProvider = new M2PomModelProvider(file.getAbsolutePath());
+        try {
+            PomModel model = m2PomModelProvider.getPomModel();
+            if (model != null) {
+                lib.setGroupId(model.getGroupId());
+                lib.setArtifactId(model.getArtifactId());
+                lib.setVersion(model.getArtifactVersion());
             }
+        } catch (Exception e) {
+            UI.showError("Failed to parse associated pom", e);
         }
 
         addUserLib(lib);
