@@ -18,6 +18,7 @@
  */
 package org.nuxeo.ide.sdk.java;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -40,6 +41,9 @@ import org.nuxeo.ide.common.UI;
 import org.nuxeo.ide.sdk.NuxeoSDK;
 import org.nuxeo.ide.sdk.model.M2PomModelProvider;
 import org.nuxeo.ide.sdk.model.PomModel;
+import org.nuxeo.ide.sdk.userlibs.UserLib;
+import org.nuxeo.ide.sdk.userlibs.UserLibPreferences;
+import org.osgi.service.prefs.BackingStoreException;
 
 /**
  *
@@ -213,6 +217,52 @@ public class ClasspathEditor {
                 dirty = true;
             }
         }
+    }
+
+    /**
+     * Check into the classpath entries and add all as a NuxeoSDK UserLib (can
+     * be deployed in the sdk)
+     *
+     * @throws BackingStoreException
+     */
+    public void setLibsAsSdkUserLibs() throws BackingStoreException {
+        UserLibPreferences prefs = UserLibPreferences.load();
+        ArrayList<IClasspathEntry> entriesToRemove = new ArrayList<IClasspathEntry>();
+        for (IClasspathEntry iClasspathEntry : entries) {
+            String path = JavaCore.getResolvedClasspathEntry(iClasspathEntry).getPath().toString();
+            File file = new File(path);
+            // a userlib is normally a jar file, right ?
+            if (path.endsWith(".jar")) {
+                UserLib lib = new UserLib(file.getAbsolutePath());
+                M2PomModelProvider m2PomModelProvider = new M2PomModelProvider(
+                        path);
+                try {
+                    PomModel model = m2PomModelProvider.getPomModel();
+                    if (model != null) {
+                        lib.setGroupId(model.getGroupId());
+                        lib.setArtifactId(model.getArtifactId());
+                        lib.setVersion(model.getArtifactVersion());
+                    }
+                } catch (Exception e) {
+                    UI.showError("Failed to parse associated pom", e);
+                }
+                prefs.addUserLib(lib);
+                // removing from the classpath entries to avoid duplicated
+                // entries
+                entriesToRemove.add(iClasspathEntry);
+            }
+        }
+        // in 2 steps to avoid concurent access to entries
+        for (IClasspathEntry iClasspathEntry : entriesToRemove) {
+            entries.remove(iClasspathEntry);
+            dirty = true;
+        }
+
+        if (prefs.isModified()) {
+            prefs.save();
+            NuxeoSDK.reload();
+        }
+
     }
 
 }
