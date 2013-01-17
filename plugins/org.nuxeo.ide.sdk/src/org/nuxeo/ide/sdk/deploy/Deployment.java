@@ -42,6 +42,7 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
+import org.nuxeo.ide.common.JarUtils;
 import org.nuxeo.ide.sdk.IConnectProvider;
 import org.nuxeo.ide.sdk.SDKPlugin;
 import org.nuxeo.ide.sdk.index.UnitProvider;
@@ -218,7 +219,11 @@ public class Deployment {
         for (String lib : libs) {
             File file = new File(lib);
             if (file.exists()) {
-                builder.append("library:").append(lib).append(crlf);
+            	if (JarUtils.isBundle(file)) {
+            		builder.append("bundle:").append(lib).append(crlf);
+            	} else {
+            		builder.append("library:").append(lib).append(crlf);
+            	}
             }
         }
         return builder.toString();
