@@ -34,7 +34,7 @@ import org.nuxeo.ide.sdk.userlibs.UserLib;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
- * 
+ *
  */
 public class DeploymentPanel extends Composite {
 
@@ -59,15 +59,16 @@ public class DeploymentPanel extends Composite {
 
     public void setDeployment(Deployment deployment) {
         this.deployment = deployment;
-        this.name.setText(deployment.getName());
-        this.projects.setCheckedProjects(deployment.getProjects());
-        this.libraries.setCheckedLibs(deployment.getLibraries());
+        name.setText(deployment.getName());
+        projects.setCheckedProjects(deployment.getProjects());
+//        libraries.setCheckedLibs(deployment.getLibraries());
     }
 
     public Deployment getDeployment() {
         return deployment;
     }
 
+    @Override
     public void dispose() {
 
     }
@@ -77,55 +78,35 @@ public class DeploymentPanel extends Composite {
         layout.numColumns = 2;
         setLayout(layout);
 
-        Label label0 = new Label(this, SWT.NONE);
-        label0.setText("Deployment Name:");
+        GridData oneColumn = new GridData();
+        oneColumn.horizontalSpan = 2;
+        oneColumn.horizontalAlignment = SWT.BEGINNING;
+        oneColumn.grabExcessHorizontalSpace = false;
+
+        GridData fillColumn = new GridData();
+        fillColumn.horizontalSpan = 2;
+        fillColumn.horizontalAlignment = SWT.FILL;
+        fillColumn.verticalAlignment = SWT.FILL;
+        fillColumn.grabExcessHorizontalSpace = true;
+        fillColumn.grabExcessVerticalSpace = true;
+
         name = new Text(this, SWT.BORDER);
-        Label sep0 = new Label(this, SWT.SEPARATOR | SWT.HORIZONTAL);
+        name.setLayoutData(oneColumn);
+
         Label label1 = new Label(this, SWT.NONE);
         label1.setText("Projects");
-
         projects = new ProjectCheckList(this);
-
-        // Add Select/Unselect button
+        projects.setLayoutData(fillColumn);
         Button selectAllProjects = selectAllButton();
+        selectAllProjects.setLayoutData(oneColumn);
 
         Label label2 = new Label(this, SWT.NONE);
         label2.setText("User Libraries");
         libraries = new UserLibCheckList(this);
-
-        // Add Select/Unselect button
+        libraries.setLayoutData(fillColumn);
         Button selectAllLibraries = selectAllButton();
+        selectAllLibraries.setLayoutData(oneColumn);
 
-        GridData gd = new GridData();
-        gd.horizontalSpan = 2;
-        label1.setLayoutData(gd);
-        label2.setLayoutData(gd);
-
-        gd = new GridData();
-        gd.horizontalSpan = 2;
-        gd.horizontalAlignment = SWT.FILL;
-        gd.grabExcessHorizontalSpace = true;
-        sep0.setLayoutData(gd);
-
-        gd = new GridData();
-        gd.horizontalAlignment = SWT.FILL;
-        gd.grabExcessHorizontalSpace = true;
-        name.setLayoutData(gd);
-
-        gd = new GridData();
-        gd.horizontalSpan = 2;
-        gd.horizontalAlignment = SWT.FILL;
-        gd.verticalAlignment = SWT.FILL;
-        gd.grabExcessHorizontalSpace = true;
-        gd.grabExcessVerticalSpace = true;
-        projects.setLayoutData(gd);
-
-        gd = new GridData();
-        gd.horizontalSpan = 2;
-        gd.horizontalAlignment = SWT.FILL;
-        gd.verticalAlignment = SWT.FILL;
-        gd.grabExcessHorizontalSpace = true;
-        libraries.setLayoutData(gd);
 
         name.addKeyListener(new KeyAdapter() {
             @Override
@@ -153,10 +134,11 @@ public class DeploymentPanel extends Composite {
                 new ICheckStateListener() {
                     @Override
                     public void checkStateChanged(CheckStateChangedEvent event) {
+                        UserLib lib = (UserLib) event.getElement();
                         if (event.getChecked()) {
-                            deployment.addLibrary((UserLib) event.getElement());
+                            deployment.addLibrary(lib);
                         } else {
-                            deployment.removeLibrary((UserLib) event.getElement());
+                            deployment.removeLibrary(lib);
                         }
                     }
                 });
@@ -169,7 +151,7 @@ public class DeploymentPanel extends Composite {
                     deployment.clearProjects();
                 } else {
                     projects.getTableViewer().setAllChecked(true);
-                    deployment.addProjects((IProject[]) projects.getCheckedProjects());
+                    deployment.addProjects(projects.getCheckedProjects());
                 }
             }
 
@@ -187,7 +169,7 @@ public class DeploymentPanel extends Composite {
                     deployment.clearLibraries();
                 } else {
                     libraries.getTableViewer().setAllChecked(true);
-                    deployment.addLibraries((UserLib[]) libraries.getCheckedLibs());
+                    deployment.addLibraries(libraries.getCheckedLibs());
                 }
             }
 

@@ -16,8 +16,8 @@
  */
 package org.nuxeo.ide.sdk.userlibs;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.eclipse.core.runtime.preferences.ConfigurationScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
@@ -26,7 +26,7 @@ import org.osgi.service.prefs.Preferences;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
- * 
+ *
  */
 public class UserLibPreferences {
 
@@ -42,7 +42,7 @@ public class UserLibPreferences {
     protected Map<String, UserLib> userLibs;
 
     public UserLibPreferences() {
-        userLibs = new HashMap<String, UserLib>();
+        userLibs = new TreeMap<String, UserLib>();
     }
 
     public boolean isModified() {

@@ -17,7 +17,9 @@
 package org.nuxeo.ide.sdk.deploy;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -31,7 +33,7 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
- * 
+ *
  */
 public class ProjectViewProvider extends BaseLabelProvider implements
         ILabelProvider, IStructuredContentProvider {
@@ -63,9 +65,25 @@ public class ProjectViewProvider extends BaseLabelProvider implements
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Object[] getElements(Object inputElement) {
+        IProject[] elements = getUnsortedElements(inputElement);
+        if (elements == null) {
+            return elements;
+        }
+        Arrays.sort(elements, new Comparator<IProject>() {
+
+            @Override
+            public int compare(IProject o1, IProject o2) {
+                return o1.getName().compareTo(o2.getName());
+            }
+
+        });
+        return elements;
+    }
+
+    private IProject[] getUnsortedElements(Object inputElement) {
         if (inputElement instanceof Collection) {
+            @SuppressWarnings("unchecked")
             Collection<IProject> projects = (Collection<IProject>) inputElement;
             if (natures == null) {
                 return projects.toArray(new IProject[projects.size()]);
