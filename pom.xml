@@ -23,7 +23,9 @@
     <module>features/org.nuxeo.ide.sdk.feature</module>
     <module>features/org.nuxeo.ide.shell.feature</module>
     <module>sites/org.nuxeo.ide.site</module>
+<!--
     <module>plugins/org.nuxeo.ide.sdk.helios</module>
+ -->
     <module>plugins/org.nuxeo.ide.sdk.juno</module>
   </modules>
 
@@ -34,7 +36,7 @@
   </scm>
 
   <properties>
-    <tycho-version>0.12.0</tycho-version>
+    <tycho-version>0.17.0</tycho-version>
     <platform-version-name>helios</platform-version-name>
     <wikitext-site>http://download.eclipse.org/tools/mylyn/update/weekly</wikitext-site>
     <swtbot-site>http://download.eclipse.org/technology/swtbot/${platform-version-name}/dev-build/update-site</swtbot-site>
@@ -181,7 +183,7 @@
 	</plugin>
 	<plugin>
 	  <groupId>org.eclipse.tycho</groupId>
-	  <artifactId>maven-osgi-packaging-plugin</artifactId>
+	  <artifactId>tycho-packaging-plugin</artifactId>
 	  <version>${tycho-version}</version>
 	</plugin>
 	<plugin>
@@ -201,8 +203,8 @@
 	  <version>${tycho-version}</version>
 	</plugin>
 	<plugin>
-	  <groupId>org.sonatype.tycho</groupId>
-	  <artifactId>maven-osgi-packaging-plugin</artifactId>
+	  <groupId>org.eclipse.tycho</groupId>
+	  <artifactId>tycho-packaging-plugin</artifactId>
 	  <version>${tycho-version}</version>
 	</plugin>
 	<plugin>
@@ -236,7 +238,7 @@
       </plugin>
       <plugin>
         <groupId>org.eclipse.tycho</groupId>
-        <artifactId>maven-osgi-packaging-plugin</artifactId>
+        <artifactId>tycho-packaging-plugin</artifactId>
         <configuration>
           <archiveSite>true</archiveSite>
         </configuration>
@@ -266,8 +268,8 @@
         <artifactId>tycho-p2-director-plugin</artifactId>
       </plugin>
       <plugin>
-        <groupId>org.sonatype.tycho</groupId>
-        <artifactId>maven-osgi-packaging-plugin</artifactId>
+        <groupId>org.eclipse.tycho</groupId>
+        <artifactId>tycho-packaging-plugin</artifactId>
         <version>${tycho-version}</version>
         <configuration>
           <strictVersions>false</strictVersions>
