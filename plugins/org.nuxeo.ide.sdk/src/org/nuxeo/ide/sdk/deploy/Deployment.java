@@ -18,34 +18,33 @@
 package org.nuxeo.ide.sdk.deploy;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.io.FileUtils;
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IImportDeclaration;
+import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.nuxeo.ide.common.JarUtils;
-import org.nuxeo.ide.sdk.IConnectProvider;
 import org.nuxeo.ide.sdk.SDKPlugin;
-import org.nuxeo.ide.sdk.index.UnitProvider;
+import org.nuxeo.ide.sdk.java.ProjectDeployer;
 import org.nuxeo.ide.sdk.userlibs.UserLib;
 
 /**
@@ -60,8 +59,6 @@ public class Deployment {
 
     protected Set<String> libs;
 
-    protected UnitProvider unitProvider;
-
     public static final String DEPENDENCY_NAME = "org.jboss.seam.annotations.Name";
 
     public static final String SOURCE_ELEMENT = "@Name";
@@ -69,12 +66,12 @@ public class Deployment {
     /**
      * Java beans output folder (not seam type)
      */
-    public static final String POJO_BIN = "pojo-bin";
+    public static final String POJO_BIN = "bin/nxsdk-pojo";
 
     /**
      * Seam beans output folder
      */
-    public static final String SEAM_BIN = "seam-bin";
+    public static final String SEAM_BIN = "bin/nxsdk-beans";
 
     public Deployment(String name) {
         this.name = name;
@@ -110,8 +107,8 @@ public class Deployment {
         return projects.toArray(new IProject[projects.size()]);
     }
 
-    public void addLibrary(UserLib lib) {
-        libs.add(lib.getPath());
+    public void addLibrary(UserLib userLib) {
+        libs.add(userLib.getPath());
     }
 
     public void addLibraries(UserLib[] libs) {
@@ -150,71 +147,12 @@ public class Deployment {
     }
 
     public String getContentAsString() throws Exception {
-        String crlf = "\n";
+        final String crlf = "\n";
         StringBuilder builder = new StringBuilder();
         builder.append("# Projects").append(crlf);
         for (IProject project : projects) {
-            unitProvider = new UnitProvider();
-            // Sort units per type
-            unitProvider.getUnitsForDep(project, DEPENDENCY_NAME,
-                    SOURCE_ELEMENT);
-
-            // Workspace - Project Path
-            String projectPath = project.getLocation().toOSString()
-                    + File.separator;
-
-            // Resources copy
-            resourcesCopy(project, projectPath + POJO_BIN);
-            // default classes -> copy all pojo classes into pojo-bin output
-            // folder
-            for (ICompilationUnit unit : unitProvider.getPojoUnits()) {
-                unitOutputCopy(projectPath, unit, project, POJO_BIN);
-            }
-            // Write into dev.bundles the path to pojo-bin
-            builder.append("bundle:").append(projectPath + POJO_BIN).append(
-                    File.separator).append("main").append(crlf);
-            // Exclude folder from eclipse search
-            folderExcluder(project, POJO_BIN);
-
-            // Seam bin cleanup
-            File seamBin = new File(projectPath + SEAM_BIN);
-            if (seamBin.exists()) {
-                deleteTree(seamBin);
-            }
-            // Seam classes -> copy all seam classes into seam-bin output
-            // folder
-            for (ICompilationUnit unit : unitProvider.getDepUnits()) {
-                unitOutputCopy(projectPath, unit, project, SEAM_BIN);
-            }
-            // Write into dev.bundles the path to seam-bin
-            if (!unitProvider.getDepUnits().isEmpty()) {
-                builder.append("seam:").append(projectPath + SEAM_BIN).append(
-                        File.separator).append("main").append(crlf);
-                // Exclude folder from eclipse search
-                folderExcluder(project, SEAM_BIN);
-            }
-
-            // l10n resource bundle fragments
-            IFolder l10n = project.getFolder("src/main/resources/OSGI-INF/l10n");
-            if (l10n.exists()) {
-                for (IResource m : l10n.members()) {
-                    if (IResource.FILE == m.getType()) {
-                        builder.append("resourceBundleFragment:").append(
-                                m.getLocation().toOSString()).append(crlf);
-                    }
-                }
-            }
-            // studio project dependencies
-            IConnectProvider connectProvider = SDKPlugin.getDefault().getConnectProvider();
-            if (connectProvider != null) {
-                for (IConnectProvider.Infos infos : SDKPlugin.getDefault().getConnectProvider().getLibrariesInfos(
-                        project, null)) {
-                    builder.append("bundle:").append(infos.file.getPath()).append(
-                            crlf);
-                }
-            }
+            ProjectDeployer.copy(JavaCore.create(project), new NullProgressMonitor(), builder);
         }
-        builder.append(crlf);
         builder.append("# User Libraries").append(crlf);
         for (String lib : libs) {
             File file = new File(lib);
@@ -229,137 +167,94 @@ public class Deployment {
         return builder.toString();
     }
 
-    protected void unitOutputCopy(String projectPath, ICompilationUnit unit,
-            IProject project, String outputPath) throws IOException,
-            JavaModelException {
-        // InnerClasses
-        List<File> classes = new ArrayList<File>();
-        // Retrieve the output class of java unit
-        String clazzOutputPath = outputPath(project,
-                unit.getParent().getResource().getProjectRelativePath());
-        File clazzOutputFile = new File(clazzOutputPath + File.separator
-                + relativeUnitPath(unit.getPath().toOSString()));
-        classes.add(clazzOutputFile);
-        File parent = clazzOutputFile.getParentFile();
-        int mid = unit.getElementName().lastIndexOf(".");
-        String unitName = unit.getElementName().substring(0, mid);
-        for (File child : parent.listFiles()) {
-            String name = child.getName();
-            if (name.startsWith(unitName + "$")) {
-                classes.add(child);
-            }
-        }
-
-        for (File clazz : classes) {
-            // New class output target
-            File newClazzOutputFile = new File(projectPath + outputPath
-                    + File.separator + "main" + File.separator
-                    + relativeUnitPath(clazz.getAbsolutePath().toString()));
-            if (newClazzOutputFile.exists()) {
-                // clean up
-                newClazzOutputFile.delete();
-            }
-            // Copy each class in the structure created into
-            // output folders
-            newClazzOutputFile.getParentFile().mkdirs();
-            FileUtils.copyFile(clazz, newClazzOutputFile);
-        }
-    }
-
-    protected String relativeUnitPath(String unitPath) {
-        int index = unitPath.indexOf(unitProvider.getParentNameSpace());
-        String relativePath = unitPath.substring(index);
-        // Add .class
-        int mid = relativePath.lastIndexOf(".");
-        relativePath = relativePath.substring(0, mid).concat(".class");
-        return relativePath;
-    }
-
-    protected void resourcesCopy(IProject project, String pojoBin)
-            throws JavaModelException, IOException {
-        String resourcesOutputPath = outputPath(project, new Path(
-                "src/main/resources"));
-        File resourcesOutputFolder = new File(resourcesOutputPath);
-        File newResourcesOutputFolder = new File(pojoBin + File.separator
-                + "main");
-        copyFolder(resourcesOutputFolder, newResourcesOutputFolder);
+    protected IFolder nxdataFolder(IJavaProject project) throws JavaModelException {
+        IPath outputPath = project.getOutputLocation().removeFirstSegments(1).removeLastSegments(1).append("nxdata");
+        return project.getProject().getFolder(outputPath);
     }
 
     /**
-     * Retrieve from source path output path in output/bin folder
+     * For a given @param depName java unit import, retrieves all unit classes
+     * having given dependencies Parse all resources from src/main folder (could
+     * be src/main/java, src/main/seam...)
      */
-    protected String outputPath(IProject project, IPath sourcePath)
-            throws JavaModelException {
+    protected void buildProjectCommands(Set<String> commands, IProject project) throws Exception {
         IJavaProject java = JavaCore.create(project);
-        IFolder folder = project.getFolder(sourcePath);
-        if (!folder.exists()) {
-            return null;
+        IFolder nxdataFolder = nxdataFolder(java);
+        if (nxdataFolder.exists()) {
+            nxdataFolder.delete(false, new NullProgressMonitor());
         }
-        IPackageFragmentRoot root = java.getPackageFragmentRoot(folder);
-        // We introspect the source tree in order to find the classpath src
-        // entry (in case of src/main/seam)
-        while (!root.isOpen()) {
-            folder = project.getFolder(folder.getParent().getProjectRelativePath());
-            root = java.getPackageFragmentRoot(folder);
+        for (IPackageFragmentRoot root : java.getPackageFragmentRoots()) {
+            if (root.getKind() != IPackageFragmentRoot.K_SOURCE) {
+                continue;
+            }
+            if (!"main".equals(root.getCorrespondingResource().getParent().getName())) {
+                continue;
+            }
+            copyPackageRoot(commands, root);
         }
-        IClasspathEntry entry = root.getRawClasspathEntry();
-        IPath outputLocation = entry.getOutputLocation();
-        if (outputLocation == null) {
-            outputLocation = java.getOutputLocation();
+    }
+
+    protected void copyPackageRoot(Set<String> commands, IPackageFragmentRoot root)
+            throws Exception {
+        for (IJavaElement child : root.getChildren()) {
+            switch (child.getElementType()) {
+            case IJavaElement.PACKAGE_FRAGMENT:
+                copyPackageFragment(commands, root, (IPackageFragment) child);
+                break;
+            case IJavaElement.COMPILATION_UNIT:
+                copyCompilationUnit(commands, root, (ICompilationUnit) child);
+                break;
+            }
         }
-        IFolder output = project.getWorkspace().getRoot().getFolder(
+        root.getNonJavaResources();
+    }
+
+    protected void copyPackageFragment(Set<String> commands, IPackageFragmentRoot root, IPackageFragment fragment) throws CoreException {
+        for (ICompilationUnit unit : fragment.getCompilationUnits()) {
+            copyCompilationUnit(commands, root, unit);
+        }
+    }
+
+    protected String unitOutput(ICompilationUnit unit)
+            throws JavaModelException {
+        for (IImportDeclaration imp : unit.getImports()) {
+            if (imp.getElementName().equals("org.jboss.seam.annotations.Name")
+                    && unit.getSource().contains("@Name")) {
+                return "seam";
+            }
+        }
+        return "bundle";
+    }
+
+    protected void copyCompilationUnit(Set<String> commands, IPackageFragmentRoot root, ICompilationUnit unit) throws JavaModelException, CoreException {
+        IJavaProject java = (IJavaProject) root.getParent();
+        String type = unitOutput(unit);
+        IFolder nxdataFolder = nxdataFolder(java).getFolder(type);
+        IProject project = java.getProject();
+        IPath outputLocation = java.getOutputLocation();
+        IPath path = unit.getPath().removeFirstSegments(
+                root.getPath().segmentCount()).removeLastSegments(1);
+        path = path.append(org.eclipse.jdt.internal.core.util.Util.getNameWithoutJavaLikeExtension(unit.getElementName())
+                + ".class"); //$NON-NLS-1$
+        IContainer container = (IContainer) project.getWorkspace().getRoot().findMember(
                 outputLocation);
-
-        String path = output.getRawLocation().toOSString();
-        return path;
-    }
-
-    public void copyFolder(File src, File dest) throws IOException {
-        if (src.isDirectory()) {
-            // Check if its sources directory (do not copy before introspection)
-            if (!src.getName().equals(unitProvider.getParentNameSpace())) {
-                if (dest.exists()) {
-                    deleteTree(dest);
-                }
-                dest.mkdirs();
-                String files[] = src.list();
-                for (String file : files) {
-                    File srcFile = new File(src, file);
-                    File destFile = new File(dest, file);
-                    copyFolder(srcFile, destFile);
-                }
-            }
-        } else {
-            InputStream in = new FileInputStream(src);
-            OutputStream out = new FileOutputStream(dest);
-            byte[] buffer = new byte[1024];
-            int length;
-            while ((length = in.read(buffer)) > 0) {
-                out.write(buffer, 0, length);
-            }
-            in.close();
-            out.close();
+        IResource dotClassMember = container.findMember(path);
+        if (dotClassMember == null) {
+            SDKPlugin.log(IStatus.ERROR, "Cannot find binary class " + path + " in project " + java.getElementName());
+            return;
         }
+
+        IFile outputFile = nxdataFolder.getFile(path);
+        mkdirs((IFolder)outputFile.getParent(), new NullProgressMonitor());
+        dotClassMember.copy(outputFile.getFullPath(), IResource.HIDDEN|IResource.DERIVED, new NullProgressMonitor());
+        commands.add(type +":" + nxdataFolder.getLocation().toOSString());
     }
 
-    public static void deleteTree(File dir) {
-        for (File file : dir.listFiles()) {
-            if (file.isDirectory()) {
-                deleteTree(file);
-            } else {
-                file.delete();
-            }
+    protected void mkdirs(IFolder folder, IProgressMonitor monitor) throws CoreException {
+        if (folder.exists()) {
+            return;
         }
-        dir.delete();
-    }
-
-    /**
-     * Exclude project folders from eclipse search by setting resources derived
-     */
-    protected void folderExcluder(IProject project, String location)
-            throws CoreException {
-        IResource folder = project.getFolder(location);
-        if (folder.exists())
-            folder.setDerived(true, null);
+        mkdirs((IFolder)folder.getParent(), monitor);
+        folder.create(false, true, monitor);
     }
 }
