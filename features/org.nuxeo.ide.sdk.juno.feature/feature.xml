@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.nuxeo.ide.sdk.feature"
+      id="org.nuxeo.ide.sdk.juno.feature"
       label="%featureName"
       version="1.1.11.qualifier"
       provider-name="%providerName"
@@ -23,32 +23,10 @@
    </url>
 
    <plugin
-         id="org.nuxeo.ide.common"
+         id="org.nuxeo.ide.sdk.juno"
          download-size="0"
          install-size="0"
          version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.nuxeo.ide.connect"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.nuxeo.ide.sdk"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.nuxeo.ide.sdk543"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
          unpack="false"/>
 
 </feature>
