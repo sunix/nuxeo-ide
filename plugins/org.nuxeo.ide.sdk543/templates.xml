@@ -183,7 +183,11 @@
   <template id="seam:Action" src="features/seam/action">
      <name>Seam Action Bean Component</name>
      <description>A seam action bean</description>
-     
+
+    <dependencies>
+        <dependency groupId="org.jboss.seam" artifactId="jboss-seam"/>
+    </dependencies>
+
      <extension src="features/seam/MyAction-extensions.xml" />
      <resourceBundle from="MyAction" to="${package}.${class}" />
      <binaryResource path="web/nuxeo.war/icons/MyAction-action.png" to="web/nuxeo.war/icons/${package}.${class}-action.png" />
@@ -194,7 +198,11 @@
   <template id="seam:Controller" src="features/seam/controller">
      <name>Seam Controller Bean Component</name>
      <description>A seam controller bean</description>
-     
+
+    <dependencies>
+        <dependency groupId="org.jboss.seam" artifactId="jboss-seam"/>
+    </dependencies>
+
      <extension src="features/seam/MyController-extensions.xml" />
      <resourceBundle from="MyController" to="${package}.${class}"/>
      <binaryResource path="web/nuxeo.war/icons/MyController-tab.png" to="web/nuxeo.war/icons/${package}.${class}-tab.png" />
@@ -209,6 +217,10 @@
      
      <javaClass src="java" path="packagePath/MyServiceWrapperBean.java" to="${packagePath}/${class}.java" />
      <select path="src/main/java/${packagePath}/${class}.java"/>
+     
+    <dependencies>
+        <dependency groupId="org.jboss.seam" artifactId="jboss-seam"/>
+    </dependencies>
   </template>
 
 </templates>
