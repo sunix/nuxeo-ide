@@ -27,7 +27,7 @@ import org.codehaus.jackson.JsonToken;
  * @author <a href="mailto:bs@nuxeo.com">Bogdan Stefanescu</a>
  * 
  */
-public class DocumentType implements StudioFeature {
+public class DocumentType implements StudioFeature, Comparable<DocumentType> {
 
     protected String id;
 
@@ -118,5 +118,10 @@ public class DocumentType implements StudioFeature {
             addSchema(jp.getText());
         }
     }
+
+	@Override
+	public int compareTo(DocumentType o) {
+        return id.compareTo(o.id);
+	}
 
 }

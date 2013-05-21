@@ -1,0 +1,21 @@
+<panel cols="2"  layout="grid">
+
+<text>Project:</text>
+<project id="project" hfill="true">
+<validator type="required">The project field is required</validator>
+</project>
+<text>Package:</text>
+<testPackage id="package" hfill="true">
+<validator type="regex" value="[A-Za-z_]+(.[A-Za-z0-9_]+)*">Not a valid package name</validator>
+</testPackage>
+<text>Name:</text>
+<textbox id="className" hfill="true">
+<validator type="regex" value="[A-Za-z]+[A-Za-z0-9_]*">Not a valid class name</validator>
+</textbox>
+
+<hr hfill="true" colspan="2"/>
+
+<text colspan="2">Select the document types you want to include in your test</text>
+<chooseStudioDocType id="chooseStudioDocType" hfill="true" vfill="true" colspan="2" height="200" />
+
+</panel>

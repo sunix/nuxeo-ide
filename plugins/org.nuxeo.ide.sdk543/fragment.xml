@@ -211,6 +211,23 @@
             id="org.nuxeo.ide.sdk.features.seam.SeamServiceCreationWizard"
             name="Service Bean">
       </wizard>
+
+      <!-- test -->
+
+      <category
+            id="org.nuxeo.ide.test.newWizards"
+            name="Tests"
+            parentCategory="org.nuxeo.ide.project.newWizards">
+      </category>
+
+      <wizard
+            category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.test.newWizards"
+            class="org.nuxeo.ide.sdk.features.test.RestUnitTestWizard"
+            icon="icons/nx.gif"
+            id="org.nuxeo.ide.sdk.features.test.RestUnitTestWizard"
+            name="Rest Unit Test">
+      </wizard>
+      
       
    </extension>
 

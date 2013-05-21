@@ -223,4 +223,40 @@
     </dependencies>
   </template>
 
+  <template id ="studioUnitTest" src="features/test/studioUnitTest/project">
+    <name>Studio Unit Test</name>
+    <description>A unit test based on your studio projects</description>
+
+    <dependencies>
+        <dependency groupId="org.nuxeo.runtime" artifactId="nuxeo-runtime-test" scope="test"/>
+        <dependency groupId="org.nuxeo.ecm.platform" artifactId="nuxeo-platform-test" scope="test"/>
+        <dependency groupId="com.google.inject" artifactId="guice" scope="test"/>
+        <dependency groupId="junit" artifactId="junit" scope="test"/>
+    </dependencies>
+
+    <studioDependencies />
+
+    <transform path="src/test/java/packagePath/MyUnitTest.java" to="src/test/java/${packagePath}/${className}.java" />
+    
+    <select path = "src/test/java/${packagePath}/${className}.java" />
+  </template>
+
+  <template id ="restUnitTest" src="features/test/restUnitTest/project">
+    <name>Rest Unit Test</name>
+    <description>A unit test deploying Nuxeo in a Jetty instance</description>
+
+    <dependencies>
+        <dependency groupId="org.nuxeo.runtime" artifactId="nuxeo-runtime-test" scope="test"/>
+        <dependency groupId="org.nuxeo.ecm.platform" artifactId="nuxeo-platform-test" scope="test"/>
+        <dependency groupId="com.google.inject" artifactId="guice" scope="test"/>
+        <dependency groupId="junit" artifactId="junit" scope="test"/>
+        <dependency groupId="org.nuxeo.ecm.automation" artifactId="nuxeo-automation-client" scope="test"/>
+        <dependency groupId="org.nuxeo.ecm.automation" artifactId="nuxeo-automation-test" scope="test"/>
+    </dependencies>
+
+    <transform path="src/test/java/packagePath/MyUnitTest.java" to="src/test/java/${packagePath}/${className}.java" />
+    
+    <select path = "src/test/java/${packagePath}/${className}.java" />
+  </template>
+
 </templates>

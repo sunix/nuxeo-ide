@@ -23,6 +23,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.QualifiedName;
 import org.nuxeo.ide.connect.studio.DocumentSchema;
+import org.nuxeo.ide.connect.studio.DocumentType;
 import org.nuxeo.ide.connect.studio.StudioProject;
 
 /**
@@ -122,6 +123,21 @@ public class StudioProjectBinding {
         DocumentSchema[] schemas = result.toArray(new DocumentSchema[result.size()]);
         Arrays.sort(schemas);
         return schemas;
+    }
+
+    public DocumentType[] getTypes() {
+        Set<DocumentType> result = new HashSet<DocumentType>();
+        for (StudioProject project : getProjects()) {
+            for (DocumentType dt : project.getPlatform().getDoctypes().values()) {
+                result.add(dt);
+            }
+            for (DocumentType dt : project.getDocumentTypes()) {
+                result.add(dt);
+            }
+        }
+        DocumentType[] types = result.toArray(new DocumentType[result.size()]);
+        Arrays.sort(types);
+        return types;
     }
 
     private final void collectSchemaPaths(Set<String> result) {

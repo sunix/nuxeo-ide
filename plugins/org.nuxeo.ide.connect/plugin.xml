@@ -163,6 +163,17 @@
             id="org.nuxeo.ide.core.adapterWizard"
             name="Document Adapter">
       </wizard>
+      
+      <!-- test -->
+      <wizard
+            category="org.nuxeo.ide.project.newWizards/org.nuxeo.ide.test.newWizards"
+            class="org.nuxeo.ide.connect.features.test.StudioUnitTestWizard"
+            icon="icons/nx.gif"
+            id="org.nuxeo.ide.connect.features.test.StudioUnitTestWizard"
+            name="Studio Unit Test">
+      </wizard>
+      
+      
    </extension>
    <extension
          id="org.nuxeo.ide.connect.sdk_provider"
