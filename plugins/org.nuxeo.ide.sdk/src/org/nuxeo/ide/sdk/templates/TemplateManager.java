@@ -42,6 +42,7 @@ import org.nuxeo.ide.sdk.templates.cmd.ResourceCommand;
 import org.nuxeo.ide.sdk.templates.cmd.ResourcePathCommand;
 import org.nuxeo.ide.sdk.templates.cmd.SelectCommand;
 import org.nuxeo.ide.sdk.templates.cmd.SourcePathCommand;
+import org.nuxeo.ide.sdk.templates.cmd.StudioDependenciesCommand;
 import org.nuxeo.ide.sdk.templates.cmd.TransformCommand;
 import org.osgi.framework.Bundle;
 import org.w3c.dom.Document;
@@ -90,6 +91,7 @@ public class TemplateManager {
         commands.put("javaClass", JavaClassCommand.class);
         commands.put("resourceBundle", ResourceBundleCommand.class);
         commands.put("organizeImports", OrganizeImportsCommand.class);
+        commands.put("studioDependencies", StudioDependenciesCommand.class);
     }
 
     public void addCommand(String key, Class<? extends Command> type) {

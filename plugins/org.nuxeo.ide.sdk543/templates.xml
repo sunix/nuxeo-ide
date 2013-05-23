@@ -233,7 +233,7 @@
         <dependency groupId="com.google.inject" artifactId="guice" scope="test"/>
         <dependency groupId="junit" artifactId="junit" scope="test"/>
     </dependencies>
-
+    <studioDependencies />
     <transform path="src/test/java/packagePath/MyUnitTest.java" to="src/test/java/${packagePath}/${className}.java" />
     
     <select path = "src/test/java/${packagePath}/${className}.java" />
