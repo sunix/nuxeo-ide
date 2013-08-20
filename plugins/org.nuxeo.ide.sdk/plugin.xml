@@ -509,5 +509,25 @@
          name="Nuxeo Component">
    </editor>
 </extension>
+<extension
+      point="org.eclipse.wst.sse.ui.completionProposal">
+   <proposalComputer
+         activate="true"
+         categoryId="org.nuxeo.ide.sdk.comp.contentassist"
+         class="org.nuxeo.ide.sdk.comp.contentassist.NuxeoXmlComponentProposalComputer"
+         id="org.nuxeo.ide.sdk.comp.contentassist.ComponentProposal">
+      <contentType
+            id="org.eclipse.core.runtime.xml">
+         <partitionType
+               id="org.eclipse.wst.xml.XML_DEFAULT">
+         </partitionType>
+      </contentType>
+   </proposalComputer>
+   <proposalCategory
+         icon="icons/nx.gif"
+         id="org.nuxeo.ide.sdk.comp.contentassist"
+         name="Nuxeo XML Component and extension point proposals">
+   </proposalCategory>
+</extension>
 
 </plugin>
