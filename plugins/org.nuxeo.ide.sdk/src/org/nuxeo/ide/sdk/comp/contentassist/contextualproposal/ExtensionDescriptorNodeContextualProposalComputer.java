@@ -22,9 +22,17 @@ import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jdt.core.IAnnotatable;
 import org.eclipse.jdt.core.IAnnotation;
+import org.eclipse.jdt.core.IField;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.Signature;
+import org.eclipse.jdt.core.search.IJavaSearchConstants;
+import org.eclipse.jdt.core.search.IJavaSearchScope;
+import org.eclipse.jdt.core.search.SearchEngine;
+import org.eclipse.jdt.core.search.SearchPattern;
+import org.eclipse.jdt.core.search.TypeNameMatch;
+import org.eclipse.jdt.internal.corext.util.TypeNameMatchCollector;
 import org.eclipse.jface.text.contentassist.CompletionProposal;
 import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
 import org.nuxeo.ide.sdk.SDKPlugin;
@@ -140,13 +148,14 @@ public class ExtensionDescriptorNodeContextualProposalComputer extends
     @Override
     public void addAttributeNameProposals(
             ContentAssistRequest contentAssistRequest, int offset, String prefix) {
-
+        // get the current descriptor type and and relative path
         IType nodeDescriptorType = nodeContext.getNodeDescriptorType();
         String currentNodePath = nodeContext.getCurrentNodePath();
 
         if (nodeDescriptorType != null) {
             // propose the current object attribute
 
+            // get all attributes and methods of the descriptor
             List<IAnnotatable> annotatableElements = new ArrayList<IAnnotatable>();
             try {
                 annotatableElements.addAll(Arrays.asList(nodeDescriptorType.getFields()));
@@ -159,6 +168,7 @@ public class ExtensionDescriptorNodeContextualProposalComputer extends
                 return;
             }
 
+            // if it contains xmap annotation, add a proposal
             for (IAnnotatable annotatableElement : annotatableElements) {
                 IAnnotation xnodeAnnotation = extractXmapAnnotation(annotatableElement);
                 if (xnodeAnnotation == null) {
@@ -262,5 +272,102 @@ public class ExtensionDescriptorNodeContextualProposalComputer extends
 
         }
     }
+
+    @Override
+    public void addAttributeValueProposals(
+            ContentAssistRequest contentAssistRequest, int offset,
+            String attributeName, String prefix) {
+        // get the current descriptor type and and relative path
+        IType nodeDescriptorType = nodeContext.getNodeDescriptorType();
+        String currentNodePath = nodeContext.getCurrentNodePath();
+
+        if (nodeDescriptorType != null) {
+            // propose the current object attribute
+
+            // get all attributes and methods of the descriptor
+            List<IAnnotatable> annotatableElements = new ArrayList<IAnnotatable>();
+            try {
+                annotatableElements.addAll(Arrays.asList(nodeDescriptorType.getFields()));
+                annotatableElements.addAll(Arrays.asList(nodeDescriptorType.getMethods()));
+            } catch (JavaModelException e) {
+                SDKPlugin.log(
+                        IStatus.WARNING,
+                        "exception while trying to get fields and methods from the node type descriptor",
+                        e);
+                return;
+            }
+
+            // if it contains xmap annotation, add a proposal
+            for (IAnnotatable annotatableElement : annotatableElements) {
+                IAnnotation xnodeAnnotation = extractXmapAnnotation(annotatableElement);
+                if (xnodeAnnotation == null) {
+                    continue;
+                }
+                String elementName = getAnnotationValue(xnodeAnnotation);
+                if (elementName == null) {
+                    continue;
+                }
+                if (elementName.equals("@" + attributeName)) {
+                    // get the type of the current annotatable element
+                    if (annotatableElement instanceof IField) {
+                        try {
+                            String typeSignature = getTypeSignature(annotatableElement);
+                            // a better way to do ?
+                            String signatureQualifier = Signature.getSignatureQualifier(typeSignature);
+                            String type = (signatureQualifier.isEmpty() ? ""
+                                    : (signatureQualifier + "."))
+                                    + Signature.getSignatureSimpleName(typeSignature);
+                            if ("boolean".equals(type)) {
+                                proposeAttributeValue(contentAssistRequest,
+                                        offset, prefix, currentNodePath,
+                                        "true", "icons/comp/xpoint.gif");
+                                proposeAttributeValue(contentAssistRequest,
+                                        offset, prefix, currentNodePath,
+                                        "false", "icons/comp/xpoint.gif");
+                            }
+                            if (type.startsWith("java.lang.Class")) {
+                                // TODO use another way to retrieve class:
+                                // currently not possible to get class that
+                                // implements an interface or extends a class.
+                                IJavaSearchScope scope = SearchEngine.createJavaSearchScope(new IJavaProject[] { getJavaProjectForDocument(nodeContext.getCompletionProposalInvocationContext().getDocument()) });
+                                ArrayList<TypeNameMatch> res = new ArrayList<TypeNameMatch>();
+                                TypeNameMatchCollector requestor = new TypeNameMatchCollector(
+                                        res);
+                                int matchMode = SearchPattern.R_CAMELCASE_MATCH;
+                                new SearchEngine().searchAllTypeNames(
+                                        null,
+                                        matchMode,
+                                        prefix.toCharArray(),
+                                        matchMode,
+                                        IJavaSearchConstants.TYPE,
+                                        scope,
+                                        requestor,
+                                        IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH,
+                                        null);
+
+                                for (TypeNameMatch typeNameMatch : res) {
+                                    proposeAttributeValue(
+                                            contentAssistRequest,
+                                            offset,
+                                            prefix,
+                                            currentNodePath,
+                                            typeNameMatch.getFullyQualifiedName(),
+                                            "icons/comp/xpoint.gif");
+                                }
+                            }
+                        } catch (JavaModelException e) {
+                            SDKPlugin.log(
+                                    IStatus.WARNING,
+                                    "Exception while trying to search for class.",
+                                    e);
+                        }
+                    }
+
+                    return;
+                }
+            }
+        }
+    }
+
 
 }

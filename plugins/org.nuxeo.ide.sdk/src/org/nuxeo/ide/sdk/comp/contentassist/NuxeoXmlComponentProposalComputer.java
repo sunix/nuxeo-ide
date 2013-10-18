@@ -110,7 +110,27 @@ public class NuxeoXmlComponentProposalComputer extends
                 getExtensionProposalProcessor(context));
         nodeCtxProposalComputer.addTagNameProposal(contentAssistRequest,
                 offset, prefix);
+    }
 
+    @Override
+    protected void addAttributeValueProposals(
+            ContentAssistRequest contentAssistRequest,
+            CompletionProposalInvocationContext context) {
+
+        int offset = getOffset(context);
+        String prefix = extractPrefix(context.getViewer(), offset);
+
+        List<Node> nodePath = getNodePath(contentAssistRequest, true);
+
+        String attributeName = getAttributeName(context.getViewer(), offset);
+
+        ExtensionPointNodeResolver extensionPointNodeResolver = getExtensionPointNodeResolver();
+        AbstractNodeContextualProposalComputer nodeContextualProposalComputer = extensionPointNodeResolver.resolve(
+                nodePath, context, contentAssistRequest,
+                getExtensionProposalProcessor(context));
+
+        nodeContextualProposalComputer.addAttributeValueProposals(
+                contentAssistRequest, offset, attributeName, prefix);
     }
 
     protected int getOffset(CompletionProposalInvocationContext context) {
@@ -140,6 +160,37 @@ public class NuxeoXmlComponentProposalComputer extends
         return nodePath;
     }
 
+    /**
+     * When adding proposals of an attribute value, get the current attribute
+     * name.
+     *
+     * @param viewer
+     * @param offset
+     * @return
+     */
+    protected String getAttributeName(ITextViewer viewer, int offset) {
+        int i = offset;
+        IDocument document = viewer.getDocument();
+        if (i > document.getLength()) {
+            return ""; //$NON-NLS-1$
+        }
+
+        try {
+            while (i > 0) {
+                char ch = document.getChar(i - 1);
+                if (ch == '=') {
+                    i--;
+                    break;
+                }
+                i--;
+            }
+
+            return extractPrefix(viewer, i);
+        } catch (BadLocationException e) {
+            return ""; //$NON-NLS-1$
+        }
+    }
+
     // copied from
     // org.eclipse.jface.text.templates.TemplateCompletionProcessor.extractPrefix(ITextViewer,
     // int)
@@ -153,7 +204,7 @@ public class NuxeoXmlComponentProposalComputer extends
         try {
             while (i > 0) {
                 char ch = document.getChar(i - 1);
-                if (!Character.isJavaIdentifierPart(ch)) {
+                if (!Character.isJavaIdentifierPart(ch) && ch != '.') {
                     break;
                 }
                 i--;

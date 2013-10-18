@@ -89,6 +89,19 @@ public abstract class AbstractNodeContextualProposalComputer {
             int offset, String prefix) {
     }
 
+    /**
+     * is called when a attribute value is being edited.
+     *
+     * @param contentAssistRequest
+     * @param offset
+     * @param attributeName
+     * @param prefix
+     */
+    public void addAttributeValueProposals(
+            ContentAssistRequest contentAssistRequest, int offset,
+            String attributeName, String prefix) {
+    }
+
     /*
      * reusable methods, utils
      */
@@ -130,6 +143,22 @@ public abstract class AbstractNodeContextualProposalComputer {
             int offset, String prefix, String elementName, String icon) {
         proposeTag(contentAssistRequest, offset, elementName.length(), prefix,
                 elementName, elementName, icon, null);
+    }
+
+    protected void proposeAttributeValue(
+            ContentAssistRequest contentAssistRequest, int offset,
+            String prefix, String currentNodePath, String proposalSuggestion,
+            String icon) {
+
+        if (proposalSuggestion.toLowerCase().contains(prefix.toLowerCase())) {
+            CompletionProposal newProposal;
+            newProposal = new CompletionProposal(proposalSuggestion, offset
+                    - prefix.length(), prefix.length(),
+                    proposalSuggestion.length(),
+                    SDKPlugin.getDefault().getImageRegistry().get(icon),
+                    proposalSuggestion, null, null);
+            contentAssistRequest.addProposal(newProposal);
+        }
     }
 
     protected String getAnnotationValue(IAnnotation xnodeAnnotation) {
